@@ -10,7 +10,7 @@ const Sidebar = (props: Props) => {
             <div className="col-6 col-xl-2">
                 <ul className="nav flex-column" id="navbar">
                     <li style={{ borderBottom: '1px solid #f3f3f3' }}>
-                        <a><img src="./src/assets/img/singin.jpg" style={{ margin: '0px 15px 0px 0' }} width="40px" alt="" />
+                        <a><img src="/src/assets/img/singin.jpg" style={{ margin: '0px 15px 0px 0' }} width="40px" alt="" />
                             <b>Lê Anh Thái</b>
                         </a>
                     </li>

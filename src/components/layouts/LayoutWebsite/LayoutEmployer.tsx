@@ -17,7 +17,6 @@ const LayoutEmployer = (props: Props) => {
                     <div className="mt-4">
                         <Outlet />
                     </div>
-
                 </div>
             </div>
             <Footer />
