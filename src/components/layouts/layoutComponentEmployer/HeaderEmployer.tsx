@@ -2,7 +2,7 @@ import React from 'react'
 
 type Props = {}
 
-const Header = (props: Props) => {
+const HeaderEmployer = (props: Props) => {
     return (
         <>
             {/* Header */}
@@ -21,4 +21,4 @@ const Header = (props: Props) => {
     )
 }
 
-export default Header
+export default HeaderEmployer

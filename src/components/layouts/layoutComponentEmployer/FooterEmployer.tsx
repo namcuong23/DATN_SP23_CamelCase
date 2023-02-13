@@ -2,7 +2,7 @@ import React from 'react'
 
 type Props = {}
 
-const Footer = (props: Props) => {
+const FooterEmployer = (props: Props) => {
     return (
         <>
             {/* Footer */}
@@ -44,4 +44,4 @@ const Footer = (props: Props) => {
     )
 }
 
-export default Footer
+export default FooterEmployer

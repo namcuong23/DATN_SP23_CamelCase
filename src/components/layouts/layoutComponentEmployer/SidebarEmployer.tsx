@@ -1,9 +1,8 @@
 import React from 'react'
-import { NavLink } from 'react-router-dom'
 
 type Props = {}
 
-const Sidebar = (props: Props) => {
+const SidebarEmployer = (props: Props) => {
     return (
         <>
             {/* Sidebar */}
@@ -15,9 +14,7 @@ const Sidebar = (props: Props) => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <NavLink to={'/'}>
-                            Bảng Tin
-                        </NavLink>
+                        <a className="nav"> Bảng Tin</a>
                     </li>
                     <li className="nav-item" style={{ borderBottom: '1px solid #f3f3f3' }}>
                         <a className="nav">Toppy AI - Đề xuất</a>
@@ -26,7 +23,7 @@ const Sidebar = (props: Props) => {
                         <a className="nav">Chiến dịch tuyển dụng</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav">Quản lý bài viết</a>
+                        <a className="nav">Tin tuyển dụng</a>
                     </li>
                     <li className="nav-item">
                         <a className="nav">Quản lý CV</a>
@@ -61,4 +58,4 @@ const Sidebar = (props: Props) => {
     )
 }
 
-export default Sidebar
+export default SidebarEmployer
