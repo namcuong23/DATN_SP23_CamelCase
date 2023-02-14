@@ -14,6 +14,7 @@ function App() {
         </Route>
         <Route path='/employs' element={<LayoutWebsite />}>
           <Route index element={<HomeEmployer />} />
+          {/* <Route index element={<HomeEmployer />} /> */}
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
