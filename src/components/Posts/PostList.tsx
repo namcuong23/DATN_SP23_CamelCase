@@ -127,7 +127,7 @@ const PostList = () => {
         {
             title: 'Số Lượng',
             dataIndex: 'number_of_recruits',
-            defaultSortOrder: 'descend',
+            // defaultSortOrder: 'descend',
             sorter: (a, b) => a.number_of_recruits - b.number_of_recruits,
         },
         {
@@ -151,7 +151,7 @@ const PostList = () => {
             render: (_, record) => (
                 <p>{(record.job_salary).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</p>
             ),
-            defaultSortOrder: 'descend',
+            // defaultSortOrder: 'descend',
             sorter: (a, b) => a.job_salary - b.job_salary,
 
         },
@@ -200,7 +200,9 @@ const PostList = () => {
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    <EyeOutlined />
+                    <NavLink to={`/posts/${record._id}`}>
+                        <EyeOutlined className='text-dark' />
+                    </NavLink>
                     <NavLink to={`/posts/${record._id}/edit`}>
                         <EditOutlined className='text-dark' />
                     </NavLink>
@@ -236,7 +238,7 @@ const PostList = () => {
                 <div>
                     <h2 className='mt-0'>Quản lý bài viết</h2>
                 </div>
-                <div className='bg-primary px-3 py-2'>
+                <div className='bg-success rounded px-3 py-2'>
                     <NavLink to={'/posts/add'} className='text-white text-decoration-none'>
                         Đăng tin
                     </NavLink>

@@ -1,35 +1,35 @@
-import { Button, Form, Input, Select } from 'antd'
+import { Button, Form, Input, message, Select } from 'antd'
 import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import IPost from '../../interface/post'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
-import { useGetPostQuery } from '../../service/post';
-import { useForm } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useGetPostQuery, useEditPostMutation } from '../../service/post';
 
 const PostEdit = () => {
-    const [form] = Form.useForm<IPost>();
+    const [form] = Form.useForm();
     const navigate = useNavigate()
     const { id } = useParams();
-    const { register, handleSubmit, reset } = useForm<IPost>()
-    const { data: post } = useGetPostQuery(id as string)
-    // useEffect(() => {
-    //     reset(post as IPost)
-    // }, [post])
-
+    const { data } = useGetPostQuery(id as string)
+    const [editPost] = useEditPostMutation()
     const onHandleEdit = (post: IPost) => {
         console.log(post);
-    }
+        try {
+            editPost({ ...post, post_status: false, user_id: 0, _id: id })
+            message.info('Sửa thành công.')
+            navigate('/posts')
+        } catch (error) {
 
+        }
+    }
 
     return (
         <>
             <div style={{ maxWidth: '700px' }} className='mx-auto'>
                 <h1 className='text-center fw-normal'>Chỉnh sửa bài viết</h1>
-                <Form layout="vertical" onFinish={onHandleEdit} form={form} defaultValue={post}>
+                <Form layout="vertical" onFinish={onHandleEdit} form={form} initialValues={data}>
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-primary border border-4 border-primary p-3 rounded-circle' />
+                                className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Việc cần tuyển</div>
@@ -44,7 +44,7 @@ const PostEdit = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-primary border border-4 border-primary p-3 rounded-circle' />
+                                className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thông tin về yêu cầu tuyển dụng</div>
@@ -92,7 +92,7 @@ const PostEdit = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <MoneyCollectOutlined style={{ fontSize: '300%' }}
-                                className='text-primary border border-4 border-primary p-3 rounded-circle' />
+                                className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Ngân sách dự kiến</div>
@@ -106,11 +106,11 @@ const PostEdit = () => {
                         </div>
                     </div>
                     <Form.Item className='text-center'>
-                        <Button type="primary" htmlType="submit">
+                        <Button className='bg-success text-white' htmlType="submit">
                             Sửa
                         </Button>
                         <NavLink to={'/posts'}>
-                            <Button type="primary" htmlType="button" className='ms-2'>
+                            <Button className='bg-success text-white ms-2' htmlType="button">
                                 Trở về
                             </Button>
                         </NavLink>

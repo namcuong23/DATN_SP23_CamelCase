@@ -28,7 +28,7 @@ const PostAdd = (props: Props) => {
                     <div className='d-flex align-items-top'>
                         <div className='mr-4'>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-primary border border-4 border-primary p-3 rounded-circle' />
+                                className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4 fw-'>Việc cần tuyển</div>
@@ -43,7 +43,7 @@ const PostAdd = (props: Props) => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-primary border border-4 border-primary p-3 rounded-circle' />
+                                className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thông tin về yêu cầu tuyển dụng</div>
@@ -93,7 +93,7 @@ const PostAdd = (props: Props) => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <MoneyCollectOutlined style={{ fontSize: '300%' }}
-                                className='text-primary border border-4 border-primary p-3 rounded-circle' />
+                                className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Ngân sách dự kiến</div>
@@ -107,11 +107,11 @@ const PostAdd = (props: Props) => {
                         </div>
                     </div>
                     <Form.Item className='text-center'>
-                        <Button type="primary" htmlType="submit">
+                        <Button className='bg-success text-white' htmlType="submit">
                             Đăng
                         </Button>
                         <NavLink to={'/posts'}>
-                            <Button type="primary" htmlType="button" className='ms-2'>
+                            <Button className='bg-success text-white ms-2' htmlType="button">
                                 Trở về
                             </Button>
                         </NavLink>
