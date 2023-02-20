@@ -14,10 +14,11 @@ const Login = () => {
     const [loading, setLoading] = useState(false)
     const [showOTP, setShowOTP] = useState(false)
     const [user, setUser] = useState(null)
+    const windowType: any = window
 
     const onCapchaVerify = () => {
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier(
+        if (!windowType.recaptchaVerifier) {
+            windowType.recaptchaVerifier = new RecaptchaVerifier(
                 'recaptcha-container',
                 {
                     size: 'invisible',
@@ -38,14 +39,14 @@ const Login = () => {
         setLoading(true)
         onCapchaVerify()
 
-        const appVerifier = window.recaptchaVerifier;
+        const appVerifier = windowType.recaptchaVerifier;
         const phoneNumber = '+' + ph
         await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
             .then((confirmationResult) => {
                 // SMS sent. Prompt user to type the code from the message, then sign the
                 // user in with confirmationResult.confirm(code)
                 console.log('3');
-                window.confirmationResult = confirmationResult
+                windowType.confirmationResult = confirmationResult
                 setLoading(false);
                 setShowOTP(true)
                 toast.success('OTP sended successfully!')
@@ -57,7 +58,7 @@ const Login = () => {
 
     const onOTPVerify = () => {
         setLoading(true);
-        window.confirmationResult.confirm(otp).then(async (res: any) => {
+        windowType.confirmationResult.confirm(otp).then(async (res: any) => {
             console.log(res);
             setUser(res.user)
             setLoading(false);
