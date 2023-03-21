@@ -1,5 +1,5 @@
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { useGetPostsQuery } from '../../service/post';
+import { useGetPostsQuery } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
@@ -9,7 +9,8 @@ import { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
-import { useRemovePostMutation } from '../../service/post'
+import { useRemovePostMutation } from '../../../service/post'
+import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer';
 
 const PostList = () => {
     const { data: posts, error, isLoading } = useGetPostsQuery()
@@ -125,12 +126,6 @@ const PostList = () => {
             ...getColumnSearchProps('job_name'),
         },
         {
-            title: 'Số Lượng',
-            dataIndex: 'number_of_recruits',
-            // defaultSortOrder: 'descend',
-            sorter: (a, b) => a.number_of_recruits - b.number_of_recruits,
-        },
-        {
             title: 'Hình thức làm việc',
             dataIndex: 'working_form',
             filters: [
@@ -146,16 +141,6 @@ const PostList = () => {
             onFilter: (value: any, record) => record.working_form.indexOf(value) === 0,
         },
         {
-            title: 'Ngân sách',
-            dataIndex: 'job_salary',
-            render: (_, record) => (
-                <p>{(record.job_salary).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</p>
-            ),
-            // defaultSortOrder: 'descend',
-            sorter: (a, b) => a.job_salary - b.job_salary,
-
-        },
-        {
             title: 'Khu vực',
             dataIndex: 'work_location',
             filters: [
@@ -169,6 +154,14 @@ const PostList = () => {
                 },
             ],
             onFilter: (value: any, record) => record.work_location.indexOf(value) === 0,
+        },
+        {
+            title: 'Ngày đăng',
+            dataIndex: 'createdAt',
+            render: (_, record) => (
+                <p>{(record.createdAt)}</p>
+            ),
+
         },
         {
             title: 'Trạng thái',
@@ -200,10 +193,10 @@ const PostList = () => {
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    <NavLink to={`/posts/${record._id}`}>
+                    <NavLink to={`/home/posts/${record._id}`}>
                         <EyeOutlined className='text-dark' />
                     </NavLink>
-                    <NavLink to={`/posts/${record._id}/edit`}>
+                    <NavLink to={`/home/posts/${record._id}/edit`}>
                         <EditOutlined className='text-dark' />
                     </NavLink>
                     <Popconfirm placement="top"
@@ -234,17 +227,22 @@ const PostList = () => {
         </Space>
     return (
         <>
-            <div className='d-flex align-items-center justify-content-between mb-2'>
-                <div>
-                    <h2 className='mt-0'>Quản lý bài viết</h2>
-                </div>
-                <div className='bg-success rounded px-3 py-2'>
-                    <NavLink to={'/posts/add'} className='text-white text-decoration-none'>
-                        Đăng tin
-                    </NavLink>
+            <div className='container'>
+                <div className='mt-4 h-[100vh]'>
+                    <div className='d-flex align-items-center justify-content-between mb-2'>
+                        <div>
+                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý bài viết</h2>
+                        </div>
+                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-3 py-2'>
+                            <NavLink to={'/home/posts/add'} className='text-white text-decoration-none'>
+                                Đăng tin
+                            </NavLink>
+                        </div>
+                    </div>
+                    <Table columns={columns} dataSource={posts} onChange={onChange} />
                 </div>
             </div>
-            <Table columns={columns} dataSource={posts} onChange={onChange} />
+            <FooterEmployer />
         </>
     )
 }

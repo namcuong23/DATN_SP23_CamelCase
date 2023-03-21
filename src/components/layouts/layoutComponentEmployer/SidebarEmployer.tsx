@@ -18,7 +18,7 @@ import {
 
 type Props = {}
 
-const Sidebar = (props: Props) => {
+const SidebarEmployer = (props: Props) => {
     return (
         <>
             {/* Sidebar */}
@@ -30,7 +30,7 @@ const Sidebar = (props: Props) => {
                         </a>
                     </li>
                     <li className="nav-item">
-                        <NavLink to={'/'} className='d-flex align-items-center'>
+                        <NavLink to={'/home'} className='d-flex align-items-center'>
                             <HomeOutlined className='text-success' />
                             <span className='ms-3'>Bảng Tin</span>
                         </NavLink>
@@ -48,7 +48,7 @@ const Sidebar = (props: Props) => {
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink to={'/posts'} className='d-flex align-items-center'>
+                        <NavLink to={'/home/posts'} className='d-flex align-items-center'>
                             <UnorderedListOutlined className='text-success' />
                             <span className='ms-3'>Quản lý bài viết</span>
                         </NavLink>
@@ -113,4 +113,4 @@ const Sidebar = (props: Props) => {
     )
 }
 
-export default Sidebar
+export default SidebarEmployer

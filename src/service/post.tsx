@@ -4,15 +4,15 @@ import IPost from "../interface/post"
 export const postApi: any = createApi({
     reducerPath: 'postApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
-    tagTypes: ['post'],
+    tagTypes: ['Post'],
     endpoints: (builder) => ({
         getPosts: builder.query<IPost[], void>({
             query: () => '/posts',
-            providesTags: ['post']
+            providesTags: ['Post']
         }),
         getPost: builder.query<IPost, string>({
             query: (id: string) => `/posts/${id}`,
-            providesTags: ['post']
+            providesTags: ['Post']
         }),
         addPost: builder.mutation<IPost, Omit<IPost, '_id'>>({
             query: (post: IPost) => ({
@@ -20,7 +20,7 @@ export const postApi: any = createApi({
                 method: 'POST',
                 body: post
             }),
-            invalidatesTags: ['post']
+            invalidatesTags: ['Post']
         }),
         editPost: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
             query: (post: IPost) => ({
@@ -28,7 +28,7 @@ export const postApi: any = createApi({
                 method: 'PUT',
                 body: post
             }),
-            invalidatesTags: ['post']
+            invalidatesTags: ['Post']
         }),
         removePost: builder.mutation({
             query: (id: string) => ({
@@ -36,7 +36,7 @@ export const postApi: any = createApi({
                 method: 'DELETE',
                 credentials: 'omit'
             }),
-            invalidatesTags: ['post']
+            invalidatesTags: ['Post']
         })
     })
 })
