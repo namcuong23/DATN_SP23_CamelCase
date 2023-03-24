@@ -13,6 +13,7 @@ import PostDetail from "./components/employer/Posts/PostDetail"
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
+import Profile from "./components/employee/profile/Profile"
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="/works" element={<WorkPage />} />
+          <Route path="/profile" element={<Profile />} />
         </Route>
         <Route path='/home' element={<LayoutEmployer />}>
           <Route index element={<Home />} />

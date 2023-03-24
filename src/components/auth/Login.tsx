@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
 import { useSigninMutation } from '../../service/auth'
+import UseAuth from './UseAuth'
 
 
 
@@ -19,6 +20,9 @@ const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signin] = useSigninMutation()
+    const currentUser: any = UseAuth()
+    // console.log(currentUser);
+
 
     const signIn = async (user: any) => {
         const email = user.email
@@ -38,8 +42,10 @@ const Login = () => {
                 if (login) {
                     message.info(`Signed in successfully!`)
                     const userInfo = userCredential.user;
-                    console.log(userInfo);
-                    navigate('/')
+                    console.log('login', user);
+                    currentUser.displayName = userInfo.name
+                    // console.log('auth', currentUser);
+                    // navigate('/')
                     // await sendSignInLinkToEmail(auth, email, actionCodeSettings)
                     //     .then(() => {
                     //         message.info(`Link sent to ${email}`)
@@ -121,10 +127,15 @@ const Login = () => {
                                     </div>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Mật khẩu</label>
-                                        <input {...register('password', { required: true, minLength: 6 })}
-                                            type="password"
-                                            className={errors.password ? "form-control border-red-500" : "form-control"}
-                                            name='password' />
+                                        <div className='relative flex items-center'>
+                                            <input {...register('password', { required: true, minLength: 6 })}
+                                                type="password"
+                                                className={errors.password ? "form-control border-red-500" : "form-control"}
+                                                name='password'
+                                                id='password' />
+                                            <i className="eye fa fa-eye-slash cursor-pointer absolute right-[10px]" />
+                                        </div>
+
                                         {errors.password && errors.password.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mật khẩu</span>}
                                         {errors.password && errors.password.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu chứa từ 6 ký tự trở lên.</span>}
                                     </div>

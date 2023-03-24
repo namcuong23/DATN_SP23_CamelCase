@@ -1,5 +1,5 @@
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { useGetPostsQuery } from '../../../service/post';
+import { formatDate, useGetPostsQuery } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
@@ -17,6 +17,7 @@ const PostList = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
+    const date = new Date()
 
     const text = 'Are you sure to delete this post?';
     const [removePost] = useRemovePostMutation()
@@ -159,7 +160,7 @@ const PostList = () => {
             title: 'Ngày đăng',
             dataIndex: 'createdAt',
             render: (_, record) => (
-                <p>{(record.createdAt)}</p>
+                <p>{(new Date(record.createdAt)).toLocaleString()}</p>
             ),
 
         },
@@ -175,17 +176,17 @@ const PostList = () => {
                     </Tag>
                 </>
             ),
-            filters: [
-                {
-                    text: 'Đã duyệt',
-                    value: 'Đã duyệt',
-                },
-                {
-                    text: 'Đang chờ duyệt',
-                    value: 'Đang chờ duyệt',
-                },
-            ],
-            onFilter: (value: any, record) => record.work_location.indexOf(value) === 0,
+            // filters: [
+            //     {
+            //         text: 'Đã duyệt',
+            //         value: true,
+            //     },
+            //     {
+            //         text: 'Đang chờ duyệt',
+            //         value: false,
+            //     },
+            // ],
+            // onFilter: (value: any, record) => record.post_status.indexOf(value) === 0,
         },
         {
             title: 'Hành động',
@@ -216,13 +217,13 @@ const PostList = () => {
         console.log('params', pagination, filters, sorter, extra);
     };
     if (isLoading)
-        return <Space direction="vertical" style={{ width: '100%' }}>
+        return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>
             <Spin tip="Loading" size="large">
                 <div className="content" />
             </Spin>
         </Space>
     if (error)
-        return <Space direction="vertical" style={{ width: '100%' }}>
+        return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>
             <Alert message="Error!!!" type="error" />
         </Space>
     return (

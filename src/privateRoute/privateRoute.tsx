@@ -1,8 +1,6 @@
 import React from 'react'
 
-type Props = {}
-
-const privateRoute = (props: Props) => {
+const privateRoute = () => {
     return (
         <div>privateRoute</div>
     )
