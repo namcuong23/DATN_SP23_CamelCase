@@ -1,37 +1,38 @@
-import React from 'react'
+import { Button, Form, Input, message, Select } from 'antd'
 import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Select, message } from 'antd';
-import { NavLink, useNavigate } from 'react-router-dom';
-import IPost from '../../interface/post';
-import { SubmitHandler } from 'react-hook-form/dist/types';
-import { useAddPostMutation } from '../../service/post';
+import IPost from '../../../interface/post'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
+import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
 
-type Props = {}
-
-const PostAdd = (props: Props) => {
+const PostEdit = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
-    const [addPost] = useAddPostMutation()
-    const onHandleAdd: SubmitHandler<IPost> = (post: IPost) => {
+    const { id } = useParams();
+    const { data } = useGetPostQuery(id as string)
+    const [editPost] = useEditPostMutation()
+    const onHandleEdit = (post: IPost) => {
         console.log(post);
         try {
-            addPost({ ...post, post_status: false, user_id: 0 })
-            message.info('Dang tin thanh cong.')
+            editPost({ ...post, post_status: false, user_id: 0, _id: id })
+            message.info('Sửa thành công.')
             navigate('/posts')
-        } catch (error) { }
+        } catch (error) {
+
+        }
     }
+
     return (
         <>
             <div style={{ maxWidth: '700px' }} className='mx-auto'>
-                <h1 className='mb-3 text-center fw-normal'>Đăng tin</h1>
-                <Form onFinish={onHandleAdd} form={form} name="add" layout="vertical">
+                <h1 className='text-center fw-normal'>Chỉnh sửa bài viết</h1>
+                <Form layout="vertical" onFinish={onHandleEdit} form={form} initialValues={data}>
                     <div className='d-flex align-items-top'>
-                        <div className='mr-4'>
+                        <div>
                             <BookOutlined style={{ fontSize: '300%' }}
                                 className='text-success border border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
-                            <div className='fs-4 fw-'>Việc cần tuyển</div>
+                            <div className='fs-4'>Việc cần tuyển</div>
                             <Form.Item name="job_name" label="Tên công việc cần tuyển"
                                 rules={[
                                     { required: true, message: "Please input your job name." },
@@ -63,16 +64,14 @@ const PostAdd = (props: Props) => {
                             </Form.Item>
                             <Form.Item name="working_form" label="Hình thức làm việc"
                                 rules={[{ required: true, message: 'Please choose working form.' }]}>
-                                <Select defaultValue={'0'}>
-                                    <Select.Option value="0">- Chọn hình thức làm việc -</Select.Option>
+                                <Select>
                                     <Select.Option value="online">Online</Select.Option>
                                     <Select.Option value="offline">Offline</Select.Option>
                                 </Select>
                             </Form.Item>
                             <Form.Item name="gender" label="Giới tính"
                                 rules={[{ required: true, message: 'Please choose a gender.' }]}>
-                                <Select defaultValue={'0'}>
-                                    <Select.Option value="0">- Chọn giới tính -</Select.Option>
+                                <Select>
                                     <Select.Option value="nam">Nam</Select.Option>
                                     <Select.Option value="nữ">Nữ</Select.Option>
                                 </Select>
@@ -108,7 +107,7 @@ const PostAdd = (props: Props) => {
                     </div>
                     <Form.Item className='text-center'>
                         <Button className='bg-success text-white' htmlType="submit">
-                            Đăng
+                            Sửa
                         </Button>
                         <NavLink to={'/posts'}>
                             <Button className='bg-success text-white ms-2' htmlType="button">
@@ -122,4 +121,4 @@ const PostAdd = (props: Props) => {
     )
 }
 
-export default PostAdd
+export default PostEdit

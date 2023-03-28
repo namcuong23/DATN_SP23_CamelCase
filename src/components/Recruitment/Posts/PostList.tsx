@@ -1,5 +1,5 @@
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { useGetPostsQuery } from '../../service/post';
+import { useGetPostsQuery } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
@@ -9,7 +9,7 @@ import { useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
-import { useRemovePostMutation } from '../../service/post'
+import { useRemovePostMutation } from '../../../service/post'
 
 const PostList = () => {
     const { data: posts, error, isLoading } = useGetPostsQuery()
