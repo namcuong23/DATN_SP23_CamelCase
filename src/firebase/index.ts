@@ -3,13 +3,13 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyC6fyM5a4LR6WECi1zqdL5v66DGGCmUI64",
-    authDomain: "signin-52219.firebaseapp.com",
-    projectId: "signin-52219",
-    storageBucket: "signin-52219.appspot.com",
-    messagingSenderId: "289536503233",
-    appId: "1:289536503233:web:6a6a256bdbb05eb78bd340",
-    measurementId: "G-9LLX3K4215"
+    apiKey: "AIzaSyC_m0HKXlcdtzO9zX0HjEyRHtOPfow-W0k",
+    authDomain: "my-app-fa32c.firebaseapp.com",
+    projectId: "my-app-fa32c",
+    storageBucket: "my-app-fa32c.appspot.com",
+    messagingSenderId: "506001695564",
+    appId: "1:506001695564:web:9e7ba8a63f285c3a5ca5e9",
+    measurementId: "G-FLD1DXE507"
 };
 
 // Initialize Firebase

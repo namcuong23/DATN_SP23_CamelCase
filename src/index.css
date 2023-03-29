@@ -13,3 +13,24 @@
 .opt-container input {
     @apply !mr-0 flex-1 py-5 outline-none;
 }
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+#loading-area{
+  width: 25px;
+  height: 25px;
+  border: 2px solid #ccc; 
+  background-color: #FFF;
+  animation: spinner 1s linear infinite;
+}
+
+
+
+

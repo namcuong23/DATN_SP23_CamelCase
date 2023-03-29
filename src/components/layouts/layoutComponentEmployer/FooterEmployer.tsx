@@ -2,11 +2,11 @@ import React from 'react'
 
 type Props = {}
 
-const Footer = (props: Props) => {
+const FooterEmployer = (props: Props) => {
     return (
         <>
             {/* Footer */}
-            <div className='bg-success text-white mt-3'>
+            <div className='bg-[#001744] text-white mt-3'>
                 <div className="container px-4 py-5" id="hanging-icons">
                     <h2 className="pb-2 border-bottom">Thông tin</h2>
                     <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
@@ -44,4 +44,4 @@ const Footer = (props: Props) => {
     )
 }
 
-export default Footer
+export default FooterEmployer

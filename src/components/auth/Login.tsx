@@ -1,150 +1,189 @@
-import { useState } from "react"
-import { getAuth, signInWithPhoneNumber, RecaptchaVerifier } from "firebase/auth";
-import { BsFillShieldLockFill, BsTelephoneFill } from "react-icons/bs"
-import { CgSpinner } from "react-icons/cg"
-import PhoneInput from 'react-phone-input-2'
-import 'react-phone-input-2/lib/style.css'
-import OtpInput from "otp-input-react"
-import { toast, Toaster } from "react-hot-toast";
-import { auth } from "../../firebase";
+import { useState } from 'react'
+import { message } from 'antd'
+import {
+    FacebookAuthProvider,
+    GoogleAuthProvider,
+    sendSignInLinkToEmail,
+    signInWithEmailAndPassword,
+    signInWithPopup
+} from 'firebase/auth'
+import React from 'react'
+import { useForm } from 'react-hook-form'
+import { useNavigate } from 'react-router-dom'
+import { auth } from '../../firebase'
+import { useSigninMutation } from '../../service/auth'
+import UseAuth from './UseAuth'
+
+
 
 const Login = () => {
-    const [otp, setOtp] = useState("")
-    const [ph, setPh] = useState("")
-    const [loading, setLoading] = useState(false)
-    const [showOTP, setShowOTP] = useState(false)
-    const [user, setUser] = useState(null)
-    const windowType: any = window
+    const { register, handleSubmit, formState: { errors } } = useForm<any>()
+    const navigate = useNavigate()
+    const [signin] = useSigninMutation()
+    const currentUser: any = UseAuth()
+    // console.log(currentUser);
 
-    const onCapchaVerify = () => {
-        if (!windowType.recaptchaVerifier) {
-            windowType.recaptchaVerifier = new RecaptchaVerifier(
-                'recaptcha-container',
-                {
-                    size: 'invisible',
-                    callback: (response: any) => {
-                        // reCAPTCHA solved, allow signInWithPhoneNumber.
-                        onSignup()
-                    },
-                    "expired-callback": () => {
-                        // Response expired. Ask user to solve reCAPTCHA again.
-                    }
-                },
-                auth
-            );
-        }
-    }
 
-    const onSignup = async () => {
-        setLoading(true)
-        onCapchaVerify()
+    const signIn = async (user: any) => {
+        const email = user.email
+        const password = user.password
 
-        const appVerifier = windowType.recaptchaVerifier;
-        const phoneNumber = '+' + ph
-        await signInWithPhoneNumber(auth, phoneNumber, appVerifier)
-            .then((confirmationResult) => {
-                // SMS sent. Prompt user to type the code from the message, then sign the
-                // user in with confirmationResult.confirm(code)
-                console.log('3');
-                windowType.confirmationResult = confirmationResult
-                setLoading(false);
-                setShowOTP(true)
-                toast.success('OTP sended successfully!')
-            }).catch((error) => {
-                console.log(error);
-                setLoading(false);
-            });
-    }
-
-    const onOTPVerify = () => {
-        setLoading(true);
-        windowType.confirmationResult.confirm(otp).then(async (res: any) => {
-            console.log(res);
-            setUser(res.user)
-            setLoading(false);
-        }).className((err: any) => {
-            console.log(err);
-            setLoading(false);
-        })
-    }
-
-    return (
-        <section className="bg-emerald-500 flex items-center justify-center h-screen">
-            <div>
-                <Toaster toastOptions={{ duration: 4000 }} />
-                <div id="recaptcha-container"></div>
-                {
-                    user ?
-                        <h2 className="text-center text-white font-medium text-2xl">
-                            Login Success
-                        </h2> :
-                        <div className="w-80 flex flex-col gap-4 rounded-lg p-4">
-                            <h1 className="text-center leading-normal text-white font-medium text-3xl mb-6">
-                                Otp Authentication
-                            </h1>
-
-                            {
-                                showOTP ?
-                                    <>
-                                        <div className="bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full">
-                                            <BsFillShieldLockFill size={30} />
-                                        </div>
-                                        <label
-                                            htmlFor="ph"
-                                            className="font-bold text-xl text-white text-center"
-                                        >
-                                            Enter your OTP
-                                        </label>
-                                        <OtpInput
-                                            value={otp}
-                                            onChange={setOtp}
-                                            OTPLength={6}
-                                            otpType="number"
-                                            disabled={false}
-                                            autoFocus
-                                            className="opt-container"
-                                        ></OtpInput>
-                                        <button
-                                            onClick={onOTPVerify}
-                                            className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded">
-                                            {
-                                                loading && <CgSpinner size={20} className="mt-1 animate-spin" />
-                                            }
-
-                                            <span>Verify OTP</span>
-                                        </button>
-                                    </> :
-                                    <>
-                                        <div className="bg-white text-emerald-500 w-fit mx-auto p-4 rounded-full">
-                                            <BsTelephoneFill size={30} />
-                                        </div>
-                                        <label
-                                            htmlFor=""
-                                            className="font-bold text-xl text-white text-center"
-                                        >
-                                            Xác thực bằng số điện thoại
-                                        </label>
-                                        <PhoneInput
-                                            country={"vn"}
-                                            value={ph}
-                                            onChange={setPh} />
-                                        <button
-                                            onClick={onSignup}
-                                            className="bg-emerald-600 w-full flex gap-1 items-center justify-center py-2.5 text-white rounded">
-                                            {
-                                                loading && <CgSpinner size={20} className="mt-1 animate-spin" />
-                                            }
-
-                                            <span>Gửi mã</span>
-                                        </button>
-                                    </>
-                            }
-
-                        </div>
+        const actionCodeSettings = {
+            // URL you want to redirect back to. The domain (www.example.com) for this
+            // URL must be in the authorized domains list in the Firebase Console.
+            url: 'http://127.0.0.1:5173/',
+            // This must be true.
+            handleCodeInApp: true
+        };
+        await signInWithEmailAndPassword(auth, email, password)
+            .then(async (userCredential: any) => {
+                // Signed in 
+                const login = await signin(user)
+                if (login) {
+                    message.info(`Signed in successfully!`)
+                    const userInfo = userCredential.user;
+                    console.log('login', user);
+                    currentUser.displayName = userInfo.name
+                    // console.log('auth', currentUser);
+                    // navigate('/')
+                    // await sendSignInLinkToEmail(auth, email, actionCodeSettings)
+                    //     .then(() => {
+                    //         message.info(`Link sent to ${email}`)
+                    //     }).catch((error) => {
+                    //         const errorCode = error.code;
+                    //         console.log(errorCode)
+                    //     })
 
                 }
+
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log(errorCode)
+            });
+    }
+    const signInWithFacebook = async () => {
+        const provider = new FacebookAuthProvider()
+        await signInWithPopup(auth, provider)
+            .then((result: any) => {
+                // The signed-in user info.
+                const user = result.user;
+                console.log(user);
+
+                // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+                const credential: any = FacebookAuthProvider.credentialFromResult(result);
+                const accessToken = credential.accessToken;
+                message.info("Sign in with Facebook!")
+                navigate('/')
+            })
+            .catch((error) => {
+                // Handle Errors here.
+                const errorCode = error.code;
+                console.log(errorCode)
+
+            });
+
+    }
+    const signInWithGoogle = async () => {
+        const provider = new GoogleAuthProvider()
+        await signInWithPopup(auth, provider)
+            .then((result) => {
+                const credential: any = GoogleAuthProvider.credentialFromResult(result)
+                const token = credential.accessToken
+                console.log(result.user);
+                message.info("Login with Google!")
+                navigate('/')
+
+            }).catch((error) => {
+                message.info(error.data)
+            })
+    }
+    return (
+        <>
+            <div className="card o-hidden border-0 text-dark">
+                <div className="card-body p-0">
+                    {/* Nested Row within Card Body */}
+                    <div className="row p-0">
+                        <div className="col-lg-5 min-h-[100vh]">
+                            <div className="p-5">
+                                <div className="">
+                                    <h1 className="h4 text-gray-900 fw-bold">
+                                        Chào mừng bạn trở lại,
+                                    </h1>
+                                    {/* <div className="container">
+                                        <div id="loading-area">
+                                        </div>
+                                    </div> */}
+                                    <p className="text-gray-900 mb-4">This is slogan of website.</p>
+                                </div>
+                                <form onSubmit={handleSubmit(signIn)}>
+                                    <div className="form-group">
+                                        <label className="text-dark fw-bold">Email</label>
+                                        <input {...register('email', { required: true })}
+                                            type="email"
+                                            className={errors.email ? "form-control border-red-500" : "form-control"}
+                                            name='email' />
+                                        {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
+                                    </div>
+                                    <div className="form-group">
+                                        <label className="text-dark fw-bold">Mật khẩu</label>
+                                        <div className='relative flex items-center'>
+                                            <input {...register('password', { required: true, minLength: 6 })}
+                                                type="password"
+                                                className={errors.password ? "form-control border-red-500" : "form-control"}
+                                                name='password'
+                                                id='password' />
+                                            <i className="eye fa fa-eye-slash cursor-pointer absolute right-[10px]" />
+                                        </div>
+
+                                        {errors.password && errors.password.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mật khẩu</span>}
+                                        {errors.password && errors.password.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu chứa từ 6 ký tự trở lên.</span>}
+                                    </div>
+                                    <div className="form-group">
+                                        <div className='flex items-center justify-between'>
+                                            <div className="space-x-1">
+                                                <input type="checkbox" className="" />
+                                                <label className="small">Remember Me</label>
+                                            </div>
+                                            <div className="">
+                                                <a className="small" href="">Quên mật khẩu?</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button onClick={signIn} className="btn btn-primary btn-user btn-block">
+                                        Đăng nhập
+                                    </button>
+
+                                </form>
+                                <div className='text-center py-3'>Hoặc</div>
+                                <div className='flex items-center space-x-3'>
+                                    <button onClick={signInWithFacebook}
+                                        className="bg-blue-600 hover:bg-blue-700 text-white w-100 p-[6px] rounded">
+                                        <i className="fab fa-facebook-f fa-fw" /> Facebook
+                                    </button>
+                                    <button onClick={signInWithGoogle} className="bg-red-500 hover:bg-red-600 text-white w-100 p-[6px] rounded">
+                                        <i className="fab fa-google fa-fw" /> Google
+                                    </button>
+                                </div>
+
+                                <div className="text-dark my-4">
+                                    Bạn chưa có tài khoản?
+                                    <span>
+                                        <a className="fw-bold" href=''> Đăng ký ngay </a>
+                                    </span>
+                                </div>
+                                <hr />
+                                <div>
+                                    <div className="fw-bold pb-0 mt-4">Bạn gặp khó khăn khi tạo tài khoản?</div>
+                                    <div>Vui lòng gọi tới số 0123456789 (giờ hành chính).</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-lg-7 d-none d-lg-block bg-gray-200" />
+                    </div>
+                </div>
             </div>
-        </section>
+        </>
     )
 }
 
