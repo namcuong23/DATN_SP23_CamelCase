@@ -10,6 +10,8 @@ import { useAppDispatch } from '../../app/hook';
 import { useSignupMutation } from '../../service/auth';
 import { useNavigate } from 'react-router-dom';
 import PhoneInput from 'react-phone-input-2'
+import { AiFillTaobaoSquare } from 'react-icons/ai';
+import { CgSpinner } from "react-icons/cg"
 
 const Register = () => {
     const [value, setValue] = useState(null);
@@ -19,12 +21,12 @@ const Register = () => {
     };
 
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
-    const dispatch = useAppDispatch()
     const navigate = useNavigate()
     const [signup] = useSignupMutation()
+    const [loading, setLoading] = useState(false)
 
     const signUp: SubmitHandler<any> = async (user: any) => {
-        console.log(user);
+        setLoading(true)
         const email = user.email
         const password = user.password
 
@@ -44,6 +46,7 @@ const Register = () => {
                 })
                 if (register) {
                     console.log(userInfo);
+                    setLoading(false)
                     message.info("Created account successfully!")
                     navigate('/login')
 
@@ -215,7 +218,11 @@ const Register = () => {
                                         </p>
                                     </div>
                                     <div>
-                                        <button onClick={signUp} className="btn btn-primary btn-block">
+                                        <button onClick={signUp} className="btn btn-primary btn-block flex items-center justify-center py-2 gap-2">
+                                            {
+                                                loading &&
+                                                <CgSpinner size={20} className="mt-1 animate-spin" />
+                                            }
                                             Đăng ký
                                         </button>
                                     </div>

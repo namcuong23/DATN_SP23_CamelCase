@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom'
 import { auth } from '../../firebase'
 import { useSigninMutation } from '../../service/auth'
 import UseAuth from './UseAuth'
+import { CgSpinner } from "react-icons/cg"
 
 
 
@@ -21,10 +22,12 @@ const Login = () => {
     const navigate = useNavigate()
     const [signin] = useSigninMutation()
     const currentUser: any = UseAuth()
+    const [type, setType] = useState(false)
+    const [loading, setLoading] = useState(false)
     // console.log(currentUser);
 
-
     const signIn = async (user: any) => {
+        setLoading(true)
         const email = user.email
         const password = user.password
 
@@ -40,12 +43,13 @@ const Login = () => {
                 // Signed in 
                 const login = await signin(user)
                 if (login) {
-                    message.info(`Signed in successfully!`)
                     const userInfo = userCredential.user;
                     console.log('login', user);
-                    currentUser.displayName = userInfo.name
+                    currentUser.displayName = userInfo.displayName
+                    setLoading(false)
+                    message.info('Login')
                     // console.log('auth', currentUser);
-                    // navigate('/')
+                    navigate('/')
                     // await sendSignInLinkToEmail(auth, email, actionCodeSettings)
                     //     .then(() => {
                     //         message.info(`Link sent to ${email}`)
@@ -129,12 +133,13 @@ const Login = () => {
                                         <label className="text-dark fw-bold">Mật khẩu</label>
                                         <div className='relative flex items-center'>
                                             <input {...register('password', { required: true, minLength: 6 })}
-                                                type="password"
+                                                type={"password"}
                                                 className={errors.password ? "form-control border-red-500" : "form-control"}
                                                 name='password'
                                                 id='password' />
-                                            <i className="eye fa fa-eye-slash cursor-pointer absolute right-[10px]" />
+
                                         </div>
+
 
                                         {errors.password && errors.password.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mật khẩu</span>}
                                         {errors.password && errors.password.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu chứa từ 6 ký tự trở lên.</span>}
@@ -150,11 +155,18 @@ const Login = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <button onClick={signIn} className="btn btn-primary btn-user btn-block">
+                                    <button onClick={signIn} className="btn btn-primary btn-user btn-block flex items-center justify-center py-2 gap-2">
+                                        {
+                                            loading &&
+                                            <CgSpinner size={20} className="mt-1 animate-spin" />
+                                        }
                                         Đăng nhập
                                     </button>
 
                                 </form>
+                                {/* <button type='button' onClick={changeType()}>
+                                    show button
+                                </button> */}
                                 <div className='text-center py-3'>Hoặc</div>
                                 <div className='flex items-center space-x-3'>
                                     <button onClick={signInWithFacebook}

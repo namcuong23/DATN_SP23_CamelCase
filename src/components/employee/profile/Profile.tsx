@@ -69,7 +69,7 @@ const Profile = () => {
                             </div>
                             <div className='px-4 text-[#333333] cursor-pointer'>
                                 <div className='border-y py-3'>
-                                    <div className='flex items-center'>
+                                    <div className='flex items-center mx-3'>
                                         <div className='w-50 flex items-center'>
                                             <div className='w-[38%]'>Họ và tên</div>
                                             <div className='w-[62%] font-[700]'>Tên của bạn</div>
@@ -81,7 +81,7 @@ const Profile = () => {
                                     </div>
                                 </div>
                                 <div className='border-b py-3'>
-                                    <div>
+                                    <div className='mx-3'>
                                         <div className='w-50 flex items-center'>
                                             <div className='w-[38%]'>Email</div>
                                             <div className='w-[62%] font-[700]'>example@gmail.com</div>
@@ -89,7 +89,7 @@ const Profile = () => {
                                     </div>
                                 </div>
                                 <div className='border-b py-3'>
-                                    <div>
+                                    <div className='mx-3'>
                                         <div className='w-50 flex items-center'>
                                             <div className='w-[38%]'>Số điện thoại</div>
                                             <div className='w-[62%] font-[700]'>0123456789</div>
@@ -97,7 +97,7 @@ const Profile = () => {
                                     </div>
                                 </div>
                                 <div className='border-b py-3'>
-                                    <div className='flex items-center'>
+                                    <div className='flex items-center mx-3'>
                                         <div className='w-50 flex items-center'>
                                             <div className='w-[38%]'>Tỉnh/Thành phố</div>
                                             <div className='w-[62%] font-[700]'>Hà Nội</div>
@@ -109,7 +109,7 @@ const Profile = () => {
                                     </div>
                                 </div>
                                 <div className='border-0 py-3'>
-                                    <div>
+                                    <div className='mx-3'>
                                         <div className='w-50 flex items-center'>
                                             <div className='w-[38%]'>Địa chỉ</div>
                                             <div className='w-[62%] font-[700]'>Trịnh Văn Bô</div>

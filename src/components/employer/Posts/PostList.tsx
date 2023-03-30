@@ -124,11 +124,13 @@ const PostList = () => {
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
+            key: 'job_name',
             ...getColumnSearchProps('job_name'),
         },
         {
             title: 'Hình thức làm việc',
             dataIndex: 'working_form',
+            key: 'working_form',
             filters: [
                 {
                     text: 'online',
@@ -144,6 +146,7 @@ const PostList = () => {
         {
             title: 'Khu vực',
             dataIndex: 'work_location',
+            key: 'work_location',
             filters: [
                 {
                     text: 'HN',
@@ -159,6 +162,7 @@ const PostList = () => {
         {
             title: 'Ngày đăng',
             dataIndex: 'createdAt',
+            key: 'createdAt',
             render: (_, record) => (
                 <p>{(new Date(record.createdAt)).toLocaleString()}</p>
             ),
@@ -167,6 +171,7 @@ const PostList = () => {
         {
             title: 'Trạng thái',
             dataIndex: 'post_status',
+            key: 'post_status',
             render: (_, record) => (
                 <>
                     <Tag

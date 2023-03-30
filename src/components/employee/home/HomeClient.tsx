@@ -128,7 +128,7 @@ const HomeClient = () => {
                         {
                           posts ?
                             posts.map((post: any) =>
-                              <div className="sc-gJwTLC doaJYu col-4">
+                              <div key={post._id} className="sc-gJwTLC doaJYu col-4">
                                 <div className="swiper-slide">
                                   <div className="jobBlock recoJobs__job animated fadeIn take-1-second ">
                                     <div className="columns is-mobile cursor-pointer">

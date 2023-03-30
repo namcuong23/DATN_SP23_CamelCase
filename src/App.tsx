@@ -14,20 +14,33 @@ import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
 import Profile from "./components/employee/profile/Profile"
+import RedirectRoute from "./privateRoute/RedirectRoute"
+import PrivateRoute from "./privateRoute/PrivateRoute"
 
 function App() {
-
   return (
     <div className="App">
       <Routes>
         <Route path='otp' element={<OTPAuth />} />
         <Route path='email-auth' element={<EmailAuth />} />
-        <Route path='signup' element={<Register />} />
-        <Route path='login' element={<Login />} />
+        <Route path='signup' element={
+          <RedirectRoute>
+            <Register />
+          </RedirectRoute>
+        } />
+        <Route path='login' element={
+          <RedirectRoute>
+            <Login />
+          </RedirectRoute>
+        } />
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
-          <Route path="/works" element={<WorkPage />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="works" element={<WorkPage />} />
+          <Route path="profile" element={
+            <PrivateRoute>
+              <Profile />
+            </PrivateRoute>
+          } />
         </Route>
         <Route path='/home' element={<LayoutEmployer />}>
           <Route index element={<Home />} />
