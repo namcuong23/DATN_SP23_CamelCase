@@ -13,6 +13,8 @@ import PostDetail from "./components/employer/Posts/PostDetail"
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
+import LayoutAdmin from "./components/layouts/LayoutAdmin"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
 
 function App() {
 
@@ -33,6 +35,9 @@ function App() {
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />
           <Route path='posts/:id' element={<PostDetail />} />
+        </Route>
+        <Route path="/admin" element={<LayoutAdmin/>}>
+            <Route index element ={<HomeAdmin/>}/>
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
