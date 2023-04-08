@@ -15,13 +15,14 @@ import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
 import LayoutAdmin from "./components/layouts/LayoutAdmin"
-import HomeAdmin from "./components/admin/home/HomeAdmin"
+import HomeAdmin from "./components/Admin/home/HomeAdmin"
 import Profile from "./components/employee/profile/Profile"
 import RedirectRoute from "./privateRoute/RedirectRoute"
 // import PrivateRoute from "./privateRoute/PrivateRoute"
-import VoucherList from "./components/admin/Voucher/VoucherList"
-import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import VoucherList from "./components/Admin/Voucher/VoucherList"
+import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/Admin/Post/PostAdmin"
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
         </Route>
         <Route path="/admin" element={<LayoutAdmin/>}>
             <Route index element ={<HomeAdmin/>}/>
+            <Route path='posts' element={<PostAdmin />} />
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>

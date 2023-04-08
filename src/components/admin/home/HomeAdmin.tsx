@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react'
 import { useGetUsersQuery } from '../../../service/admin'
 import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
-import { User } from '../../../interFace/admin/users';
+import { User } from '../../../interface/admin/users';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 const HomeAdmin = () => {

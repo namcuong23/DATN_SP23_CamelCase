@@ -20,10 +20,10 @@ const PostList = () => {
     const date = new Date()
 
     const text = 'Are you sure to delete this post?';
+
     const [removePost] = useRemovePostMutation()
     const onHandleRemove = (id: string) => {
         console.log(id);
-
         const confirm: MessageType = message.info('Remove post successfully.')
         if (confirm !== null) {
             removePost(id)
@@ -170,9 +170,10 @@ const PostList = () => {
             render: (_, record) => (
                 <>
                     <Tag
-                        color={record.post_status ? "green" : "gold"}
-                        key={record.post_status ? "Đã duyệt" : "Đang chờ duyệt"}>
-                        {record.post_status ? "Đã duyệt" : "Đang chờ duyệt"}
+                        color={record.post_status ? "green" : "red"}
+                        key={record.post_status ? "Đã duyệt" : "Từ Chối"}>
+                        {record.post_status ? "Đã duyệt" : "Từ Chối"}
+                        
                     </Tag>
                 </>
             ),

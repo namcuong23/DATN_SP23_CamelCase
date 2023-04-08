@@ -1,5 +1,7 @@
 import React from 'react'
-// import '../../../assets/img/admin/images/'
+import { Link } from 'react-router-dom'
+// import '../../../assets/img/admin/images/'\
+
 type Props = {}
 
 const SideBar = (props: Props) => {
@@ -33,6 +35,14 @@ const SideBar = (props: Props) => {
                 <a href="#" className="nk-menu-link">
                   <span className="nk-menu-icon"><em className="icon ni ni-dashboard-fill" /></span>
                   <span className="nk-menu-text">Quản lý người dùng</span>
+                </a>
+                
+              </li>{/* .nk-menu-item */}
+
+              <li className="nk-menu-item has-sub w-full ">
+                <a href="#" className="nk-menu-link">
+                  <span className="nk-menu-icon"><em className="icon ni ni-dashboard-fill" /></span>
+                  <span className="nk-menu-text"><Link to="/admin/posts">Quản lý bài viết</Link></span>
                 </a>
                 
               </li>{/* .nk-menu-item */}
