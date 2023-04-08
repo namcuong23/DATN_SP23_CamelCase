@@ -1,1 +1,0 @@
-declare module '../../assets/js/admin/scripts.js'
