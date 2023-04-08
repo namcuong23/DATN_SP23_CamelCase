@@ -12,9 +12,11 @@ import PostDetail from "./components/employer/Posts/PostDetail"
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
+import LayoutAdmin from "./components/layouts/LayoutAdmin"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
 import Profile from "./components/employee/profile/Profile"
 import RedirectRoute from "./privateRoute/RedirectRoute"
-import PrivateRoute from "./privateRoute/PrivateRoute"
+// import PrivateRoute from "./privateRoute/PrivateRoute"
 import VoucherList from "./components/admin/Voucher/VoucherList"
 import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
 import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
@@ -58,9 +60,9 @@ function App() {
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
           <Route path="profile" element={
-            <PrivateRoute>
+            // <PrivateRoute>
               <Profile />
-            </PrivateRoute>
+            // </PrivateRoute>
           } />
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
@@ -80,6 +82,9 @@ function App() {
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />
+        </Route>
+        <Route path="/admin" element={<LayoutAdmin/>}>
+            <Route index element ={<HomeAdmin/>}/>
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>

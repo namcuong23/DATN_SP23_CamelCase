@@ -14,6 +14,7 @@ import { postApi } from "../service/post";
 import { profileApi } from "../service/manage_profile"
 import { voucherApi } from "../service/admin_voucher"
 import { authApi } from "../service/auth";
+import { adminApi } from "../service/admin";
 import { cvApi } from "../service/manage_cv";
 import { authEprApi } from "../service/auth_employer";
 
@@ -29,7 +30,8 @@ const rootReducer = combineReducers({
     [voucherApi.reducerPath]: voucherApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [cvApi.reducerPath]: cvApi.reducer,
-    [authEprApi.reducerPath]: authEprApi.reducer
+    [authEprApi.reducerPath]: authEprApi.reducer,
+    [adminApi.reducerPath]: adminApi.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -47,10 +49,10 @@ export const store = configureStore({
         postApi.middleware,
         cvApi.middleware,
         authApi.middleware,
-        authEprApi.middleware
+        authEprApi.middleware,
+        adminApi.middleware
     )
-}
-)
+})
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>
