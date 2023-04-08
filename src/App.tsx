@@ -18,6 +18,7 @@ import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
 import Profile from "./components/employee/profile/Profile"
+import LayoutAdmin from "./components/layouts/LayoutAdmin"
 
 function App() {
 
@@ -43,11 +44,12 @@ function App() {
           <Route path='posts/:id' element={<PostDetail />} />
           <Route path='manage-profile' element={<ProfileList />} />
         </Route>
-        <Route path='/admin' element={<LayoutEmployer />}>
+        <Route path='/admin' element={<LayoutAdmin />}>
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />
         </Route>
+
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
     </div>

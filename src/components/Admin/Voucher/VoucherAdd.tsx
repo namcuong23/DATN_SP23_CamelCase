@@ -25,6 +25,7 @@ const VoucherAdd = () => {
             <div style={{ maxWidth: '700px' }} className='mx-auto'>
                 <h1 className='mb-3 text-center fw-normal'>Tạo gói mới</h1>
                 <Form onFinish={onHandleAdd} form={form} name="add" layout="vertical">
+
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
@@ -91,8 +92,6 @@ const VoucherAdd = () => {
                             </Form.Item>
                         </div>
                     </div>
-
-
 
                     <Form.Item className='text-center'>
                         <Button className='bg-success text-white' htmlType="submit">
