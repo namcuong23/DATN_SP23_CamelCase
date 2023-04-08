@@ -182,11 +182,17 @@ const PostList = () => {
             key: 'post_status',
             render: (_, record) => (
                 <>
-                    <Tag
-                        color={record.post_status ? "green" : "gold"}
-                        key={record.post_status ? "Đã duyệt" : "Đang chờ duyệt"}>
-                        {record.post_status ? "Đã duyệt" : "Đang chờ duyệt"}
-                    </Tag>
+                    {
+                        record.post_status == null ? <p>Đang chờ duyệt</p>
+                            :
+                            <Tag
+                                color={record.post_status ? "green" : "gold"}
+                                key={record.post_status ? "Đã duyệt" : "Đang chờ duyệt"}>
+                                {record.post_status ? "Đã duyệt" : "Đang chờ duyệt"}
+                            </Tag>
+                    }
+
+
                 </>
             ),
             // filters: [
