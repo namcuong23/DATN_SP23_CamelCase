@@ -10,8 +10,17 @@ export const adminApi = createApi({
             query: () => '/users',
             providesTags: ['User']
         }),
+        updateUser: builder.mutation<User, Partial<User>>({
+            query: ({ ...patch }) => ({
+              url: `/users`,
+              method: 'PATCH',
+              body: patch
+            }),
+            invalidatesTags: ['User']
+          })
     })
 });
 export const {
     useGetUsersQuery,
+    useUpdateUserMutation,
 } = adminApi
