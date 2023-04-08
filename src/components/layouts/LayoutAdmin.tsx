@@ -3,7 +3,7 @@ import { Outlet } from 'react-router-dom';
 import Header from './LayoutComponentAdmin/Header';
 import Footer from './LayoutComponentAdmin/Footer';
 import Region from './LayoutComponentAdmin/Region';
-import SideBar from './LayoutComponentAdmin/SideBar';
+
 import '../../assets/css/adminCss/dashlite.css'
 import '../../assets/css/adminCss/theme.css'
 
@@ -14,7 +14,7 @@ const LayoutAdmin = (props: Props) => {
         <div className='nk-body bg-lighter npc-general has-sidebar'>
             <div className='nk-app-root'>
                 <div className='nk-main'>
-                    <SideBar />
+                    {/* <SideBar /> */}
                     <div className='nk-wrap'>
                     <Header />
                     <Outlet />
