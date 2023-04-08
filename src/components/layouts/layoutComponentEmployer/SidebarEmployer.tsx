@@ -54,7 +54,7 @@ const SidebarEmployer = (props: Props) => {
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink to={'/manage-profile'} className='d-flex align-items-center'>
+                        <NavLink to={'/homne/manage-profile'} className='d-flex align-items-center'>
                             <SnippetsOutlined className='text-success' />
                             <span className='ms-3'>Quản lý hồ sơ</span>
                         </NavLink>

@@ -3,6 +3,9 @@ import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import IPost from '../../../interface/post'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
+import UseAuth from '../../auth/UseAuth';
+import { useGetProfileQuery } from '../../../service/manage_profile';
+import ImanageProfile from '../../../interface/manageProfile';
 
 const PostEdit = () => {
     const navigate = useNavigate()
@@ -13,11 +16,14 @@ const PostEdit = () => {
     form.setFieldsValue(post)
 
     const [editPost] = useEditPostMutation()
+    const currentUser: any = UseAuth()
+    const data: any = useGetProfileQuery(currentUser?.email)
+    const profile: ImanageProfile = data.currentData
     const onHandleEdit = (post: IPost) => {
         console.log(post);
         try {
-            editPost({ ...post, post_status: false, user_id: 0, _id: id })
-            message.info('Sửa thành công.')
+            editPost({ ...post, post_status: false, user_id: profile?._id, _id: id })
+            message.success('Sửa thành công.')
             navigate('/home/posts')
         } catch (error) {
 

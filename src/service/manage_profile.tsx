@@ -11,8 +11,17 @@ export const profileApi: any = createApi({
             providesTags: ['profile']
         }),
         getProfile: builder.query<ImanageProfile, string>({
-            query: (id: string) => `/profiles/${id}`,
+            query: (email: string) => `/profiles/${email}`,
             providesTags: ['profile']
+        }),
+        addProfile: builder.mutation({
+            query: (profile: ImanageProfile) => ({
+                url: `/profiles`,
+                method: "POST",
+                body: profile
+            }),
+            invalidatesTags: ['profile']
+
         }),
         removeProfile: builder.mutation({
             query: (id: string) => ({
@@ -44,6 +53,7 @@ export const profileApi: any = createApi({
 export const {
     useGetProfilesQuery,
     useGetProfileQuery,
+    useAddProfileMutation,
     useRemoveProfileMutation,
     useApproveProfileMutation,
     useRefuseProfileMutation,

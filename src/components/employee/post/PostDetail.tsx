@@ -1,92 +1,41 @@
-import { Button, message, Modal, Popconfirm, Space, Table } from 'antd'
-import { useState } from 'react'
+import { message } from 'antd'
 import { useParams } from 'react-router-dom'
+import ImanageProfile from '../../../interface/manageProfile'
+import { useAddCvMutation } from '../../../service/manage_cv'
+import { useGetProfileQuery } from '../../../service/manage_profile'
 import { useGetPostQuery } from '../../../service/post'
-import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
-import { useGetCvsByPostIdQuery, useRemoveCvMutation } from '../../../service/manage_cv'
+import UseAuth from '../../auth/UseAuth'
 
-const PostDetail = () => {
+const PostDetailEp = () => {
     const { id } = useParams()
-    const { data: post } = useGetPostQuery(id);
-    const [open, setOpen] = useState(false);
-    const text: string = 'Are you sure to delete this CV?';
-    const { data } = useGetCvsByPostIdQuery(post?._id)
-    const cvs: any = data?.cvs
-    console.log(cvs);
+    const { data: post } = useGetPostQuery(id)
 
-    const [removeCv] = useRemoveCvMutation()
-    const onHandleRemove = (id: string) => {
-        const remove = removeCv(id)
-        if (remove) {
-            message.info("Xóa thành công.")
+    const currentUser: any = UseAuth()
+    const data: any = useGetProfileQuery(currentUser?.email)
+    const profile: ImanageProfile = data.currentData
+    const [addCv] = useAddCvMutation()
+    const applyJob = () => {
+        try {
+            const apply = addCv({
+                name: profile?.last_name + " " + profile?.first_name,
+                email: profile?.email,
+                phone: profile?.phone,
+                date: profile?.birth_day,
+                post_id: post._id
+            })
+
+            if (apply) {
+                message.info('Nộp đơn thành công.')
+            }
+        } catch (error) {
+            console.log(error);
         }
     }
-
-    const showModal = () => {
-        setOpen(true);
-    };
-
-    const handleCancel = (e: React.MouseEvent<HTMLElement>) => {
-        console.log(e);
-        setOpen(false);
-    };
-
-    const columns = [
-        {
-            title: 'Họ và tên',
-            dataIndex: 'name',
-            key: 'name',
-        },
-        {
-            title: 'Ngày sinh',
-            dataIndex: 'date',
-            key: 'date',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'phone',
-            key: 'phone',
-        },
-        {
-            title: 'Ngày nộp',
-            dataIndex: 'createdAt',
-            key: 'createdAt',
-            render: (_: any, record: any) => (
-                <p>{(new Date(record.createdAt)).toLocaleString()}</p>
-            ),
-        },
-        {
-            title: 'Hành động',
-            dataIndex: 'key',
-            key: 'key',
-            render: (_: any, record: any) => (
-                <Space size="middle">
-                    {/* <NavLink to={`/home/posts/${record._id}`}> */}
-                    <EyeOutlined className='text-dark' />
-                    {/* </NavLink> */}
-                    <Popconfirm placement="top"
-                        title={text}
-                        onConfirm={() => onHandleRemove(record._id)}
-                        okText="Yes"
-                        cancelText="No">
-                        <DeleteOutlined className='text-danger' />
-                    </Popconfirm>
-
-                </Space>
-            ),
-        },
-    ];
     return (
         <>
-            <div className=''>
+            <div className='bg-gray-100 pb-7'>
                 <div className='h-[100vh] container text-black'>
-                    <h1 className='my-3'>Post Detail</h1>
+                    <h1 className='py-3'>Post Detail</h1>
                     <div className='row bg-white p-5 h-[100vh]'>
                         <div className='col-8'>
                             <h1 className='text-3xl font-medium'>{post?.job_name}</h1>
@@ -181,29 +130,16 @@ const PostDetail = () => {
                                 </div>
                                 <button
                                     className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
-                                    onClick={showModal} >
-                                    Danh sách ứng viên
+                                    onClick={applyJob}>
+                                    Nộp đơn
                                 </button>
-                                <Modal
-                                    title="Danh sách ứng viên"
-                                    open={open}
-                                    onCancel={handleCancel}
-                                    okButtonProps={{ hidden: true }}
-                                    cancelButtonProps={{ hidden: true }}
-                                    width={1000}
-                                >
-                                    <Table dataSource={cvs} columns={columns} />
-                                </Modal>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className='mt-16'>
-                <FooterEmployer />
-            </div>
         </>
     )
 }
 
-export default PostDetail
+export default PostDetailEp

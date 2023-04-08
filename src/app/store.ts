@@ -11,10 +11,12 @@ import {
 } from 'redux-persist';
 import storage from "redux-persist/lib/storage";
 import { postApi } from "../service/post";
-import { profileApi} from "../service/manage_profile"
-import { voucherApi} from "../service/admin_voucher"
+import { profileApi } from "../service/manage_profile"
+import { voucherApi } from "../service/admin_voucher"
 import { authApi } from "../service/auth";
 import { adminApi } from "../service/admin";
+import { cvApi } from "../service/manage_cv";
+import { authEprApi } from "../service/auth_employer";
 
 const persistConfig = {
     key: 'root',
@@ -27,6 +29,8 @@ const rootReducer = combineReducers({
     [profileApi.reducerPath]: profileApi.reducer,
     [voucherApi.reducerPath]: voucherApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
+    [cvApi.reducerPath]: cvApi.reducer,
+    [authEprApi.reducerPath]: authEprApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
 })
 
@@ -38,9 +42,17 @@ export const store = configureStore({
         serializableCheck: {
             ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-    }).concat(postApi.middleware, profileApi.middleware, voucherApi.middleware, postApi.middleware, authApi.middleware,adminApi.middleware)
-}
-)
+    }).concat(
+        postApi.middleware,
+        profileApi.middleware,
+        voucherApi.middleware,
+        postApi.middleware,
+        cvApi.middleware,
+        authApi.middleware,
+        authEprApi.middleware,
+        adminApi.middleware
+    )
+})
 
 export type AppDispatch = typeof store.dispatch;
 export type RootState = ReturnType<typeof store.getState>

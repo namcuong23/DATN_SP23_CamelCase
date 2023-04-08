@@ -6,11 +6,15 @@ import { useRef, useState } from 'react';
 import { CheckOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import { useGetProfilesQuery, useRemoveProfileMutation } from '../../../service/manage_profile';
 import { MessageType } from 'antd/es/message/interface';
+// <<<<<<< HEAD
 import { useRefuseProfileMutation, useApproveProfileMutation } from '../../../service/manage_profile';
+// =======
+import { useGetCvsQuery } from '../../../service/manage_cv';
+// >>>>>>> 5849e9f51a8b552d7d69049d644b0cbda9008473
 
 type Props = {}
 const ProfileList = () => {
-    const { data: profiles, error, isLoading } = useGetProfilesQuery()
+    const { data: cvs, error, isLoading } = useGetCvsQuery()
     const remove = 'Bạn có muốn xoá hồ sơ này?';
     const approve = 'Bạn có phê duyệt hồ sơ này?';
     const reject = "Bạn có muốn từ chối hồ sơ này?"
@@ -156,7 +160,7 @@ const ProfileList = () => {
                     <h2 className='mt-0'>Quản lý hồ sơ ứng tuyển</h2>
                 </div>
             </div>
-            <Table columns={columns} dataSource={profiles} onChange={onChange} />
+            <Table columns={columns} dataSource={cvs} onChange={onChange} />
         </>
     )
 }

@@ -1,34 +1,42 @@
 import React, { useRef, useState } from 'react'
-import { useGetUsersQuery } from '../../../service/admin'
-import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
+import { useGetUsersQuery, useUpdateUserMutation } from '../../../service/admin'
+import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import { User } from '../../../interface/admin/users';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
+import { Popconfirm } from 'antd';
+import { Modal } from "antd";
 const HomeAdmin = () => {
   const { data: Users, error, isLoading } = useGetUsersQuery();
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [modalVisible, setModalVisible] = useState(false);
   const searchInput = useRef<InputRef>(null);
+  const handleUpdateClick = () => {
+    setModalVisible(true);
+  };
+
   interface DataType {
     key: string;
-    _id: String;
-    name: String;
-    phone: Number;
-    role:Number;
-    level_auth:Number;
-    email:String;
-    password:String
+    _id: string;
+    name: string;
+    phone: number;
+    role: number;
+    level_auth: number;
+    email: string;
+    password: string
   }
   type DataIndex = keyof DataType;
 
-  const data =Users?.map((item,index)=>({
-      key:String(index),
-      _id:item._id,
-      name:item.name,
-      phone:item.phone,
-      role:item.role,
-      level_auth:item.level_auth,
-      email:item.email,
-      password:item.password
+  const data = Users?.map((item, index) => ({
+    key: String(index),
+    _id: String(item._id),
+    name: String(item.name),
+    phone: Number(item.phone),
+    role: Number(item.role),
+    level_auth: Number(item.level_auth),
+    email: String(item.email),
+    password: String(item.password)
   }))
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
@@ -120,23 +128,27 @@ const HomeAdmin = () => {
         .toString()
         .toLowerCase()
         .includes((value as string).toLowerCase()),
-        onFilterDropdownOpenChange: (visible) => {
-          if (visible) {
-            setTimeout(() => searchInput.current?.select(), 100);
-          }
-        },
-        render: (text) =>
-        searchedColumn === dataIndex ? (
-          <Highlighter
-            highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-            searchWords={[searchText]}
-            autoEscape
-            textToHighlight={text ? text.toString() : ''}
-          />
-        ) : (
-          text
-        ),
-    })
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ''}
+        />
+      ) : (
+        text
+      ),
+  })
+  const handleDelete = (record: string) => {
+    console.log(record);
+
+  }
   const columns: ColumnsType<DataType> = [
     {
       title: 'id',
@@ -158,43 +170,115 @@ const HomeAdmin = () => {
       ...getColumnSearchProps('name'),
       ellipsis: true,
     },
-    {title:'Phone',
-    dataIndex:'phone',
-    key:'phone',
-    ...getColumnSearchProps('phone'),
+    {
+      title: 'Phone',
+      dataIndex: 'phone',
+      key: 'phone',
+      ...getColumnSearchProps('phone'),
     },
     {
-      title:'Email',
-      dataIndex:'email',
-      key:'email',
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
       ...getColumnSearchProps('email'),
-    }
+    },
+    {
+      title: 'Action',
+      key: 'action',
+      render: (_, record) => (
+        <Space size="middle">
+          <Button type="default" className='bg-yellow-400' onClick={handleUpdateClick}>Update</Button>
+          <Modal
+            open={modalVisible}
+            onCancel={() => setModalVisible(false)}
+            footer={null}
+          >
+            <Form initialValues={{
+              _id: record._id,
+              name: record.name,
+              phone: record.phone,
+              role: record.role,
+              password: record.password,
+              level_auth: record.level_auth,
+              email: record.email
+            }} onFinish={handleUpdateSubmit}>
+              <Form.Item name="_id" hidden>
+                <Input />
+              </Form.Item>
+              <Form.Item name="name" label="Name">
+                <Input />
+              </Form.Item>
+              <Form.Item name="phone" label="Phone">
+                <InputNumber />
+              </Form.Item>
+              <Form.Item name="role" label="Role">
+                <InputNumber />
+              </Form.Item>
+              <Form.Item name="level_auth" label="Level Auth">
+                <InputNumber />
+              </Form.Item>
+              <Form.Item name="email" label="Email">
+                <Input />
+              </Form.Item>
+              <Form.Item hidden name="password" label="Password">
+                <Input.Password />
+              </Form.Item>
+              <Form.Item>
+                <Button type="primary" htmlType="submit">
+                  Update
+                </Button>
+              </Form.Item>
+            </Form>
+          </Modal>
+          <Popconfirm
+            title="Are you sure to block this guy?"
+            onConfirm={() => handleDelete(record._id)}
+            okText="Yes"
+            okButtonProps={{
+              className: 'bg-red-500',
+            }}
+            cancelText="No"
+          >
+            <Button type="default" className='bg-red-400'>Block</Button> {/* Đổi màu nền của nút Delete sang màu đỏ */}
+          </Popconfirm>
+        </Space>
+
+      ),
+    },
   ];
+
+  const handleUpdateSubmit = (values: DataType) => {
+    console.log(values);
+    updateUser(values);
+    console.log(isUpdating);
+    
+    setModalVisible(false);
+  };
   return (
     <div className="nk-content ">
-    <div className="container-fluid">
-      <div className="nk-content-inner">
-        <div className="nk-content-body">
-          <div className="nk-block-head nk-block-head-sm">
-            <div className="nk-block-between">
-              <div className="nk-block-head-content">
-                <h4 className="nk-block-title page-title">Dashboard</h4>
-              </div>{/* .nk-block-head-content */}
-            </div>{/* .nk-block-between */}
-          </div>{/* .nk-block-head */}
-        <div className='nk-block'>
-        <>
-          <Space style={{ marginBottom: 16 }}>
-            <Button onClick={clearFilters}>Clear filters</Button>
-            <Button onClick={clearAll}>Clear filters and sorters</Button>
-          </Space>
-          <Table columns={columns} dataSource={data} onChange={handleChange} />
-        </>
-        </div>
+      <div className="container-fluid">
+        <div className="nk-content-inner">
+          <div className="nk-content-body">
+            <div className="nk-block-head nk-block-head-sm">
+              <div className="nk-block-between">
+                <div className="nk-block-head-content">
+                  <h4 className="nk-block-title page-title">Dashboard</h4>
+                </div>{/* .nk-block-head-content */}
+              </div>{/* .nk-block-between */}
+            </div>{/* .nk-block-head */}
+            <div className='nk-block'>
+              <>
+                <Space style={{ marginBottom: 16 }}>
+                  <Button onClick={clearFilters}>Clear filters</Button>
+                  <Button onClick={clearAll}>Clear filters and sorters</Button>
+                </Space>
+                <Table columns={columns} dataSource={data} onChange={handleChange} />
+              </>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   )
 }
 

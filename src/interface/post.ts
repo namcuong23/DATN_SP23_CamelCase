@@ -9,7 +9,7 @@ interface IPost {
     gender: string;
     work_location: string;
     post_status: boolean;
-    user_id: number;
+    user_id: string;
 }
 
 export default IPost

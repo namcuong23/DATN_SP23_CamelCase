@@ -1,11 +1,12 @@
-import React from 'react'
 import Header from './layoutComponentEmployer/HeaderEmployer'
-import Sidebar from './layoutComponentEmployer/SidebarEmployer'
 import { Outlet } from 'react-router-dom'
 
-type Props = {}
+import "../../assets/vendor/fontawesome-free/css/all.min.css"
+import "../../assets/css/index.css"
+// import "../../assets/css/footer.css"
+// import "../../assets/css/sb-admin-2.min.css"
 
-const LayoutEmployer = (props: Props) => {
+const LayoutEmployer = () => {
     return (
         <div>
             <Header />
