@@ -6,6 +6,7 @@ import { useRef, useState } from 'react';
 import { CheckOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import { useGetProfilesQuery, useRemoveProfileMutation } from '../../../service/manage_profile';
 import { MessageType } from 'antd/es/message/interface';
+import { useRefuseProfileMutation, useApproveProfileMutation } from '../../../service/manage_profile';
 
 type Props = {}
 const ProfileList = () => {
@@ -15,27 +16,29 @@ const ProfileList = () => {
     const reject = "Bạn có muốn từ chối hồ sơ này?"
     const [removeProfile] = useRemoveProfileMutation()
 
+    const [duyet] = useRefuseProfileMutation()
+    const onHandleApprove = (id: string) => {
+        console.log(id);
+        const confirm: MessageType = message.info('Duyệt thành công')
+        if (confirm !== null) {
+            duyet(id)
+        }
+    }
+
+    const [tuchoi] = useRefuseProfileMutation()
+    const onHandleRefuse = (id: string) => {
+        console.log(id);
+        const confirm: MessageType = message.info('Từ chối thành công')
+        if (confirm !== null) {
+            tuchoi(id)
+        }
+    }
+
     const onHandleRemove = (id: string) => {
         console.log(id);
         const confirm: MessageType = message.info('Xoá thành công')
         if (confirm !== null) {
             removeProfile(id)
-        }
-    }
-
-    const onHandleApprove = (id: string) => {
-        console.log(id);
-        const confirm: MessageType = message.info('Phê duyệt thành công')
-        if (confirm !== null) {
-            console.log(columns)
-        }
-    }
-
-    const onHandleReject = (id: string) => {
-        console.log(id);
-        const confirm: MessageType = message.info('Từ chối thành công')
-        if (confirm !== null) {
-
         }
     }
 
@@ -74,25 +77,29 @@ const ProfileList = () => {
             dataIndex: 'status',
             render: (_, record) => (
                 <>
-                    <Tag
-                        color={record.status ? "gold" : "green"}
-                        key={record.status ? "Đang chờ duyệt" : "Đã duyệt"}>
-                        {record.status ? "Đang chờ duyệt" : "Đã duyệt"}
-                    </Tag>
-                </>
-            ),
-            filters: [
-                {
-                    text: 'Đã duyệt',
-                    value: 'Đã duyệt',
-                },
-                {
-                    text: 'Đang chờ duyệt',
-                    value: 'Đang chờ duyệt',
-                },
-            ],
-            onFilter: (value: any, record) => record.status.indexOf(value) === 0,
-        },
+                                   {
+                        record.status == null ? <p>Đang chờ duyệt</p>
+                            :
+                            <Tag
+                                color={record.status ? "green" : "red"}
+                                key={record.status ? "Đã duyệt" : "Từ chối"}>
+                                {record.status ? "Đã duyệt" : "Từ chối"}
+                            </Tag>
+                    }
+                    </>
+                ),
+                filters: [
+                    {
+                        text: 'Đã duyệt',
+                        value: true,
+                    },
+                    {
+                        text: 'Từ Chối',
+                        value: false,
+                    },
+                ],
+                onFilter: (value: any, record) => record.post_status.indexOf(value) === 0,
+            },
         {
             title: 'Hành động',
             dataIndex: '_id',
@@ -102,7 +109,7 @@ const ProfileList = () => {
 
                     <Popconfirm placement="top"
                         title={reject}
-                        onConfirm={() => onHandleReject(record._id)}
+                        onConfirm={() => onHandleRefuse(record._id)}
                         okText="Đồng ý"
                         cancelText="Không">
                         <CloseOutlined className='text-dark' />
@@ -146,7 +153,7 @@ const ProfileList = () => {
         <>
             <div className='d-flex align-items-center justify-content-between mb-2'>
                 <div>
-                    <h2 className='mt-0'>Quản lý hồ sơ</h2>
+                    <h2 className='mt-0'>Quản lý hồ sơ ứng tuyển</h2>
                 </div>
             </div>
             <Table columns={columns} dataSource={profiles} onChange={onChange} />

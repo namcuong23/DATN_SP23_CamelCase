@@ -7,7 +7,7 @@ interface ImanageProfile {
     working: string;
     note: number;
     time: string;
-    status: string;
+    status: boolean;
 }
 
 export default ImanageProfile;

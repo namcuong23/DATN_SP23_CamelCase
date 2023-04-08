@@ -21,7 +21,23 @@ export const profileApi: any = createApi({
                 credentials: 'omit'
             }),
             invalidatesTags: ['profile']
-        })
+        }),
+        refuseProfile: builder.mutation<ImanageProfile, Partial<ImanageProfile> & Pick<ImanageProfile, '_id'>>({
+            query: (id: any) => ({
+                url: `/profiles/${id}/tuchoi`,
+                method: 'PUT',
+                body: id
+            }),
+            invalidatesTags: ['profile']
+        }),
+        approveProfile: builder.mutation<ImanageProfile, Partial<ImanageProfile> & Pick<ImanageProfile, '_id'>>({
+            query: (id: any) => ({
+                url: `/profiles/${id}/duyet`,
+                method: 'PUT',
+                body: id
+            }),
+            invalidatesTags: ['profile']
+        }),
     })
 })
 
@@ -29,4 +45,6 @@ export const {
     useGetProfilesQuery,
     useGetProfileQuery,
     useRemoveProfileMutation,
+    useApproveProfileMutation,
+    useRefuseProfileMutation,
 } = profileApi

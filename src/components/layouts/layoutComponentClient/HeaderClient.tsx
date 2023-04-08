@@ -18,8 +18,8 @@ const HeaderClient = () => {
         }
     }
     return (
-        <div>
-            <div className="sc-lkcIho hIprbQ menu-homepage ">
+        <>
+            <div className="sticky top-0 z-[1000] sc-lkcIho hIprbQ menu-homepage ">
                 <NavLink to={'/'} className='cursor-pointer mr-10'>
                     <img className='w-[50px] h-[50px]' src="https://www.corsair.com/ww/en/medias/sys_master/images/images/hb5/h6b/9597775020062/CA-9011185-NA/Gallery/VIRTUOSO_CARBON_01/-CA-9011185-NA-Gallery-VIRTUOSO-CARBON-01.png_515Wx515H" alt="" />
                 </NavLink>
@@ -72,13 +72,13 @@ const HeaderClient = () => {
                                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
                                     </svg>
-                                    <span>{currentUser.displayName}</span>
+                                    <span>{currentUser.displayName ? currentUser.displayName : "Hello"}</span>
                                 </button>
                                 <div className="text-[#555555] dropdown-menu dropdown-not-login animated fadeIn userProfileMenu-homepage mt-4"
                                     aria-labelledby="dropdownMenuButton1">
                                     <div className='flex items-center justify-between px-4 py-3'>
                                         <div>
-                                            <h3 className='text-[14px] font-[500] pb-[5px]'>{currentUser.displayName}</h3>
+                                            <h3 className='text-[14px] font-[500] pb-[5px]'>{currentUser.displayName ? currentUser.displayName : "Hello"}</h3>
                                             <h4>{currentUser.email}</h4>
                                         </div>
                                         <div>
@@ -210,7 +210,7 @@ const HeaderClient = () => {
                     }
                 </div >
             </div >
-        </div >
+        </ >
     )
 }
 

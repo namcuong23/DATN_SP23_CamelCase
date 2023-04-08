@@ -37,7 +37,23 @@ export const postApi: any = createApi({
                 credentials: 'omit'
             }),
             invalidatesTags: ['Post']
-        })
+        }),
+        approvePost: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
+            query: (id: any) => ({
+                url: `/posts/${id}/duyet`,
+                method: 'PUT',
+                body: id
+            }),
+            invalidatesTags: ['Post']
+        }),
+        refusePost: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
+            query: (id: any) => ({
+                url: `/posts/${id}/tuchoi`,
+                method: 'PUT',
+                body: id
+            }),
+            invalidatesTags: ['Post']
+        }),
     })
 })
 
@@ -58,4 +74,6 @@ export const {
     useAddPostMutation,
     useEditPostMutation,
     useRemovePostMutation,
+    useApprovePostMutation,
+    useRefusePostMutation,
 } = postApi

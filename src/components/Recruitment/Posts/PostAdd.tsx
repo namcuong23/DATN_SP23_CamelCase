@@ -15,7 +15,7 @@ const PostAdd = (props: Props) => {
     const onHandleAdd: SubmitHandler<IPost> = (post: IPost) => {
         console.log(post);
         try {
-            addPost({ ...post, post_status: false, user_id: 0 })
+            addPost({ ...post, post_status: null, user_id: 0 })
             message.info('Dang tin thanh cong.')
             navigate('/posts')
         } catch (error) { }
