@@ -20,7 +20,7 @@ const PostAdd = () => {
 
     const onHandleAdd: any = (post: IPost) => {
         try {
-            addPost({ ...post, post_status: false, user_id: profile?._id })
+            addPost({ ...post, post_status: null, user_id: profile?._id })
             console.log(post);
             message.success('Dang tin thanh cong.')
             navigate('/home/posts')
