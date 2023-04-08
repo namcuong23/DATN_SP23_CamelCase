@@ -5,18 +5,29 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import IPost from '../../../interface/post';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { useAddPostMutation } from '../../../service/post';
+import UseAuth from '../../auth/UseAuth';
+import ImanageProfile from '../../../interface/manageProfile';
+import { useGetProfileQuery } from '../../../service/manage_profile';
 
 const PostAdd = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const [addPost] = useAddPostMutation()
-    const onHandleAdd: SubmitHandler<IPost> = (post: IPost) => {
-        console.log(post);
+    const currentUser: any = UseAuth()
+    const data: any = useGetProfileQuery(currentUser?.email)
+    const profile: ImanageProfile = data.currentData
+    console.log(profile);
+
+    const onHandleAdd: any = (post: IPost) => {
         try {
-            addPost({ ...post, post_status: false, user_id: 0 })
-            message.info('Dang tin thanh cong.')
+            addPost({ ...post, post_status: false, user_id: profile?._id })
+            console.log(post);
+            message.success('Dang tin thanh cong.')
             navigate('/home/posts')
-        } catch (error) { }
+        } catch (error) {
+            console.log(error);
+
+        }
     }
     return (
         <>

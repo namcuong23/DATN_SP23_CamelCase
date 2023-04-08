@@ -6,10 +6,11 @@ import { useRef, useState } from 'react';
 import { CheckOutlined, DeleteOutlined, CloseOutlined } from '@ant-design/icons';
 import { useGetProfilesQuery, useRemoveProfileMutation } from '../../../service/manage_profile';
 import { MessageType } from 'antd/es/message/interface';
+import { useGetCvsQuery } from '../../../service/manage_cv';
 
 type Props = {}
 const ProfileList = () => {
-    const { data: profiles, error, isLoading } = useGetProfilesQuery()
+    const { data: cvs, error, isLoading } = useGetCvsQuery()
     const remove = 'Bạn có muốn xoá hồ sơ này?';
     const approve = 'Bạn có phê duyệt hồ sơ này?';
     const reject = "Bạn có muốn từ chối hồ sơ này?"
@@ -149,7 +150,7 @@ const ProfileList = () => {
                     <h2 className='mt-0'>Quản lý hồ sơ</h2>
                 </div>
             </div>
-            <Table columns={columns} dataSource={profiles} onChange={onChange} />
+            <Table columns={columns} dataSource={cvs} onChange={onChange} />
         </>
     )
 }

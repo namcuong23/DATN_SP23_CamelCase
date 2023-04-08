@@ -11,7 +11,15 @@ export const postApi: any = createApi({
             providesTags: ['Post']
         }),
         getPost: builder.query<IPost, string>({
-            query: (id: string) => `/posts/${id}`,
+            query: (id: string) => `/posts/${id}/detail`,
+            providesTags: ['Post']
+        }),
+        getPostsByUId: builder.query<IPost[], string>({
+            query: (uid: string) => `/posts/${uid}`,
+            providesTags: ['Post']
+        }),
+        getPostsDefUId: builder.query<IPost[], string>({
+            query: (uid: string) => `/posts/${uid}/def`,
             providesTags: ['Post']
         }),
         addPost: builder.mutation<IPost, Omit<IPost, '_id'>>({
@@ -54,6 +62,8 @@ export const formatDate = (inputDate: string): any => {
 
 export const {
     useGetPostsQuery,
+    useGetPostsByUIdQuery,
+    useGetPostsDefUIdQuery,
     useGetPostQuery,
     useAddPostMutation,
     useEditPostMutation,

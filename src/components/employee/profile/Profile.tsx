@@ -1,10 +1,73 @@
-import React from 'react'
+import { useState } from 'react'
+import ImanageProfile from '../../../interface/manageProfile'
+import { useGetProfileQuery } from '../../../service/manage_profile'
+import UseAuth from '../../auth/UseAuth'
+import { sendEmailVerification } from 'firebase/auth'
+import { message } from 'antd'
+import { NavLink } from 'react-router-dom'
+import { useGetUserByEmailQuery } from '../../../service/auth'
 
 const Profile = () => {
+    const currentUser: any = UseAuth()
+    const data: any = useGetProfileQuery(currentUser?.email)
+    const profile: ImanageProfile = data.currentData
+    const user = useGetUserByEmailQuery(currentUser?.email)
+    console.log(user);
+    const [hidden, setHidden] = useState(false)
+    const showForm = () => {
+        setHidden(!hidden)
+    }
+    const verifyEmail: any = () => {
+        sendEmailVerification(currentUser)
+            .then(() => {
+                message.info(`Email verification link sent to ${currentUser.email}`)
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                console.log(errorCode);
+            })
+    }
+
+    if (!user.currentData) {
+        return <div className='my-10'>
+            <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
+        </div>
+    }
     return (
         <>
-            <div className='bg-gray-100 h-[100vh] p-3'>
-                <div className='flex items-start w-100 gap-3'>
+            <div className='bg-gray-100 h-[100vh]'>
+                {/* SEARCH BAR */}
+                <div className='h-[80px] w-100 py-3 bg-white'>
+                    <div className='container flex items-center justify-center h-100 w-100'>
+                        <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2 rounded'>
+                            <div className='h-100 flex items-center bg-[#F4F4F7] w-[65%]'>
+                                <button className='w-[10%] flex justify-center'>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-search text-black" viewBox="0 0 16 16">
+                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                    </svg>
+                                </button>
+                                <input type="text" className='bg-[#F4F4F7] h-100 w-[90%] text-gray-600 focus:outline-none' placeholder='Tìm kiếm việc làm, công ty, kỹ năng' />
+                            </div>
+                            <div className='flex items-center bg-[#F4F4F7] border-l-[1px] border-[#979797] h-[24px] mr-1'></div>
+                            <div className='h-100 flex items-center bg-[#F4F4F7] w-[35%] px-3'>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 384 512">
+                                    <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z" />
+                                </svg>
+                                <select name="" id="" className='bg-[#F4F4F7] focus:outline-none w-100 pl-2'>
+                                    <option value="0" selected>Tất cả địa điểm</option>
+                                    <option value="1">Vĩnh Phúc</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className='h-100'>
+                            <div className='h-100'>
+                                <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded h-100 px-10'>Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {/* CONTENT */}
+                <div className='flex items-start w-100 gap-3 p-3'>
                     <aside className='rounded w-25 space-y-2'>
                         <section className='border-1 rounded bg-[#4A80F8] p-3'>
                             <div className='flex items-center space-x-4'>
@@ -19,7 +82,7 @@ const Profile = () => {
                                     <img src="" alt="" />
                                 </div>
                                 <div>
-                                    <h3 className='text-[20px] font-[600] text-white'>Đỗ Quốc Vương</h3>
+                                    <h3 className='text-[20px] font-[600] text-white'>{profile?.last_name + " " + profile?.first_name}</h3>
                                 </div>
                             </div>
                         </section>
@@ -67,60 +130,148 @@ const Profile = () => {
                             <div className='px-4 pb-4'>
                                 <h4 className='text-[22px] font-[700] text-[#333333]'>Thông tin cá nhân</h4>
                             </div>
-                            <div className='px-4 text-[#333333] cursor-pointer'>
-                                <div className='border-y py-3'>
-                                    <div className='flex items-center mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Họ và tên</div>
-                                            <div className='w-[62%] font-[700]'>Tên của bạn</div>
-                                        </div>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Ngày sinh</div>
-                                            <div className='w-[62%] font-[700]'>01/01/2023</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='border-b py-3'>
-                                    <div className='mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Email</div>
-                                            <div className='w-[62%] font-[700]'>example@gmail.com</div>
+                            <div>
+                                <div className={hidden ? 'px-4 text-[#333333]' : 'px-4 text-[#333333] hidden'}>
+                                    form
+                                    {/* <div className='border-y py-3'>
+                                        <div className='flex items-center mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Họ và tên</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.last_name + " " + profile?.first_name}</div>
+                                            </div>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Ngày sinh</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.birth_day}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='border-b py-3'>
-                                    <div className='mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Số điện thoại</div>
-                                            <div className='w-[62%] font-[700]'>0123456789</div>
+                                    <div className='border-b py-3'>
+                                        <div className='mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Email</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.email}</div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className='border-b py-3'>
-                                    <div className='flex items-center mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Tỉnh/Thành phố</div>
-                                            <div className='w-[62%] font-[700]'>Hà Nội</div>
-                                        </div>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Quận/Huyện</div>
-                                            <div className='w-[62%] font-[700]'>Nam Từ Liêm</div>
+                                    <div className='border-b py-3'>
+                                        <div className='mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Số điện thoại</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.phone}</div>
+                                            </div>
                                         </div>
                                     </div>
+                                    <div className='border-b py-3'>
+                                        <div className='flex items-center mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Tỉnh/Thành phố</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.province}</div>
+                                            </div>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Quận/Huyện</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.district}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='border-0 py-3'>
+                                        <div className='mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Địa chỉ</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.specific_address}</div>
+                                            </div>
+                                        </div>
+                                    </div> */}
                                 </div>
-                                <div className='border-0 py-3'>
-                                    <div className='mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Địa chỉ</div>
-                                            <div className='w-[62%] font-[700]'>Trịnh Văn Bô</div>
+                                <div className={hidden ? 'px-4 text-[#333333] hidden' : 'px-4 text-[#333333]'}>
+                                    <div className='border-y py-3'>
+                                        <div className='flex items-center mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Họ và tên</div>
+                                                <div className='w-[62%] font-[700]'>{currentUser?.displayName ? currentUser?.displayName : profile?.last_name + " " + profile?.first_name}</div>
+                                            </div>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Ngày sinh</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.birth_day}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='border-b py-3'>
+                                        <div className='mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Email</div>
+                                                {currentUser?.email ?
+                                                    <div className='w-[62%] font-[700] flex items-center gap-1'>
+                                                        {currentUser?.email}
+                                                        {
+                                                            currentUser?.emailVerified ?
+                                                                <span><i className='fas fa-check-circle text-green-500'></i></span>
+                                                                :
+                                                                <button onClick={verifyEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
+                                                        }
+
+                                                    </div>
+                                                    :
+                                                    <div className='w-[62%] font-[700] flex items-center gap-1'>
+                                                        {profile?.email}
+                                                        {
+                                                            currentUser?.emailVerified ?
+                                                                <span><i className='fas fa-check-circle text-green-500'></i></span>
+                                                                :
+                                                                <button onClick={verifyEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
+                                                        }
+
+                                                    </div>
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='border-b py-3'>
+                                        <div className='mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Số điện thoại</div>
+
+                                                {profile?.phone ?
+                                                    <>
+                                                        <div className='w-[62%] font-[700] flex items-center gap-1'>
+                                                            {profile?.phone}
+                                                            <button className='font-[100]'>
+                                                                <NavLink className={'hover:text-[#fd7e14] hover:no-underline'} to={'/otp'}>Xác thực</NavLink>
+                                                            </button>
+                                                        </div>
+                                                    </> : ""
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='border-b py-3'>
+                                        <div className='flex items-center mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Tỉnh/Thành phố</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.province}</div>
+                                            </div>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Quận/Huyện</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.district}</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className='border-0 py-3'>
+                                        <div className='mx-3'>
+                                            <div className='w-50 flex items-center'>
+                                                <div className='w-[38%]'>Địa chỉ</div>
+                                                <div className='w-[62%] font-[700]'>{profile?.specific_address}</div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <button className='bg-[#005AFF] mx-3 text-white font-[700] rounded p-[8px]' onClick={showForm}>Chỉnh sửa</button>
                         </section>
                     </main>
                 </div>
-            </div>
+            </div >
         </>
     )
 }

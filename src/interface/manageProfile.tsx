@@ -1,13 +1,13 @@
 interface ImanageProfile {
     _id: string;
-    name: string;
+    first_name: string;
+    last_name: string;
     email: string;
     phone: string;
-    date: number;
-    working: string;
-    note: number;
-    time: string;
-    status: string;
+    birth_day: string;
+    province: string;
+    district: number;
+    specific_address: string;
 }
 
 export default ImanageProfile;

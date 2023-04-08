@@ -17,7 +17,7 @@ export const voucherApi: any = createApi({
         addVoucher: builder.mutation<IAdmin_voucher, Omit<IAdmin_voucher, '_id'>>({
             query: (voucher: IAdmin_voucher) => ({
                 url: '/vouchers',
-                method: 'VOUCHER',
+                method: 'POST',
                 body: voucher
             }),
             invalidatesTags: ['voucher']

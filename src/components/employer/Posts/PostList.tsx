@@ -1,5 +1,5 @@
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { formatDate, useGetPostsQuery } from '../../../service/post';
+import { formatDate, useGetPostsByUIdQuery, useGetPostsQuery } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
@@ -11,21 +11,29 @@ import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
 import { useRemovePostMutation } from '../../../service/post'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer';
+import UseAuth from '../../auth/UseAuth';
+import ImanageProfile from '../../../interface/manageProfile';
+import { useGetProfileQuery } from '../../../service/manage_profile';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
 const PostList = () => {
-    const { data: posts, error, isLoading } = useGetPostsQuery()
+    // const { data: posts, error, isLoading } = useGetPostsQuery()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
     const date = new Date()
 
+    const currentUser: any = UseAuth()
+    const data: any = useGetProfileQuery(currentUser?.email)
+    const profile: ImanageProfile = data.currentData
+    const user = useGetUserEprByEmailQuery(currentUser?.email)
+    const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
+
     const text = 'Are you sure to delete this post?';
     const [removePost] = useRemovePostMutation()
     const onHandleRemove = (id: string) => {
-        console.log(id);
-
-        const confirm: MessageType = message.info('Remove post successfully.')
-        if (confirm !== null) {
+        const confirmMsg: MessageType = message.success('Xoa thanh cong.')
+        if (confirmMsg !== null) {
             removePost(id)
         }
     }
@@ -221,6 +229,13 @@ const PostList = () => {
     const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
+
+    if (!user.currentData) {
+        return <div className='mt-10 min-h-screen'>
+            <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
+        </div>
+    }
+
     if (isLoading)
         return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>
             <Spin tip="Loading" size="large">

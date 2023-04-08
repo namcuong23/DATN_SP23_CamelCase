@@ -7,6 +7,7 @@ import 'react-phone-input-2/lib/style.css'
 import OtpInput from "otp-input-react"
 import { toast, Toaster } from "react-hot-toast";
 import { auth } from "../../firebase";
+import UseAuth from "./UseAuth";
 
 const OTPAuth = () => {
     const [otp, setOtp] = useState("")
@@ -15,6 +16,8 @@ const OTPAuth = () => {
     const [showOTP, setShowOTP] = useState(false)
     const [user, setUser] = useState(null)
     const windowType: any = window
+    const currentUser: any = UseAuth()
+
 
     const onCapchaVerify = () => {
         if (!windowType.recaptchaVerifier) {
@@ -63,6 +66,9 @@ const OTPAuth = () => {
         windowType.confirmationResult.confirm(otp).then(async (res: any) => {
             console.log(res);
             setUser(res.user)
+            currentUser.phoneNumber = res.user.phoneNumber
+            console.log(currentUser);
+
             setLoading(false);
         }).className((err: any) => {
             console.log(err);
@@ -78,7 +84,7 @@ const OTPAuth = () => {
                 {
                     user ?
                         <h2 className="text-center text-white font-medium text-2xl">
-                            Login Success
+                            Verify Success
                         </h2> :
                         <div className="w-80 flex flex-col gap-4 rounded-lg p-4">
                             <h1 className="text-center leading-normal text-white font-medium text-3xl mb-6">
