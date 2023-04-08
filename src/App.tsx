@@ -61,7 +61,7 @@ function App() {
           <Route path="works" element={<WorkPage />} />
           <Route path="profile" element={
             // <PrivateRoute>
-              <Profile />
+            <Profile />
             // </PrivateRoute>
           } />
           <Route path='posts/:id' element={<PostDetailEp />} />
@@ -78,13 +78,11 @@ function App() {
         </Route>
 
         {/* ADMIN */}
-        <Route path='/admin' element={<LayoutEmployer />}>
+        <Route path='/admin' element={<LayoutAdmin />}>
+          <Route index element={<HomeAdmin />} />
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />
-        </Route>
-        <Route path="/admin" element={<LayoutAdmin/>}>
-            <Route index element ={<HomeAdmin/>}/>
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>

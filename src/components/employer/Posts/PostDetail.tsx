@@ -86,10 +86,10 @@ const PostDetail = () => {
         <>
             <div className=''>
                 <div className='h-[100vh] container text-black'>
-                    <h1 className='my-3'>Post Detail</h1>
+                    <h1 className='my-3 text-3xl'>Post Detail</h1>
                     <div className='row bg-white p-5 h-[100vh]'>
                         <div className='col-8'>
-                            <h1 className='text-3xl font-medium'>{post?.job_name}</h1>
+                            <h1 className='text-xl font-[700]'>{post?.job_name}</h1>
                             <div className='my-3 bg-gray-100 p-3 w-[680px]'>
                                 <div>
                                     Dịch vụ cần thuê:
@@ -199,7 +199,7 @@ const PostDetail = () => {
                     </div>
                 </div>
             </div>
-            <div className='mt-16'>
+            <div className='mt-20'>
                 <FooterEmployer />
             </div>
         </>
