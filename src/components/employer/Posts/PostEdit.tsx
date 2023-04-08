@@ -5,11 +5,13 @@ import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
 
 const PostEdit = () => {
-    const [form] = Form.useForm();
     const navigate = useNavigate()
     const { id } = useParams();
+
+    const [form] = Form.useForm();
     const { data: post } = useGetPostQuery(id as string)
-    console.log(post)
+    form.setFieldsValue(post)
+
     const [editPost] = useEditPostMutation()
     const onHandleEdit = (post: IPost) => {
         console.log(post);
@@ -26,7 +28,7 @@ const PostEdit = () => {
         <>
             <div className='mt-4'>
                 <h1 className='text-center text-3xl font-bold text-[#44454A]'>Chỉnh sửa bài viết</h1>
-                <Form layout="vertical" onFinish={onHandleEdit} form={form} initialValues={post}>
+                <Form layout="vertical" onFinish={onHandleEdit} form={form}>
                     <div className='max-w-[700px] mx-auto'>
                         <div className='d-flex align-items-top'>
                             <div>

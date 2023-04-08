@@ -6,7 +6,7 @@ const HeaderEmployer = () => {
     return (
         <>
             {/* Header */}
-            <div className='bg-gradient-to-r from-[#001744] via-[#001744] to-[#0053EB] d-flex justify-content-between align-items-center'>
+            <div className='sticky top-0 z-[1000] bg-gradient-to-r from-[#001744] via-[#001744] to-[#0053EB] d-flex justify-content-between align-items-center'>
                 <ul className='text-white'>
                     <li className='p-3 text-decoration-none text-white'>
                         <NavLink to={'/home'}

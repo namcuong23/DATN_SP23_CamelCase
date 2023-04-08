@@ -1,16 +1,17 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import {User} from "../interFace/admin/users";
 
 export const adminApi = createApi({
     reducerPath: 'admin',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
-    tagTypes: ['admin'],
-    endpoints: (builder: any) => ({
-        getProfiles: builder.query({
-            query: () => ({
-                url: '/profiles/users',
-                providesTags: ['admin']
-            }),
-            invalidatesTags: ['admin']
+    tagTypes: ['User'],
+    endpoints: (builder) => ({
+        getUsers: builder.query<User[], void>({
+            query: () => '/users',
+            providesTags: ['User']
         }),
     })
-})
+});
+export const {
+    useGetUsersQuery,
+} = adminApi

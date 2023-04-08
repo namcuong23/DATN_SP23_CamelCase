@@ -1,10 +1,91 @@
+import { Button, Modal, Popconfirm, Space, Table } from 'antd'
+import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetPostQuery } from '../../../service/post'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
+import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 
 const PostDetail = () => {
     const { id } = useParams()
     const { data: post } = useGetPostQuery(id)
+    const [open, setOpen] = useState(false);
+    const text: string = 'Are you sure to delete this post?';
+
+    const showModal = () => {
+        setOpen(true);
+    };
+
+    const handleCancel = (e: React.MouseEvent<HTMLElement>) => {
+        console.log(e);
+        setOpen(false);
+    };
+
+    const dataSource = [
+        {
+            key: '1',
+            name: 'Mike',
+            birthday: "01/01/2023",
+            email: 'example@gmail.com',
+            phone: '01234565789',
+            submitAt: '01/01/2023',
+        },
+        {
+            key: '2',
+            name: 'John',
+            birthday: "01/01/2023",
+            email: 'example@gmail.com',
+            phone: '01234565789',
+            submitAt: '01/01/2023',
+        },
+    ];
+
+    const columns = [
+        {
+            title: 'Họ và tên',
+            dataIndex: 'name',
+            key: 'name',
+        },
+        {
+            title: 'Ngày sinh',
+            dataIndex: 'birthday',
+            key: 'birthday',
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+            key: 'email',
+        },
+        {
+            title: 'Số điện thoại',
+            dataIndex: 'phone',
+            key: 'phone',
+        },
+        {
+            title: 'Ngày nộp',
+            dataIndex: 'submitAt',
+            key: 'submitAt',
+        },
+        {
+            title: 'Hành động',
+            dataIndex: 'key',
+            key: 'key',
+            render: (_: any, record: any) => (
+                <Space size="middle">
+                    {/* <NavLink to={`/home/posts/${record._id}`}> */}
+                    <EyeOutlined className='text-dark' />
+                    {/* </NavLink> */}
+                    <Popconfirm placement="top"
+                        title={text}
+                        // onConfirm={() => onHandleRemove(record._id)}
+                        okText="Yes"
+                        cancelText="No">
+                        <DeleteOutlined className='text-danger' />
+                    </Popconfirm>
+
+                </Space>
+            ),
+        },
+    ];
     return (
         <>
             <div className=''>
@@ -103,9 +184,20 @@ const PostDetail = () => {
                                     </div>
                                 </div>
                                 <button
-                                    className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'>
-                                    Liên hệ trực tiếp
+                                    className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
+                                    onClick={showModal} >
+                                    Danh sách ứng viên
                                 </button>
+                                <Modal
+                                    title="Danh sách ứng viên"
+                                    open={open}
+                                    onCancel={handleCancel}
+                                    okButtonProps={{ hidden: true }}
+                                    cancelButtonProps={{ hidden: true }}
+                                    width={1000}
+                                >
+                                    <Table dataSource={dataSource} columns={columns} />
+                                </Modal>
                             </div>
                         </div>
                     </div>

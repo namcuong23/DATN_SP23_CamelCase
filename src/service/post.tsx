@@ -41,6 +41,17 @@ export const postApi: any = createApi({
     })
 })
 
+export const formatDate = (inputDate: string): any => {
+    const date = new Date(inputDate);
+    const options = { timeZone: "Asia/Ho_Chi_Minh" };
+    const day = date.toLocaleDateString("en-US", { day: "2-digit" });
+    const month = date.toLocaleDateString("en-US", { month: "2-digit" });
+    const year = date.toLocaleDateString("en-US", { year: "numeric" });
+    const time = date.toLocaleTimeString("en-US", options);
+
+    return { date: `${day}-${month}-${year}`, time };
+}
+
 export const {
     useGetPostsQuery,
     useGetPostQuery,
