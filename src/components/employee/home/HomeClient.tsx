@@ -10,6 +10,8 @@ const HomeClient = () => {
   const profiles: any = useGetProfileQuery(currentUser?.email)
   const profile: ImanageProfile = profiles.currentData
   const { data: posts } = useGetPostsQuery()
+  console.log(posts);
+
 
 
   return (

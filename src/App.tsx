@@ -18,12 +18,13 @@ import PostDetailEp from "./components/employee/post/PostDetail"
 import Register from "./components/auth/Employee/Register"
 import RegisterEmployer from "./components/auth/Employer/RegisterEmployer"
 import LoginEmployer from "./components/auth/Employer/LoginEmployer"
-import HomeAdmin from "./components/admin/home/HomeAdmin"
 import VoucherList from "./components/admin/Voucher/VoucherList"
 import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
 import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
 import PostAdmin from "./components/admin/Post/PostAdmin"
 import PostList from "./components/employer/Posts/PostList"
+import UsersManage from "./components/admin/home/UsersManage"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
 
 function App() {
   return (
@@ -80,6 +81,7 @@ function App() {
         {/* ADMIN */}
         <Route path='/admin' element={<LayoutAdmin />}>
           <Route index element={<HomeAdmin />} />
+          <Route path="users-management" element={<UsersManage />} />
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />

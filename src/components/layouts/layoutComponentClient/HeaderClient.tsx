@@ -15,7 +15,6 @@ const HeaderClient = () => {
     const user: any = useGetUserByEmailQuery(currentUser?.email)
     console.log(user);
 
-
     const onSignOut = async () => {
         try {
             await signOut(auth)

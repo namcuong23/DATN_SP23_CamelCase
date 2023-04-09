@@ -81,6 +81,7 @@ const PostAdmin = () => {
         work_location: item.work_location,
         post_status: item.post_status,
         user_id: item.user_id,
+        createdAt: item.createdAt,
     }))
     const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (

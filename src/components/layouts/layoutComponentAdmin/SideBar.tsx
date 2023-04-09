@@ -1,6 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 // import '../../../assets/img/admin/images/'\
+// import myImage from './src/assets/img/admin/images/logo.png';
+import myImage from '../../../assets/img/logo.jpg';
 
 type Props = {}
 
@@ -10,9 +12,10 @@ const SideBar = (props: Props) => {
       <div className="nk-sidebar-element nk-sidebar-head">
         <div className="nk-sidebar-brand">
           <a href="html/index.html" className="logo-link nk-sidebar-logo">
-            <img className="logo-light logo-img" src="./src/assets/img/admin/images/logo.png" srcSet="./src/assets/img/admin/images/logo2x.png 2x" alt="logo" />
-            <img className="logo-dark logo-img" src="./src/assets/img/admin/images/logo-dark.png" srcSet="./src/assets/img/admin/images/logo-dark2x.png 2x" alt="logo-dark" />
-            <img className="logo-small logo-img logo-img-small" src="./src/assets/img/admin/images/logo-small.png" srcSet="./src/assets/img/admin/images/logo-small2x.png 2x" alt="logo-small" />
+            <img className="logo-light logo-img" src={myImage} alt="logo" />
+            <img className="logo-dark logo-img" src={myImage} alt="logo-dark" />
+            {/* <img src={myImage} alt="My Image" /> */}
+            <img className="logo-small logo-img logo-img-small" src={myImage} alt="logo-small" />
           </a>
         </div>
         <div className="nk-menu-trigger me-n2">
@@ -27,16 +30,16 @@ const SideBar = (props: Props) => {
               <li className="nk-menu-item has-sub w-full active ">
                 <a href="#" className="nk-menu-link">
                   <span className="nk-menu-icon"><em className="icon ni ni-dashboard-fill" /></span>
-                  <span className="nk-menu-text">Dashboard</span>
+                  <span className="nk-menu-text"><Link to='/admin'>Dashboard</Link></span>
                 </a>
-                
+
               </li>{/* .nk-menu-item */}
               <li className="nk-menu-item has-sub w-full ">
                 <a href="#" className="nk-menu-link">
                   <span className="nk-menu-icon"><em className="icon ni ni-dashboard-fill" /></span>
-                  <span className="nk-menu-text">Quản lý người dùng</span>
+                  <span className="nk-menu-text"><Link to="/admin/users-management">Quản lý người dùng</Link></span>
                 </a>
-                
+
               </li>{/* .nk-menu-item */}
 
               <li className="nk-menu-item has-sub w-full ">
@@ -44,7 +47,7 @@ const SideBar = (props: Props) => {
                   <span className="nk-menu-icon"><em className="icon ni ni-dashboard-fill" /></span>
                   <span className="nk-menu-text"><Link to="/admin/posts">Quản lý bài viết</Link></span>
                 </a>
-                
+
               </li>{/* .nk-menu-item */}
             </ul>{/* .nk-menu */}
           </div>{/* .nk-sidebar-menu */}

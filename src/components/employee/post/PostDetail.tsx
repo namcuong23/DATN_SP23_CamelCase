@@ -5,6 +5,8 @@ import { useAddCvMutation } from '../../../service/manage_cv'
 import { useGetProfileQuery } from '../../../service/manage_profile'
 import { useGetPostQuery } from '../../../service/post'
 import UseAuth from '../../auth/UseAuth'
+import { useGetUserByEmailQuery } from '../../../service/auth'
+import { NavLink } from 'react-router-dom'
 
 const PostDetailEp = () => {
     const { id } = useParams()
@@ -13,11 +15,12 @@ const PostDetailEp = () => {
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
+    const user: any = useGetUserByEmailQuery(currentUser?.email)
     const [addCv] = useAddCvMutation()
     const applyJob = () => {
         try {
             const apply = addCv({
-                name: profile?.last_name + " " + profile?.first_name,
+                name: profile?.name,
                 email: profile?.email,
                 phone: profile?.phone,
                 date: profile?.birth_day,
@@ -128,11 +131,21 @@ const PostDetailEp = () => {
                                         <div>1 việc</div>
                                     </div>
                                 </div>
-                                <button
-                                    className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
-                                    onClick={applyJob}>
-                                    Nộp đơn
-                                </button>
+                                {
+                                    user.currentData ?
+                                        <button
+                                            className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
+                                            onClick={applyJob}>
+                                            Nộp đơn
+                                        </button> :
+                                        <NavLink to={'/login'}>
+                                            <button
+                                                className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'>
+                                                Nộp đơn
+                                            </button>
+                                        </NavLink>
+                                }
+
                             </div>
                         </div>
                     </div>

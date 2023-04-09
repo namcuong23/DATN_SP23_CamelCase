@@ -6,6 +6,7 @@ import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { useRef, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
@@ -17,6 +18,7 @@ import { useGetProfileQuery } from '../../../service/manage_profile';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
 const PostList = () => {
+    const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -223,9 +225,7 @@ const PostList = () => {
     };
 
     if (!user.currentData) {
-        return <div className='mt-10 min-h-screen'>
-            <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
-        </div>
+        return navigate('/login-epr')
     }
 
     if (isLoading)
