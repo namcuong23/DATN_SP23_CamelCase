@@ -5,25 +5,25 @@ import LayoutClient from "./components/layouts/LayoutClient"
 import HomeClient from "./components/employee/home/HomeClient"
 import Login from "./components/auth/Employee/Login"
 import OTPAuth from "./components/auth/OTPAuth"
-import PostList from "./components/employer/Posts/PostList"
 import PostAdd from "./components/employer/Posts/PostAdd"
 import PostEdit from "./components/employer/Posts/PostEdit"
 import PostDetail from "./components/employer/Posts/PostDetail"
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
-import LayoutAdmin from "./components/layouts/LayoutAdmin"
-import HomeAdmin from "./components/admin/home/HomeAdmin"
 import Profile from "./components/employee/profile/Profile"
+import LayoutAdmin from "./components/layouts/LayoutAdmin"
 import RedirectRoute from "./privateRoute/RedirectRoute"
-// import PrivateRoute from "./privateRoute/PrivateRoute"
-import VoucherList from "./components/admin/Voucher/VoucherList"
-import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
 import PostDetailEp from "./components/employee/post/PostDetail"
 import Register from "./components/auth/Employee/Register"
 import RegisterEmployer from "./components/auth/Employer/RegisterEmployer"
 import LoginEmployer from "./components/auth/Employer/LoginEmployer"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import PostList from "./components/employer/Posts/PostList"
 
 function App() {
   return (
@@ -83,6 +83,7 @@ function App() {
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />
+          <Route path='posts' element={<PostAdmin />} />
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>

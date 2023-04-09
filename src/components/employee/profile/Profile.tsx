@@ -35,7 +35,7 @@ const Profile = () => {
     }
     return (
         <>
-            <div className='bg-gray-100 h-[100vh]'>
+            <div className='bg-gray-100 min-h-screen'>
                 {/* SEARCH BAR */}
                 <div className='h-[80px] w-100 py-3 bg-white'>
                     <div className='container flex items-center justify-center h-100 w-100'>
@@ -82,7 +82,7 @@ const Profile = () => {
                                     <img src="" alt="" />
                                 </div>
                                 <div>
-                                    <h3 className='text-[20px] font-[600] text-white'>{profile?.last_name + " " + profile?.first_name}</h3>
+                                    <h3 className='text-[20px] font-[600] text-white'>{profile?.name}</h3>
                                 </div>
                             </div>
                         </section>
@@ -187,7 +187,7 @@ const Profile = () => {
                                         <div className='flex items-center mx-3'>
                                             <div className='w-50 flex items-center'>
                                                 <div className='w-[38%]'>Họ và tên</div>
-                                                <div className='w-[62%] font-[700]'>{currentUser?.displayName ? currentUser?.displayName : profile?.last_name + " " + profile?.first_name}</div>
+                                                <div className='w-[62%] font-[700]'>{currentUser?.displayName ? currentUser?.displayName : profile?.name}</div>
                                             </div>
                                             <div className='w-50 flex items-center'>
                                                 <div className='w-[38%]'>Ngày sinh</div>

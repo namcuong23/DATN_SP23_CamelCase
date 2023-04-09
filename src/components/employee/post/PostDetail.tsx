@@ -25,7 +25,7 @@ const PostDetailEp = () => {
             })
 
             if (apply) {
-                message.info('Nộp đơn thành công.')
+                message.success('Nộp đơn thành công.')
             }
         } catch (error) {
             console.log(error);
@@ -35,8 +35,8 @@ const PostDetailEp = () => {
         <>
             <div className='bg-gray-100 pb-7'>
                 <div className='h-[100vh] container text-black'>
-                    <h1 className='py-3'>Post Detail</h1>
-                    <div className='row bg-white p-5 h-[100vh]'>
+                    <h1 className='py-3 text-xl'>Post Detail</h1>
+                    <div className='row bg-white p-5 min-h-[100vh]'>
                         <div className='col-8'>
                             <h1 className='text-3xl font-medium'>{post?.job_name}</h1>
                             <div className='my-3 bg-gray-100 p-3 w-[680px]'>

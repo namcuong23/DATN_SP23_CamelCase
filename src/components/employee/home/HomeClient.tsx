@@ -2,15 +2,15 @@ import { NavLink } from 'react-router-dom'
 import ImanageProfile from '../../../interface/manageProfile'
 import IPost from '../../../interface/post'
 import { useGetProfileQuery } from '../../../service/manage_profile'
-import { useGetPostsDefUIdQuery } from '../../../service/post'
 import UseAuth from '../../auth/UseAuth'
+import { useGetPostsQuery } from '../../../service/post'
 
 const HomeClient = () => {
   const currentUser: any = UseAuth()
   const profiles: any = useGetProfileQuery(currentUser?.email)
   const profile: ImanageProfile = profiles.currentData
-  const { data } = useGetPostsDefUIdQuery(profile?._id)
-  const posts: IPost[] = data?.posts
+  const { data: posts } = useGetPostsQuery()
+
 
   return (
     <div>
@@ -137,29 +137,30 @@ const HomeClient = () => {
                         {
                           posts ?
                             posts.map((post: any) =>
-                              <NavLink to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-                                <div key={post._id}>
-                                  <div className="swiper-slide">
-                                    <div className="jobBlock recoJobs__job animated fadeIn take-1-second ">
-                                      <div className="columns is-mobile cursor-pointer">
-                                        <div className="column jobBlock__leftCol has-text-centered">
-                                          <img src="https://images.vietnamworks.com/pictureofcompany/3d/10195707.jpg"
-                                            className="jobBlock__logo" />
-                                        </div>
-                                        <div className="column jobBlock__rightCol">
-                                          <div className="columns is-mobile is-multiline justify-between">
-                                            <div className="column jobBlock__info">
-                                              <div className="jobBlock__title truncate-text-2-line">{post.job_name}</div>
-                                              <p className="jobBlock__company truncate-text">{post.job_description}</p>
+                              post.post_status == true ?
+                                <NavLink to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                                  <div key={post._id}>
+                                    <div className="swiper-slide">
+                                      <div className="jobBlock recoJobs__job animated fadeIn take-1-second ">
+                                        <div className="columns is-mobile cursor-pointer">
+                                          <div className="column jobBlock__leftCol has-text-centered">
+                                            <img src="https://images.vietnamworks.com/pictureofcompany/3d/10195707.jpg"
+                                              className="jobBlock__logo" />
+                                          </div>
+                                          <div className="column jobBlock__rightCol">
+                                            <div className="columns is-mobile is-multiline justify-between">
+                                              <div className="column jobBlock__info">
+                                                <div className="jobBlock__title truncate-text-2-line">{post.job_name}</div>
+                                                <p className="jobBlock__company truncate-text">{post.job_description}</p>
+                                              </div>
+                                              <span className="tag tag_hot">Hot</span>
                                             </div>
-                                            <span className="tag tag_hot">Hot</span>
                                           </div>
                                         </div>
                                       </div>
                                     </div>
                                   </div>
-                                </div>
-                              </NavLink>
+                                </NavLink> : ""
                             )
                             : ''
                         }

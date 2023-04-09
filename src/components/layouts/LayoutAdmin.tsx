@@ -1,11 +1,10 @@
-import React from 'react';
 import { Outlet } from 'react-router-dom';
-import Header from './LayoutComponentAdmin/Header';
 import Footer from './LayoutComponentAdmin/Footer';
-import Region from './LayoutComponentAdmin/Region';
-import SideBar from './LayoutComponentAdmin/SideBar';
 import '../../assets/css/adminCss/dashlite.css'
 import '../../assets/css/adminCss/theme.css'
+import Header from './LayoutComponentAdmin/Header';
+import SideBar from './LayoutComponentAdmin/SideBar';
+import Region from './LayoutComponentAdmin/Region';
 
 type Props = {}
 
@@ -16,9 +15,9 @@ const LayoutAdmin = (props: Props) => {
                 <div className='nk-main'>
                     <SideBar />
                     <div className='nk-wrap'>
-                    <Header />
-                    <Outlet />
-                    <Footer />
+                        <Header />
+                        <Outlet />
+                        {/* <Footer /> */}
                     </div>
                 </div>
             </div>

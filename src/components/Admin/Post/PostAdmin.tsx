@@ -1,42 +1,58 @@
-import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { useGetPostsByUIdQuery } from '../../../service/post';
+import React, { useRef, useState } from 'react'
+import { useGetUsersQuery } from '../../../service/admin'
+import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
+import { User } from '../../../interface/admin/users';
+import Highlighter from 'react-highlight-words';;
+import { formatDate, useApprovePostMutation, useGetPostsQuery, useRefusePostMutation } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
-import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
-import { Button, Input, Space, Table } from 'antd';
-import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { useRef, useState } from 'react';
-import Highlighter from 'react-highlight-words';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
+import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
-import { useRemovePostMutation } from '../../../service/post'
-import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer';
-import UseAuth from '../../auth/UseAuth';
-import ImanageProfile from '../../../interface/manageProfile';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-
-const PostList = () => {
-    const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
+import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
+import IPost from '../../../interface/post';
+const PostAdmin = () => {
+    const { data: posts, error, isLoading } = useGetPostsQuery()
     const searchInput = useRef<InputRef>(null);
     const date = new Date()
+    const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
+    const [sortedInfo, setSortedInfo] = useState<SorterResult<IPost>>({});
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const handleChange: TableProps<IPost>['onChange'] = (pagination, filters, sorter) => {
+        console.log('Various parameters', pagination, filters, sorter);
+        setFilteredInfo(filters);
+        setSortedInfo(sorter as SorterResult<IPost>);
+    };
+    const clearFilters = () => {
+        setFilteredInfo({});
+    };
 
-    const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
-    const user = useGetUserEprByEmailQuery(currentUser?.email)
-    const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
+    const clearAll = () => {
+        setFilteredInfo({});
+        setSortedInfo({});
+    };
+    const text_X = 'Bạn xác nhận từ chối bài viết này?';
+    const text_V = 'Bạn xác nhận duyệt bài viết này?';
 
-    const text = 'Are you sure to delete this post?';
-
-    const [removePost] = useRemovePostMutation()
-    const onHandleRemove = (id: string) => {
-        const confirmMsg: MessageType = message.success('Xoa thanh cong.')
-        if (confirmMsg !== null) {
-            removePost(id)
+    const [duyet] = useApprovePostMutation()
+    const onHandleApprove = (id: string) => {
+        console.log(id);
+        const confirm: MessageType = message.info('Duyệt thành công')
+        if (confirm !== null) {
+            duyet(id)
         }
     }
+
+    const [tuchoi] = useRefusePostMutation()
+    const onHandleRefuse = (id: string) => {
+        console.log(id);
+        const confirm: MessageType = message.info('Từ chối thành công')
+        if (confirm !== null) {
+            tuchoi(id)
+        }
+    }
+
 
     const handleSearch = (
         selectedKeys: string[],
@@ -52,6 +68,20 @@ const PostList = () => {
         clearFilters();
         setSearchText('');
     };
+    const data = posts?.map((item: any, index: any) => ({
+        key: String(index),
+        _id: item._id,
+        job_name: item.job_name,
+        job_description: item.job_description,
+        job_salary: item.job_salary,
+        working_form: item.working_form,
+        number_of_recruits: item.number_of_recruits,
+        requirements: item.requirements,
+        gender: item.gender,
+        work_location: item.work_location,
+        post_status: item.post_status,
+        user_id: item.user_id,
+    }))
     const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -192,6 +222,17 @@ const PostList = () => {
                     }
                 </>
             ),
+            filters: [
+                {
+                    text: 'Đã duyệt',
+                    value: true,
+                },
+                {
+                    text: 'Từ Chối',
+                    value: false,
+                },
+            ],
+            onFilter: (value: any, record) => record.post_status.indexOf(value) === 0,
         },
         {
             title: 'Hành động',
@@ -202,15 +243,23 @@ const PostList = () => {
                     <NavLink to={`/home/posts/${record._id}`}>
                         <EyeOutlined className='text-dark' />
                     </NavLink>
-                    <NavLink to={`/home/posts/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
-                    </NavLink>
+
+
                     <Popconfirm placement="top"
-                        title={text}
-                        onConfirm={() => onHandleRemove(record._id)}
-                        okText="Yes"
-                        cancelText="No">
-                        <DeleteOutlined className='text-danger' />
+                        title={text_V}
+                        onConfirm={() => onHandleApprove(record._id)}
+                        okText="Đồng ý"
+                        cancelText="Không">
+                        <CheckOutlined className='text-success' />
+                    </Popconfirm>
+
+
+                    <Popconfirm placement="top"
+                        title={text_X}
+                        onConfirm={() => onHandleRefuse(record._id)}
+                        okText="Đồng ý"
+                        cancelText="Không">
+                        <CloseOutlined className='text-danger' />
                     </Popconfirm>
 
                 </Space>
@@ -221,13 +270,6 @@ const PostList = () => {
     const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
-
-    if (!user.currentData) {
-        return <div className='mt-10 min-h-screen'>
-            <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
-        </div>
-    }
-
     if (isLoading)
         return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>
             <Spin tip="Loading" size="large">
@@ -239,26 +281,31 @@ const PostList = () => {
             <Alert message="Error!!!" type="error" />
         </Space>
     return (
-        <>
-            <div className='mx-5'>
-                <div className='mt-4 h-[100vh]'>
-                    <div className='d-flex align-items-center justify-content-between mb-2'>
-                        <div>
-                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý bài viết</h2>
-                        </div>
-                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-3 py-2'>
-                            <NavLink to={'/home/posts/add'} className='text-white text-decoration-none'>
-                                Đăng tin
-                            </NavLink>
+        <div className="nk-content ">
+            <div className="container-fluid">
+                <div className="nk-content-inner">
+                    <div className="nk-content-body">
+                        <div className="nk-block-head nk-block-head-sm">
+                            <div className="nk-block-between">
+                                <div className="nk-block-head-content">
+                                    <h4 className="nk-block-title page-title">Dashboard</h4>
+                                </div>{/* .nk-block-head-content */}
+                            </div>{/* .nk-block-between */}
+                        </div>{/* .nk-block-head */}
+                        <div className='nk-block'>
+                            <>
+                                <Space style={{ marginBottom: 16 }}>
+                                    <Button onClick={clearFilters}>Clear filters</Button>
+                                    <Button onClick={clearAll}>Clear filters and sorters</Button>
+                                </Space>
+                                <Table columns={columns} dataSource={data} onChange={handleChange} />
+                            </>
                         </div>
                     </div>
-                    <Table columns={columns} dataSource={posts} onChange={onChange} />
                 </div>
             </div>
-            <FooterEmployer />
-        </>
+        </div>
     )
 }
 
-
-export default PostList
+export default PostAdmin

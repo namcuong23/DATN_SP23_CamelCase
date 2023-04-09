@@ -10,11 +10,13 @@ import { CgSpinner } from "react-icons/cg"
 import { useAddProfileMutation } from '../../../service/manage_profile';
 import { auth } from '../../../firebase';
 import { useRegisterWithEmployerMutation } from '../../../service/auth_employer';
+import { useSignupAMutation } from '../../../service/admin';
 
 const RegisterEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signup] = useRegisterWithEmployerMutation()
+    const [signupA] = useSignupAMutation()
     const [addProfile] = useAddProfileMutation()
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState(false)
@@ -37,8 +39,7 @@ const RegisterEmployer = () => {
                         message.info('Email verification link sent!')
                     })
                 await addProfile({
-                    first_name: user.first_name,
-                    last_name: user.last_name,
+                    name: user.name,
                     email: user.email,
                     phone: user.phone
                 })
@@ -48,6 +49,10 @@ const RegisterEmployer = () => {
                     level_auth: 1
                 })
                 if (register) {
+                    await signupA({
+                        ...user,
+                        level_auth: 1
+                    })
                     setLoading(false)
                     navigate('/login-epr')
                     message.success("Created account successfully!")
@@ -72,24 +77,12 @@ const RegisterEmployer = () => {
                             <h3 className='text-3xl font-[600] py-12'>Đăng ký</h3>
                             <form onSubmit={handleSubmit(signUp)} className="flex flex-col">
                                 <div className='flex flex-col mb-2'>
-                                    <div className='flex items-center justify-between'>
-                                        <div>
-                                            <label className="text-dark fw-bold">Tên</label>
-                                            <input {...register('first_name', { required: true })}
-                                                type="text"
-                                                className={errors.first_name ? "form-control border-red-500 border-1 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                                name='first_name' />
-                                            {errors.first_name && errors.first_name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
-                                        </div>
-                                        <div>
-                                            <label className="text-dark fw-bold">Họ</label>
-                                            <input {...register('last_name', { required: true })}
-                                                type="text"
-                                                className={errors.last_name ? "form-control border-red-500 border-1 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                                name='last_name' />
-                                            {errors.last_name && errors.last_name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Họ.</span>}
-                                        </div>
-                                    </div>
+                                    <label className="text-dark fw-bold">Tên</label>
+                                    <input {...register('name', { required: true })}
+                                        type="text"
+                                        className={errors.name ? "form-control border-red-500 border-1 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
+                                        name='name' />
+                                    {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
                                 </div>
                                 <div className='flex flex-col mb-2'>
                                     <label className='font-[600]'>Số điện thoại</label>

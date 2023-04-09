@@ -19,7 +19,7 @@ const PostDetail = () => {
     const onHandleRemove = (id: string) => {
         const remove = removeCv(id)
         if (remove) {
-            message.info("Xóa thành công.")
+            message.success("Xóa thành công.")
         }
     }
 
@@ -86,8 +86,8 @@ const PostDetail = () => {
         <>
             <div className=''>
                 <div className='h-[100vh] container text-black'>
-                    <h1 className='my-3 text-3xl'>Post Detail</h1>
-                    <div className='row bg-white p-5 h-[100vh]'>
+                    <h1 className='my-3 text-2xl font-[700]'>Post Detail</h1>
+                    <div className='row bg-white p-5 min-h-[100vh]'>
                         <div className='col-8'>
                             <h1 className='text-xl font-[700]'>{post?.job_name}</h1>
                             <div className='my-3 bg-gray-100 p-3 w-[680px]'>
@@ -199,7 +199,7 @@ const PostDetail = () => {
                     </div>
                 </div>
             </div>
-            <div className='mt-20'>
+            <div className='mt-60'>
                 <FooterEmployer />
             </div>
         </>

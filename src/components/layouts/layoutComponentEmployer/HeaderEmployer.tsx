@@ -84,7 +84,7 @@ const HeaderEmployer = () => {
                             <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
                                 <BsPersonCircle className='text-5xl text-[#474747]' />
                                 <div>
-                                    <h2 className='text-[20px] text-[#474747] font-[700]'>{profile?.last_name + " " + profile?.first_name}</h2>
+                                    <h2 className='text-[20px] text-[#474747] font-[700]'>{profile?.name}</h2>
                                     <div className='text-[15px]'>{profile?.email}</div>
                                 </div>
                             </div>

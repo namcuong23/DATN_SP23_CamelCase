@@ -15,8 +15,8 @@ const VoucherAdd = () => {
     const onHandleAdd: SubmitHandler<IAdmin_voucher> = (voucher: IAdmin_voucher) => {
         console.log(voucher);
         try {
-            addVoucher({ ...voucher, status: false})
-            message.info('Tạo voucher thành công.')
+            addVoucher({ ...voucher, status: false })
+            message.success('Tạo voucher thành công.')
             navigate('/admin/vouchers')
         } catch (error) { }
     }
@@ -25,6 +25,7 @@ const VoucherAdd = () => {
             <div style={{ maxWidth: '700px' }} className='mx-auto'>
                 <h1 className='mb-3 text-center fw-normal'>Tạo gói mới</h1>
                 <Form onFinish={onHandleAdd} form={form} name="add" layout="vertical">
+
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
@@ -36,7 +37,7 @@ const VoucherAdd = () => {
                                 rules={[
                                     { required: true, message: "Please input your name." },
                                 ]}>
-                                <Input/>
+                                <Input />
                             </Form.Item>
                         </div>
                     </div>
@@ -52,7 +53,7 @@ const VoucherAdd = () => {
                                 rules={[
                                     { required: true, message: "Please input your description." },
                                 ]}>
-                                <Input/>
+                                <Input />
                             </Form.Item>
                         </div>
                     </div>
@@ -68,7 +69,7 @@ const VoucherAdd = () => {
                                 rules={[
                                     { required: true, message: "Please input your price." },
                                 ]}>
-                                <Input/>
+                                <Input />
                             </Form.Item>
                         </div>
                     </div>
@@ -92,13 +93,11 @@ const VoucherAdd = () => {
                         </div>
                     </div>
 
-
-
                     <Form.Item className='text-center'>
                         <Button className='bg-success text-white' htmlType="submit">
                             Tạo
                         </Button>
-                        <NavLink to={'admin/vouchers'}>
+                        <NavLink to={'/admin/vouchers'}>
                             <Button className='bg-success text-white ms-2' htmlType="button">
                                 Trở về
                             </Button>

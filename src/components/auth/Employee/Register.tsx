@@ -10,11 +10,13 @@ import { CgSpinner } from "react-icons/cg"
 import { useSignupMutation } from '../../../service/auth';
 import { useAddProfileMutation } from '../../../service/manage_profile';
 import { auth } from '../../../firebase';
+import { useSignupAMutation } from '../../../service/admin';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signup] = useSignupMutation()
+    const [signupA] = useSignupAMutation()
     const [addProfile] = useAddProfileMutation()
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState(false)
@@ -37,8 +39,7 @@ const Register = () => {
                         message.info('Email verification link sent!')
                     })
                 await addProfile({
-                    first_name: user.first_name,
-                    last_name: user.last_name,
+                    name: user.name,
                     email: user.email,
                     phone: user.phone
                 })
@@ -48,6 +49,10 @@ const Register = () => {
                     level_auth: 1
                 })
                 if (register) {
+                    await signupA({
+                        ...user,
+                        level_auth: 1
+                    })
                     setLoading(false)
                     navigate('/login')
                     message.success("Created account successfully!")
@@ -137,24 +142,12 @@ const Register = () => {
                                 <div className='text-center pb-4 pt-[30px] text-xl'>Hoặc</div>
                                 <form onSubmit={handleSubmit(signUp)}>
                                     <div className="form-group">
-                                        <div className='flex items-center justify-between'>
-                                            <div>
-                                                <label className="text-dark fw-bold">Tên</label>
-                                                <input {...register('first_name', { required: true })}
-                                                    type="text"
-                                                    className={errors.first_name ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                                    name='first_name' />
-                                                {errors.first_name && errors.first_name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
-                                            </div>
-                                            <div>
-                                                <label className="text-dark fw-bold">Họ</label>
-                                                <input {...register('last_name', { required: true })}
-                                                    type="text"
-                                                    className={errors.last_name ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                                    name='last_name' />
-                                                {errors.last_name && errors.last_name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Họ.</span>}
-                                            </div>
-                                        </div>
+                                        <label className="text-dark fw-bold">Tên</label>
+                                        <input {...register('name', { required: true })}
+                                            type="text"
+                                            className={errors.name ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
+                                            name='name' />
+                                        {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Số điện thoại</label>

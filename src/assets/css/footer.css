@@ -88,8 +88,8 @@ body.flo-no-scrolling {
 }
 
 .modal-close {
-    -moz-appearance: none;
-    -webkit-appearance: none;
+    /* -moz-appearance: none; */
+    /* -webkit-appearance: none; */
     background-color: hsla(0, 0%, 4%, .2);
     border: none;
     border-radius: 290486px;

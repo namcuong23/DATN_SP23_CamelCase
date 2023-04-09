@@ -2,13 +2,14 @@ import React, { useRef, useState } from 'react'
 import { useGetUsersQuery, useUpdateUserMutation } from '../../../service/admin'
 import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
-import { User } from '../../../interFace/admin/users';
+import { User } from '../../../interface/admin/users';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Popconfirm } from 'antd';
 import { Modal } from "antd";
 const HomeAdmin = () => {
   const { data: Users, error, isLoading } = useGetUsersQuery();
+
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
   const searchInput = useRef<InputRef>(null);
@@ -21,7 +22,6 @@ const HomeAdmin = () => {
     _id: string;
     name: string;
     phone: number;
-    role: number;
     level_auth: number;
     email: string;
     password: string
@@ -33,7 +33,6 @@ const HomeAdmin = () => {
     _id: String(item._id),
     name: String(item.name),
     phone: Number(item.phone),
-    role: Number(item.role),
     level_auth: Number(item.level_auth),
     email: String(item.email),
     password: String(item.password)
@@ -195,9 +194,8 @@ const HomeAdmin = () => {
           >
             <Form initialValues={{
               _id: record._id,
-              name: record.name,
+              last_name: record.name,
               phone: record.phone,
-              role: record.role,
               password: record.password,
               level_auth: record.level_auth,
               email: record.email
@@ -251,7 +249,7 @@ const HomeAdmin = () => {
     console.log(values);
     updateUser(values);
     console.log(isUpdating);
-    
+
     setModalVisible(false);
   };
   return (

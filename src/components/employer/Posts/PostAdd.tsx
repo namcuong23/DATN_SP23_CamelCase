@@ -3,7 +3,6 @@ import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Select, message } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
 import IPost from '../../../interface/post';
-import { SubmitHandler } from 'react-hook-form/dist/types';
 import { useAddPostMutation } from '../../../service/post';
 import UseAuth from '../../auth/UseAuth';
 import ImanageProfile from '../../../interface/manageProfile';

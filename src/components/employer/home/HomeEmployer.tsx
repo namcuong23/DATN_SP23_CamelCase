@@ -6,8 +6,8 @@ type Props = {}
 const Home = (props: Props) => {
     return (
         <>
-            <div className='container'>
-                <div className="row gx-5 mt-4">
+            <div className='mx-5'>
+                <div className="row mt-4">
                     <div className="col">
                         <div className="col  rounded px-0">
                             <div className="col rounded" id="meo" style={{ backgroundImage: 'url("./src/assets/img/3.jpg")' }}>

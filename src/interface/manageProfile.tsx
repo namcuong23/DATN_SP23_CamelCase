@@ -1,7 +1,6 @@
 interface ImanageProfile {
     _id: string;
-    first_name: string;
-    last_name: string;
+    name: string;
     email: string;
     phone: string;
     birth_day: string;

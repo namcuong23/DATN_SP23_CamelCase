@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
 import { Space, Table } from 'antd';
 import { useRef, useState } from 'react';
-import { CheckOutlined, DeleteOutlined,EditOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons';
 import { useRemoveVoucherMutation, useGetVouchersQuery } from '../../../service/admin_voucher';
 import { MessageType } from 'antd/es/message/interface';
 
@@ -15,7 +15,7 @@ const VoucherList = () => {
 
     const onHandleRemove = (id: string) => {
         console.log(id);
-        const confirm: MessageType = message.info('Xoá thành công')
+        const confirm: MessageType = message.success('Xoá thành công')
         if (confirm !== null) {
             removeVoucher(id)
         }
@@ -98,9 +98,9 @@ const VoucherList = () => {
         </Space>
     return (
         <>
-            <div className='d-flex align-items-center justify-content-between mb-2'>
+            <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
-                    <h2 className='mt-0'>Quản lý các gói</h2>
+                    <h2 className='mt-0 text-xl'>Quản lý các gói</h2>
                 </div>
                 <div className='bg-success rounded px-3 py-2'>
                     <NavLink to={'/admin/vouchers/add'} className='text-white text-decoration-none'>
@@ -108,7 +108,7 @@ const VoucherList = () => {
                     </NavLink>
                 </div>
             </div>
-            <Table columns={columns} dataSource={vouchers} onChange={onChange} />
+            <Table columns={columns} dataSource={vouchers} onChange={onChange} className='mx-3' />
         </>
     )
 }

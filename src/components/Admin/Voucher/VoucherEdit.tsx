@@ -15,7 +15,7 @@ const VoucherEdit = () => {
         console.log(voucher);
         try {
             editVoucher({ ...voucher, status: false, _id: id })
-            message.info('Sửa thành công.')
+            message.success('Sửa thành công.')
             navigate('/admin/vouchers')
         } catch (error) {
 
@@ -38,7 +38,7 @@ const VoucherEdit = () => {
                                 rules={[
                                     { required: true, message: "Please input your name." },
                                 ]}>
-                                <Input/>
+                                <Input />
                             </Form.Item>
                         </div>
                     </div>
@@ -54,7 +54,7 @@ const VoucherEdit = () => {
                                 rules={[
                                     { required: true, message: "Please input your description." },
                                 ]}>
-                                <Input/>
+                                <Input />
                             </Form.Item>
                         </div>
                     </div>
@@ -70,7 +70,7 @@ const VoucherEdit = () => {
                                 rules={[
                                     { required: true, message: "Please input your price." },
                                 ]}>
-                                <Input/>
+                                <Input />
                             </Form.Item>
                         </div>
                     </div>
@@ -100,7 +100,7 @@ const VoucherEdit = () => {
                         <Button className='bg-success text-white' htmlType="submit">
                             Sửa
                         </Button>
-                        <NavLink to={'admin/vouchers'}>
+                        <NavLink to={'/admin/vouchers'}>
                             <Button className='bg-success text-white ms-2' htmlType="button">
                                 Trở về
                             </Button>

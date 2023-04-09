@@ -7,7 +7,7 @@ const WorkPage = (props: Props) => {
         <>
             <div className='min-h-[100vh]'>
                 {/* SEARCH BAR */}
-                <div className='h-[80px] w-100 py-3'>
+                <div className='h-[80px] w-100 py-3 bg-white '>
                     <div className='container flex items-center justify-center h-100 w-100'>
                         <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2 rounded'>
                             <div className='h-100 flex items-center bg-[#F4F4F7] w-[65%]'>
@@ -446,7 +446,7 @@ const WorkPage = (props: Props) => {
                         </div>
                     </div>
                 </section>
-                <section className="w-100 sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
+                <section className="w-100 sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs mb-6">
                     <div className="container w-[82%] p-0">
                         <div className=''>
                             <div className="is-flex justify-between align-center section-title">
