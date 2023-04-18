@@ -6,6 +6,8 @@ import UseAuth from '../../auth/UseAuth'
 import ImanageProfile from "../../../interface/manageProfile"
 import { useGetProfileQuery } from '../../../service/manage_profile'
 import { useGetUserByEmailQuery } from '../../../service/auth'
+import { useAppDispatch } from '../../../app/hook'
+import { logoutAuth } from '../../../app/actions/auth'
 
 const HeaderClient = () => {
     const currentUser: any = UseAuth()
@@ -13,10 +15,11 @@ const HeaderClient = () => {
     const profile: ImanageProfile = data.currentData
     const email = localStorage.getItem('userEpe')
     const user: any = useGetUserByEmailQuery(currentUser?.email)
-    console.log(user);
+    const dispatch = useAppDispatch()
 
     const onSignOut = async () => {
         try {
+            dispatch(logoutAuth())
             await signOut(auth)
         } catch (error: any) {
             message.error(error.message)

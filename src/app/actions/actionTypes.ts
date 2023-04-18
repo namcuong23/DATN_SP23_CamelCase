@@ -1,0 +1,10 @@
+const actionTypes = {
+    LOGIN: 'LOGIN',
+    LOGOUT: 'LOGOUT',
+    SET_CART: 'SET_CART',
+    REMOVE_PRODUCT_CART: 'REMOVE_PRODUCT_CART',
+    NUS_PRODUCT_CART: 'NUS_PRODUCT_CART',
+    MINUS_PRODUCT_CART: 'MINUS_PRODUCT_CART'
+}
+
+export default actionTypes

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { BsPersonCircle } from 'react-icons/bs'
-import { SettingOutlined } from "@ant-design/icons"
+import { SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons"
 import { Drawer, message } from 'antd';
 import UseAuth from '../../auth/UseAuth';
 import { useGetProfileQuery } from '../../../service/manage_profile';
@@ -9,6 +9,8 @@ import ImanageProfile from '../../../interface/manageProfile';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
+import { useAppDispatch } from '../../../app/hook';
+import { logoutAuth } from '../../../app/actions/auth';
 
 const HeaderEmployer = () => {
     const [open, setOpen] = useState(false);
@@ -17,6 +19,7 @@ const HeaderEmployer = () => {
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
     const user = useGetUserEprByEmailQuery(currentUser?.email)
+    const dispatch = useAppDispatch()
 
     const showDrawer = () => {
         setOpen(true);
@@ -28,6 +31,7 @@ const HeaderEmployer = () => {
 
     const onSignOut = async () => {
         try {
+            dispatch(logoutAuth())
             const signout: any = await signOut(auth)
             if (signout) {
                 navigate('/login-epr')
@@ -60,10 +64,22 @@ const HeaderEmployer = () => {
                     </li>
                     <li className='p-3 text-decoration-none text-white'><a>Ứng viên</a></li>
                     <li className='p-3 text-decoration-none text-white'><a>Ưu đãi</a></li>
-                    <li className='p-3 text-decoration-none text-white'><a>Đơn hàng</a></li>
+                    <li className='p-3 text-decoration-none text-white'>
+                        <NavLink to={'/home/packages'}
+                            className='d-flex align-items-center text-decoration-none text-white'>
+                            <span className='hover:text-orange-400'>
+                                Mua dịch vụ
+                            </span>
+                        </NavLink>
+                    </li>
                     <li className='p-3 text-decoration-none text-white'><a>Báo cáo</a></li>
                 </ul>
-                <ul>
+                <ul className='flex items-center'>
+                    <li className='p-3 pr-4 text-decoration-none'>
+                        <NavLink to={'/home/cart'}>
+                            <ShoppingCartOutlined className='text-2xl text-white' />
+                        </NavLink>
+                    </li>
                     <li className='p-3 pr-4 text-decoration-none text-white'>
                         <button onClick={showDrawer}>
                             <BsPersonCircle className='text-3xl' />

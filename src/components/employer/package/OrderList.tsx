@@ -1,42 +1,53 @@
+import { Alert, Button, Input, InputRef, Popconfirm, Space, Spin, Table, Tag } from 'antd'
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { useGetPostsByUIdQuery } from '../../../service/post';
-import { NavLink } from 'react-router-dom';
-import { SearchOutlined } from '@ant-design/icons';
-import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
-import { Button, Input, Space, Table } from 'antd';
-import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import type { FilterConfirmProps } from 'antd/es/table/interface'
+import { useState, useRef } from 'react'
+import { NavLink, useNavigate } from 'react-router-dom'
+import {
+    SearchOutlined,
+    MinusOutlined,
+    PlusOutlined,
+    EyeOutlined,
+    DeleteOutlined
+} from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
-import { MessageType } from 'antd/es/message/interface';
-import { useRemovePostMutation } from '../../../service/post'
+import IOrder from '../../../interface/employer/order';
 import UseAuth from '../../auth/UseAuth';
-import ImanageProfile from '../../../interface/manageProfile';
 import { useGetProfileQuery } from '../../../service/manage_profile';
+import ImanageProfile from '../../../interface/manageProfile';
+import { useGetOrdersByUIdQuery } from '../../../service/employer/order';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import { useAppSelector } from '../../../app/hook';
 
-const PostList = (): any | null | JSX.Element => {
+type Props = {}
+
+const OrderList: any = (props: Props) => {
     const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
-    const date = new Date()
+    const text: string = 'Are you sure to delete this order?'
 
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
     const user = useGetUserEprByEmailQuery(currentUser?.email)
-    const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
-    const text: string = 'Are you sure to delete this post?';
-
-    const [removePost] = useRemovePostMutation()
-    const onHandleRemove = (id: string) => {
-        const confirmMsg: MessageType = message.success('Xoa thanh cong.')
-        if (confirmMsg !== null) {
-            removePost(id)
-        }
+    const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(profile?._id)
+    interface DataType {
+        key: React.Key
+        product: {
+            _id: string;
+            package_name: string;
+            package_code: string;
+            package_desc: string;
+            package_price: number;
+            package_day: number;
+            status: boolean;
+            user_id: string;
+        };
+        orderCount: number;
     }
+    const dataSource: DataType[] = useAppSelector((item: any) => item.package)
 
     const handleSearch = (
         selectedKeys: string[],
@@ -128,44 +139,41 @@ const PostList = (): any | null | JSX.Element => {
                 text
             ),
     });
+
     const columns: ColumnsType<any> = [
         {
-            title: 'Tiêu đề',
-            dataIndex: 'job_name',
-            ...getColumnSearchProps('job_name'),
+            title: 'Tên dịch vụ',
+            dataIndex: 'order_name',
+            key: 'order_name',
+            ...getColumnSearchProps('order_name'),
         },
         {
-            title: 'Hình thức làm việc',
-            dataIndex: 'working_form',
-            filters: [
-                {
-                    text: 'online',
-                    value: 'online',
-                },
-                {
-                    text: 'offline',
-                    value: 'offline',
-                },
-            ],
-            onFilter: (value: any, record) => record.working_form.indexOf(value) === 0,
+            title: 'Đơn giá',
+            dataIndex: 'order_price',
+            key: 'order_price',
         },
         {
-            title: 'Khu vực',
-            dataIndex: 'work_location',
-            filters: [
-                {
-                    text: 'HN',
-                    value: 'HN',
-                },
-                {
-                    text: 'HCM',
-                    value: 'HCM',
-                },
-            ],
-            onFilter: (value: any, record) => record.work_location.indexOf(value) === 0,
+            title: 'Số lượng',
+            dataIndex: 'order_count',
+            key: 'order_count',
+            render: (_: any, record: IOrder) => (
+                <div className='flex items-center h-100'>
+                    <MinusOutlined />
+                    <span className='px-2'>{record.order_count}</span>
+                    <PlusOutlined />
+                </div>
+            ),
         },
         {
-            title: 'Ngày đăng',
+            title: 'Số tiền',
+            dataIndex: 'total',
+            key: 'total',
+            render: (_, record) => (
+                <p>{(record.order_price * record.order_count)}</p>
+            ),
+        },
+        {
+            title: 'Ngày tạo đơn',
             dataIndex: 'createdAt',
             render: (_, record) => (
                 <p>{(new Date(record.createdAt)).toLocaleString()}</p>
@@ -174,21 +182,15 @@ const PostList = (): any | null | JSX.Element => {
         },
         {
             title: 'Trạng thái',
-            dataIndex: 'post_status',
+            dataIndex: 'order_status',
             render: (_, record) => (
                 <>
                     {
-                        record.post_status == null ? <Tag
-                            color={'gold'}
-                            key={'Đang chờ duyệt'}>
-                            Đang chờ duyệt
+                        <Tag
+                            color={record.order_status ? "green" : "gold"}
+                            key={record.order_status ? "Đã duyệt" : "Đang chờ duyệt"}>
+                            {record.order_status ? "Đã duyệt" : "Đang chờ duyệt"}
                         </Tag>
-                            :
-                            <Tag
-                                color={record.post_status ? "green" : "red"}
-                                key={record.post_status ? "Đã duyệt" : "Từ chối"}>
-                                {record.post_status ? "Đã duyệt" : "Từ chối"}
-                            </Tag>
                     }
                 </>
             ),
@@ -199,15 +201,12 @@ const PostList = (): any | null | JSX.Element => {
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    <NavLink to={`/home/posts/${record._id}`}>
+                    <NavLink to={`/home/orders/${record._id}/detail`}>
                         <EyeOutlined className='text-dark' />
-                    </NavLink>
-                    <NavLink to={`/home/posts/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
                     </NavLink>
                     <Popconfirm placement="top"
                         title={text}
-                        onConfirm={() => onHandleRemove(record._id)}
+                        // onConfirm={() => onHandleRemove(record._id)}
                         okText="Yes"
                         cancelText="No">
                         <DeleteOutlined className='text-danger' />
@@ -222,9 +221,9 @@ const PostList = (): any | null | JSX.Element => {
         console.log('params', pagination, filters, sorter, extra);
     };
 
-    if (!user.currentData) {
-        return navigate('/login-epr')
-    }
+    // if (!user.currentData) {
+    //     return navigate('/login-epr')
+    // }
 
     if (isLoading) {
         return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>
@@ -240,25 +239,37 @@ const PostList = (): any | null | JSX.Element => {
     }
 
     return (
-        <>
-            <div className='mx-5'>
-                <div className='mt-4 min-h-screen'>
-                    <div className='d-flex align-items-center justify-content-between mb-2'>
-                        <div>
-                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý bài viết</h2>
-                        </div>
-                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-3 py-2'>
-                            <NavLink to={'/home/posts/add'} className='text-white text-decoration-none'>
-                                Đăng tin
-                            </NavLink>
-                        </div>
+        <div className='min-h-screen bg-white px-10 max-w-100 space-y-2'>
+            <ul className='flex items-center space-x-1 py-2 mb-3 border-b-2'>
+                <li className='border-1 rounded-full px-[10px] bg-[#C2C2C2]'>
+                    <NavLink to={'/home/cart'} className='text-white'>Giỏ hàng({dataSource.length})</NavLink>
+                </li>
+                <li className='border-1 rounded-full px-[10px] bg-[#FF7D55]'>
+                    <NavLink to={'/home/orders'} className='text-white'>Đơn hàng của tôi({orders.length})</NavLink>
+                </li>
+            </ul>
+            <div className='flex items-start space-x-5'>
+                <main className='w-[70%]'>
+                    <h2 className='text-[23px]'>Đơn hàng của tôi</h2>
+                    <div>
+                        <Table columns={columns}
+                            rowSelection={{
+                                type: 'checkbox'
+                            }}
+                            dataSource={orders}
+                            onChange={onChange} />
                     </div>
-                    <Table columns={columns} dataSource={posts} onChange={onChange} />
-                </div>
+                </main>
+                <aside className='w-[30%]'>
+                    <div className='border-1 shadow p-[30px]'>
+                        <h3 className='text-lg font-[550] m-0'>ĐẶT HÀNG TRỰC TUYẾN</h3>
+                        <p className='m-0'>Chọn dịch vụ phù hợp với nhu cầu và đặt mua trực tuyến</p>
+                        <button className='bg-[#FF7D55] text-white border-1 rounded px-2 py-1'>Mua ngay!</button>
+                    </div>
+                </aside>
             </div>
-        </>
+        </div>
     )
 }
 
-
-export default PostList
+export default OrderList

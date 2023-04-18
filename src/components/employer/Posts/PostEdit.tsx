@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { Button, Form, Input, message, Select } from 'antd'
 import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import IPost from '../../../interface/post'
@@ -6,11 +7,11 @@ import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
 import UseAuth from '../../auth/UseAuth';
 import { useGetProfileQuery } from '../../../service/manage_profile';
 import ImanageProfile from '../../../interface/manageProfile';
+import { apiGetProvinces } from '../../../service/api'
 
 const PostEdit = () => {
     const navigate = useNavigate()
     const { id } = useParams();
-
     const [form] = Form.useForm();
     const { data: post } = useGetPostQuery(id as string)
     form.setFieldsValue(post)
@@ -19,6 +20,16 @@ const PostEdit = () => {
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
+    const [provinces, setProvinces] = useState<any>([])
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            const { data: response }: any = await apiGetProvinces()
+            setProvinces(response?.results);
+        }
+        fetchProvinces()
+    }, [])
+
     const onHandleEdit = (post: IPost) => {
         console.log(post);
         try {
@@ -95,7 +106,14 @@ const PostEdit = () => {
                                 </Form.Item>
                                 <Form.Item name="work_location" label="Khu vực"
                                     rules={[{ required: true, message: 'Please input work location.' }]}>
-                                    <Input />
+                                    <Select defaultValue={'0'}>
+                                        <Select.Option value="0">- Chọn khu vực -</Select.Option>
+                                        {
+                                            provinces ? provinces?.map((province: any) =>
+                                                <Select.Option value={province.province_name}>{province.province_name}</Select.Option>
+                                            ) : ''
+                                        }
+                                    </Select>
                                 </Form.Item>
                             </div>
                         </div>

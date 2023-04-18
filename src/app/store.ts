@@ -17,14 +17,20 @@ import { authApi } from "../service/auth";
 import { adminApi } from "../service/admin";
 import { cvApi } from "../service/manage_cv";
 import { authEprApi } from "../service/auth_employer";
+import { packageApi } from "../service/package";
+import authReducer from "../reducer/auth";
+import packageReducer from "../reducer/package";
+import { orderApi } from "../service/employer/order";
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth', 'user']
+    whitelist: ['auth', 'package']
 }
 
 const rootReducer = combineReducers({
+    auth: authReducer,
+    package: packageReducer,
     [postApi.reducerPath]: postApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
     [voucherApi.reducerPath]: voucherApi.reducer,
@@ -32,6 +38,8 @@ const rootReducer = combineReducers({
     [cvApi.reducerPath]: cvApi.reducer,
     [authEprApi.reducerPath]: authEprApi.reducer,
     [adminApi.reducerPath]: adminApi.reducer,
+    [packageApi.reducerPath]: packageApi.reducer,
+    [orderApi.reducerPath]: orderApi.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -50,7 +58,9 @@ export const store = configureStore({
         cvApi.middleware,
         authApi.middleware,
         authEprApi.middleware,
-        adminApi.middleware
+        packageApi.middleware,
+        adminApi.middleware,
+        orderApi.middleware
     )
 })
 

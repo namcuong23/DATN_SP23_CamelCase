@@ -7,9 +7,9 @@ interface IAuth {
 }
 
 export const authApi = createApi({
-    reducerPath: 'auth',
+    reducerPath: 'authEpe',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
-    tagTypes: ['auth'],
+    tagTypes: ['authEpe'],
     endpoints: (builder: any) => ({
         signup: builder.mutation({
             query: (user: IAuth) => ({
@@ -17,7 +17,7 @@ export const authApi = createApi({
                 method: 'POST',
                 body: user
             }),
-            invalidatesTags: ['auth']
+            invalidatesTags: ['authEpe']
 
         }),
         signin: builder.mutation({
@@ -26,11 +26,11 @@ export const authApi = createApi({
                 method: 'POST',
                 body: user
             }),
-            invalidatesTags: ['auth']
+            invalidatesTags: ['authEpe']
         }),
         getUserByEmail: builder.query({
             query: (email: string) => `/epe-users/${email}`,
-            providesTags: ['auth']
+            providesTags: ['authEpe']
         })
         // getUsers: builder.query({
         //     query: () => `/users`,

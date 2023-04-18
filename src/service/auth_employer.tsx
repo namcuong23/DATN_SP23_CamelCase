@@ -6,9 +6,9 @@ interface IAuth {
 }
 
 export const authEprApi = createApi({
-    reducerPath: 'authEprApi',
+    reducerPath: 'authEpr',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
-    tagTypes: ['AuthEpr'],
+    tagTypes: ['authEpr'],
     endpoints: (builder: any) => ({
         registerWithEmployer: builder.mutation({
             query: (user: IAuth) => ({
@@ -16,7 +16,7 @@ export const authEprApi = createApi({
                 method: 'POST',
                 body: user
             }),
-            invalidatesTags: ['AuthEpr']
+            invalidatesTags: ['authEpr']
         }),
         LoginWithEmployer: builder.mutation({
             query: (user: IAuth) => ({
@@ -24,11 +24,11 @@ export const authEprApi = createApi({
                 method: 'POST',
                 body: user
             }),
-            invalidatesTags: ['AuthEpr']
+            invalidatesTags: ['authEpr']
         }),
         getUserEprByEmail: builder.query({
             query: (email: string) => `/epr-users/${email}`,
-            providesTags: ['auth']
+            providesTags: ['authEpr']
         })
     })
 })

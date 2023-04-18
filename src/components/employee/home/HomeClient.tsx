@@ -12,8 +12,6 @@ const HomeClient = () => {
   const { data: posts } = useGetPostsQuery()
   console.log(posts);
 
-
-
   return (
     <div>
       <div id="pageContentWrapper">

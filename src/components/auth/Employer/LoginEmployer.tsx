@@ -10,6 +10,8 @@ import UseAuth from '../UseAuth'
 import { CgSpinner } from "react-icons/cg"
 import { NavLink } from 'react-router-dom'
 import { useLoginWithEmployerMutation } from '../../../service/auth_employer'
+import { useAppDispatch } from '../../../app/hook'
+import { loginAuth } from '../../../app/actions/auth'
 
 
 
@@ -20,6 +22,8 @@ const LoginEmployer = () => {
     const currentUser: any = UseAuth()
     const [type, setType] = useState(false)
     const [loading, setLoading] = useState(false)
+    const dispatch = useAppDispatch()
+
     const showPassword = () => {
         setType(!type)
     }
@@ -42,14 +46,11 @@ const LoginEmployer = () => {
                 const login = await signin(user)
                 if (login) {
                     const userInfo = userCredential.user;
-                    console.log('login', user);
-                    currentUser.displayName = userInfo.displayName
+                    dispatch(loginAuth(currentUser))
                     setLoading(false)
-                    localStorage.setItem('userEpr', user.email)
                     message.success('Login')
                     navigate('/home')
                 }
-
             })
             .catch((error) => {
                 setLoading(false)

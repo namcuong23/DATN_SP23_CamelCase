@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Select, message } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { useAddPostMutation } from '../../../service/post';
 import UseAuth from '../../auth/UseAuth';
 import ImanageProfile from '../../../interface/manageProfile';
 import { useGetProfileQuery } from '../../../service/manage_profile';
+import { apiGetProvinces } from '../../../service/api';
 
 const PostAdd = () => {
     const [form] = Form.useForm();
@@ -15,7 +16,17 @@ const PostAdd = () => {
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
-    console.log(profile);
+    const [provinces, setProvinces] = useState<any>([])
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            const { data: response }: any = await apiGetProvinces()
+            setProvinces(response?.results);
+            console.log(response?.results);
+
+        }
+        fetchProvinces()
+    }, [])
 
     const onHandleAdd: any = (post: IPost) => {
         try {
@@ -95,7 +106,16 @@ const PostAdd = () => {
                                 </Form.Item>
                                 <Form.Item name="work_location" label="Khu vực"
                                     rules={[{ required: true, message: 'Please input work location.' }]}>
-                                    <Input />
+                                    {/* <Input /> */}
+                                    <Select defaultValue={'0'}>
+                                        <Select.Option value="0">- Chọn khu vực -</Select.Option>
+                                        {
+                                            provinces ? provinces?.map((province: any) =>
+                                                <Select.Option value={province.province_name}>{province.province_name}</Select.Option>
+                                            ) : ''
+                                        }
+
+                                    </Select>
                                 </Form.Item>
                             </div>
                         </div>
