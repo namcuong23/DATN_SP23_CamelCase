@@ -168,7 +168,6 @@ const HomeClient = () => {
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
 

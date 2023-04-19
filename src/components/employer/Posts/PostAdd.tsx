@@ -20,14 +20,9 @@ const PostAdd = () => {
 
     const onHandleAdd: any = (post: IPost) => {
         try {
-<<<<<<< HEAD
-            addPost({ ...post, post_status: null, user_id: 0 })
-            message.info('Dang tin thanh cong.')
-=======
             addPost({ ...post, post_status: null, user_id: profile?._id })
             console.log(post);
             message.success('Dang tin thanh cong.')
->>>>>>> 5849e9f51a8b552d7d69049d644b0cbda9008473
             navigate('/home/posts')
         } catch (error) {
             console.log(error);
