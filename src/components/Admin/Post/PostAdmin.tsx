@@ -15,6 +15,7 @@ const PostAdmin = () => {
     const { data: posts, error, isLoading } = useGetPostsQuery()
     const searchInput = useRef<InputRef>(null);
     const date = new Date()
+    let index = 0
     const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
     const [sortedInfo, setSortedInfo] = useState<SorterResult<IPost>>({});
     const [searchText, setSearchText] = useState('');
@@ -160,6 +161,11 @@ const PostAdmin = () => {
             ),
     });
     const columns: ColumnsType<any> = [
+        {
+            title: 'STT',
+            dataIndex: 'key',
+            render: () =>{return  index += 1}
+          },
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',

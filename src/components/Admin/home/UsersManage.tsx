@@ -9,7 +9,6 @@ import { Popconfirm } from 'antd';
 import { Modal } from "antd";
 const UsersManage = () => {
   const { data: Users, error, isLoading } = useGetUsersQuery();
-
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
   const searchInput = useRef<InputRef>(null);
