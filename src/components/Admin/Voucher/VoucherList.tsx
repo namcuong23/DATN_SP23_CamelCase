@@ -12,7 +12,7 @@ const VoucherList = () => {
     const { data: vouchers, error, isLoading } = useGetVouchersQuery()
     const remove = 'Bạn có muốn xoá gói voucher này?';
     const [removeVoucher] = useRemoveVoucherMutation()
-
+    let index = 0
     const onHandleRemove = (id: string) => {
         console.log(id);
         const confirm: MessageType = message.success('Xoá thành công')
@@ -22,6 +22,11 @@ const VoucherList = () => {
     }
 
     const columns: ColumnsType<any> = [
+        {
+            title: 'STT',
+            dataIndex: 'key',
+            render: () => { return index += 1 }
+        },
         {
             title: 'Tên gói',
             dataIndex: 'name',

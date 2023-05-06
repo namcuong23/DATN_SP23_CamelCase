@@ -5,25 +5,15 @@ import LayoutClient from "./components/layouts/LayoutClient"
 import HomeClient from "./components/employee/home/HomeClient"
 import Login from "./components/auth/Employee/Login"
 import OTPAuth from "./components/auth/OTPAuth"
-import PostAdd from "./components/employer/posts/PostAdd"
-import PostEdit from "./components/employer/posts/PostEdit"
-import PostDetail from "./components/employer/posts/PostDetail"
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
 import Profile from "./components/employee/profile/Profile"
 import LayoutAdmin from "./components/layouts/LayoutAdmin"
-import RedirectRoute from "./privateRoute/RedirectRoute"
 import PostDetailEp from "./components/employee/post/PostDetail"
 import Register from "./components/auth/Employee/Register"
 import RegisterEmployer from "./components/auth/Employer/RegisterEmployer"
 import LoginEmployer from "./components/auth/Employer/LoginEmployer"
-import VoucherList from "./components/admin/Voucher/VoucherList"
-import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/admin/Post/PostAdmin"
-import UsersManage from "./components/admin/home/UsersManage"
-import HomeAdmin from "./components/admin/home/HomeAdmin"
 import PackageList from "./components/employer/package/PackageList"
 import Cart from "./components/employer/package/Cart"
 import OrderList from "./components/employer/package/OrderList"
@@ -31,6 +21,17 @@ import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
 import PostList from "./components/employer/posts/PostList"
 import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
+import PostAdd from "./components/employer/posts/PostAdd"
+import PostEdit from "./components/employer/posts/PostEdit"
+import PostDetail from "./components/employer/posts/PostDetail"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import UsersManage from "./components/admin/home/UsersManage"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import CareerAdd from "./components/admin/Career/CareerAdd"
+import CareerList from "./components/admin/Career/CareerList"
 
 function App() {
   return (
@@ -99,6 +100,8 @@ function App() {
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />
           <Route path='posts' element={<PostAdmin />} />
+          <Route path='careers' element={<CareerList />} />
+          <Route path='careers/add' element={<CareerAdd />} />
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
