@@ -1,20 +1,20 @@
-import { Table } from 'antd'
+import { Popconfirm, Table, Tag, message } from 'antd'
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { NavLink, useParams } from 'react-router-dom';
-import { useGetOrderQuery, useGetOrdersByUIdQuery } from '../../../service/employer/order';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { useGetOrderQuery, useRemoveOrderMutation } from '../../../service/employer/order';
 import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import IOrder from '../../../interface/employer/order';
 import UseAuth from '../../auth/UseAuth';
 import { useGetProfileQuery } from '../../../service/manage_profile';
 import ImanageProfile from '../../../interface/manageProfile';
+import QRCode from 'qrcode.react';
 
 const OrderDetail = () => {
     const { id } = useParams()
-    const { data: order } = useGetOrderQuery<any>(id)
+    const navigate = useNavigate()
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
-    const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(profile?._id)
+    const { data: order } = useGetOrderQuery<any>(id)
 
     interface dataType {
         _id: string;
@@ -24,6 +24,11 @@ const OrderDetail = () => {
         total: number
     }
 
+    let orders: dataType[] = []
+    if (order) {
+        orders.push(order)
+    }
+
     const columns: ColumnsType<dataType> = [
         {
             title: 'TÊN DỊCH VỤ',
@@ -31,14 +36,14 @@ const OrderDetail = () => {
             key: 'order_name',
         },
         {
-            title: 'ĐƠN GIÁ',
-            dataIndex: 'order_price',
-            key: 'order_price',
-        },
-        {
             title: 'SỐ LƯỢNG',
             dataIndex: 'order_count',
             key: 'order_count',
+        },
+        {
+            title: 'ĐƠN GIÁ',
+            dataIndex: 'order_price',
+            key: 'order_price',
         },
         {
             title: 'SỐ TIỀN',
@@ -50,6 +55,31 @@ const OrderDetail = () => {
         }
     ];
 
+    const total = order?.order_price * order?.order_count
+    const totalVat = total * (10 / 100)
+
+    const [removeOrder] = useRemoveOrderMutation()
+    const text: string = 'Xác nhận hủy đơn hàng?'
+    const handleRemoveOrder = (id: string) => {
+        const deleteOrder: any = removeOrder(id)
+        if (deleteOrder) {
+            message.info("Hủy thành công!")
+            navigate('/home/orders')
+        }
+    }
+
+    const downloadQR = () => {
+        const canvas: any = document.getElementById('qrcode');
+        const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
+        console.log('pngUrl', pngUrl);
+        let downloadLink = document.createElement('a');
+        downloadLink.href = pngUrl;
+        downloadLink.download = 'QRCode.png';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    };
+
     return (
         <>
             <div className='min-h-screen'>
@@ -60,7 +90,7 @@ const OrderDetail = () => {
                     </NavLink>
                     <h2 className='text-xl'>Chi tiết đơn hàng</h2>
                 </div>
-                <div className='mx-20 flex items-center space-x-60 bg-white mt-3 border-l-[5px] border-[#004AD1] px-8 py-2 rounded-md'>
+                <div className='mx-20 flex items-center space-x-40 bg-white mt-3 border-l-[5px] border-[#004AD1] px-8 py-2 rounded-md'>
                     <div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Mã đơn hàng: </label>
@@ -68,17 +98,21 @@ const OrderDetail = () => {
                         </div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Người tạo đơn: </label>
-                            <span className='font-[700]'>NTD</span>
+                            <span className='font-[700]'>{profile?.name}</span>
                         </div>
                     </div>
                     <div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Ngày tạo đơn: </label>
-                            <span className='font-[700]'>17/04/2023</span>
+                            <span className='font-[700]'>{(new Date(order?.createdAt)).toLocaleDateString()}</span>
                         </div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Trạng thái đơn hàng: </label>
-                            <span className='font-[700] text-[#FD6333]'>Đang chờ duyệt</span>
+                            <Tag
+                                color={order?.order_status ? "green" : "gold"}
+                                key={order?.order_status ? "Đã duyệt" : "Đang chờ duyệt"}>
+                                {order?.order_status ? "Đã duyệt" : "Đang chờ duyệt"}
+                            </Tag>
                         </div>
                     </div>
                     <div>
@@ -98,7 +132,6 @@ const OrderDetail = () => {
                         <div className='mb-3'>
                             <Table
                                 columns={columns}
-
                                 dataSource={orders}
                                 pagination={false} />
 
@@ -107,25 +140,32 @@ const OrderDetail = () => {
                             <div className='px-4 border-b-[1px]'>
                                 <div className='pb-[7px] flex items-center justify-between'>
                                     <label>Tổng giá trị đơn hàng: </label>
-                                    <span className='font-[700]'>7.500.000 VND</span>
+                                    <span className='font-[700]'>{total} VND</span>
                                 </div>
                                 <div className='py-[7px] flex items-center justify-between'>
                                     <label>Tổng tiền chưa bào gồm VAT: </label>
-                                    <span className='font-[700]'>7.500.000 VND</span>
+                                    <span className='font-[700]'>{total} VND</span>
                                 </div>
                             </div>
                             <div className='px-4 pt-2'>
                                 <div className='py-[7px] flex items-center justify-between'>
                                     <label>VAT (10%): </label>
-                                    <span className='font-[700]'>750.000 VND</span>
+                                    <span className='font-[700]'>{totalVat} VND</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <label className='font-[700]'>Tổng số tiền thành toán: </label>
-                                    <span className='font-[700] text-[#004AD1] text-[18px]'>8.250.000 VND</span>
+                                    <span className='font-[700] text-[#004AD1] text-[18px]'>{total + totalVat} VND</span>
                                 </div>
                             </div>
                         </div>
-                        <button className='border-1 border-[#FD6333] text-[#FD6333] py-1 px-2 rounded mt-4'>Hủy đơn hàng</button>
+                        <Popconfirm placement="top"
+                            title={text}
+                            className="border-1 border-[#FD6333] text-[#FD6333] py-1 px-2 rounded mt-4"
+                            onConfirm={() => handleRemoveOrder(order._id)}
+                            okText="Yes"
+                            cancelText="No">
+                            <button>Hủy đơn hàng</button>
+                        </Popconfirm>
                     </main>
                     <aside className='w-[30%] p-3 bg-white border-1 rounded-md'>
                         <div className='flex justify-center'>
@@ -147,6 +187,19 @@ const OrderDetail = () => {
                             <div className='text-[#E35E5A] text-center py-2'>
                                 (Nhập chính xác giá trị đơn hàng)
                             </div>
+                        </div>
+                        <div className='flex justify-center text-center'>
+                            <div>
+                                <QRCode
+                                    id='qrcode'
+                                    value='https://www.facebook.com/dqv28'
+                                    size={290}
+                                    level={'H'}
+                                    includeMargin={true}
+                                />
+                                <button onClick={downloadQR}> Download QR </button>
+                            </div>
+
                         </div>
                         <div className='flex items-center justify-center space-x-1 my-2 cursor-pointer'>
                             <span>Hiện mã QR</span>

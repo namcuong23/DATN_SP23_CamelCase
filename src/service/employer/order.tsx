@@ -18,7 +18,7 @@ export const orderApi = createApi({
             query: (id: string) => `/orders/${id}`,
             providesTags: ['order']
         }),
-        createOrder: builder.query({
+        createOrder: builder.mutation({
             query: (order: IOrder) => ({
                 url: `/orders`,
                 method: 'POST',
@@ -26,9 +26,9 @@ export const orderApi = createApi({
             }),
             invalidatesTags: ['order']
         }),
-        removeOrder: builder.query({
+        removeOrder: builder.mutation({
             query: (id: string) => ({
-                url: `/orders`,
+                url: `/orders/${id}`,
                 method: 'DELETE',
                 credentials: 'omit'
             }),

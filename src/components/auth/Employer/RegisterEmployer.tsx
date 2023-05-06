@@ -5,7 +5,7 @@ import { SubmitHandler } from 'react-hook-form/dist/types';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import PhoneInput from 'react-phone-input-2'
-import { AiFillTaobaoSquare } from 'react-icons/ai';
+import { AiFillAlipaySquare, AiFillTaobaoSquare } from 'react-icons/ai';
 import { CgSpinner } from "react-icons/cg"
 import { useAddProfileMutation } from '../../../service/manage_profile';
 import { auth } from '../../../firebase';
@@ -41,7 +41,10 @@ const RegisterEmployer = () => {
                 await addProfile({
                     name: user.name,
                     email: user.email,
-                    phone: user.phone
+                    phone_props: {
+                        phone: user.phone,
+                        is_verified: false,
+                    },
                 })
 
                 const register = await signup({

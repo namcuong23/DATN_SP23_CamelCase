@@ -41,7 +41,10 @@ const Register = () => {
                 await addProfile({
                     name: user.name,
                     email: user.email,
-                    phone: user.phone
+                    phone_props: {
+                        phone: user.phone,
+                        is_verified: false
+                    },
                 })
 
                 const register = await signup({

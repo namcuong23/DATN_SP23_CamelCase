@@ -2,7 +2,7 @@ export interface User {
     _id: String,
     name: String,
     phone: String,
-    level_auth: Number,
     email: String,
+    level_auth: Number,
     password: String
 }

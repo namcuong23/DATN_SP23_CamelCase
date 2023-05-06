@@ -20,6 +20,7 @@ const HeaderEmployer = () => {
     const profile: ImanageProfile = data.currentData
     const user = useGetUserEprByEmailQuery(currentUser?.email)
     const dispatch = useAppDispatch()
+    console.log(data);
 
     const showDrawer = () => {
         setOpen(true);
@@ -105,13 +106,17 @@ const HeaderEmployer = () => {
                                 </div>
                             </div>
                             <div className='pt-[90px] px-[10px]'>
-                                <div className='flex items-start gap-2'>
+                                <div className='flex items-start'>
                                     <SettingOutlined className='text-[25px] font-[700]' />
-                                    <div className='flex flex-col gap-2'>
-                                        <span className='text-[17px] text-[#474747] font-[700]'>Thiết lập tài khoản</span>
-                                        <span className='text-[15px] text-[#474747]'>Quản lý tài khoản</span>
-                                        <span className='text-[15px] text-[#474747]'>Thông tin NTD</span>
-                                        <span className='text-[15px] text-[#474747]'>Quản lý ứng viên</span>
+                                    <div className='flex flex-col'>
+                                        <span className='text-[17px] text-[#474747] font-[700] px-3'>Thiết lập tài khoản</span>
+                                        <span className='text-[15px] text-[#474747] px-3 py-1'>Quản lý tài khoản</span>
+                                        <NavLink
+                                            to={'/home/profile-epr'}
+                                            className='text-[15px] text-[#474747] hover:text-[#474747] hover:bg-[#F3F8FC] px-3 py-1'>
+                                            Thông tin NTD
+                                        </NavLink>
+                                        <span className='text-[15px] text-[#474747] px-3 py-1'>Quản lý ứng viên</span>
                                     </div>
                                 </div>
                             </div>

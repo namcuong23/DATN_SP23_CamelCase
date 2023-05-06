@@ -17,6 +17,8 @@ const Profile = () => {
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
 
+    console.log(currentUser);
+
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
@@ -203,10 +205,10 @@ const Profile = () => {
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Số điện thoại</div>
 
-                                                        {profile?.phone ?
+                                                        {profile?.phone_props.phone ?
                                                             <>
                                                                 <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                    {profile?.phone}
+                                                                    {profile?.phone_props.phone}
                                                                     <button className='font-[100]'>
                                                                         <NavLink className={'hover:text-[#fd7e14] hover:no-underline'} to={'/otp'}>Xác thực</NavLink>
                                                                     </button>

@@ -4,7 +4,7 @@ const initState: { data: CartState[] } = {
     data: []
 }
 
-const packageReducer = (state = initState.data, action: any) => {
+const cartReducer = (state = initState.data, action: any) => {
     const nusQuantity = (pack: any) => {
         return { ...pack, orderCount: pack.orderCount += 1 };
     };
@@ -25,8 +25,9 @@ const packageReducer = (state = initState.data, action: any) => {
                 return [
                     ...state,
                     {
+                        key: action.pack._id,
                         product: action.pack,
-                        orderCount: 1
+                        orderCount: 1,
                     }
                 ]
             }
@@ -57,4 +58,4 @@ const packageReducer = (state = initState.data, action: any) => {
     }
 }
 
-export default packageReducer
+export default cartReducer

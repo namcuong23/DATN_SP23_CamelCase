@@ -1,21 +1,21 @@
 import React from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { useGetPackagesQuery } from '../../../service/package'
 import { Alert, Space, Spin, message } from 'antd'
 import IPackage from '../../../interface/package'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { setCart } from '../../../app/actions/package'
+import { useGetAdmPackagesQuery } from '../../../service/admin/package'
+import IAdPackage from '../../../interface/admin/package'
 
 type Props = {}
 
 const PackageList = (props: Props) => {
     const dispatch: any = useAppDispatch()
-    const data = useAppSelector(state => state.package)
-    console.log(data);
+    const data = useAppSelector(state => state.cart)
 
     const navigate = useNavigate()
-    const { data: packages, error, isLoading } = useGetPackagesQuery()
-    const onHandleAddToCart = (pack: IPackage) => {
+    const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
+    const onHandleAddToCart = (pack: IAdPackage) => {
         message.success('Thêm thành công!')
         const addToCart = dispatch(setCart(pack))
         // if (addToCart) {
@@ -54,9 +54,9 @@ const PackageList = (props: Props) => {
                         </div>
                         <div className='grid grid-cols-3 gap-x-3 mt-3'>
                             {
-                                packages ? packages?.map((pack: IPackage) =>
+                                packages ? packages?.map((pack: any) =>
                                     <div key={pack._id} className='bg-white p-4 border-none rounded mb-3'>
-                                        <h3 className='text-[18px]'>TOP MAX</h3>
+                                        <h3 className='text-[18px]'>{pack.package_name}</h3>
                                         <span className='text-[17px] text-[#FD6333] font-[700]'>{pack.package_price} VND</span>
                                         <p>Quảng cáo tin đăng hiệu quả với vị trí nổi bật trong <span className='font-[550]'>Việc làm tốt nhất</span> kết hợp cùng các dịch cao cấp và được bảo hành vị trí ưu tiên.</p>
                                         <div className='flex items-center justify-between'>

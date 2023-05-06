@@ -222,9 +222,9 @@ const PostList = (): any | null | JSX.Element => {
         console.log('params', pagination, filters, sorter, extra);
     };
 
-    if (!user.currentData) {
-        return navigate('/login-epr')
-    }
+    // if (!user.currentData) {
+    //     return navigate('/login-epr')
+    // }
 
     if (isLoading) {
         return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>

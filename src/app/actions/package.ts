@@ -1,7 +1,8 @@
+import IAdPackage from "../../interface/admin/package";
 import IPackage from "../../interface/package";
 import actionTypes from "./actionTypes";
 
-export const setCart = (pack: IPackage) => {
+export const setCart = (pack: IAdPackage) => {
     if (pack) {
         return {
             type: actionTypes.SET_CART,

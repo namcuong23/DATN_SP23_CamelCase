@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import type { ColumnsType } from 'antd/es/table';
-import { NavLink } from 'react-router-dom';
-import { Popconfirm, Space, Table } from 'antd';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { Popconfirm, Space, Table, message } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
@@ -9,12 +9,15 @@ import { minusProductCart, nusProductCart, removeProductCart } from '../../../ap
 import UseAuth from '../../auth/UseAuth';
 import { useGetProfileQuery } from '../../../service/manage_profile';
 import ImanageProfile from '../../../interface/manageProfile';
-import { useGetOrdersByUIdQuery } from '../../../service/employer/order';
+import { useGetOrdersByUIdQuery, useRemoveOrderMutation } from '../../../service/employer/order';
+import { useCreateOrderMutation } from '../../../service/employer/order';
+import IOrder from '../../../interface/employer/order';
 
 type Props = {}
 
 const Cart = (props: Props) => {
     const dispatch: any = useAppDispatch()
+    const navigate = useNavigate()
     const text: string = 'Are you sure to delete this item?'
 
     const onHandleRemove = (id: string) => {
@@ -43,11 +46,10 @@ const Cart = (props: Props) => {
             package_price: number;
             package_day: number;
             status: boolean;
-            user_id: string;
         };
         orderCount: number;
     }
-    const dataSource: DataType[] = useAppSelector((item: any) => item.package)
+    const dataSource: DataType[] = useAppSelector((item: any) => item.cart)
 
     const columns: ColumnsType<DataType> = [
         {
@@ -109,17 +111,45 @@ const Cart = (props: Props) => {
         },
     ];
 
-    const [selectedRowKeys, setSelectedRowKeys] = useState();
-    //     setSelectedRowKeys(selectedRowKeys);
-    // };
+    const [selectedRowKeys, setSelectedRowKeys] = useState<DataType[]>([]);
+    let total: number = 0
+    for (let i = 0; i < selectedRowKeys.length; i++) {
+        total += ((selectedRowKeys[i].product.package_price) * selectedRowKeys[i].orderCount)
+    }
+    const totalVat: number = total * (10 / 100)
 
-    // const rowSelection = {
-    //     selectedRowKeys,
-    //     onSelect: (record: any, selected: boolean) => {
-    //         selected ? setSelectedRowKeys(record) : ''
-    //     }
-    // };
-    // console.log(selectedRowKeys);
+    const [createOrder] = useCreateOrderMutation<IOrder>()
+    const handleCreateOrder = (orders: DataType[] | []) => {
+        try {
+            for (let i = 0; i < orders.length; i++) {
+                const addOrder: any = createOrder({
+                    order_name: orders[i].product.package_name,
+                    order_status: false,
+                    order_count: orders[i].orderCount,
+                    order_price: orders[i].product.package_price,
+                    custom: profile.name,
+                    user_id: profile._id,
+                    package_id: orders[i].product._id,
+                    voucher_id: null,
+                })
+                if (addOrder) {
+                    dispatch(removeProductCart(orders[i].product._id))
+                }
+            }
+            // orders.length > 0 ?
+            navigate('/home/orders')
+            // : message.info("Vui lòng chọn gói.")
+        } catch (error) {
+            console.log(error);
+
+        }
+
+    }
+
+    const [isChecked, setIsChecked] = useState(true)
+    const handleConfirm = () => {
+        setIsChecked(!isChecked)
+    }
 
     return (
         <>
@@ -139,11 +169,16 @@ const Cart = (props: Props) => {
                             <Table columns={columns}
                                 rowSelection={{
                                     type: 'checkbox',
-                                    onSelect: (record: any) => {
-                                        // setSelectedRowKeys(record);
-                                        // console.log(selectedRowKeys);
-                                        console.log(record);
-                                    }
+                                    onSelect: (record: any, selected: any) => {
+                                        const pack: any = selectedRowKeys.filter((item: any) => item.product._id !== record.product._id)
+                                        selected ? setSelectedRowKeys([
+                                            ...selectedRowKeys,
+                                            record
+                                        ]) : setSelectedRowKeys(pack);
+                                    },
+                                    // onSelectAll: () => {
+
+                                    // }
                                 }}
                                 expandable={{
                                     expandedRowRender: (record) => <p style={{ margin: 0 }}>{record.product.package_desc}</p>,
@@ -162,15 +197,15 @@ const Cart = (props: Props) => {
                             <div>
                                 <div className='px-3 py-2 flex jitems-center justify-between border-b'>
                                     <label className='m-0'>Tổng giá trị đơn hàng: </label>
-                                    <span className='font-[700]'>7.500.000 VND</span>
+                                    <span className='font-[700]'>{total} VND</span>
                                 </div>
                                 <div className='px-3 py-2 flex jitems-center justify-between border-b'>
                                     <label className='m-0'>Tổng tiền chưa bao gồm VAT: </label>
-                                    <span className='font-[700]'>7.500.000 VND</span>
+                                    <span className='font-[700]'>{total} VND</span>
                                 </div>
                                 <div className='px-3 py-2 flex jitems-center justify-between border-b'>
-                                    <label className='m-0'>VAT(10%): </label>
-                                    <span className='font-[700]'>750.000 VND</span>
+                                    <label className='m-0'>VAT (10%): </label>
+                                    <span className='font-[700]'>{totalVat} VND</span>
                                 </div>
                                 <div className='px-3 py-2 border-b space-x-2'>
                                     <label className='m-0'>Mã ưu đãi: </label>
@@ -178,16 +213,21 @@ const Cart = (props: Props) => {
                                 </div>
                                 <div className='px-3 py-2 flex items-center justify-between'>
                                     <label className='m-0 font-[700]'>Tổng số tiền thanh toán: </label>
-                                    <span className='font-[700] text-[#FD6333] text-[19px]'>8.250.000 VND</span>
+                                    <span className='font-[700] text-[#FD6333] text-[19px]'>{total + totalVat} VND</span>
                                 </div>
                             </div>
                             <div>
                                 <div className='px-3 py-2 flex items-center space-x-2'>
-                                    <input type="checkbox" />
+                                    <input type="checkbox" onChange={handleConfirm} />
                                     <span>Tôi đồng ý với <span className='text-[#004AD1]'>Điều khoản dịch vụ</span> của công ty.</span>
                                 </div>
                                 <div className='px-3 pt-3 pb-4 py-2'>
-                                    <button className='bg-[#FD6333] text-white w-full p-1 rounded'>Tạo đơn hàng</button>
+                                    <button
+                                        onClick={() => handleCreateOrder(selectedRowKeys)}
+                                        disabled={isChecked}
+                                        className={isChecked || selectedRowKeys.length == 0 ? 'bg-[#FD6333] text-white w-full p-1 rounded opacity-75' : 'bg-[#FD6333] text-white w-full p-1 rounded'}>
+                                        Tạo đơn hàng
+                                    </button>
                                 </div>
                             </div>
                         </div>

@@ -1,12 +1,10 @@
-import { Alert, Button, Input, InputRef, Popconfirm, Space, Spin, Table, Tag } from 'antd'
+import { Alert, Button, Input, InputRef, Popconfirm, Space, Spin, Table, Tag, message } from 'antd'
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface'
 import { useState, useRef } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
     SearchOutlined,
-    MinusOutlined,
-    PlusOutlined,
     EyeOutlined,
     DeleteOutlined
 } from '@ant-design/icons';
@@ -15,14 +13,14 @@ import IOrder from '../../../interface/employer/order';
 import UseAuth from '../../auth/UseAuth';
 import { useGetProfileQuery } from '../../../service/manage_profile';
 import ImanageProfile from '../../../interface/manageProfile';
-import { useGetOrdersByUIdQuery } from '../../../service/employer/order';
+import { useGetOrdersByUIdQuery, useRemoveOrderMutation } from '../../../service/employer/order';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useAppSelector } from '../../../app/hook';
+import { MutationActionCreatorResult } from '@reduxjs/toolkit/dist/query/core/buildInitiate';
 
 type Props = {}
 
 const OrderList: any = (props: Props) => {
-    const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
@@ -31,7 +29,6 @@ const OrderList: any = (props: Props) => {
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
-    const user = useGetUserEprByEmailQuery(currentUser?.email)
     const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(profile?._id)
     interface DataType {
         key: React.Key
@@ -41,13 +38,11 @@ const OrderList: any = (props: Props) => {
             package_code: string;
             package_desc: string;
             package_price: number;
-            package_day: number;
-            status: boolean;
-            user_id: string;
+            package_day: number
         };
         orderCount: number;
     }
-    const dataSource: DataType[] = useAppSelector((item: any) => item.package)
+    const dataSource: DataType[] = useAppSelector((item: any) => item.cart)
 
     const handleSearch = (
         selectedKeys: string[],
@@ -140,6 +135,14 @@ const OrderList: any = (props: Props) => {
             ),
     });
 
+    const [removeOrder] = useRemoveOrderMutation()
+    const onHandleRemove = (id: string) => {
+        const deleteOrder: any = removeOrder(id)
+        if (deleteOrder) {
+            message.info('Xóa thành công!')
+        }
+    }
+
     const columns: ColumnsType<any> = [
         {
             title: 'Tên dịch vụ',
@@ -156,13 +159,6 @@ const OrderList: any = (props: Props) => {
             title: 'Số lượng',
             dataIndex: 'order_count',
             key: 'order_count',
-            render: (_: any, record: IOrder) => (
-                <div className='flex items-center h-100'>
-                    <MinusOutlined />
-                    <span className='px-2'>{record.order_count}</span>
-                    <PlusOutlined />
-                </div>
-            ),
         },
         {
             title: 'Số tiền',
@@ -176,7 +172,7 @@ const OrderList: any = (props: Props) => {
             title: 'Ngày tạo đơn',
             dataIndex: 'createdAt',
             render: (_, record) => (
-                <p>{(new Date(record.createdAt)).toLocaleString()}</p>
+                <p>{(new Date(record.createdAt)).toLocaleDateString()}</p>
             ),
 
         },
@@ -206,7 +202,7 @@ const OrderList: any = (props: Props) => {
                     </NavLink>
                     <Popconfirm placement="top"
                         title={text}
-                        // onConfirm={() => onHandleRemove(record._id)}
+                        onConfirm={() => onHandleRemove(record._id)}
                         okText="Yes"
                         cancelText="No">
                         <DeleteOutlined className='text-danger' />
@@ -253,9 +249,6 @@ const OrderList: any = (props: Props) => {
                     <h2 className='text-[23px]'>Đơn hàng của tôi</h2>
                     <div>
                         <Table columns={columns}
-                            rowSelection={{
-                                type: 'checkbox'
-                            }}
                             dataSource={orders}
                             onChange={onChange} />
                     </div>

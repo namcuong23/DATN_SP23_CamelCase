@@ -30,6 +30,7 @@ import OrderList from "./components/employer/package/OrderList"
 import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
 import PostList from "./components/employer/posts/PostList"
+import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
 
 function App() {
   return (
@@ -76,6 +77,7 @@ function App() {
         {/* EMPLOYER */}
         <Route path='/home' element={<LayoutEmployer />}>
           <Route index element={<Home />} />
+          <Route path='profile-epr' element={<ProfileEpr />} />
           <Route path='posts' element={<PostList />} />
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />

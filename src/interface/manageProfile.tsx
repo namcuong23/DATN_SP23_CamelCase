@@ -2,7 +2,10 @@ interface ImanageProfile {
     _id: string;
     name: string;
     email: string;
-    phone: string;
+    phone_props: {
+        phone: string;
+        is_verified: boolean;
+    };
     birth_day: string;
     province: string;
     district: number;

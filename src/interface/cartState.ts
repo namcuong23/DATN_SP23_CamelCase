@@ -1,7 +1,8 @@
-import IPackage from "./package";
+import IAdPackage from "./admin/package";
 
 interface CartState {
-    product: IPackage,
+    key: string,
+    product: IAdPackage,
     orderCount: number
 }
 

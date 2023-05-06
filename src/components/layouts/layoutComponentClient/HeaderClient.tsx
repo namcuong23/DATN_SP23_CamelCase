@@ -13,7 +13,6 @@ const HeaderClient = () => {
     const currentUser: any = UseAuth()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
-    const email = localStorage.getItem('userEpe')
     const user: any = useGetUserByEmailQuery(currentUser?.email)
     const dispatch = useAppDispatch()
 
