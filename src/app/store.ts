@@ -11,6 +11,7 @@ import {
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { jobdoneApi } from '../services/jobdone';
+import { personalInforApi } from '../services/personalInfor';
 const persistConfig = {
     key: 'root',
     storage,
@@ -18,6 +19,7 @@ const persistConfig = {
 }
 const rootReducer = combineReducers({
     [jobdoneApi.reducerPath]: jobdoneApi.reducer,
+    [personalInforApi.reducerPath]: personalInforApi.reducer,
 })
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 export const store = configureStore({
@@ -26,7 +28,7 @@ export const store = configureStore({
         serializableCheck: {
             ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-    }).concat(jobdoneApi.middleware),
+    }).concat(jobdoneApi.middleware, personalInforApi.middleware),
 })
 export default persistStore(store)
 export type AppDispatch = typeof store.dispatch;

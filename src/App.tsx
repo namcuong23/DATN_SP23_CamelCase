@@ -5,6 +5,7 @@ import LayoutClient from './components/layouts/LayoutClient'
 import LayoutWebsite from './components/layouts/LayoutEmployer'
 import Jobdone from './components/pages/Jobdone'
 import "./App.css"
+import PersonalInfor from './components/pages/PersonalInfor'
 function App() {
 
   return (
@@ -18,6 +19,10 @@ function App() {
         </Route>
         <Route path='/jobdones' element={<LayoutClient />}>
           <Route index element={<Jobdone />} />
+        </Route>
+        <Route path='/personalInfors' element={<LayoutClient />}>
+          <Route index element={<PersonalInfor />} />
+          <Route path="/personalInfors/:id" element={<PersonalInfor />} />
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
