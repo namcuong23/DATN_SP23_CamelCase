@@ -15,7 +15,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       </PersistGate>
     </Provider>
   </BrowserRouter>
-
 )
 
 import "./assets/vendor/jquery/jquery.min.js"

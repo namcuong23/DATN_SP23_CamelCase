@@ -5,7 +5,6 @@ import LayoutClient from "./components/layouts/LayoutClient"
 import HomeClient from "./components/employee/home/HomeClient"
 import Login from "./components/auth/Employee/Login"
 import OTPAuth from "./components/auth/OTPAuth"
-import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
 import Profile from "./components/employee/profile/Profile"
@@ -33,7 +32,11 @@ import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import CareerList from "./components/admin/Career/CareerList"
 import ServicesEpr from "./components/employer/package/ServicesEpr"
-
+import HomeEmployer from './components/home/HomeEmployer'
+import Jobdone from './components/pages/Jobdone'
+import "./App.css"
+import PersonalInfor from './components/pages/PersonalInfor'
+import LayoutEmployer from "./components/layouts/LayoutEmployer"
 function App() {
   return (
     <div className="App">
@@ -104,6 +107,19 @@ function App() {
           <Route path='posts' element={<PostAdmin />} />
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
+        </Route>
+        <Route path='/' element={<LayoutClient />}>
+          <Route index element={<HomeClient />} />
+        </Route>
+        <Route path='/employs' element={<LayoutEmployer />}>
+          <Route index element={<HomeEmployer />} />
+        </Route>
+        <Route path='/jobdones' element={<LayoutClient />}>
+          <Route index element={<Jobdone />} />
+        </Route>
+        <Route path='/personalInfors' element={<LayoutClient />}>
+          <Route index element={<PersonalInfor />} />
+          <Route path="/personalInfors/:id" element={<PersonalInfor />} />
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
