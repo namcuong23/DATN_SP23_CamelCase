@@ -1,4 +1,4 @@
-import type {TableProps } from 'antd/es/table';
+import type { TableProps } from 'antd/es/table';
 import { NavLink } from 'react-router-dom';
 import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, InputRef, Space, Table } from 'antd';
@@ -64,7 +64,7 @@ const CareerList = () => {
                         onClick={() => clearFilters && handleReset(clearFilters)}
                         size="small"
                         style={{ width: 90 }}
->
+                    >
                         Reset
                     </Button>
                     <Button
@@ -119,8 +119,8 @@ const CareerList = () => {
         {
             title: 'STT',
             dataIndex: 'key',
-            render: () =>{return  index += 1}
-          },
+            render: () => { return index += 1 }
+        },
         {
             title: 'Tên gói',
             dataIndex: 'name',
@@ -128,7 +128,7 @@ const CareerList = () => {
         },
 
 
- 
+
         {
             title: 'Hành động',
             dataIndex: '_id',
@@ -154,7 +154,7 @@ const CareerList = () => {
         console.log('params', pagination, filters, sorter, extra);
     };
     if (isLoading)
-return <Space direction="vertical" style={{ width: '100%' }}>
+        return <Space direction="vertical" style={{ width: '100%' }}>
             <Spin tip="Loading" size="large">
                 <div className="content" />
             </Spin>
@@ -170,7 +170,7 @@ return <Space direction="vertical" style={{ width: '100%' }}>
                     <h2 className='mt-0 text-xl'>Quản lý các ngành nghề</h2>
                 </div>
                 <div className='bg-success rounded px-3 py-2'>
-                    <NavLink to={'/admin/career/add'} className='text-white text-decoration-none'>
+                    <NavLink to={'/admin/careers/add'} className='text-white text-decoration-none'>
                         Tạo ngành nghề mới
                     </NavLink>
                 </div>

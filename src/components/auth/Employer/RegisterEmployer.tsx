@@ -4,20 +4,17 @@ import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
-import PhoneInput from 'react-phone-input-2'
-import { AiFillAlipaySquare, AiFillTaobaoSquare } from 'react-icons/ai';
-import { CgSpinner } from "react-icons/cg"
-import { useAddProfileMutation } from '../../../service/manage_profile';
 import { auth } from '../../../firebase';
 import { useRegisterWithEmployerMutation } from '../../../service/auth_employer';
 import { useSignupAMutation } from '../../../service/admin';
+import { useAddEprProfileMutation } from '../../../service/employer/profileEpr';
 
 const RegisterEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signup] = useRegisterWithEmployerMutation()
     const [signupA] = useSignupAMutation()
-    const [addProfile] = useAddProfileMutation()
+    const [addEprProfile] = useAddEprProfileMutation()
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState(false)
     const showPassword = () => {
@@ -38,7 +35,7 @@ const RegisterEmployer = () => {
                     .then(() => {
                         message.info('Email verification link sent!')
                     })
-                await addProfile({
+                await addEprProfile({
                     name: user.name,
                     email: user.email,
                     phone_props: {
@@ -129,7 +126,7 @@ const RegisterEmployer = () => {
                                 </div>
 
                                 <div className='flex items-center justify-end my-5'>
-                                    <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-2 px-3 rounded text-white font-[500]'>Đăng nhập</button>
+                                    <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-2 px-3 rounded text-white font-[500]'>Đăng ký</button>
                                 </div>
 
                             </form>

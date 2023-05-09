@@ -3,15 +3,14 @@ import type { ColumnsType } from 'antd/es/table';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { Popconfirm, Space, Table, message } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
-import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import { minusProductCart, nusProductCart, removeProductCart } from '../../../app/actions/package';
 import UseAuth from '../../auth/UseAuth';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import ImanageProfile from '../../../interface/manageProfile';
-import { useGetOrdersByUIdQuery, useRemoveOrderMutation } from '../../../service/employer/order';
+import { useGetOrdersByUIdQuery } from '../../../service/employer/order';
 import { useCreateOrderMutation } from '../../../service/employer/order';
 import IOrder from '../../../interface/employer/order';
+import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 
 type Props = {}
 
@@ -33,8 +32,8 @@ const Cart = (props: Props) => {
     }
 
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
+    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const profile: IProfileEpr = data.currentData
     const { data: orders } = useGetOrdersByUIdQuery<any>(profile?._id)
     interface DataType {
         key: React.Key;

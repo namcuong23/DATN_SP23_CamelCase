@@ -32,6 +32,7 @@ import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
 import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import CareerList from "./components/admin/Career/CareerList"
+import ServicesEpr from "./components/employer/package/ServicesEpr"
 
 function App() {
   return (
@@ -89,6 +90,7 @@ function App() {
           <Route path='orders/:id/detail' element={<OrderDetail />} />
           <Route path='notice' element={<OrderNotice />} />
           <Route path='cart' element={<Cart />} />
+          <Route path='services' element={<ServicesEpr />} />
           <Route path='manage-cv' element={<ProfileList />} />
         </Route>
 

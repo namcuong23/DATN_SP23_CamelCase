@@ -1,20 +1,22 @@
 import { Popconfirm, Table, Tag, message } from 'antd'
-import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
+import type { ColumnsType } from 'antd/es/table';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useGetOrderQuery, useRemoveOrderMutation } from '../../../service/employer/order';
 import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import UseAuth from '../../auth/UseAuth';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import ImanageProfile from '../../../interface/manageProfile';
 import QRCode from 'qrcode.react';
+import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 
 const OrderDetail = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
+    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const profile: IProfileEpr = data.currentData
     const { data: order } = useGetOrderQuery<any>(id)
+    const paymentTerm = new Date(order?.createdAt)
+    paymentTerm.setDate(paymentTerm.getDate() + 1)
 
     interface dataType {
         _id: string;
@@ -60,6 +62,7 @@ const OrderDetail = () => {
 
     const [removeOrder] = useRemoveOrderMutation()
     const text: string = 'Xác nhận hủy đơn hàng?'
+
     const handleRemoveOrder = (id: string) => {
         const deleteOrder: any = removeOrder(id)
         if (deleteOrder) {
@@ -118,7 +121,7 @@ const OrderDetail = () => {
                     <div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Hạn thanh toán: </label>
-                            <span className='font-[700]'>17/04/2023</span>
+                            <span className='font-[700]'>{paymentTerm.toLocaleDateString()}</span>
                         </div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Trạng thái thanh toán: </label>

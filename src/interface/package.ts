@@ -6,7 +6,7 @@ interface IPackage {
     package_price: number,
     package_day: number,
     status: boolean,
-    user_id: boolean,
+    user_id: string,
 }
 
 export default IPackage

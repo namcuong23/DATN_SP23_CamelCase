@@ -6,8 +6,8 @@ export const packageApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
     tagTypes: ['packageEpr'],
     endpoints: (builder) => ({
-        getPackages: builder.query<IPackage[], void>({
-            query: () => '/packages',
+        getPackages: builder.query<IPackage[], string>({
+            query: (uid: string) => `/packages/${uid}`,
             providesTags: ['packageEpr']
         }),
         getPackage: builder.query<IPackage, string>({

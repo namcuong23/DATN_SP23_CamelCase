@@ -4,23 +4,22 @@ import { BsPersonCircle } from 'react-icons/bs'
 import { SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons"
 import { Drawer, message } from 'antd';
 import UseAuth from '../../auth/UseAuth';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import ImanageProfile from '../../../interface/manageProfile';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
 import { useAppDispatch } from '../../../app/hook';
 import { logoutAuth } from '../../../app/actions/auth';
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import IProfileEpr from '../../../interface/employer/profileEpr';
 
 const HeaderEmployer = () => {
     const [open, setOpen] = useState(false);
     const currentUser: any = UseAuth()
     const navigate = useNavigate()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
+    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const profile: IProfileEpr = data.currentData
     const user = useGetUserEprByEmailQuery(currentUser?.email)
     const dispatch = useAppDispatch()
-    console.log(data);
 
     const showDrawer = () => {
         setOpen(true);
@@ -64,12 +63,19 @@ const HeaderEmployer = () => {
                         </NavLink>
                     </li>
                     <li className='p-3 text-decoration-none text-white'><a>Ứng viên</a></li>
-                    <li className='p-3 text-decoration-none text-white'><a>Ưu đãi</a></li>
                     <li className='p-3 text-decoration-none text-white'>
                         <NavLink to={'/home/packages'}
                             className='d-flex align-items-center text-decoration-none text-white'>
                             <span className='hover:text-orange-400'>
                                 Mua dịch vụ
+                            </span>
+                        </NavLink>
+                    </li>
+                    <li className='p-3 text-decoration-none text-white'>
+                        <NavLink to={'/home/services'}
+                            className='d-flex align-items-center text-decoration-none text-white'>
+                            <span className='hover:text-orange-400'>
+                                Dịch vụ của tôi
                             </span>
                         </NavLink>
                     </li>

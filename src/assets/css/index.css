@@ -17,6 +17,9 @@ li a {
   body{
     background-color: #f6f6f6;
   }
+  * {
+    box-sizing: border-box;
+  }
   #nav {
     background: #0a0a23;
   }

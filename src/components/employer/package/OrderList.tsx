@@ -1,7 +1,7 @@
 import { Alert, Button, Input, InputRef, Popconfirm, Space, Spin, Table, Tag, message } from 'antd'
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
     SearchOutlined,
@@ -9,14 +9,11 @@ import {
     DeleteOutlined
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import IOrder from '../../../interface/employer/order';
 import UseAuth from '../../auth/UseAuth';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import ImanageProfile from '../../../interface/manageProfile';
 import { useGetOrdersByUIdQuery, useRemoveOrderMutation } from '../../../service/employer/order';
-import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useAppSelector } from '../../../app/hook';
-import { MutationActionCreatorResult } from '@reduxjs/toolkit/dist/query/core/buildInitiate';
+import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 
 type Props = {}
 
@@ -27,9 +24,10 @@ const OrderList: any = (props: Props) => {
     const text: string = 'Are you sure to delete this order?'
 
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
+    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const profile: IProfileEpr = data.currentData
     const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(profile?._id)
+    const [removeOrder] = useRemoveOrderMutation()
     interface DataType {
         key: React.Key
         product: {
@@ -42,6 +40,19 @@ const OrderList: any = (props: Props) => {
         };
         orderCount: number;
     }
+
+    useEffect(() => {
+        orders?.forEach((order: any | {}) => {
+            const paymentTerm = new Date(order?.createdAt)
+            const today = new Date()
+            paymentTerm.setDate(paymentTerm.getDate() + 1)
+
+            if (paymentTerm.getTime() < today.getTime()) {
+                removeOrder(order._id)
+            }
+        });
+    }, [orders])
+
     const dataSource: DataType[] = useAppSelector((item: any) => item.cart)
 
     const handleSearch = (
@@ -135,7 +146,6 @@ const OrderList: any = (props: Props) => {
             ),
     });
 
-    const [removeOrder] = useRemoveOrderMutation()
     const onHandleRemove = (id: string) => {
         const deleteOrder: any = removeOrder(id)
         if (deleteOrder) {
