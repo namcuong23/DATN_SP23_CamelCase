@@ -6,29 +6,56 @@ import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { useRef, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
 import { useRemovePostMutation } from '../../../service/post'
 import UseAuth from '../../auth/UseAuth';
-import ImanageProfile from '../../../interface/manageProfile';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import IProfileEpr from '../../../interface/employer/profileEpr';
 
 const PostList = (): any | null | JSX.Element => {
-    const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
-    const date = new Date()
 
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
-    const user = useGetUserEprByEmailQuery(currentUser?.email)
+    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const profile: IProfileEpr = data.currentData
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
     const text: string = 'Are you sure to delete this post?';
+
+    interface DataType {
+        key: string;
+        _id: string;
+        job_name: string;
+        job_description: string;
+        job_salary: number;
+        working_form: string;
+        number_of_recruits: number;
+        requirements: string;
+        gender: string;
+        work_location: string;
+        post_status: boolean | null;
+        user_id: string;
+        createdAt: string;
+    }
+    type DataIndex = keyof DataType;
+    const dataSource = posts?.map((item: DataType, index: string) => ({
+        key: String(index),
+        _id: String(item._id),
+        job_name: String(item.job_name),
+        job_description: String(item.job_description),
+        job_salary: Number(item.job_salary),
+        working_form: String(item.working_form),
+        number_of_recruits: Number(item.number_of_recruits),
+        requirements: String(item.requirements),
+        gender: String(item.job_name),
+        work_location: String(item.work_location),
+        post_status: Boolean(item.post_status),
+        user_id: String(item.user_id),
+        createdAt: String(item.createdAt),
+    }))
 
     const [removePost] = useRemovePostMutation()
     const onHandleRemove = (id: string) => {
@@ -41,7 +68,7 @@ const PostList = (): any | null | JSX.Element => {
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
-        dataIndex: any,
+        dataIndex: DataIndex,
     ) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -52,7 +79,7 @@ const PostList = (): any | null | JSX.Element => {
         clearFilters();
         setSearchText('');
     };
-    const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -128,7 +155,7 @@ const PostList = (): any | null | JSX.Element => {
                 text
             ),
     });
-    const columns: ColumnsType<any> = [
+    const columns: ColumnsType<DataType> = [
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
@@ -168,7 +195,7 @@ const PostList = (): any | null | JSX.Element => {
             title: 'Ngày đăng',
             dataIndex: 'createdAt',
             render: (_, record) => (
-                <p>{(new Date(record.createdAt)).toLocaleString()}</p>
+                <p>{(new Date(record.createdAt)).toLocaleDateString()}</p>
             ),
 
         },
@@ -253,7 +280,7 @@ const PostList = (): any | null | JSX.Element => {
                             </NavLink>
                         </div>
                     </div>
-                    <Table columns={columns} dataSource={posts} onChange={onChange} />
+                    <Table columns={columns} dataSource={dataSource} onChange={onChange} />
                 </div>
             </div>
         </>

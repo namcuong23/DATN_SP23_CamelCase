@@ -29,19 +29,24 @@ const VoucherList = () => {
         },
         {
             title: 'Tên gói',
-            dataIndex: 'name',
+            dataIndex: 'package_name',
         },
         {
             title: 'Mô tả',
-            dataIndex: 'description',
+            dataIndex: 'package_desc',
         },
         {
             title: 'Giá',
-            dataIndex: 'price',
+            dataIndex: 'package_price',
         },
         {
             title: 'Thời gian hiệu lực',
-            dataIndex: 'valid',
+            dataIndex: 'package_day',
+            render: (_, record) => (
+                <>
+                    <div>{record.package_day} tháng</div>
+                </>
+            )
         },
         {
             title: 'Trạng thái',
@@ -49,9 +54,9 @@ const VoucherList = () => {
             render: (_, record) => (
                 <>
                     <Tag
-                        color={record.status ? "gold" : "green"}
-                        key={record.status ? "Đang chờ duyệt" : "Khả dụng"}>
-                        {record.status ? "Đang chờ duyệt" : "Khả dụng"}
+                        color={record.status ? "green" : "gold"}
+                        key={record.status ? "Khả dụng" : "Đang chờ duyệt"}>
+                        {record.status ? "Khả dụng" : "Đang chờ duyệt"}
                     </Tag>
                 </>
             ),

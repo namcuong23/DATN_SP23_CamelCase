@@ -1,9 +1,9 @@
 interface IAdmin_voucher {
     _id: string;
-    name: string;
-    description: string;
-    price: string;
-    valid: string;
+    package_name: string;
+    package_desc: string;
+    package_price: number;
+    package_day: number;
     status: boolean;
 }
 

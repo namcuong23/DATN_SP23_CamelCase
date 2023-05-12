@@ -30,10 +30,10 @@ const PostEdit = () => {
         fetchProvinces()
     }, [])
 
-    const onHandleEdit = (post: IPost) => {
-        console.log(post);
+    const onHandleEdit = (postForm: IPost) => {
+        console.log(postForm);
         try {
-            editPost({ ...post, post_status: false, user_id: profile?._id, _id: id })
+            editPost({ ...postForm, post_status: post.post_status, user_id: profile?._id, _id: id })
             message.success('Sửa thành công.')
             navigate('/home/posts')
         } catch (error) {

@@ -178,7 +178,7 @@ const PersonalInfor = (props: Props) => {
                                                 <div className='row'>
                                                     <h1 className='font-bold text-2xl pb-3 col-10 row'>Thông tin cá nhân</h1>
                                                     <div className='col-2 '>
-                                                        <Link to={`/personalInfors/${personalInfor._id}`} onClick={showForm}>
+                                                        <Link to={`/personalInfors/${personalInfor?._id}`} onClick={showForm}>
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen" viewBox="0 0 16 16">
                                                                 <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
                                                             </svg>
@@ -188,27 +188,26 @@ const PersonalInfor = (props: Props) => {
                                                 </div>
 
                                                 <div className='row mt-3'>
-                                                    <div className='col row'><label className='col-3'>Email</label> <label className='font-bold col-9'>{personalInfor.email}</label></div>
-                                                    <div className='col row'><label className='col-3'>Số điện thoại</label> <label className='font-bold col-9'>{personalInfor.numberphone}</label></div>
+                                                    <div className='col row'><label className='col-3'>Email</label> <label className='font-bold col-9'>{personalInfor?.email}</label></div>
+                                                    <div className='col row'><label className='col-3'>Số điện thoại</label> <label className='font-bold col-9'>{personalInfor?.numberphone}</label></div>
                                                     <hr className='px-1' />
                                                 </div>
                                                 <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Ngày sinh</label> <label className='font-bold col-9'>{personalInfor.date}</label></div>
-                                                    <div className='col row'><label className='col-3'>Quốc tịch</label> <label className='font-bold col-9'>{personalInfor.nationality}</label></div>
+                                                    <div className='col row'><label className='col-3'>Ngày sinh</label> <label className='font-bold col-9'>{personalInfor?.date}</label></div>
+                                                    <div className='col row'><label className='col-3'>Quốc tịch</label> <label className='font-bold col-9'>{personalInfor?.nationality}</label></div>
                                                     <hr className='px-1' />
                                                 </div>
                                                 <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Giới tính</label> <label className='font-bold col-9'>{personalInfor.sex}</label></div>
-                                                    <div className='col row'><label className='col-3'>Quốc gia</label> <label className='font-bold col-9'>{personalInfor.nation}</label></div>
+                                                    <div className='col row'><label className='col-3'>Giới tính</label> <label className='font-bold col-9'>{personalInfor?.sex}</label></div>
+                                                    <div className='col row'><label className='col-3'>Quốc gia</label> <label className='font-bold col-9'>{personalInfor?.nation}</label></div>
                                                     <hr className='px-1' />
                                                 </div>
                                                 <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Tỉnh/Thành phố</label> <label className='font-bold col-9'>{personalInfor.city}</label></div>
-                                                    <div className='col row'><label className='col-3'>Quận/Huyện</label> <label className='font-bold col-9'>{personalInfor.district} </label></div>
-                                                    <hr className='px-1' />
+                                                    <div className='col row'><label className='col-3'>Tỉnh/Thành phố</label> <label className='font-bold col-9'>{personalInfor?.city}</label></div>
+                                                    <div className='col row'><label className='col-3'>Quận/Huyện</label> <label className='font-bold col-9'>{personalInfor?.district} </label></div>
                                                 </div>
                                                 <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Địa chỉ</label> <label className='font-bold col-9'>{personalInfor.address}</label></div>
+                                                    <div className='col row'><label className='col-3'>Địa chỉ</label> <label className='font-bold col-9'>{personalInfor?.address}</label></div>
                                                     <div className='col row'><label className='col-3'></label> <label className='font-bold col-9'></label></div>
                                                 </div>
 
@@ -229,7 +228,7 @@ const PersonalInfor = (props: Props) => {
                                                 </div>
                                                 <div className="mb-3 col-6">
                                                     <label className="form-label"><label className="text-red-400">*</label> Số điện thoại</label>
-                                                    <input type="number" className="form-control" {...register("numberphone", { required: true, minLength:10 })} />
+                                                    <input type="number" className="form-control" {...register("numberphone", { required: true, minLength: 10 })} />
                                                     {errors.numberphone?.type === "required" && <p className='text-danger'>Vui lòng nhập Số điện thoại</p>}
                                                     {errors.numberphone?.type === "minLength" && <p className='text-danger'>Vui lòng nhập chính xác số điện thoại</p>}
                                                 </div>

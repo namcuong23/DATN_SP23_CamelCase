@@ -135,9 +135,9 @@ const CareerList = () => {
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    <NavLink to={`/admin/vouchers/${record._id}/edit`}>
+                    {/* <NavLink to={`/admin/vouchers/${record._id}/edit`}>
                         <EditOutlined className='text-dark' />
-                    </NavLink>
+                    </NavLink> */}
                     <Popconfirm placement="top"
                         title={remove}
                         onConfirm={() => onHandleRemove(record._id)}

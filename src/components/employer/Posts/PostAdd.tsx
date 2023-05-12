@@ -5,25 +5,23 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import IPost from '../../../interface/post';
 import { useAddPostMutation } from '../../../service/post';
 import UseAuth from '../../auth/UseAuth';
-import ImanageProfile from '../../../interface/manageProfile';
-import { useGetProfileQuery } from '../../../service/manage_profile';
 import { apiGetProvinces } from '../../../service/api';
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import IProfileEpr from '../../../interface/employer/profileEpr';
 
 const PostAdd = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const [addPost] = useAddPostMutation()
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
+    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const profile: IProfileEpr = data.currentData
     const [provinces, setProvinces] = useState<any>([])
 
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
             setProvinces(response?.results);
-            console.log(response?.results);
-
         }
         fetchProvinces()
     }, [])
@@ -31,12 +29,10 @@ const PostAdd = () => {
     const onHandleAdd: any = (post: IPost) => {
         try {
             addPost({ ...post, post_status: null, user_id: profile?._id })
-            console.log(post);
             message.success('Dang tin thanh cong.')
             navigate('/home/posts')
         } catch (error) {
             console.log(error);
-
         }
     }
     return (

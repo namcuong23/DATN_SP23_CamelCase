@@ -6,16 +6,14 @@ import IAdmin_voucher from '../../../interface/admin_voucher';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { useAddVoucherMutation } from '../../../service/admin_voucher';
 
-type Props = {}
-
 const VoucherAdd = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const [addVoucher] = useAddVoucherMutation()
-    const onHandleAdd: SubmitHandler<IAdmin_voucher> = (voucher: IAdmin_voucher) => {
-        console.log(voucher);
+    const onHandleAdd: any = (voucher: IAdmin_voucher) => {
+        console.log({ ...voucher, status: true });
         try {
-            addVoucher({ ...voucher, status: false })
+            addVoucher({ ...voucher, status: true })
             message.success('Tạo voucher thành công.')
             navigate('/admin/vouchers')
         } catch (error) { }
@@ -29,11 +27,11 @@ const VoucherAdd = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border border-4 border-success p-3 rounded-circle' />
+                                className='text-success border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Tên gói</div>
-                            <Form.Item name="name" label="Tên gói voucher dành cho khách hàng"
+                            <Form.Item name="package_name" label="Tên gói voucher dành cho khách hàng"
                                 rules={[
                                     { required: true, message: "Please input your name." },
                                 ]}>
@@ -45,11 +43,11 @@ const VoucherAdd = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border border-4 border-success p-3 rounded-circle' />
+                                className='text-success border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Mô tả</div>
-                            <Form.Item name="description" label="Thông tin chi tiết về gói voucher này"
+                            <Form.Item name="package_desc" label="Thông tin chi tiết về gói voucher này"
                                 rules={[
                                     { required: true, message: "Please input your description." },
                                 ]}>
@@ -61,11 +59,11 @@ const VoucherAdd = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border border-4 border-success p-3 rounded-circle' />
+                                className='text-success border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Giá</div>
-                            <Form.Item name="price" label="Thông tin về giá tiền"
+                            <Form.Item name="package_price" label="Thông tin về giá tiền"
                                 rules={[
                                     { required: true, message: "Please input your price." },
                                 ]}>
@@ -77,17 +75,17 @@ const VoucherAdd = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border border-4 border-success p-3 rounded-circle' />
+                                className='text-success border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thời gian hiệu lực</div>
-                            <Form.Item name="valid" label="Thời gian hiệu lực của voucher"
+                            <Form.Item name="package_day" label="Thời gian hiệu lực của voucher"
                                 rules={[{ required: true, message: 'Please choose a gender.' }]}>
                                 <Select>
-                                    <Select.Option value="1 tháng">1 tháng</Select.Option>
-                                    <Select.Option value="3 tháng">3 tháng</Select.Option>
-                                    <Select.Option value="6 tháng">6 tháng</Select.Option>
-                                    <Select.Option value="12 tháng">12 tháng</Select.Option>
+                                    <Select.Option value={1}>1 tháng</Select.Option>
+                                    <Select.Option value={3}>3 tháng</Select.Option>
+                                    <Select.Option value={6}>6 tháng</Select.Option>
+                                    <Select.Option value={12}>12 tháng</Select.Option>
                                 </Select>
                             </Form.Item>
                         </div>

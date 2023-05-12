@@ -23,6 +23,7 @@ import cartReducer from "../reducer/package";
 import { orderApi } from "../service/employer/order";
 import { packageAdmApi } from "../service/admin/package";
 import { profileEprApi } from "../service/employer/profileEpr";
+import { personalInforApi } from "../services/personalInfor";
 
 const persistConfig = {
     key: 'root',
@@ -44,6 +45,7 @@ const rootReducer = combineReducers({
     [packageApi.reducerPath]: packageApi.reducer,
     [packageAdmApi.reducerPath]: packageAdmApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
+    [personalInforApi.reducerPath]: personalInforApi.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -66,7 +68,8 @@ export const store = configureStore({
         packageApi.middleware,
         packageAdmApi.middleware,
         adminApi.middleware,
-        orderApi.middleware
+        orderApi.middleware,
+        personalInforApi.middleware
     )
 })
 

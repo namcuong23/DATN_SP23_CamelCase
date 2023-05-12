@@ -4,39 +4,39 @@ import IAdmin_voucher from "../interface/admin_voucher"
 export const voucherApi: any = createApi({
     reducerPath: 'voucherApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
-    tagTypes: ['voucher'],
+    tagTypes: ['adPackage'],
     endpoints: (builder) => ({
         getVouchers: builder.query<IAdmin_voucher[], void>({
-            query: () => '/vouchers',
-            providesTags: ['voucher']
+            query: () => '/ad-packages',
+            providesTags: ['adPackage']
         }),
         getVoucher: builder.query<IAdmin_voucher, string>({
-            query: (id: string) => `/vouchers/${id}`,
-            providesTags: ['voucher']
+            query: (id: string) => `/ad-packages/${id}`,
+            providesTags: ['adPackage']
         }),
         addVoucher: builder.mutation<IAdmin_voucher, Omit<IAdmin_voucher, '_id'>>({
             query: (voucher: IAdmin_voucher) => ({
-                url: '/vouchers',
+                url: '/ad-packages',
                 method: 'POST',
                 body: voucher
             }),
-            invalidatesTags: ['voucher']
+            invalidatesTags: ['adPackage']
         }),
         editVoucher: builder.mutation<IAdmin_voucher, Partial<IAdmin_voucher> & Pick<IAdmin_voucher, '_id'>>({
             query: (voucher: IAdmin_voucher) => ({
-                url: `/vouchers/${voucher._id}`,
+                url: `/ad-packages/${voucher._id}`,
                 method: 'PUT',
                 body: voucher
             }),
-            invalidatesTags: ['voucher']
+            invalidatesTags: ['adPackage']
         }),
         removeVoucher: builder.mutation({
             query: (id: string) => ({
-                url: `/vouchers/${id}`,
+                url: `/ad-packages/${id}`,
                 method: 'DELETE',
                 credentials: 'omit'
             }),
-            invalidatesTags: ['voucher']
+            invalidatesTags: ['adPackage']
         })
     })
 })

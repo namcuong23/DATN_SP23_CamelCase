@@ -8,7 +8,7 @@ interface IPost {
     requirements: string;
     gender: string;
     work_location: string;
-    post_status: boolean;
+    post_status: boolean | null;
     user_id: string;
 }
 

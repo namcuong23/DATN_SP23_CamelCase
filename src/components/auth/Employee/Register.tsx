@@ -14,11 +14,14 @@ import { useSignupAMutation } from '../../../service/admin';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
+    console.log(errors);
+
     const navigate = useNavigate()
     const [signup] = useSignupMutation()
     const [signupA] = useSignupAMutation()
     const [addProfile] = useAddProfileMutation()
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState(null)
     const [type, setType] = useState(false)
     const showPassword = () => {
         setType(!type)
@@ -26,6 +29,7 @@ const Register = () => {
 
     const signUp: SubmitHandler<any> = async (user: any) => {
         setLoading(true)
+        setError(null)
         const email = user.email
         const password = user.password
 
@@ -64,8 +68,7 @@ const Register = () => {
             })
             .catch((error) => {
                 setLoading(false)
-                const errorCode = error.code;
-                console.log(errorCode);
+                setError(error.code)
             });
 
     }
@@ -146,7 +149,9 @@ const Register = () => {
                                 <form onSubmit={handleSubmit(signUp)}>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Tên</label>
-                                        <input {...register('name', { required: true })}
+                                        <input {...register('name', {
+                                            required: true
+                                        })}
                                             type="text"
                                             className={errors.name ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
                                             name='name' />
@@ -174,6 +179,7 @@ const Register = () => {
                                             name='email' />
                                         {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
                                         {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
+                                        {error != null && !errors.email ? <span className='text-red-500 fw-bold mt-1'>{error}</span> : ''}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Mật khẩu</label>
@@ -223,7 +229,7 @@ const Register = () => {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-lg-7 d-none d-lg-block bg-gray-200" />
+                        {/* <div className="col-lg-7 d-none d-lg-block bg-gray-200" /> */}
                     </div>
                 </div>
             </div >
