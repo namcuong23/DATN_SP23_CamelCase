@@ -4,8 +4,6 @@ import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInWithPopup } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
-import PhoneInput from 'react-phone-input-2'
-import { AiFillTaobaoSquare } from 'react-icons/ai';
 import { CgSpinner } from "react-icons/cg"
 import { useSignupMutation } from '../../../service/auth';
 import { useAddProfileMutation } from '../../../service/manage_profile';
@@ -14,8 +12,6 @@ import { useSignupAMutation } from '../../../service/admin';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
-    console.log(errors);
-
     const navigate = useNavigate()
     const [signup] = useSignupMutation()
     const [signupA] = useSignupAMutation()
@@ -160,11 +156,17 @@ const Register = () => {
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Số điện thoại</label>
                                         {/* <PhoneInput country={"vn"} /> */}
-                                        <input {...register('phone', { required: true })}
+                                        <input {...register('phone', {
+                                            required: true,
+                                            minLength: 10,
+                                            pattern: /"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"/gmi
+                                        })}
                                             type="text"
                                             className={errors.phone ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
                                             name='phone' />
                                         {errors.phone && errors.phone.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Số điện thoại.</span>}
+                                        {errors.phone && errors.phone.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'> Số điện thoại phải có ít nhất 10 ký tự.</span>}
+                                        {errors.phone && errors.phone.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Số điện thoại không hợp lệ.</span>}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Email</label>
@@ -173,13 +175,13 @@ const Register = () => {
                                                 required: true,
                                                 pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                                             })}
-                                            type="email"
+                                            type="text"
                                             placeholder='Sử dụng email có thật để xác thực.'
                                             className={errors.email ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
                                             name='email' />
                                         {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
-                                        {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
-                                        {error != null && !errors.email ? <span className='text-red-500 fw-bold mt-1'>{error}</span> : ''}
+                                        {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
+                                        {/* {error != null && !errors.email ? <span className='text-red-500 fw-bold mt-1'>{error}</span> : ''} */}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Mật khẩu</label>
@@ -189,7 +191,7 @@ const Register = () => {
                                                     required: true,
                                                     minLength: 6,
                                                     maxLength: 50,
-                                                    pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,15}$/
+                                                    pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,50}$/
                                                 })}
                                                 type={type ? 'text' : "password"}
                                                 placeholder='Từ 6 đến 50 ký tự, 1 chữ hoa, 1 chữ thường.'
