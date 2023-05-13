@@ -10,7 +10,7 @@ const WorkPage = (props: Props) => {
 
     const salaryOptions = [
         {
-            title: "Tất cả",
+            title: "Lương Theo Giờ",
             salary: []
         },
         {
