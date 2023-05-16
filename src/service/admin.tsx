@@ -4,18 +4,30 @@ import ICareer from "../interface/admin/career";
 
 
 interface IAuth {
-    email: string;
+    name: string;
     password: string
 }
-
+interface Block{
+    _id : string,
+    level_auth : string
+}
 export const adminApi = createApi({
     reducerPath: 'admin',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
     tagTypes: ['User', 'Career'],
     endpoints: (builder) => ({
+        signinAdmin: builder.mutation({
+            query: (user: IAuth) => ({
+                url: '/signin',
+                method: 'POST',
+                body: user
+            }),
+            invalidatesTags: ['User']
+
+        }),
         signupA: builder.mutation({
             query: (user: IAuth) => ({
-                url: '/signup',
+                url: '/signin',
                 method: 'POST',
                 body: user
             }),
@@ -62,13 +74,23 @@ export const adminApi = createApi({
             query: () => '/careers',
             providesTags: ['Career']
         }),
+        blockUser: builder.mutation({
+            query: (body:Block) => ({
+              url: `/block`,
+              method: 'PATCH',
+              body: body,
+            }),
+            invalidatesTags: ['User'],
+          }),
     })
 });
 export const {
     useGetUsersQuery,
     useUpdateUserMutation,
-    useSignupAMutation,
     useAddCareerMutation,
     useGetCareersQuery,
-    useRemoveCareerMutation
+    useRemoveCareerMutation,
+    useSigninAdminMutation,
+    useSignupAMutation,
+    useBlockUserMutation
 } = adminApi

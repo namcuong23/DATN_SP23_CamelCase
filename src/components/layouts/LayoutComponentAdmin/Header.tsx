@@ -11,8 +11,8 @@ const Header = (props: Props) => {
         </div>
         <div className="nk-header-brand d-xl-none">
           <a href="html/index.html" className="logo-link">
-            <img className="logo-light logo-img" src="./src/assets/img/admin/images/logo.png" srcSet="./src/assets/img/admin/images/logo2x.png 2x" alt="logo" />
-            <img className="logo-dark logo-img" src="./src/assets/img/admin/images/logo-dark.png" srcSet="./src/assets/img/admin/images/logo-dark2x.png 2x" alt="logo-dark" />
+            {/* <img className="logo-light logo-img" src="./src/assets/img/admin/images/logo.png" srcSet="./src/assets/img/admin/images/logo2x.png 2x" alt="logo" />
+            <img className="logo-dark logo-img" src="./src/assets/img/admin/images/logo-dark.png" srcSet="./src/assets/img/admin/images/logo-dark2x.png 2x" alt="logo-dark" /> */}
           </a>
         </div>{/* .nk-header-brand */}
         <div className="nk-header-search ms-3 ms-xl-0">
@@ -23,42 +23,15 @@ const Header = (props: Props) => {
           <ul className="nk-quick-nav">
             <li className="dropdown language-dropdown d-none d-sm-block me-n1">
               <a href="#" className="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown">
-                <div className="quick-icon border border-light">
-                  <img className="icon" src="./src/assets/img/admin/images/flags/english-sq.png" alt="" />
-                </div>
+                
               </a>
               <div className="dropdown-menu dropdown-menu-end dropdown-menu-s1">
-                <ul className="language-list">
-                  <li>
-                    <a href="#" className="language-item">
-                      <img src="./src/assets/img/admin/images/flags/english.png" alt="" className="language-flag" />
-                      <span className="language-name">English</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="language-item">
-                      <img src="./src/assets/img/admin/images/flags/spanish.png" alt="" className="language-flag" />
-                      <span className="language-name">Español</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="language-item">
-                      <img src="./src/assets/img/admin/images/flags/french.png" alt="" className="language-flag" />
-                      <span className="language-name">Français</span>
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" className="language-item">
-                      <img src="./src/assets/img/admin/images/flags/turkey.png" alt="" className="language-flag" />
-                      <span className="language-name">Türkçe</span>
-                    </a>
-                  </li>
-                </ul>
+              
               </div>
             </li>{/* .dropdown */}
             <li className="dropdown chats-dropdown hide-mb-xs">
               <a href="#" className="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown">
-                <div className="icon-status icon-status-na"><em className="icon ni ni-comments" /></div>
+              
               </a>
               <div className="dropdown-menu dropdown-menu-xl dropdown-menu-end">
                 <div className="dropdown-head">
@@ -110,7 +83,7 @@ const Header = (props: Props) => {
                     <li className="chat-item">
                       <a className="chat-link" href="html/apps-chats.html">
                         <div className="chat-media user-avatar">
-                          <img src="./src/assets/img/admin/images/avatar/b-sm.jpg" alt="" />
+                          <img src="#" alt="" />
                         </div>
                         <div className="chat-info">
                           <div className="chat-from">
@@ -127,7 +100,7 @@ const Header = (props: Props) => {
                       <a className="chat-link" href="html/apps-chats.html">
                         <div className="chat-media user-avatar user-avatar-multiple">
                           <div className="user-avatar">
-                            <img src="./src/assets/img/admin/images/avatar/c-sm.jpg" alt="" />
+                            <img src="#" alt="" />
                           </div>
                           <div className="user-avatar">
                             <span>AB</span>
@@ -150,7 +123,7 @@ const Header = (props: Props) => {
                     <li className="chat-item">
                       <a className="chat-link" href="html/apps-chats.html">
                         <div className="chat-media user-avatar">
-                          <img src="./src/assets/img/admin/images/avatar/a-sm.jpg" alt="" />
+                          <img src="#" alt="" />
                           <span className="status dot dot-lg dot-success" />
                         </div>
                         <div className="chat-info">
@@ -191,14 +164,7 @@ const Header = (props: Props) => {
               </div>
             </li>
             <li className="dropdown notification-dropdown">
-              <a href="#" className="dropdown-toggle nk-quick-nav-icon" data-bs-toggle="dropdown">
-                <div className="icon-status icon-status-info"><em className="icon ni ni-bell" /></div>
-              </a>
               <div className="dropdown-menu dropdown-menu-xl dropdown-menu-end">
-                <div className="dropdown-head">
-                  <span className="sub-title nk-dropdown-title">Notifications</span>
-                  <a href="#">Mark All as Read</a>
-                </div>
                 <div className="dropdown-body">
                   <div className="nk-notification">
                     <div className="nk-notification-item dropdown-inner">
@@ -206,8 +172,6 @@ const Header = (props: Props) => {
                         <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
                       </div>
                       <div className="nk-notification-content">
-                        <div className="nk-notification-text">You have requested to <span>Widthdrawl</span></div>
-                        <div className="nk-notification-time">2 hrs ago</div>
                       </div>
                     </div>
                     <div className="nk-notification-item dropdown-inner">
@@ -215,44 +179,34 @@ const Header = (props: Props) => {
                         <em className="icon icon-circle bg-success-dim ni ni-curve-down-left" />
                       </div>
                       <div className="nk-notification-content">
-                        <div className="nk-notification-text">Your <span>Deposit Order</span> is placed</div>
-                        <div className="nk-notification-time">2 hrs ago</div>
                       </div>
                     </div>
                     <div className="nk-notification-item dropdown-inner">
                       <div className="nk-notification-icon">
                         <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
                       </div>
-                      <div className="nk-notification-content">
-                        <div className="nk-notification-text">You have requested to <span>Widthdrawl</span></div>
-                        <div className="nk-notification-time">2 hrs ago</div>
+                      <div className="nk-notification-content">             
                       </div>
                     </div>
                     <div className="nk-notification-item dropdown-inner">
                       <div className="nk-notification-icon">
                         <em className="icon icon-circle bg-success-dim ni ni-curve-down-left" />
                       </div>
-                      <div className="nk-notification-content">
-                        <div className="nk-notification-text">Your <span>Deposit Order</span> is placed</div>
-                        <div className="nk-notification-time">2 hrs ago</div>
+                      <div className="nk-notification-content">                      
                       </div>
                     </div>
                     <div className="nk-notification-item dropdown-inner">
                       <div className="nk-notification-icon">
                         <em className="icon icon-circle bg-warning-dim ni ni-curve-down-right" />
                       </div>
-                      <div className="nk-notification-content">
-                        <div className="nk-notification-text">You have requested to <span>Widthdrawl</span></div>
-                        <div className="nk-notification-time">2 hrs ago</div>
+                      <div className="nk-notification-content">                      
                       </div>
                     </div>
                     <div className="nk-notification-item dropdown-inner">
                       <div className="nk-notification-icon">
                         <em className="icon icon-circle bg-success-dim ni ni-curve-down-left" />
                       </div>
-                      <div className="nk-notification-content">
-                        <div className="nk-notification-text">Your <span>Deposit Order</span> is placed</div>
-                        <div className="nk-notification-time">2 hrs ago</div>
+                      <div className="nk-notification-content">                     
                       </div>
                     </div>
                   </div>{/* .nk-notification */}

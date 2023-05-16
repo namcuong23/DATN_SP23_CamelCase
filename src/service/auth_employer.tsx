@@ -5,6 +5,7 @@ interface IAuth {
     password: string
 }
 
+
 export const authEprApi = createApi({
     reducerPath: 'authEpr',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
@@ -36,5 +37,5 @@ export const authEprApi = createApi({
 export const {
     useRegisterWithEmployerMutation,
     useLoginWithEmployerMutation,
-    useGetUserEprByEmailQuery
+    useGetUserEprByEmailQuery,
 } = authEprApi

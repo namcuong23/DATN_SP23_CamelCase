@@ -19,7 +19,7 @@ const SideBar = (props: Props) => {
 
         </div>
         <div className="nk-menu-trigger me-n2">
-          <a href="#" className="nk-nav-toggle nk-quick-nav-icon d-xl-none" data-target="sidebarMenu"><em className="icon ni ni-arrow-left" /></a>
+       
         </div>
       </div>
       <div className="nk-sidebar-element">
@@ -28,43 +28,34 @@ const SideBar = (props: Props) => {
             <ul className="nk-menu">
 
               <Link to='/admin'>
-                <li className="nk-menu-item has-sub w-full ">
-                  <a href="#" className="nk-menu-link">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">              
                     <span className="nk-menu-icon m-1"><AreaChartOutlined /></span>
                     <span className="nk-menu-text">Dashboard</span>
-                  </a>
                 </li>
               </Link>
               <Link to="/admin/users-management">
-                <li className="nk-menu-item has-sub w-full ">
-                  <a href="#" className="nk-menu-link">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">              
                     <span className="nk-menu-icon m-1" ><UserOutlined /></span>
-                    <span className="nk-menu-text">Quản lý người dùng</span>
-                  </a>
+                   <span className="nk-menu-text">Quản lý người dùng</span>
                 </li>
               </Link>
               <Link to="/admin/posts">
-                <li className="nk-menu-item has-sub w-full ">
-                  <a href="#" className="nk-menu-link">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">              
                     <span className="nk-menu-icon m-1"><ReconciliationOutlined /></span>
                     <span className="nk-menu-text">Quản lý bài tuyển dụng</span>
-                  </a>
                 </li>
               </Link>
               <Link to="/admin/vouchers">
-                <li className="nk-menu-item has-sub w-full ">
-                  <a href="#" className="nk-menu-link">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">
+                
                     <span className="nk-menu-icon m-1"><TagsOutlined /></span>
                     <span className="nk-menu-text">Quản lý Voucher</span>
-                  </a>
                 </li>
               </Link>
               <Link to="/admin/careers">
-                <li className="nk-menu-item has-sub w-full ">
-                  <a href="#" className="nk-menu-link">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">                
                     <span className="nk-menu-icon m-1"><DeploymentUnitOutlined /></span>
                     <span className="nk-menu-text">Quản lý bài Ngành nghề</span>
-                  </a>
                 </li>
               </Link>
             </ul>
