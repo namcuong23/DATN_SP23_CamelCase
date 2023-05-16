@@ -159,7 +159,7 @@ const Register = () => {
                                         <input {...register('phone', {
                                             required: true,
                                             minLength: 10,
-                                            pattern: /"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"/gmi
+                                            pattern: /\(?([0-9]{3})\)?([ .-]?)([0-9]{3})\2([0-9]{4})/
                                         })}
                                             type="text"
                                             className={errors.phone ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
