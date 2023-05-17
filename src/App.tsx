@@ -7,6 +7,7 @@ import Login from "./components/auth/Employee/Login"
 import OTPAuth from "./components/auth/OTPAuth"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
+import Feedback from "./components/employee/feedback/Feedback"
 import Profile from "./components/employee/profile/Profile"
 import LayoutAdmin from "./components/layouts/LayoutAdmin"
 import PostDetailEp from "./components/employee/post/PostDetail"
@@ -37,6 +38,7 @@ import Jobdone from './components/pages/Jobdone'
 import "./App.css"
 import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
+import FeedbackList from "./components/Admin/Feedback/FeedbackList"
 function App() {
   return (
     <div className="App">
@@ -76,6 +78,7 @@ function App() {
             <Profile />
             // </PrivateRoute>
           } />
+          <Route path="feedbacks" element={<Feedback />} />
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -95,6 +98,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           <Route path='services' element={<ServicesEpr />} />
           <Route path='manage-cv' element={<ProfileList />} />
+          <Route path="feedbacks" element={<Feedback />} />
         </Route>
 
         {/* ADMIN */}
@@ -107,6 +111,7 @@ function App() {
           <Route path='posts' element={<PostAdmin />} />
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
+          <Route path='feedbacks' element={<FeedbackList />} />
         </Route>
         <Route path='/' element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
