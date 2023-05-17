@@ -15,13 +15,13 @@ import { CgSpinner } from "react-icons/cg"
 import { NavLink } from 'react-router-dom'
 import { useAppDispatch } from '../../../app/hook'
 import { loginAuth } from '../../../app/actions/auth'
+import { toast } from 'react-toastify'
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const currentUser: any = UseAuth()
     const dispatch = useAppDispatch()
-
     const [signin] = useSigninMutation()
     const [type, setType] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -29,11 +29,16 @@ const Login = () => {
         setType(!type)
     }
 
+    const [emailE, setEmail] = useState('')
+    const changeInput = (e: any) => {
+        setEmail(e.target.value)
+    }
+    const { data: existUser } = useGetUserByEmailQuery<any>(emailE)
+
     const signIn = async (user: any) => {
         setLoading(true)
         const email = user.email
         const password = user.password
-
         const actionCodeSettings = {
             // URL you want to redirect back to. The domain (www.example.com) for this
             // URL must be in the authorized domains list in the Firebase Console.
@@ -41,11 +46,15 @@ const Login = () => {
             // This must be true.
             handleCodeInApp: true
         };
-        await signInWithEmailAndPassword(auth, email, password)
+
+        if (emailE && !existUser) {
+            return toast.error("Không tìm thấy email.")
+        }
+
+        return await signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential: any) => {
                 // Signed in 
                 const login = await signin(user)
-
                 if (login) {
                     const userInfo = userCredential.user;
                     currentUser.displayName = userInfo.displayName
@@ -54,12 +63,9 @@ const Login = () => {
                     message.success('Login')
                     navigate('/')
                 }
-
             })
             .catch((error) => {
                 setLoading(false)
-                const errorCode = error.message;
-                console.log(errorCode)
             });
 
 
@@ -154,7 +160,8 @@ const Login = () => {
                                     })}
                                         type="email"
                                         className={errors.email ? "form-control border-1 border-red-500" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                        name='email' />
+                                        name='email'
+                                        onChange={changeInput} />
                                     {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
                                     {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ.</span>}
                                 </div>
@@ -180,16 +187,15 @@ const Login = () => {
                                     {errors.password && errors.password.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu chứa từ 6 ký tự trở lên.</span>}
                                 </div>
                                 <div className="form-group">
-                                    <div className='flex items-center justify-between'>
-                                        <div className="space-x-1">
-                                            <input type="checkbox" className="" />
-                                            <label className="small">Remember Me</label>
-                                        </div>
+                                    <div className='flex items-center justify-end'>
                                         <div className="">
-                                            <a className="small" href="">Quên mật khẩu?</a>
+                                            <NavLink to={'/forgot-pasword-epe'} className="">
+                                                Quên mật khẩu?
+                                            </NavLink>
                                         </div>
                                     </div>
                                 </div>
+
                                 <button onClick={signIn} className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                     {
                                         loading &&

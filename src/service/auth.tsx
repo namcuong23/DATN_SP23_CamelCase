@@ -29,7 +29,7 @@ export const authApi = createApi({
             invalidatesTags: ['authEpe']
         }),
         getUserByEmail: builder.query({
-            query: (email: string) => `/epe-users/${email}`,
+            query: (email: string) => `/epe-users/${email}/detail`,
             providesTags: ['authEpe']
         })
         // getUsers: builder.query({

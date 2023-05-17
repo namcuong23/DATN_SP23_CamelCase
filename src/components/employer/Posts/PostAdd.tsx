@@ -28,6 +28,8 @@ const PostAdd = () => {
 
     const onHandleAdd: any = (post: IPost) => {
         try {
+            console.log({ ...post, post_status: null, user_id: profile?._id });
+
             addPost({ ...post, post_status: null, user_id: profile?._id })
             message.success('Dang tin thanh cong.')
             navigate('/home/posts')
@@ -91,6 +93,7 @@ const PostAdd = () => {
                                         <Select.Option value="0">- Chọn giới tính -</Select.Option>
                                         <Select.Option value="nam">Nam</Select.Option>
                                         <Select.Option value="nữ">Nữ</Select.Option>
+                                        <Select.Option value="Không yêu cầu">Không yêu cầu</Select.Option>
                                     </Select>
                                 </Form.Item>
                                 <Form.Item name="number_of_recruits" label="Số lượng"

@@ -1,9 +1,12 @@
 import React from 'react'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
+import { useAppSelector } from '../../../app/hook'
 
 type Props = {}
 
 const Home = (props: Props) => {
+
+
     return (
         <>
             <div className='mx-5'>

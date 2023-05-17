@@ -4,10 +4,9 @@ interface IOrder {
     order_name: string,
     order_status: boolean,
     order_count: number,
-    custom: string,
+    order_code: string,
     user_id: string,
-    package_id: string,
-    voucher_id: string
+    package_id: string
 }
 
 export default IOrder

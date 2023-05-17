@@ -97,7 +97,7 @@ const OrderDetail = () => {
                     <div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Mã đơn hàng: </label>
-                            <span className='font-[700] text-[#004AD1]'>F123</span>
+                            <span className='font-[700] text-[#004AD1]'>{order?.order_code}</span>
                         </div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Người tạo đơn: </label>

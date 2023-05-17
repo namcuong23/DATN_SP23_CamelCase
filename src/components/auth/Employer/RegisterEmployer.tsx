@@ -1,13 +1,15 @@
-import { useState } from 'react';
-import { message } from 'antd';
+import React, { useState } from 'react';
+import { message, notification } from 'antd';
 import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { auth } from '../../../firebase';
-import { useRegisterWithEmployerMutation } from '../../../service/auth_employer';
+import { useGetUserEprByEmailQuery, useRegisterWithEmployerMutation } from '../../../service/auth_employer';
 import { useSignupAMutation } from '../../../service/admin';
 import { useAddEprProfileMutation } from '../../../service/employer/profileEpr';
+import { useGetUserByEmailQuery } from '../../../service/auth';
+import { toast } from 'react-toastify'
 
 const RegisterEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -21,12 +23,26 @@ const RegisterEmployer = () => {
         setType(!type)
     }
 
+    const [email, setEmail] = useState('')
+    const changeInput = (e: any) => {
+        setEmail(e.target.value)
+    }
+    const { data: existUser } = useGetUserEprByEmailQuery<any>(email)
+    const { data: checkUser } = useGetUserByEmailQuery<any>(email)
+
     const signUp: SubmitHandler<any> = async (user: any) => {
         setLoading(true)
         const email = user.email
         const password = user.password
+        if (existUser) {
+            return toast.error("Email đã tồn tại.")
+        }
 
-        await createUserWithEmailAndPassword(auth, email, password)
+        if (checkUser) {
+            return toast.warning('Email đã được đăng ký trên trang người tìm việc.')
+        }
+
+        return await createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 // Signed in 
                 const userInfo: any = userCredential.user;
@@ -60,8 +76,6 @@ const RegisterEmployer = () => {
             })
             .catch((error) => {
                 setLoading(false)
-                const errorCode = error.code;
-                console.log(errorCode);
             });
 
     }
@@ -78,11 +92,15 @@ const RegisterEmployer = () => {
                             <form onSubmit={handleSubmit(signUp)} className="flex flex-col">
                                 <div className='flex flex-col mb-2'>
                                     <label className="text-dark fw-bold">Tên</label>
-                                    <input {...register('name', { required: true })}
+                                    <input {...register('name', {
+                                        required: true,
+                                        pattern: /^(?!.*\d)(?!.*[`!@#$%^&*()_+\-=\[\]{ };':"\\|,.<>\/?~])/
+                                    })}
                                         type="text"
                                         className={errors.name ? "form-control border-red-500 border-1 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
                                         name='name' />
                                     {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
+                                    {errors.name && errors.name.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Tên không hợp lệ.</span>}
                                 </div>
                                 <div className='flex flex-col mb-2'>
                                     <label className='font-[600]'>Số điện thoại</label>
@@ -100,7 +118,8 @@ const RegisterEmployer = () => {
                                     })}
                                         type="email"
                                         className={errors.email ? "form-control border-1 border-red-500 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                        name='email' />
+                                        name='email'
+                                        onChange={changeInput} />
                                     {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
                                     {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ.</span>}
                                 </div>
@@ -126,7 +145,12 @@ const RegisterEmployer = () => {
                                 </div>
 
                                 <div className='flex items-center justify-end my-5'>
-                                    <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-2 px-3 rounded text-white font-[500]'>Đăng ký</button>
+                                    <button
+                                        onClick={signUp}
+                                        className='bg-[#FE7D55] hover:bg-[#FD6333] py-2 px-3 rounded text-white font-[500]'
+                                    >
+                                        Đăng ký
+                                    </button>
                                 </div>
 
                             </form>

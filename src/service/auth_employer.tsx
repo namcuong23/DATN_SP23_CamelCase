@@ -27,7 +27,7 @@ export const authEprApi = createApi({
             invalidatesTags: ['authEpr']
         }),
         getUserEprByEmail: builder.query({
-            query: (email: string) => `/epr-users/${email}`,
+            query: (email: string) => `/epr-users/${email}/detail`,
             providesTags: ['authEpr']
         })
     })

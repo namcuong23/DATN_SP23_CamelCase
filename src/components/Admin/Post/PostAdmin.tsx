@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { useGetUsersQuery } from '../../../service/admin'
 import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
 import { User } from '../../../interface/admin/users';
@@ -11,6 +11,7 @@ import { CheckOutlined, CloseOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import IPost from '../../../interface/post';
+import { apiGetProvinces } from '../../../service/api';
 const PostAdmin = () => {
     const { data: posts, error, isLoading } = useGetPostsQuery()
     const searchInput = useRef<InputRef>(null);
@@ -20,7 +21,49 @@ const PostAdmin = () => {
     const [sortedInfo, setSortedInfo] = useState<SorterResult<IPost>>({});
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
-    const handleChange: TableProps<IPost>['onChange'] = (pagination, filters, sorter) => {
+    const [provinces, setProvinces] = useState<any>([])
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            const { data: response }: any = await apiGetProvinces()
+            setProvinces(response?.results);
+        }
+        fetchProvinces()
+    }, [])
+
+    interface DataType {
+        key: string;
+        _id: string;
+        job_name: string;
+        job_description: string;
+        job_salary: number;
+        working_form: string;
+        number_of_recruits: number;
+        requirements: string;
+        gender: string;
+        work_location: string;
+        post_status: boolean | string;
+        user_id: string;
+        createdAt: string;
+    }
+    type DataIndex = keyof DataType;
+    const data = posts?.map((item: DataType, index: number) => ({
+        key: String(index),
+        _id: item._id,
+        job_name: item.job_name,
+        job_description: item.job_description,
+        job_salary: item.job_salary,
+        working_form: item.working_form,
+        number_of_recruits: item.number_of_recruits,
+        requirements: item.requirements,
+        gender: item.gender,
+        work_location: item.work_location,
+        post_status: item.post_status,
+        user_id: item.user_id,
+        createdAt: item.createdAt,
+    }))
+
+    const handleChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
         console.log('Various parameters', pagination, filters, sorter);
         setFilteredInfo(filters);
         setSortedInfo(sorter as SorterResult<IPost>);
@@ -69,21 +112,8 @@ const PostAdmin = () => {
         clearFilters();
         setSearchText('');
     };
-    const data = posts?.map((item: any, index: any) => ({
-        key: String(index),
-        _id: item._id,
-        job_name: item.job_name,
-        job_description: item.job_description,
-        job_salary: item.job_salary,
-        working_form: item.working_form,
-        number_of_recruits: item.number_of_recruits,
-        requirements: item.requirements,
-        gender: item.gender,
-        work_location: item.work_location,
-        post_status: item.post_status,
-        user_id: item.user_id,
-        createdAt: item.createdAt,
-    }))
+
+
     const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -160,12 +190,12 @@ const PostAdmin = () => {
                 text
             ),
     });
-    const columns: ColumnsType<any> = [
+    const columns: ColumnsType<DataType> = [
         {
             title: 'STT',
             dataIndex: 'key',
-            render: () =>{return  index += 1}
-          },
+            render: () => { return index += 1 }
+        },
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
@@ -189,23 +219,19 @@ const PostAdmin = () => {
         {
             title: 'Khu vực',
             dataIndex: 'work_location',
-            filters: [
+            filters: provinces.map((province: any) => (
                 {
-                    text: 'HN',
-                    value: 'HN',
-                },
-                {
-                    text: 'HCM',
-                    value: 'HCM',
-                },
-            ],
+                    text: province.province_name,
+                    value: province.province_name,
+                }
+            )),
             onFilter: (value: any, record) => record.work_location.indexOf(value) === 0,
         },
         {
             title: 'Ngày đăng',
             dataIndex: 'createdAt',
             render: (_, record) => (
-                <p>{(new Date(record.createdAt)).toLocaleString()}</p>
+                <p>{(new Date(record.createdAt)).toLocaleDateString()}</p>
             ),
 
         },
@@ -229,17 +255,6 @@ const PostAdmin = () => {
                     }
                 </>
             ),
-            filters: [
-                {
-                    text: 'Đã duyệt',
-                    value: true,
-                },
-                {
-                    text: 'Từ Chối',
-                    value: false,
-                },
-            ],
-            onFilter: (value: any, record) => record.post_status.indexOf(value) === 0,
         },
         {
             title: 'Hành động',

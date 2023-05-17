@@ -26,6 +26,10 @@ export const adminApi = createApi({
             query: () => '/users',
             providesTags: ['User']
         }),
+        getUser: builder.query<User, string>({
+            query: (email: string) => `/users/${email}/detail`,
+            providesTags: ['User']
+        }),
         addUser: builder.mutation<User, Partial<User>>({
             query: (user: any) => ({
                 url: `/users`,
@@ -66,6 +70,7 @@ export const adminApi = createApi({
 });
 export const {
     useGetUsersQuery,
+    useGetUserQuery,
     useUpdateUserMutation,
     useSignupAMutation,
     useAddCareerMutation,

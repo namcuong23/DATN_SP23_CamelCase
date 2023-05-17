@@ -1,6 +1,6 @@
 import { message } from '@pankod/refine-antd'
 import { signOut } from 'firebase/auth'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { auth } from '../../../firebase'
 import UseAuth from '../../auth/UseAuth'
 import ImanageProfile from "../../../interface/manageProfile"
@@ -11,6 +11,7 @@ import { logoutAuth } from '../../../app/actions/auth'
 
 const HeaderClient = () => {
     const currentUser: any = UseAuth()
+    const navigate = useNavigate()
     const data: any = useGetProfileQuery(currentUser?.email)
     const profile: ImanageProfile = data.currentData
     const user: any = useGetUserByEmailQuery(currentUser?.email)
@@ -20,6 +21,7 @@ const HeaderClient = () => {
         try {
             dispatch(logoutAuth())
             await signOut(auth)
+            navigate('/login')
         } catch (error: any) {
             message.error(error.message)
         }

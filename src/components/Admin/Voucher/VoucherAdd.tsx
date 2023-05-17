@@ -31,7 +31,7 @@ const VoucherAdd = () => {
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Tên gói</div>
-                            <Form.Item name="package_name" label="Tên gói voucher dành cho khách hàng"
+                            <Form.Item name="package_name" label="Tên gói dịch vụ dành cho khách hàng"
                                 rules={[
                                     { required: true, message: "Please input your name." },
                                 ]}>
@@ -47,7 +47,7 @@ const VoucherAdd = () => {
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Mô tả</div>
-                            <Form.Item name="package_desc" label="Thông tin chi tiết về gói voucher này"
+                            <Form.Item name="package_desc" label="Thông tin chi tiết về gói dịch vụ này"
                                 rules={[
                                     { required: true, message: "Please input your description." },
                                 ]}>
@@ -79,7 +79,7 @@ const VoucherAdd = () => {
                         </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thời gian hiệu lực</div>
-                            <Form.Item name="package_day" label="Thời gian hiệu lực của voucher"
+                            <Form.Item name="package_day" label="Thời gian hiệu lực"
                                 rules={[{ required: true, message: 'Please choose a gender.' }]}>
                                 <Select>
                                     <Select.Option value={1}>1 tháng</Select.Option>

@@ -1,14 +1,16 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInWithPopup } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { CgSpinner } from "react-icons/cg"
-import { useSignupMutation } from '../../../service/auth';
+import { useGetUserByEmailQuery, useSignupMutation } from '../../../service/auth';
 import { useAddProfileMutation } from '../../../service/manage_profile';
 import { auth } from '../../../firebase';
 import { useSignupAMutation } from '../../../service/admin';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import { toast } from 'react-toastify'
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -17,19 +19,31 @@ const Register = () => {
     const [signupA] = useSignupAMutation()
     const [addProfile] = useAddProfileMutation()
     const [loading, setLoading] = useState(false)
-    const [error, setError] = useState(null)
     const [type, setType] = useState(false)
     const showPassword = () => {
         setType(!type)
     }
 
+    const [email, setEmail] = useState('')
+    const changeInput = (e: any) => {
+        setEmail(e.target.value)
+    }
+    const { data: existUser } = useGetUserByEmailQuery<any>(email)
+    const { data: checkUser } = useGetUserEprByEmailQuery<any>(email)
+
     const signUp: SubmitHandler<any> = async (user: any) => {
         setLoading(true)
-        setError(null)
         const email = user.email
         const password = user.password
+        if (existUser) {
+            return toast.error('Email đã tồn tại.')
+        }
 
-        await createUserWithEmailAndPassword(auth, email, password)
+        if (checkUser) {
+            return toast.warning('Email đã được đăng ký trên trang nhà tuyển dụng')
+        }
+
+        return await createUserWithEmailAndPassword(auth, email, password)
             .then(async (userCredential) => {
                 // Signed in 
                 const userInfo: any = userCredential.user;
@@ -64,7 +78,6 @@ const Register = () => {
             })
             .catch((error) => {
                 setLoading(false)
-                setError(error.code)
             });
 
     }
@@ -146,12 +159,14 @@ const Register = () => {
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Tên</label>
                                         <input {...register('name', {
-                                            required: true
+                                            required: true,
+                                            pattern: /^(?!.*\d)(?!.*[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~])/
                                         })}
                                             type="text"
-                                            className={errors.name ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
+                                            className={errors.name ? "form-control border-red-500 focus:ring-red-500 border-1 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
                                             name='name' />
                                         {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
+                                        {errors.name && errors.name.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Tên không hợp lệ.</span>}
                                     </div>
                                     <div className="form-group">
                                         <label className="text-dark fw-bold">Số điện thoại</label>
@@ -159,7 +174,7 @@ const Register = () => {
                                         <input {...register('phone', {
                                             required: true,
                                             minLength: 10,
-                                            pattern: /"^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$"/gmi
+                                            pattern: /^(?:0\.(?:0[0-9]|[0-9]\d?)|[0-9]\d*(?:\.\d{1,2})?)(?:e[+-]?\d+)?$/
                                         })}
                                             type="text"
                                             className={errors.phone ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
@@ -175,10 +190,11 @@ const Register = () => {
                                                 required: true,
                                                 pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
                                             })}
-                                            type="text"
+                                            type="email"
                                             placeholder='Sử dụng email có thật để xác thực.'
                                             className={errors.email ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                            name='email' />
+                                            name='email'
+                                            onChange={changeInput} />
                                         {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
                                         {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
                                         {/* {error != null && !errors.email ? <span className='text-red-500 fw-bold mt-1'>{error}</span> : ''} */}

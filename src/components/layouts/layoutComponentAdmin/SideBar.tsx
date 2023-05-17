@@ -55,7 +55,7 @@ const SideBar = (props: Props) => {
                 <li className="nk-menu-item has-sub w-full ">
                   <a href="#" className="nk-menu-link">
                     <span className="nk-menu-icon m-1"><TagsOutlined /></span>
-                    <span className="nk-menu-text">Quản lý Voucher</span>
+                    <span className="nk-menu-text">Quản lý gói dịch vụ</span>
                   </a>
                 </li>
               </Link>

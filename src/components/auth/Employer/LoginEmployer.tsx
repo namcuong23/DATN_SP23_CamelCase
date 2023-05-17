@@ -7,13 +7,11 @@ import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../../../firebase'
 import UseAuth from '../UseAuth'
-import { CgSpinner } from "react-icons/cg"
 import { NavLink } from 'react-router-dom'
-import { useLoginWithEmployerMutation } from '../../../service/auth_employer'
+import { useGetUserEprByEmailQuery, useLoginWithEmployerMutation } from '../../../service/auth_employer'
 import { useAppDispatch } from '../../../app/hook'
 import { loginAuth } from '../../../app/actions/auth'
-
-
+import { toast } from 'react-toastify'
 
 const LoginEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -21,18 +19,21 @@ const LoginEmployer = () => {
     const [signin] = useLoginWithEmployerMutation()
     const currentUser: any = UseAuth()
     const [type, setType] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const dispatch = useAppDispatch()
+    const dispatch: any = useAppDispatch()
 
     const showPassword = () => {
         setType(!type)
     }
 
+    const [emailE, setEmail] = useState('')
+    const changeInput = (e: any) => {
+        setEmail(e.target.value)
+    }
+    const { data: existUser } = useGetUserEprByEmailQuery<any>(emailE)
+
     const signIn = async (user: any) => {
-        setLoading(true)
         const email = user.email
         const password = user.password
-
         const actionCodeSettings = {
             // URL you want to redirect back to. The domain (www.example.com) for this
             // URL must be in the authorized domains list in the Firebase Console.
@@ -40,6 +41,11 @@ const LoginEmployer = () => {
             // This must be true.
             handleCodeInApp: true
         };
+
+        if (emailE && !existUser) {
+            return toast.error("Không tìm thấy email.")
+        }
+
         await signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential: any) => {
                 // Signed in 
@@ -47,13 +53,11 @@ const LoginEmployer = () => {
                 if (login) {
                     const userInfo = userCredential.user;
                     dispatch(loginAuth(currentUser))
-                    setLoading(false)
                     message.success('Login')
                     navigate('/home')
                 }
             })
             .catch((error) => {
-                setLoading(false)
                 const errorCode = error.code;
                 console.log(errorCode)
             });
@@ -78,7 +82,8 @@ const LoginEmployer = () => {
                                         })}
                                         type="email"
                                         className={errors.email ? "form-control border-1 border-red-500 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                        name='email' />
+                                        name='email'
+                                        onChange={changeInput} />
                                     {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
                                     {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ.</span>}
                                 </div>
@@ -100,7 +105,13 @@ const LoginEmployer = () => {
 
                                 <div className='flex items-center justify-between my-5'>
                                     <a href='' className='text-[#005AFF] hover:no-underline hover:text-[#FD6333]'>Quên mật khẩu</a>
-                                    <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-2 px-3 rounded text-white font-[500]'>Đăng nhập</button>
+
+                                    <button
+                                        onClick={signIn}
+                                        className='bg-[#FE7D55] hover:bg-[#FD6333] py-2 px-3 rounded text-white font-[500]'
+                                    >
+                                        Đăng nhập
+                                    </button>
                                 </div>
 
                             </form>

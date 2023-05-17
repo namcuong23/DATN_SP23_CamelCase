@@ -37,6 +37,11 @@ import Jobdone from './components/pages/Jobdone'
 import "./App.css"
 import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
+import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
+import AccountMng from "./components/employee/profile/AccountMng"
+
 function App() {
   return (
     <div className="App">
@@ -52,6 +57,11 @@ function App() {
         <Route path='login' element={
           // <RedirectRoute>
           <Login />
+          // </RedirectRoute>
+        } />
+        <Route path='forgot-pasword-epe' element={
+          // <RedirectRoute>
+          <ForgotPassEpe />
           // </RedirectRoute>
         } />
 
@@ -76,6 +86,7 @@ function App() {
             <Profile />
             // </PrivateRoute>
           } />
+          <Route path="account-manage" element={<AccountMng />} />
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -123,6 +134,20 @@ function App() {
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
     </div>
   )
 }

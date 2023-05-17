@@ -32,10 +32,8 @@ const HeaderEmployer = () => {
     const onSignOut = async () => {
         try {
             dispatch(logoutAuth())
-            const signout: any = await signOut(auth)
-            if (signout) {
-                navigate('/login-epr')
-            }
+            await signOut(auth)
+            navigate('/login-epr')
         } catch (error: any) {
             message.info(error.message)
         }

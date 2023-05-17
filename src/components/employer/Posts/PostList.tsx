@@ -5,7 +5,7 @@ import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
@@ -13,6 +13,8 @@ import { useRemovePostMutation } from '../../../service/post'
 import UseAuth from '../../auth/UseAuth';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import IProfileEpr from '../../../interface/employer/profileEpr';
+import { apiGetProvinces } from '../../../service/api';
+import IPost from '../../../interface/post';
 
 const PostList = (): any | null | JSX.Element => {
     const [searchText, setSearchText] = useState('');
@@ -24,6 +26,15 @@ const PostList = (): any | null | JSX.Element => {
     const profile: IProfileEpr = data.currentData
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
     const text: string = 'Are you sure to delete this post?';
+    const [provinces, setProvinces] = useState<any>([])
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            const { data: response }: any = await apiGetProvinces()
+            setProvinces(response?.results);
+        }
+        fetchProvinces()
+    }, [])
 
     interface DataType {
         key: string;
@@ -36,7 +47,7 @@ const PostList = (): any | null | JSX.Element => {
         requirements: string;
         gender: string;
         work_location: string;
-        post_status: boolean | null;
+        post_status: boolean | string;
         user_id: string;
         createdAt: string;
     }
@@ -179,16 +190,12 @@ const PostList = (): any | null | JSX.Element => {
         {
             title: 'Khu vực',
             dataIndex: 'work_location',
-            filters: [
+            filters: provinces.map((province: any) => (
                 {
-                    text: 'HN',
-                    value: 'HN',
-                },
-                {
-                    text: 'HCM',
-                    value: 'HCM',
-                },
-            ],
+                    text: province.province_name,
+                    value: province.province_name,
+                }
+            )),
             onFilter: (value: any, record) => record.work_location.indexOf(value) === 0,
         },
         {
@@ -202,7 +209,7 @@ const PostList = (): any | null | JSX.Element => {
         {
             title: 'Trạng thái',
             dataIndex: 'post_status',
-            render: (_, record) => (
+            render: (_: any, record: DataType) => (
                 <>
                     {
                         record.post_status == null ? <Tag
@@ -245,9 +252,9 @@ const PostList = (): any | null | JSX.Element => {
         },
     ];
 
-    const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
-        console.log('params', pagination, filters, sorter, extra);
-    };
+    // const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
+    //     console.log('params', pagination, filters, sorter, extra);
+    // };
 
     // if (!user.currentData) {
     //     return navigate('/login-epr')
@@ -280,7 +287,7 @@ const PostList = (): any | null | JSX.Element => {
                             </NavLink>
                         </div>
                     </div>
-                    <Table columns={columns} dataSource={dataSource} onChange={onChange} />
+                    <Table columns={columns} dataSource={dataSource} />
                 </div>
             </div>
         </>

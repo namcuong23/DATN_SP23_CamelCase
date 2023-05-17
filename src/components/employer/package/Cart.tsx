@@ -35,6 +35,14 @@ const Cart = (props: Props) => {
     const data: any = useGetEprProfileQuery(currentUser?.email)
     const profile: IProfileEpr = data.currentData
     const { data: orders } = useGetOrdersByUIdQuery<any>(profile?._id)
+
+    const min = 1;
+    const max = 1000;
+    const rand = Math.floor(Math.random() * (max - min + 1)) + min;
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const charactersLength = characters.length;
+    const code = characters.charAt(Math.floor(Math.random() * charactersLength)) + rand
+
     interface DataType {
         key: React.Key;
         product: {
@@ -126,10 +134,9 @@ const Cart = (props: Props) => {
                     order_status: false,
                     order_count: orders[i].orderCount,
                     order_price: orders[i].product.package_price,
-                    custom: profile.name,
+                    order_code: code,
                     user_id: profile._id,
-                    package_id: orders[i].product._id,
-                    voucher_id: null,
+                    package_id: orders[i].product._id
                 })
                 if (addOrder) {
                     dispatch(removeProductCart(orders[i].product._id))
@@ -224,7 +231,7 @@ const Cart = (props: Props) => {
                                     <button
                                         onClick={() => handleCreateOrder(selectedRowKeys)}
                                         disabled={isChecked}
-                                        className={isChecked || selectedRowKeys.length == 0 ? 'bg-[#FD6333] text-white w-full p-1 rounded opacity-75' : 'bg-[#FD6333] text-white w-full p-1 rounded'}>
+                                        className={isChecked || selectedRowKeys.length == 0 ? 'bg-[#FD6333] text-white w-full p-1 rounded opacity-50' : 'bg-[#FD6333] text-white w-full p-1 rounded'}>
                                         Tạo đơn hàng
                                     </button>
                                 </div>

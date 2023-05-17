@@ -11,6 +11,8 @@ const ProfileEpr = () => {
   const currentUser: any = UseAuth()
   const { data: userEpr, loading, error } = useGetEprProfileQuery(currentUser?.email)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IProfileEpr>()
+  console.log(errors);
+
   const [updateEprProfile] = useUpdateEprProfileMutation()
 
   useEffect(() => {
@@ -54,24 +56,41 @@ const ProfileEpr = () => {
               <div className='flex flex-col gap-x-10 w-full mb-2'>
                 <label className='text-[15px] font-[550]'>Tên NTD<span className='text-[#ca5b54]'>*</span> </label>
                 <input type="text"
-                  {...register("name")}
+                  {...register("name", {
+                    required: true,
+                    pattern: /^(?!.*\d)(?!.*[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~])/
+                  })}
                   name='name'
                   className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
+                {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
+                {errors.name && errors.name.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Tên không hợp lệ.</span>}
               </div>
               <div className='flex items-center gap-x-10 w-full mb-2'>
                 <div className='flex flex-col w-[50%]'>
                   <label className='text-[15px] font-[550]'> Email<span className='text-[#ca5b54]'>*</span> </label>
-                  <input type="text"
-                    {...register("email")}
+                  <input type="email"
+                    {...register("email", {
+                      required: true,
+                      pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                    })}
                     name='email'
                     className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
+                  {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
+                  {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
                 </div>
                 <div className='flex flex-col w-[50%]'>
                   <label className='text-[15px] font-[550]'> Điện thoại<span className='text-[#ca5b54]'>*</span> </label>
                   <input type="text"
-                    {...register("phone_props.phone")}
-                    name='phone'
+                    {...register("phone_props.phone", {
+                      required: true,
+                      minLength: 10,
+                      pattern: /^(?:0\.(?:0[0-9]|[0-9]\d?)|[0-9]\d*(?:\.\d{1,2})?)(?:e[+-]?\d+)?$/
+                    })}
+                    name='phone_props.phone'
                     className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
+                  {errors.phone_props?.phone && errors.phone_props?.phone.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Số điện thoại.</span>}
+                  {errors.phone_props?.phone && errors.phone_props?.phone.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'> Số điện thoại phải có ít nhất 10 ký tự.</span>}
+                  {errors.phone_props?.phone && errors.phone_props?.phone.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Số điện thoại không hợp lệ.</span>}
                 </div>
               </div>
               <div className='flex items-center gap-x-10 w-full mb-2'>
