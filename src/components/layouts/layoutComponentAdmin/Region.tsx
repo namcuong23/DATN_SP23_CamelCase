@@ -9,7 +9,7 @@ const Region = (props: Props) => {
       <div className="modal-content">
         <a href="#" className="close" data-bs-dismiss="modal"><em className="icon ni ni-cross-sm" /></a>
         <div className="modal-body modal-body-md">
-          <h5 className="title mb-4">Select Your Country</h5>
+          {/* <h5 className="title mb-4">Select Your Country</h5>
           <div className="nk-country-region">
             <ul className="country-list text-center gy-2">
               <li>
@@ -119,9 +119,9 @@ const Region = (props: Props) => {
                   <img src="./src/assets/img/admin/images/flags/english.png" alt="" className="country-flag" />
                   <span className="country-name">United State</span>
                 </a>
-              </li>
-            </ul>
-          </div>
+              </li> */}
+            {/* </ul> */}
+          {/* </div> */}
         </div>
       </div>{/* .modal-content */}
     </div>{/* .modla-dialog */}

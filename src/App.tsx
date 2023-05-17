@@ -42,6 +42,7 @@ import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import AccountMng from "./components/employee/profile/AccountMng"
 
+import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 function App() {
   return (
     <div className="App">
@@ -76,7 +77,12 @@ function App() {
           <LoginEmployer />
           // </RedirectRoute>
         } />
-
+        {/* Auth ADMIN */}
+        <Route path='login-admin' element={
+          // <RedirectRoute>
+          <LoginAdmin />
+          // </RedirectRoute>
+        } />
         {/* EMPLOYEE */}
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />

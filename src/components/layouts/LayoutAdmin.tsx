@@ -9,6 +9,7 @@ import Region from './LayoutComponentAdmin/Region';
 type Props = {}
 
 const LayoutAdmin = (props: Props) => {
+    
     return (
         <div className='nk-body bg-lighter npc-general has-sidebar'>
             <div className='nk-app-root'>

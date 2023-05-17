@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
-import { useGetUsersQuery, useUpdateUserMutation } from '../../../service/admin'
-import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps } from 'antd';
+import { useBlockUserMutation, useGetUsersQuery, useUpdateUserMutation } from '../../../service/admin'
+import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps, message } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import { User } from '../../../interface/admin/users';
 import { SearchOutlined } from '@ant-design/icons';
@@ -9,13 +9,24 @@ import { Popconfirm } from 'antd';
 import { Modal } from "antd";
 const UsersManage = () => {
   const { data: Users, error, isLoading } = useGetUsersQuery();
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [updateUser, { isLoading: isUpdating, isSuccess }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
-  const searchInput = useRef<InputRef>(null);
-  const handleUpdateClick = () => {
-    setModalVisible(true);
-  };
+  const [block] = useBlockUserMutation();
+  interface RecordselectedRecord {
+    _id: string;
+    name: string;
+    phone: string;
+    password: string;
+    level_auth: number;
+    email: string;
+  }
+  const [selectedRecord, setSelectedRecord] = useState<RecordselectedRecord | undefined>();
 
+  const searchInput = useRef<InputRef>(null);
+  const handleUpdateClick = (record: any) => {
+    setSelectedRecord(record); // Lưu thông tin của hàng được chọn
+    setModalVisible(true); // Hiển thị Modal
+  };
   interface DataType {
     key: string;
     _id: string;
@@ -40,6 +51,7 @@ const UsersManage = () => {
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
   const [searchText, setSearchText] = useState('');
   const [searchedColumn, setSearchedColumn] = useState('');
+
   const handleChange: TableProps<DataType>['onChange'] = (pagination, filters, sorter) => {
     setFilteredInfo(filters);
     setSortedInfo(sorter as SorterResult<DataType>);
@@ -142,8 +154,12 @@ const UsersManage = () => {
         text
       ),
   })
-  const handleDelete = (record: string) => {
+  const handleDelete = (record: string, level: string) => {
     console.log(record);
+    const body = {
+      _id:record,level_auth : level
+    }
+    block(body)
 
   }
   const columns: ColumnsType<DataType> = [
@@ -151,9 +167,10 @@ const UsersManage = () => {
       title: 'id',
       dataIndex: '_id',
       filteredValue: filteredInfo._id || null,
-      ...getColumnSearchProps('_id'),
-      onFilter: (value: string | number | boolean, record) =>
-        typeof value === 'string' && record.name.includes(value),
+      onFilter: (value, record) => {
+        // Áp dụng logic lọc tại đây
+        return typeof value === 'string' && record.name.includes(value);
+      },
       sorter: (a, b) => a.name.length - b.name.length,
       sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
       ellipsis: true,
@@ -183,14 +200,19 @@ const UsersManage = () => {
       title: 'Action',
       key: 'action',
       render: (_, record) => (
+
         <Space size="middle">
-          <Button type="default" className='bg-yellow-400' onClick={handleUpdateClick}>Update</Button>
+
+          <Button type="default" className="bg-yellow-400" onClick={() => handleUpdateClick(record)}>
+            Update
+          </Button>
           <Modal
-            open={modalVisible}
+            open={modalVisible && selectedRecord && selectedRecord._id === record._id}
             onCancel={() => setModalVisible(false)}
             footer={null}
+            className=''
           >
-            <Form initialValues={{
+            <Form className='px-10 py-4' initialValues={{
               _id: record._id,
               name: record.name,
               phone: record.phone,
@@ -207,8 +229,8 @@ const UsersManage = () => {
               <Form.Item name="phone" label="Phone">
                 <Input />
               </Form.Item>
-              <Form.Item name="level_auth" label="Level Auth">
-                <InputNumber />
+              <Form.Item name="level_auth" label="Level">
+                <InputNumber className='w-3/12' />
               </Form.Item>
               <Form.Item name="email" label="Email">
                 <Input />
@@ -217,34 +239,51 @@ const UsersManage = () => {
                 <Input.Password />
               </Form.Item>
               <Form.Item>
-                <Button type="primary" htmlType="submit">
+                <Button type="primary" htmlType="submit" className='bg-yellow-400 text-black'>
                   Update
                 </Button>
               </Form.Item>
             </Form>
           </Modal>
-          <Popconfirm
+          {record.level_auth != 0 ? <Popconfirm
             title="Are you sure to block this guy?"
-            onConfirm={() => handleDelete(record._id)}
+            onConfirm={() => handleDelete(record._id, "0")}
             okText="Yes"
             okButtonProps={{
               className: 'bg-red-500',
             }}
             cancelText="No"
           >
-            <Button type="default" className='bg-red-400'>Block</Button> {/* Đổi màu nền của nút Delete sang màu đỏ */}
-          </Popconfirm>
-        </Space>
+            <Button type="default" className="bg-red-400">
+              Block
+            </Button>
+          </Popconfirm> : <Popconfirm
+            title="Unblock this guy?"
+            onConfirm={() => handleDelete(record._id, "1")}
+            okText="Yes"
+            okButtonProps={{
+              className: 'bg-blue-500',
+            }}
+            cancelText="No"
+          >
+            <Button type="default" className="bg-blue-500">
+              UnLock
+            </Button>
+          </Popconfirm>}
 
+        </Space>
       ),
     },
   ];
 
   const handleUpdateSubmit = (values: DataType) => {
-    console.log(values);
     updateUser(values);
-    console.log(isUpdating);
-
+    if (isUpdating) {
+      message.loading('isUpdating')
+    }
+    if (isSuccess) {
+      message.success('Successs')
+    }
     setModalVisible(false);
   };
   return (
