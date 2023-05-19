@@ -34,16 +34,13 @@ const Feedback = (props: Props) => {
   }
   return (
     <div>
-      <div className='bg-gray-100 min-h-screen'>
+      <div className='min-h-screen'>
         {/* SEARCH BAR */}
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className='h-[80px] w-100 py-3 bg-white'>
             <div className='container flex items-center justify-center h-100 w-100'>
               <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2'>
                 <div className='h-100 flex items-center bg-[#F4F4F7] w-[100%] border rounded'>
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-search text-black  flex justify-center mx-3" viewBox="0 0 16 16">
-                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                  </svg>
                   <input type="text" className='bg-[#F4F4F7] h-100 w-[100%] text-gray-600 focus:outline-none' placeholder='Nhập câu hỏi cần giải đáp' {...register("feedback_question", { required: true })} />
                   {errors.feedback_question?.type === "required" && <p className='text-danger font-bold w-200'>Vui lòng nhập câu hỏi của bạn !</p>}
                 </div>
@@ -57,11 +54,35 @@ const Feedback = (props: Props) => {
                 </div>
               </div>
             </div>
-            
+
           </div>
         </form>
+        <div className='mx-[150px] my-5 bg-white h-[600px]'>
+          <div className='mx-5 mb-3' >
+            <h3 className='text-[#FE7D55] pt-5'>Liên Hệ</h3>
+            <p>Cám ơn bạn đã vào thăm trang JOBS FOR YOU của chúng tôi, website tuyển dụng trên mạng lớn nhất tại Việt Nam hiện nay. Bạn có thể liên hệ với chúng tôi theo một trong những cách sau:</p>
+          </div>
+          <div className='mx-5 mb-3'>
+            <h5>Bộ phận Tư Vấn Nghề Nghiệp</h5>
+            <p>Nếu bạn có thắc mắc trong quá trình sử dụng trang web JOBS FOR YOU, mời bạn vào trang Hỏi Đáp để xem hướng dẫn sử dụng và giải quyết những vấn đề thường gặp.</p>
+            <p>Đối với những vấn đề khác, mời bạn điền vào mẫu thư liên lạc và gửi đi cho chúng tôi theo địa chỉ. Các chuyên viên tư vấn của VietnamWorks.com sẽ trả lời bạn trong thời gian sớm nhất.</p>
+          </div>
+          <div className='mx-5 mb-3'>
+            <h5 className='mb-3'>Văn phòng JOBS FOR YOU</h5>
+            <div className=' mb-3'>
+              <h6>Cở sở Hồ Chí Minh</h6>
+              <p>Tầng 20, tòa nhà E.Town Central, 11 Đoàn Văn Bơ, Phường 13, Quận 4, TP.HCM, Vietnam</p>
+              <p>Điện thoại: (84 28) 5404 1373</p>
+            </div>
+            <div className=' mb-3 '>
+              <h6>Cở sở Hà Nội</h6>
+              <p>Tầng 7, tòa nhà V-building 125-127 Bà Triệu, phường Nguyễn Du, quận Hai Bà Trưng,Hà Nội</p>
+              <p>Điện thoại: (84 24) 3974 3033</p>
+            </div>
+          </div>
+        </div>
       </div>
-      {/* CONTENT */}
+
       <div>
 
       </div>
