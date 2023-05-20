@@ -1,22 +1,21 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react"
-import IProfileEpr from "../../interface/employer/profileEpr"
 
-export const profileEprApi: any = createApi({
-    reducerPath: 'profileEprApi',
+export const profileEpeApi: any = createApi({
+    reducerPath: 'profileEpeApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
     tagTypes: ['profileEpr'],
     endpoints: (builder) => ({
-        getEprProfiles: builder.query<IProfileEpr[], void>({
-            query: () => '/epr-profiles',
+        getEprProfiles: builder.query<any[], void>({
+            query: () => '/profiles',
             providesTags: ['profileEpr']
         }),
-        getEprProfile: builder.query<IProfileEpr, string>({
-            query: (email: string) => `/epr-profiles/${email}`,
+        getEprProfile: builder.query<any, string>({
+            query: (email: string) => `/profiles/${email}`,
             providesTags: ['profileEpr']
         }),
         addEprProfile: builder.mutation({
-            query: (profile: IProfileEpr) => ({
-                url: `/epr-profiles`,
+            query: (profile: any) => ({
+                url: `/profiles`,
                 method: "POST",
                 body: profile
             }),
@@ -24,15 +23,15 @@ export const profileEprApi: any = createApi({
         }),
         removeEprProfile: builder.mutation({
             query: (id: string) => ({
-                url: `/epr-profiles/${id}`,
+                url: `/profiles/${id}`,
                 method: 'DELETE',
                 credentials: 'omit'
             }),
             invalidatesTags: ['profileEpr']
         }),
         updateEprProfile: builder.mutation({
-            query: (profile: IProfileEpr) => ({
-                url: `/epr-profiles/${profile._id}`,
+            query: (profile: any) => ({
+                url: `/profiles/${profile._id}`,
                 method: 'PUT',
                 body: profile
             }),
@@ -47,4 +46,4 @@ export const {
     useAddEprProfileMutation,
     useRemoveEprProfileMutation,
     useUpdateEprProfileMutation,
-} = profileEprApi
+} = profileEpeApi

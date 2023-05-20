@@ -4,7 +4,7 @@ import { useGetProfileQuery } from '../../../service/manage_profile'
 import UseAuth from '../../auth/UseAuth'
 import { sendEmailVerification } from 'firebase/auth'
 import { message } from 'antd'
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink, Outlet } from 'react-router-dom'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { apiGetDistricts, apiGetProvinces } from '../../../service/api'
 
@@ -17,14 +17,13 @@ const Profile = () => {
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
 
-    console.log(currentUser);
+    // console.log(currentUser);
 
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
             setProvinces(response?.results);
-            console.log(response?.results);
-
+            // console.log(response?.results);
         }
         fetchProvinces()
     }, [])
@@ -50,7 +49,6 @@ const Profile = () => {
                 console.log(errorCode);
             })
     }
-
     if (!user.currentData) {
         return <div className='my-10'>
             <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
@@ -91,6 +89,7 @@ const Profile = () => {
                 </div>
                 {/* CONTENT */}
                 <div className='flex items-start w-100 gap-3 p-3'>
+                    {/* Navbar */}
                     <aside className='rounded w-25 space-y-2'>
                         <section className='border-1 rounded bg-[#4A80F8] p-3'>
                             <div className='flex items-center space-x-4'>
@@ -119,203 +118,33 @@ const Profile = () => {
                                 </button>
                             </div>
                         </section>
-                        <section className='border-1 bg-white'>
-                            <div>
-                                <button className='flex items-center p-[17px] w-100 border rounded bg-[#EBF2FF] text-[#333333]'>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M5.6 1.6001C4.716 1.6001 4 2.3161 4 3.2001V20.8001C4 21.6841 4.716 22.4001 5.6 22.4001H13.05C13.6612 20.6225 15.2518 20.0363 16.1078 19.7235C16.1574 19.7051 16.2135 19.6842 16.2703 19.6626C16.0815 19.4146 15.9031 19.1368 15.7688 18.8392C15.3703 18.4136 15.0797 17.7903 15.0797 17.0079C15.0797 16.8727 15.0894 16.7443 15.1078 16.6235C14.9766 16.2699 14.8687 15.8289 14.8688 15.3329C14.8703 12.9385 16.6912 11.2001 19.2 11.2001C19.4856 11.2001 19.7496 11.2523 20 11.3251V7.6001C20 7.3881 19.916 7.18407 19.7656 7.03447L14.5656 1.83447C14.4152 1.68407 14.212 1.6001 14 1.6001H5.6ZM13.6 3.12354L18.4766 8.0001H14.4C13.9584 8.0001 13.6 7.6417 13.6 7.2001V3.12354ZM19.2 12.7985C17.6928 12.7985 16.4703 13.7073 16.4703 15.3329C16.4703 16.0201 16.8547 16.5548 16.8547 16.5548C16.8547 16.5548 16.6797 16.6407 16.6797 17.0079C16.6797 17.7207 17.1391 17.8923 17.1391 17.8923C17.2031 18.4571 18.0797 19.2845 18.0797 19.2845V20.2267C17.6085 21.6419 14.4 20.8313 14.4 24.0001H24C24 20.8313 20.7915 21.6419 20.3203 20.2267V19.2845C20.3203 19.2845 21.1977 18.4571 21.2609 17.8923C21.2609 17.8923 21.7203 17.5751 21.7203 17.0079C21.7203 16.6143 21.5453 16.5548 21.5453 16.5548C21.5453 16.5548 21.8594 15.9572 21.8594 15.386C21.8594 14.2412 21.2859 13.3595 20.3203 13.3595C20.3203 13.3595 19.9096 12.7985 19.2 12.7985Z" fill="#888888"></path>
-                                    </svg>
-                                    <span className='text-[14px] pl-[10px]'>Hồ sơ của tôi</span>
-                                </button>
-                            </div>
-                        </section>
-                        <section className='border-1 bg-white'>
-                            <div>
-                                <button className='flex items-center p-[17px] w-100 border rounded hover:bg-[#EBF2FF] text-[#333333]'>
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M11.2 2.3999C10.316 2.3999 9.59998 3.1159 9.59998 3.9999H3.19998C2.31598 3.9999 1.59998 4.7159 1.59998 5.5999V12.7999C1.59998 13.6839 2.31598 14.3999 3.19998 14.3999H20.8C21.684 14.3999 22.4 13.6839 22.4 12.7999V5.5999C22.4 4.7159 21.684 3.9999 20.8 3.9999H14.4C14.4 3.1159 13.684 2.3999 12.8 2.3999H11.2ZM12 11.1999C12.4416 11.1999 12.8 11.5583 12.8 11.9999C12.8 12.4415 12.4416 12.7999 12 12.7999C11.5584 12.7999 11.2 12.4415 11.2 11.9999C11.2 11.5583 11.5584 11.1999 12 11.1999ZM1.59998 15.5546V18.3999C1.59998 19.2839 2.31598 19.9999 3.19998 19.9999H20.8C21.684 19.9999 22.4 19.2839 22.4 18.3999V15.5546C21.9272 15.8298 21.3856 15.9999 20.8 15.9999H3.19998C2.61438 15.9999 2.07278 15.8298 1.59998 15.5546Z" fill="#888888"></path>
-                                    </svg>
-                                    <span className='text-[14px] pl-[10px]'>Việc làm của tôi</span>
-                                </button>
-                            </div>
-                        </section>
+                        <Link to='information'>
+                            <section className='border-1 bg-white'>
+                                <div>
+                                    <button className='flex items-center p-[17px] w-100 border rounded bg-[#EBF2FF] text-[#333333]'>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M5.6 1.6001C4.716 1.6001 4 2.3161 4 3.2001V20.8001C4 21.6841 4.716 22.4001 5.6 22.4001H13.05C13.6612 20.6225 15.2518 20.0363 16.1078 19.7235C16.1574 19.7051 16.2135 19.6842 16.2703 19.6626C16.0815 19.4146 15.9031 19.1368 15.7688 18.8392C15.3703 18.4136 15.0797 17.7903 15.0797 17.0079C15.0797 16.8727 15.0894 16.7443 15.1078 16.6235C14.9766 16.2699 14.8687 15.8289 14.8688 15.3329C14.8703 12.9385 16.6912 11.2001 19.2 11.2001C19.4856 11.2001 19.7496 11.2523 20 11.3251V7.6001C20 7.3881 19.916 7.18407 19.7656 7.03447L14.5656 1.83447C14.4152 1.68407 14.212 1.6001 14 1.6001H5.6ZM13.6 3.12354L18.4766 8.0001H14.4C13.9584 8.0001 13.6 7.6417 13.6 7.2001V3.12354ZM19.2 12.7985C17.6928 12.7985 16.4703 13.7073 16.4703 15.3329C16.4703 16.0201 16.8547 16.5548 16.8547 16.5548C16.8547 16.5548 16.6797 16.6407 16.6797 17.0079C16.6797 17.7207 17.1391 17.8923 17.1391 17.8923C17.2031 18.4571 18.0797 19.2845 18.0797 19.2845V20.2267C17.6085 21.6419 14.4 20.8313 14.4 24.0001H24C24 20.8313 20.7915 21.6419 20.3203 20.2267V19.2845C20.3203 19.2845 21.1977 18.4571 21.2609 17.8923C21.2609 17.8923 21.7203 17.5751 21.7203 17.0079C21.7203 16.6143 21.5453 16.5548 21.5453 16.5548C21.5453 16.5548 21.8594 15.9572 21.8594 15.386C21.8594 14.2412 21.2859 13.3595 20.3203 13.3595C20.3203 13.3595 19.9096 12.7985 19.2 12.7985Z" fill="#888888"></path>
+                                        </svg>
+                                        <span className='text-[14px] pl-[10px]'>Hồ sơ của tôi</span>
+                                    </button>
+                                </div>
+                            </section>
+                        </Link>
+                        <Link to='myjob'>
+                            <section className='border-1 bg-white'>
+                                <div>
+                                    <button className='flex items-center p-[17px] w-100 border rounded hover:bg-[#EBF2FF] text-[#333333]'>
+                                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M11.2 2.3999C10.316 2.3999 9.59998 3.1159 9.59998 3.9999H3.19998C2.31598 3.9999 1.59998 4.7159 1.59998 5.5999V12.7999C1.59998 13.6839 2.31598 14.3999 3.19998 14.3999H20.8C21.684 14.3999 22.4 13.6839 22.4 12.7999V5.5999C22.4 4.7159 21.684 3.9999 20.8 3.9999H14.4C14.4 3.1159 13.684 2.3999 12.8 2.3999H11.2ZM12 11.1999C12.4416 11.1999 12.8 11.5583 12.8 11.9999C12.8 12.4415 12.4416 12.7999 12 12.7999C11.5584 12.7999 11.2 12.4415 11.2 11.9999C11.2 11.5583 11.5584 11.1999 12 11.1999ZM1.59998 15.5546V18.3999C1.59998 19.2839 2.31598 19.9999 3.19998 19.9999H20.8C21.684 19.9999 22.4 19.2839 22.4 18.3999V15.5546C21.9272 15.8298 21.3856 15.9999 20.8 15.9999H3.19998C2.61438 15.9999 2.07278 15.8298 1.59998 15.5546Z" fill="#888888"></path>
+                                        </svg>
+                                        <span className='text-[14px] pl-[10px]'>Việc làm của tôi</span>
+                                    </button>
+                                </div>
+                            </section>
+                        </Link>
                     </aside>
-                    <main className='w-75 space-y-2'>
-                        <section className='border-1 rounded bg-white'>
-                            <h4 className='text-[#333333] text-[16px] py-3 px-4 font-[700]'>Hồ sơ của tôi</h4>
-                        </section>
-                        <section className='border-1 rounded bg-white py-4'>
-                            <div className='px-4 pb-4'>
-                                <h4 className='text-[22px] font-[700] text-[#333333]'>Hoàn chỉnh hồ sơ</h4>
-                            </div>
-                        </section>
-                        <section className='border-1 rounded bg-white py-4'>
-                            <div className='px-4 pb-4'>
-                                <h4 className='text-[22px] font-[700] text-[#333333]'>Thông tin cá nhân</h4>
-                            </div>
-                            <div>
-                                {
-                                    !hidden ?
-                                        <div className={'px-4 text-[#333333]'}>
-                                            <div className='border-y py-3'>
-                                                <div className='flex items-center mx-3'>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Họ và tên</div>
-                                                        <div className='w-[62%] font-[700]'>{currentUser?.displayName ? currentUser?.displayName : profile?.name}</div>
-                                                    </div>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Ngày sinh</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.birth_day}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='border-b py-3'>
-                                                <div className='mx-3'>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Email</div>
-                                                        {currentUser?.email ?
-                                                            <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                {currentUser?.email}
-                                                                {
-                                                                    currentUser?.emailVerified ?
-                                                                        <span><i className='fas fa-check-circle text-green-500'></i></span>
-                                                                        :
-                                                                        <button onClick={verifyEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
-                                                                }
-
-                                                            </div>
-                                                            :
-                                                            <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                {profile?.email}
-                                                                {
-                                                                    currentUser?.emailVerified ?
-                                                                        <span><i className='fas fa-check-circle text-green-500'></i></span>
-                                                                        :
-                                                                        <button onClick={verifyEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
-                                                                }
-
-                                                            </div>
-                                                        }
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='border-b py-3'>
-                                                <div className='mx-3'>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Số điện thoại</div>
-
-                                                        {profile?.phone_props.phone ?
-                                                            <>
-                                                                <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                    {profile?.phone_props.phone}
-                                                                    <button className='font-[100]'>
-                                                                        <NavLink className={'hover:text-[#fd7e14] hover:no-underline'} to={'/otp'}>Xác thực</NavLink>
-                                                                    </button>
-                                                                </div>
-                                                            </> : ""
-                                                        }
-
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='border-b py-3'>
-                                                <div className='flex items-center mx-3'>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Tỉnh/Thành phố</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.province}</div>
-                                                    </div>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Quận/Huyện</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.district}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div className='border-0 py-3'>
-                                                <div className='mx-3'>
-                                                    <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Địa chỉ</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.specific_address}</div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div> :
-                                        <div className={'px-4 text-[#333333]'}>
-                                            form
-                                            <form>
-                                                <div className='border-y py-3'>
-                                                    <div className='flex items-center mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Họ và tên</div>
-                                                            <div className='w-[62%] font-[700]'></div>
-                                                        </div>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Ngày sinh</div>
-                                                            <div className='w-[62%] font-[700]'></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className='border-b py-3'>
-                                                    <div className='mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Email</div>
-                                                            <div className='w-[62%] font-[700]'></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className='border-b py-3'>
-                                                    <div className='mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Số điện thoại</div>
-                                                            <div className='w-[62%] font-[700]'></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className='border-b py-3'>
-                                                    <div className='flex items-center mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Tỉnh/Thành phố</div>
-                                                            <select name="province" onChange={changeSelect}>
-                                                                <option value="0">--Chọn Tỉnh/Thành phố--</option>
-                                                                {
-                                                                    provinces ? provinces?.map((province: any) =>
-                                                                        <option key={province.province_id} value={province.province_id}>
-                                                                            {province.province_name}
-                                                                        </option>
-                                                                    ) : ''
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Quận/Huyện</div>
-                                                            <select name="district">
-                                                                <option value="0">--Chọn Quận/Huyện--</option>
-                                                                {
-                                                                    districts ? districts?.map((district: any) =>
-                                                                        <option key={district.district_id} value={district.district_id}>
-                                                                            {district.district_name}
-                                                                        </option>
-                                                                    ) : ''
-                                                                }
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className='border-0 py-3'>
-                                                    <div className='mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Địa chỉ</div>
-                                                            <div className='w-[62%] font-[700]'></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </form>
-                                        </div>
-                                }
-                            </div>
-                            <button className='bg-[#005AFF] mx-3 text-white font-[700] rounded p-[8px]' onClick={showForm}>Chỉnh sửa</button>
-                        </section>
-                    </main>
+                    {/* End Navbar */}
+                    <Outlet />
                 </div>
             </div >
         </>

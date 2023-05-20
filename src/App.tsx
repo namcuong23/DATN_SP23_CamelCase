@@ -37,6 +37,10 @@ import Jobdone from './components/pages/Jobdone'
 import "./App.css"
 import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
+import Infotmation from "./components/employee/profile/Infotmation"
+import MyJob from "./components/employee/profile/MyJob"
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <div className="App">
@@ -71,11 +75,11 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
-          <Route path="profile" element={
-            // <PrivateRoute>
-            <Profile />
-            // </PrivateRoute>
-          } />
+          <Route path="profile" element={<Profile />} >
+            <Route index element={<Infotmation />} />
+            <Route path="myJob" element={<MyJob />} />
+            <Route path="information" element={<Infotmation />} />
+          </Route>
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -123,7 +127,21 @@ function App() {
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
       </Routes>
-    </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+      {/* Same as */}
+      <ToastContainer />
+    </div >
   )
 }
 

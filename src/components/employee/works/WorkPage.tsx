@@ -3,11 +3,15 @@ import { BsArrowRight } from "react-icons/bs"
 import { useEffect, useState } from 'react'
 import { apiGetProvinces } from '../../../service/api';
 import axios from "axios"
-import {formatCurrency} from '../../../utils/FormatCurrrency'
+import { formatCurrency } from '../../../utils/FormatCurrrency'
+import UseAuth from "../../auth/UseAuth";
+import { useGetEprProfileQuery } from "../../../service/profileEpe";
+import { useAddJobsaveMutation } from "../../../service/savejob";
+import { toast } from "react-toastify";
+
 type Props = {}
 
 const WorkPage = (props: Props) => {
-
     const salaryOptions = [
         {
             title: "Lương Theo Giờ",
@@ -31,7 +35,7 @@ const WorkPage = (props: Props) => {
         },
         {
             title: "Trên 30.000d",
-            salary: [31000,null],
+            salary: [31000, null],
         }
     ]
     const [data, setData] = useState([])
@@ -40,7 +44,7 @@ const WorkPage = (props: Props) => {
     const [filterParams, setFilterParams] = useState({
         key: "",
         work_location: "",
-        job_salary : ""
+        job_salary: ""
     })
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -55,7 +59,7 @@ const WorkPage = (props: Props) => {
 
     useEffect(() => {
         getSearch(filterParams)
-    }, [filterParams.work_location,filterParams.job_salary]
+    }, [filterParams.work_location, filterParams.job_salary]
     )
     const loadData = async () => {
         return await axios
@@ -71,7 +75,7 @@ const WorkPage = (props: Props) => {
     }
     const getSearch = async (params: any) => {
         try {
-            const {data} = await axios({
+            const { data } = await axios({
                 url: `http://localhost:4000/api/search`,
                 params
             })
@@ -82,12 +86,24 @@ const WorkPage = (props: Props) => {
         catch (error) {
             console.log(error)
         }
-
-
     }
     const handleSearch = async (e: any) => {
         e.preventDefault();
         getSearch(filterParams)
+    }
+    //savejob
+    const currentUser: any = UseAuth();
+    const dataUser: any = useGetEprProfileQuery(currentUser?.email);
+    const profile: any = dataUser.currentData;
+    const [addJobsave] = useAddJobsaveMutation()
+    const onHandleAdd: any = (item: any) => {
+        try {
+            addJobsave({ job_name: item.job_name, job_description: item.job_description, job_salary: item.job_salary, user_id: profile?._id });
+            console.log(item);
+            toast.success("Da them Vafo Yeu Thich");
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     return (
@@ -131,8 +147,8 @@ const WorkPage = (props: Props) => {
                     </select>
                     {/* luong */}
                     <select onChange={(e) => setFilterParams({ ...filterParams, job_salary: e.target.value })} name="cars" id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '30px', gap: '5px' }}>
-                        {salaryOptions && salaryOptions.map((item:any) =>{
-                            return  <option value={item.salary}>{item.title}</option>
+                        {salaryOptions && salaryOptions.map((item: any) => {
+                            return <option value={item.salary}>{item.title}</option>
                         })}
                     </select>
                     <select onChange={(e) => setFilterParams({ ...filterParams, work_location: e.target.value })} name="cars" id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '30px', gap: '5px' }}>
@@ -170,7 +186,7 @@ const WorkPage = (props: Props) => {
                                     </div>
                                     <div className="negotiate" style={{ marginTop: '25px', marginLeft: '80px' }}>
                                         <p style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(item.job_salary)} </p>
-                                        <AiOutlineHeart style={{ color: 'black', width: '20px', height: '20px', marginTop: '100px', marginLeft: '70px' }} />
+                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} style={{ color: 'black', width: '20px', height: '20px', marginTop: '100px', marginLeft: '70px' }} />
                                     </div>
                                 </div>
                             ))

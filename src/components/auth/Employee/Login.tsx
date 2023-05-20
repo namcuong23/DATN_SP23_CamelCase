@@ -41,20 +41,20 @@ const Login = () => {
             // This must be true.
             handleCodeInApp: true
         };
+        const login = await signin(user)
+        console.log(currentUser)
+        if (login) {
+            setLoading(false)
+            message.success('Login')
+            navigate('/')
+        }
         await signInWithEmailAndPassword(auth, email, password)
             .then(async (userCredential: any) => {
                 // Signed in 
-                const login = await signin(user)
-
-                if (login) {
-                    const userInfo = userCredential.user;
-                    currentUser.displayName = userInfo.displayName
-                    setLoading(false)
-                    dispatch(loginAuth(currentUser))
-                    message.success('Login')
-                    navigate('/')
-                }
-
+                setLoading(false)
+                dispatch(loginAuth(currentUser))
+                const userInfo = userCredential.user;
+                currentUser.displayName = userInfo.displayName
             })
             .catch((error) => {
                 setLoading(false)
