@@ -25,6 +25,7 @@ const PostDetail = () => {
     const reject = "Bạn có muốn từ chối hồ sơ này?"
     // const [removeCv] = useRemoveCvMutation()
     const [removeProfile] = useRemoveProfileMutation()
+    // console
 
     const onHandleRemove = (id: string) => {
         console.log(id);
