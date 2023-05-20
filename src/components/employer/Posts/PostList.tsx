@@ -24,7 +24,6 @@ const PostList = (): any | null | JSX.Element => {
     const profile: IProfileEpr = data.currentData
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
     const text: string = 'Are you sure to delete this post?';
-
     interface DataType {
         key: string;
         _id: string;
@@ -64,7 +63,6 @@ const PostList = (): any | null | JSX.Element => {
             removePost(id)
         }
     }
-
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
