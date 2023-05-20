@@ -25,6 +25,7 @@ const PostList = (): any | null | JSX.Element => {
     const data: any = useGetEprProfileQuery(currentUser?.email)
     const profile: IProfileEpr = data.currentData
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
+    console.log(posts)
     const text: string = 'Are you sure to delete this post?';
     const [provinces, setProvinces] = useState<any>([])
 

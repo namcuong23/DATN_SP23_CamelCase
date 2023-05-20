@@ -1064,4 +1064,358 @@
 
     /*!sc*/
 
+    /* ****recruitmentDetail**** */
+.recruitment-details1{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 10.75em;
+  margin-top: 10px;
+  background: white;
+  margin: 0px;
+}
+
+.content-recruitment-details{
+  width:70%;
+  float: left;
+  padding-right: 1em;
+}
+
+/* ****endrecruitmentDetail*** */
+
+/* ****wage**** */
+.block-list-wage{
+  width: 73.3%;
+  margin: 0 auto;
+  padding-top: 1em;
+}
+
+.content-wage-job{
+  width:70%;
+  float: left;
+  padding-right: 1em;
+}
+
+/* ***endwage*** */
+
+/* ****manage-job**** */
+.content-manage-job{
+  width:70%;
+  float: left;
+  padding-right: 1em;
+}
+.content-manage-job1{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 10.75em;
+  margin-top: 10px;
+  background: white;
+  margin: 0px;
+}
+.content-manage-job2{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 10.75em;
+  margin-top: 10px;
+  background: white;
+  margin-top: 1em;
+
+}
+
+.content-wage-job{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 10.75em;
+  margin-top: 10px;
+  background: white;
+  margin: 0px;
+}
+/* ****end manage-job**** */
+/* ***Job */
+
+.info-list-job{
+  color: rgb(51, 51, 51);
+  background-color:   rgb(229, 238, 255);
+  border-radius: 3px;
+  font-size: 14px;
+}
+.block-job-list{
+  width: 74%;
+  margin: 0 auto;
+  padding-top: 1em;
+}
+.content-job2{
+  width:70%;
+  float: left;
+  padding-right: 1em;
+}
+.content-job{
+  background-color: #f7f7f7;
+  padding-top: 1em;
+  width: 74%;
+  margin: 0 auto;
+}
+#banner-list-job{
+  width: 30%;
+  float: left;
+  /* background-color: white; */
+  border: 0px solid ;
+  border-bottom: 1px solid ;
+}
+#input-search-job{
+  background-color: #f4f4f7;
+  width: 100%;
+  border-style: none;
+  display: inline;
+  margin-right: 1em;
+}
+.filter-all-job{
+  padding: 0.5em;
+  height: 4em;
+}
+#filter-all{
+  height: 40px;
+}
+#filter-all button{
+  font-size: 14px;
+  color: black;
+  opacity: 0.9;
+}
+#filter-all ul a{
+  font-size: 14px;
+  width: 300px;
+}
+#filter-all ul{
+  width: 300px;
+}
+.job-info-wrapper{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 10.75em;
+  margin-top: 10px;
+  border: 1px solid #b3ceff;
+  background: #f0f7ff;
+  margin: 0px;
+}
+.job-info-wrapper1{
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  height: 10.75em;
+  margin-top: 10px;
+  border: 1px solid #b3ceff;
+  background: #f0f7ff;
+  margin-top: 1em;
+
+}
+.job-info p {
+  margin: 0;
+}
+div.job-info-wrapper{
+  background-color: #f0f7ff;
+  /* background-color: #FF330C; */
+  border-radius: 3px;
+}
+#logo-area-wrapper{
+  width: 18%;
+  height: 100%;
+  padding: 0.25em
+}
+
+/* ***end job*** */
+
+/* ** css trang phỏng vấn */
+.head-related-jobs {
+  padding-top: 1em;
+}
+
+.head-logo-related-jobs {
+  padding-left: 1, 75em;
+  float: left;
+  width: 13%;
+}
+
+.head-related-jobs-search {
+  width: 74%;
+  margin: 0 auto;
+  display: inherit;
+}
+
+.interview {
+  width: 70%;
+  float: left;
+  padding-right: 1em;
+}
+
+#related-jobs-search {
+  background-color: rgb(255 126 86);
+  color: white;
+  padding: 0.7em 2em;
+}
+
+#input-search {
+  background-color: #f4f4f7;
+  width: 68.5%;
+  border-style: none;
+  display: inline;
+  margin-right: 1em;
+}
+
+#dropdown-login-homepage {
+  display: inline;
+  position: absolute;
+  max-width: 20%;
+  margin-left: 2.9em;
+}
+
+.menu-nav-related {
+  width: 74%;
+  margin: 0 auto;
+  display: inherit;
+  padding: 1.25em 0.75em 0.5em 0;
+}
+
+.menu-nav-related span {
+  display: inline;
+}
+
+#related-jobs {
+  width: 30%;
+  float: left;
+  background-color: white;
+  border: 0px solid;
+  height: 119.7%;
+  /* padding-left: 1em; */
+}
+
+.content-interview {
+  width: 74%;
+  margin: 0 auto;
+}
+
+.job-logo {
+  border: 1px solid rgb(238 238 238);
+  border-radius: 4px;
+  width: 3.5em;
+  height: 3.5em;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  justify-content: center;
+  display: flex;
+  margin-right: 14px;
+  flex-shrink: 0;
+}
+
+.job-info {
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 12px;
+  display: block;
+  padding: 0;
+  width: 70%;
+}
+
+.job-info div a {
+  font-size: 1em;
+}
+
+.job-info p a {
+  font-size: 0.75em;
+}
+
+.job-info div {
+  font-size: 0.75em;
+}
+
+.view-job {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 12px;
+  height: 6em;
+  padding-top: 0.5em;
+
+}
+
+div .view-job {
+  width: 100%;
+}
+
+.job-title {
+  font-weight: 500;
+  font-size: 1em;
+  color: rgb(51, 51, 51);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.job-title1 a {
+  word-wrap: break-word;
+}
+
+.job-title a,
+a:hover {
+  text-decoration: none;
+}
+
+.job-info p a,
+a:hover {
+  text-decoration: none;
+}
+
+.job-info p {
+  white-space: nowrap;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* .job-info p:hover {
+  overflow: visible;
+} */
+.job-info p a:hover+div {
+  overflow: visible;
+  display: inline;
+  position: 'absolute';
+  margin-top: 20px;
+  margin-left: -230px;
+
+}
+
+.job-info p div {
+  padding: 0.25em 0.5em;
+  margin-right: 20px;
+  background-color: #f4f4f7;
+  display: none;
+  color: black;
+}
+
+.job-info p a {
+  width: 6em;
+}
+
+#favorite-job {
+  margin-top: 0.5em;
+  width: 51%;
+  margin-left: 13%;
+  padding-bottom: 2em;
+}
+
+.view-job2 {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 0.5em 2em;
+  height: 6em;
+}
+
+/* ** end css phỏng vấn */
+
 
