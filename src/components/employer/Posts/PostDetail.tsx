@@ -1,9 +1,9 @@
-import { Button, message, Modal, Popconfirm, Space, Table } from 'antd'
+import { message, Modal, Popconfirm, Space, Table } from 'antd'
 import { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useGetPostQuery } from '../../../service/post'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
-import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { useGetCvsByPostIdQuery, useRemoveCvMutation } from '../../../service/manage_cv'
 
 const PostDetail = () => {
@@ -13,7 +13,6 @@ const PostDetail = () => {
     const text: string = 'Are you sure to delete this CV?';
     const { data } = useGetCvsByPostIdQuery(post?._id)
     const cvs: any = data?.cvs
-    console.log(cvs);
 
     const [removeCv] = useRemoveCvMutation()
     const onHandleRemove = (id: string) => {

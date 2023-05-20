@@ -4,7 +4,8 @@ export const loginAuth: any = (currentUser: any) => {
     if (currentUser) {
         return {
             type: actionTypes.LOGIN,
-            token: currentUser.accessToken
+            token: currentUser.accessToken,
+            email: currentUser.user.email
         }
     }
 }

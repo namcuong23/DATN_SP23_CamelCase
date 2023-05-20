@@ -5,26 +5,22 @@ import UseAuth from '../../auth/UseAuth'
 import { sendEmailVerification } from 'firebase/auth'
 import { message } from 'antd'
 import { NavLink } from 'react-router-dom'
-import { useGetUserByEmailQuery } from '../../../service/auth'
 import { apiGetDistricts, apiGetProvinces } from '../../../service/api'
+import { useAppSelector } from '../../../app/hook'
 
 const Profile = () => {
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
+    const data: any = useGetProfileQuery(email)
     const profile: ImanageProfile = data.currentData
-    const user = useGetUserByEmailQuery(currentUser?.email)
     const [hidden, setHidden] = useState(false)
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
-
-    console.log(currentUser);
 
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
             setProvinces(response?.results);
-            console.log(response?.results);
-
         }
         fetchProvinces()
     }, [])
@@ -47,18 +43,11 @@ const Profile = () => {
             })
             .catch((error) => {
                 const errorCode = error.code;
-                console.log(errorCode);
             })
-    }
-
-    if (!user.currentData) {
-        return <div className='my-10'>
-            <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
-        </div>
     }
     return (
         <>
-            <div className='bg-gray-100 min-h-screen'>
+            {isLoggedIn ? <div className='bg-gray-100 min-h-screen'>
                 {/* SEARCH BAR */}
                 <div className='h-[80px] w-100 py-3 bg-white'>
                     <div className='container flex items-center justify-center h-100 w-100'>
@@ -325,7 +314,11 @@ const Profile = () => {
                         </section>
                     </main>
                 </div>
-            </div >
+            </div > :
+                <div className='my-10'>
+                    <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
+                </div>}
+
         </>
     )
 }

@@ -17,7 +17,6 @@ const LoginEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signin] = useLoginWithEmployerMutation()
-    const currentUser: any = UseAuth()
     const [type, setType] = useState(false)
     const dispatch: any = useAppDispatch()
 
@@ -25,42 +24,15 @@ const LoginEmployer = () => {
         setType(!type)
     }
 
-    const [emailE, setEmail] = useState('')
-    const changeInput = (e: any) => {
-        setEmail(e.target.value)
-    }
-    const { data: existUser } = useGetUserEprByEmailQuery<any>(emailE)
-
     const signIn = async (user: any) => {
-        const email = user.email
-        const password = user.password
-        const actionCodeSettings = {
-            // URL you want to redirect back to. The domain (www.example.com) for this
-            // URL must be in the authorized domains list in the Firebase Console.
-            url: 'http://127.0.0.1:5173/',
-            // This must be true.
-            handleCodeInApp: true
-        };
-
-        if (emailE && !existUser) {
-            return toast.error("Không tìm thấy email.")
+        const login: any = await signin(user)
+        const { data: res } = login
+        if (res?.success) {
+            dispatch(loginAuth(res))
+            navigate('/home')
+        } else {
+            toast.warning(res.mes)
         }
-
-        await signInWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential: any) => {
-                // Signed in 
-                const login = await signin(user)
-                if (login) {
-                    const userInfo = userCredential.user;
-                    dispatch(loginAuth(currentUser))
-                    message.success('Login')
-                    navigate('/home')
-                }
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-                console.log(errorCode)
-            });
     }
     return (
         <>
@@ -74,7 +46,7 @@ const LoginEmployer = () => {
                             <h3 className='text-3xl font-[600] py-12'>Đăng nhập</h3>
                             <form onSubmit={handleSubmit(signIn)} className="flex flex-col">
                                 <div className='flex flex-col mb-2'>
-                                    <label className='font-[600]'>Tài khoản đăng nhập</label>
+                                    <label className='font-[600]'>Tài khoản đăng nhập <span className='text-red-500'>*</span></label>
                                     <input {...register('email',
                                         {
                                             required: true,
@@ -82,13 +54,12 @@ const LoginEmployer = () => {
                                         })}
                                         type="email"
                                         className={errors.email ? "form-control border-1 border-red-500 focus:border-red-500 focus:shadow-none" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                        name='email'
-                                        onChange={changeInput} />
+                                        name='email' />
                                     {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
                                     {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ.</span>}
                                 </div>
                                 <div className='flex flex-col'>
-                                    <label className='font-[600]'>Mật khẩu</label>
+                                    <label className='font-[600]'>Mật khẩu <span className='text-red-500'>*</span></label>
                                     <div className='relative flex items-center'>
                                         <input {...register('password', { required: true, minLength: 6 })}
                                             type={type ? 'text' : "password"}
@@ -104,7 +75,9 @@ const LoginEmployer = () => {
                                 </div>
 
                                 <div className='flex items-center justify-between my-5'>
-                                    <a href='' className='text-[#005AFF] hover:no-underline hover:text-[#FD6333]'>Quên mật khẩu</a>
+                                    <NavLink to={'/forgot-pasword-epr'} className='text-[#005AFF] hover:no-underline hover:text-[#FD6333]'>
+                                        Quên mật khẩu
+                                    </NavLink>
 
                                     <button
                                         onClick={signIn}
@@ -117,7 +90,7 @@ const LoginEmployer = () => {
                             </form>
                         </div>
                         <div className='w-100 flex items-center gap-2 bg-[#EDEDED] p-4'>
-                            <p>Bạn chưa có tài khoản?</p>
+                            <p className='m-0'>Bạn chưa có tài khoản?</p>
                             <NavLink to={'/signup-epr'} className='font-[300] text-[#005AFF] hover:no-underline hover:text-[#FD6333]'>
                                 Đăng ký
                             </NavLink>

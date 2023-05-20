@@ -1,13 +1,12 @@
 import { useState, useEffect } from 'react'
-import { Button, Form, Input, message, Select } from 'antd'
+import { Form, Input, message, Select } from 'antd'
 import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
 import IPost from '../../../interface/post'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
-import UseAuth from '../../auth/UseAuth';
-import { useGetProfileQuery } from '../../../service/manage_profile';
-import ImanageProfile from '../../../interface/manageProfile';
 import { apiGetProvinces } from '../../../service/api'
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
+import { useAppSelector } from '../../../app/hook';
 
 const PostEdit = () => {
     const navigate = useNavigate()
@@ -17,9 +16,9 @@ const PostEdit = () => {
     form.setFieldsValue(post)
 
     const [editPost] = useEditPostMutation()
-    const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
+    const { email } = useAppSelector((rs) => rs.auth)
+    const data: any = useGetUserEprByEmailQuery(email)
+    const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])
 
     useEffect(() => {
@@ -33,7 +32,12 @@ const PostEdit = () => {
     const onHandleEdit = (postForm: IPost) => {
         console.log(postForm);
         try {
-            editPost({ ...postForm, post_status: post.post_status, user_id: profile?._id, _id: id })
+            editPost({
+                ...postForm,
+                post_status: post.post_status,
+                user_id: user?._id,
+                _id: id
+            })
             message.success('Sửa thành công.')
             navigate('/home/posts')
         } catch (error) {

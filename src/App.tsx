@@ -14,7 +14,6 @@ import Register from "./components/auth/Employee/Register"
 import RegisterEmployer from "./components/auth/Employer/RegisterEmployer"
 import LoginEmployer from "./components/auth/Employer/LoginEmployer"
 import PackageList from "./components/employer/package/PackageList"
-import Cart from "./components/employer/package/Cart"
 import OrderList from "./components/employer/package/OrderList"
 import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
@@ -41,8 +40,14 @@ import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
 import AccountMng from "./components/employee/profile/AccountMng"
-
 import LoginAdmin from "./components/auth/Admin/LoginAdmin"
+import Cart from "./components/employer/package/Cart"
+import ResetPassEpe from "./components/auth/Employee/ResetPassEpe"
+import ForgotPasswordNotice from "./components/auth/Employee/ForgotPasswordNotice"
+import ForgotPassEpr from "./components/auth/Employer/ForgotPassEpr"
+import ResetPassEpr from "./components/auth/Employer/ResetPassEpr"
+import ForgotPassNotice from "./components/auth/Employer/ForgotPassNotice"
+import AccEprMng from "./components/employer/profileEpr/AccEprMng"
 function App() {
   return (
     <div className="App">
@@ -51,37 +56,29 @@ function App() {
 
         {/* AUTH EMPLOYEE */}
         <Route path='signup' element={
-          // <RedirectRoute>
           <Register />
-          // </RedirectRoute>
         } />
         <Route path='login' element={
-          // <RedirectRoute>
           <Login />
-          // </RedirectRoute>
         } />
-        <Route path='forgot-pasword-epe' element={
-          // <RedirectRoute>
-          <ForgotPassEpe />
-          // </RedirectRoute>
-        } />
+        <Route path='forgot-pasword-epe' element={<ForgotPassEpe />} />
+        <Route path='reset-pasword-epe' element={<ResetPassEpe />} />
+        <Route path='notice' element={<ForgotPasswordNotice />} />
 
         {/* AUTH EMPLOYER */}
         <Route path='signup-epr' element={
-          // <RedirectRoute>
           <RegisterEmployer />
-          // </RedirectRoute>
         } />
         <Route path='login-epr' element={
-          // <RedirectRoute>
           <LoginEmployer />
-          // </RedirectRoute>
         } />
+        <Route path='forgot-pasword-epr' element={<ForgotPassEpr />} />
+        <Route path='reset-pasword-epr' element={<ResetPassEpr />} />
+        <Route path='notice-epr' element={<ForgotPassNotice />} />
+
         {/* Auth ADMIN */}
         <Route path='login-admin' element={
-          // <RedirectRoute>
           <LoginAdmin />
-          // </RedirectRoute>
         } />
         {/* EMPLOYEE */}
         <Route path="/" element={<LayoutClient />}>
@@ -100,6 +97,7 @@ function App() {
         <Route path='/home' element={<LayoutEmployer />}>
           <Route index element={<Home />} />
           <Route path='profile-epr' element={<ProfileEpr />} />
+          <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />
@@ -124,9 +122,6 @@ function App() {
           <Route path='posts' element={<PostAdmin />} />
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
-        </Route>
-        <Route path='/' element={<LayoutClient />}>
-          <Route index element={<HomeClient />} />
         </Route>
         <Route path='/employs' element={<LayoutEmployer />}>
           <Route index element={<HomeEmployer />} />

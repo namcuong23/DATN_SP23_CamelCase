@@ -7,18 +7,19 @@ import UseAuth from '../../auth/UseAuth';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../../firebase';
-import { useAppDispatch } from '../../../app/hook';
+import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { logoutAuth } from '../../../app/actions/auth';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import IProfileEpr from '../../../interface/employer/profileEpr';
 
 const HeaderEmployer = () => {
+    const { email, isLoggedIn } = useAppSelector((res) => res.auth)
     const [open, setOpen] = useState(false);
     const currentUser: any = UseAuth()
     const navigate = useNavigate()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const data: any = useGetEprProfileQuery(email)
     const profile: IProfileEpr = data.currentData
-    const user = useGetUserEprByEmailQuery(currentUser?.email)
+    const user = useGetUserEprByEmailQuery(email)
     const dispatch = useAppDispatch()
 
     const showDrawer = () => {
@@ -32,7 +33,6 @@ const HeaderEmployer = () => {
     const onSignOut = async () => {
         try {
             dispatch(logoutAuth())
-            await signOut(auth)
             navigate('/login-epr')
         } catch (error: any) {
             message.info(error.message)
@@ -100,7 +100,7 @@ const HeaderEmployer = () => {
                     key={'right'}
                     className='relative w-full stick bottom-0'
                 >
-                    {user.currentData ?
+                    {isLoggedIn ?
                         <div>
                             <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
                                 <BsPersonCircle className='text-5xl text-[#474747]' />
@@ -114,7 +114,11 @@ const HeaderEmployer = () => {
                                     <SettingOutlined className='text-[25px] font-[700]' />
                                     <div className='flex flex-col'>
                                         <span className='text-[17px] text-[#474747] font-[700] px-3'>Thiết lập tài khoản</span>
-                                        <span className='text-[15px] text-[#474747] px-3 py-1'>Quản lý tài khoản</span>
+                                        <NavLink
+                                            to={'/home/acc-epr-manage'}
+                                            className='text-[15px] text-[#474747] hover:text-[#474747] hover:bg-[#F3F8FC] px-3 py-1'>
+                                            Quản lý tài khoản
+                                        </NavLink>
                                         <NavLink
                                             to={'/home/profile-epr'}
                                             className='text-[15px] text-[#474747] hover:text-[#474747] hover:bg-[#F3F8FC] px-3 py-1'>

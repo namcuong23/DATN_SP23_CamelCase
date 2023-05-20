@@ -1,20 +1,20 @@
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import type { ColumnsType } from 'antd/es/table';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { Popconfirm, Space, Table, message } from 'antd';
+import { Popconfirm, Table } from 'antd';
 import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { useState } from 'react';
-import { minusProductCart, nusProductCart, removeProductCart } from '../../../app/actions/package';
-import UseAuth from '../../auth/UseAuth';
+import {
+    minusProductCart,
+    nusProductCart,
+    removeProductCart
+} from '../../../app/actions/package';
 import { useGetOrdersByUIdQuery } from '../../../service/employer/order';
 import { useCreateOrderMutation } from '../../../service/employer/order';
 import IOrder from '../../../interface/employer/order';
-import IProfileEpr from '../../../interface/employer/profileEpr';
-import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
-type Props = {}
-
-const Cart = (props: Props) => {
+const Cart = (): any => {
     const dispatch: any = useAppDispatch()
     const navigate = useNavigate()
     const text: string = 'Are you sure to delete this item?'
@@ -31,11 +31,12 @@ const Cart = (props: Props) => {
         dispatch(nusProductCart(id))
     }
 
-    const currentUser: any = UseAuth()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
-    const profile: IProfileEpr = data.currentData
-    const { data: orders } = useGetOrdersByUIdQuery<any>(profile?._id)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const data: any = useGetUserEprByEmailQuery(email)
+    const user: any = data.currentData
+    const { data: orders } = useGetOrdersByUIdQuery<any>(user?._id)
 
+    //Create order code
     const min = 1;
     const max = 1000;
     const rand = Math.floor(Math.random() * (max - min + 1)) + min;
@@ -135,16 +136,14 @@ const Cart = (props: Props) => {
                     order_count: orders[i].orderCount,
                     order_price: orders[i].product.package_price,
                     order_code: code,
-                    user_id: profile._id,
+                    user_id: user?._id,
                     package_id: orders[i].product._id
                 })
                 if (addOrder) {
                     dispatch(removeProductCart(orders[i].product._id))
                 }
             }
-            // orders.length > 0 ?
             navigate('/home/orders')
-            // : message.info("Vui lòng chọn gói.")
         } catch (error) {
             console.log(error);
 
@@ -155,6 +154,10 @@ const Cart = (props: Props) => {
     const [isChecked, setIsChecked] = useState(true)
     const handleConfirm = () => {
         setIsChecked(!isChecked)
+    }
+
+    if (isLoggedIn == false) {
+        return navigate('/login')
     }
 
     return (

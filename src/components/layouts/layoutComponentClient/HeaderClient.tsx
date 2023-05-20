@@ -1,26 +1,23 @@
 import { message } from '@pankod/refine-antd'
-import { signOut } from 'firebase/auth'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { auth } from '../../../firebase'
 import UseAuth from '../../auth/UseAuth'
 import ImanageProfile from "../../../interface/manageProfile"
 import { useGetProfileQuery } from '../../../service/manage_profile'
-import { useGetUserByEmailQuery } from '../../../service/auth'
-import { useAppDispatch } from '../../../app/hook'
+import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { logoutAuth } from '../../../app/actions/auth'
 
 const HeaderClient = () => {
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
     const currentUser: any = UseAuth()
     const navigate = useNavigate()
-    const data: any = useGetProfileQuery(currentUser?.email)
+    const data: any = useGetProfileQuery(email)
     const profile: ImanageProfile = data.currentData
-    const user: any = useGetUserByEmailQuery(currentUser?.email)
     const dispatch = useAppDispatch()
 
     const onSignOut = async () => {
         try {
             dispatch(logoutAuth())
-            await signOut(auth)
+            // await signOut(auth)
             navigate('/login')
         } catch (error: any) {
             message.error(error.message)
@@ -70,7 +67,7 @@ const HeaderClient = () => {
                         <div className="new-notification" id="desktopRedDotContainer" />
                     </div>
                     {
-                        user.currentData ?
+                        isLoggedIn ?
                             <div>
                                 <button className='flex items-center justify-center space-x-3'
                                     type="button"

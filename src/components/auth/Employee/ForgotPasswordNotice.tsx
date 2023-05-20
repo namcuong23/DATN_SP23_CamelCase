@@ -1,22 +1,6 @@
-import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
-import { useSendEmailResetPassMutation } from '../../../service/auth'
-import { useNavigate } from 'react-router-dom'
+import React from 'react'
 
-const ForgotPassEpe = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm()
-    const navigate = useNavigate()
-    const [sendEmailResetPass] = useSendEmailResetPassMutation()
-    const sendEmail = async (user: any) => {
-        const send: any = await sendEmailResetPass(user)
-        const { data: rs } = send
-        if (rs?.success) {
-            navigate('/notice')
-        } else {
-            toast.warning(rs?.mes)
-        }
-
-    }
+const ForgotPasswordNotice = () => {
     return (
         <>
             <div className="border-0 text-dark relative">
@@ -24,7 +8,7 @@ const ForgotPassEpe = () => {
                 <div className="absolute top-[40%] left-[27%] bg-white">
                     <div className="w-[600px] min-h-[70vh] shadow">
                         <div className="p-5">
-                            <div className="pb-4 flex justify-center">
+                            <div className="pb-4 flex justify-center pt-10">
                                 <svg width="200px" height="200px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 200 200" xmlSpace="preserve">
                                     <style type="text/css" dangerouslySetInnerHTML={{ __html: "\n                            .st0{fill-rule:evenodd;clip-rule:evenodd;fill:#EFF0F2;}\n                            .st1{fill-rule:evenodd;clip-rule:evenodd;fill:#4285F4;}\n                            .st2{fill-rule:evenodd;clip-rule:evenodd;fill:#005AFF;}\n                            .st3{fill-rule:evenodd;clip-rule:evenodd;fill:#001744;}\n                            .st4{fill-rule:evenodd;clip-rule:evenodd;fill:url(#Path_00000109727466101490705270000002221097310213036726_);}\n                            .st5{fill:#DFE1E5;}\n                            .st6{fill-rule:evenodd;clip-rule:evenodd;fill:#BABFC5;}\n                            .st7{fill:#FFFFFF;}\n                            .st8{opacity:0.5;fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;enable-background:new    ;}\n                            .st9{fill-rule:evenodd;clip-rule:evenodd;fill:url(#Path_00000103980070254117689490000003414820839172756651_);}\n                            .st10{fill-rule:evenodd;clip-rule:evenodd;fill:#EA4335;}\n\n                            .st11{opacity:0.5;fill-rule:evenodd;clip-rule:evenodd;fill:url(#Path_00000114787410606178098290000011078242878783421847_);enable-background:new    ;}\n                            .st12{fill-rule:evenodd;clip-rule:evenodd;fill:#BBBFC3;}\n                            .st13{fill-rule:evenodd;clip-rule:evenodd;fill:#DFE1E5;}\n                            .st14{fill:none;stroke:#BABFC5;stroke-width:1.2346;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:10;}\n                            .st15{fill-rule:evenodd;clip-rule:evenodd;fill:#FFFFFF;}\n                            .st16{fill-rule:evenodd;clip-rule:evenodd;fill:#34A853;}\n                            .st17{fill:#4688F1;}\n                            .st18{fill-rule:evenodd;clip-rule:evenodd;fill:#4688F1;}\n                            .st19{fill-rule:evenodd;clip-rule:evenodd;fill:url(#Path_00000111891872168890299990000002828651614147878319_);}\n                            .st20{fill-rule:evenodd;clip-rule:evenodd;fill:#FABB05;}\n                            .st21{fill-rule:evenodd;clip-rule:evenodd;fill:#EDA606;}\n                            .st22{fill-rule:evenodd;clip-rule:evenodd;fill:#23893C;}\n                            .st23{fill-rule:evenodd;clip-rule:evenodd;fill:#CDD0D5;}\n                            .st24{display:none;}\n                            .st25{display:inline;fill:url(#SVGID_1_);}\n                            .st26{display:inline;fill:url(#SVGID_00000091010284711140075290000006210620556934897843_);}\n                            .st27{display:inline;fill:url(#SVGID_00000078008260524862635110000001480609954877502629_);}\n                            .st28{display:inline;fill:url(#SVGID_00000070819209468788921770000007837140157146645910_);}\n                        " }} />
                                     <g id="Page-1">
@@ -187,28 +171,9 @@ const ForgotPassEpe = () => {
                                 </svg>
 
                             </div>
-                            <p>Hãy nhập email vào khung bên dưới. Chúng tôi sẽ gởi thông tin để bạn thay đổi mật khẩu vào email.</p>
-                            <form onSubmit={handleSubmit(sendEmail)}>
-                                <div className="form-group">
-                                    <label className="text-dark">Email</label>
-                                    <input type="email"
-                                        {...register('email',
-                                            {
-                                                required: true,
-                                                pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-                                            }
-                                        )}
-                                        className="form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"
-                                        name='email' />
-                                    {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
-                                    {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
-                                </div>
-
-                                <button className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
-                                    Gửi
-                                </button>
-
-                            </form>
+                            <p className='bg-[#D7F3E3] p-4 rounded'>
+                                Hướng dẫn để thay đổi mật khẩu đã được gởi đến Email của bạn. Vui lòng kiểm tra Email để tạo mật khẩu mới.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -217,4 +182,4 @@ const ForgotPassEpe = () => {
     )
 }
 
-export default ForgotPassEpe
+export default ForgotPasswordNotice

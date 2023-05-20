@@ -3,16 +3,15 @@ import {
   useGetEprProfileQuery,
   useUpdateEprProfileMutation
 } from '../../../service/employer/profileEpr'
-import UseAuth from '../../auth/UseAuth'
 import IProfileEpr from '../../../interface/employer/profileEpr'
 import { useEffect } from 'react'
+import { useAppSelector } from '../../../app/hook'
+import { NavLink } from 'react-router-dom'
 
 const ProfileEpr = () => {
-  const currentUser: any = UseAuth()
-  const { data: userEpr, loading, error } = useGetEprProfileQuery(currentUser?.email)
+  const { email, isLoggedIn } = useAppSelector((res) => res.auth)
+  const { data: userEpr } = useGetEprProfileQuery(email)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IProfileEpr>()
-  console.log(errors);
-
   const [updateEprProfile] = useUpdateEprProfileMutation()
 
   useEffect(() => {
@@ -35,14 +34,17 @@ const ProfileEpr = () => {
 
   return (
     <>
-      <div className='bg-white min-h-screen flex items-start px-12 py-8 gap-14 text-[#474747]'>
+      {isLoggedIn ? <div className='bg-white min-h-screen flex items-start px-12 py-8 gap-14 text-[#474747]'>
         <aside className='w-[22%]'>
           <div className='w-full border-1 rounded-[5px]'>
             <ul className='flex flex-col text-[15px]'>
-              <li className='py-2 px-4 border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white'>Quản lý tài khoản</li>
+              <NavLink to={'/home/acc-epr-manage'}
+                className='py-2 px-[24px] hover:px-[20px] border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white text-[#333333] hover:text-[#333333] hover:border-l-[4px] hover:border-l-[#1C88E5] hover:rounded-tl-[5px]'>
+                Quản lý tài khoản
+              </NavLink>
               {/*  hover:border-b-0 hover:border-l-[4px] hover:border-[#1C88E5] hover:rounded-t-[5px] */}
               <ul className='flex flex-col'>
-                <li className='py-2 px-4 border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white'>Thông tin cá nhân</li>
+                <li className='py-2 px-[24px] hover:px-[20px] border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white hover:border-l-[4px] hover:border-l-[#1C88E5]'>Thông tin cá nhân</li>
                 <li className='py-1 px-4 bg-[#E5E5E5] font-[400]'>Thông tin chung</li>
                 <li className='py-1 px-4 hover:bg-[#E5E5E5] font-[400]'>Địa điểm làm việc</li>
               </ul>
@@ -123,7 +125,11 @@ const ProfileEpr = () => {
             </form>
           </div>
         </main>
-      </div>
+      </div> :
+        <div className='my-10'>
+          <h1 className='text-center text-[30px] font-[700]'>Đăng nhập để tiếp tục.</h1>
+        </div>}
+
     </>
   )
 }

@@ -1,16 +1,8 @@
 import { NavLink } from 'react-router-dom'
-import ImanageProfile from '../../../interface/manageProfile'
-import IPost from '../../../interface/post'
-import { useGetProfileQuery } from '../../../service/manage_profile'
-import UseAuth from '../../auth/UseAuth'
 import { useGetPostsQuery } from '../../../service/post'
 
 const HomeClient = () => {
-  const currentUser: any = UseAuth()
-  const profiles: any = useGetProfileQuery(currentUser?.email)
-  const profile: ImanageProfile = profiles.currentData
   const { data: posts } = useGetPostsQuery()
-
   return (
     <div>
       <div id="pageContentWrapper">

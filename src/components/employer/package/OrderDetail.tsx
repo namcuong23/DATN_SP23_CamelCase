@@ -3,16 +3,16 @@ import type { ColumnsType } from 'antd/es/table';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { useGetOrderQuery, useRemoveOrderMutation } from '../../../service/employer/order';
 import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons'
-import UseAuth from '../../auth/UseAuth';
 import QRCode from 'qrcode.react';
 import IProfileEpr from '../../../interface/employer/profileEpr';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import { useAppSelector } from '../../../app/hook';
 
 const OrderDetail = () => {
     const { id } = useParams()
     const navigate = useNavigate()
-    const currentUser: any = UseAuth()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
+    const { email } = useAppSelector((rs) => rs.auth)
+    const data: any = useGetEprProfileQuery(email)
     const profile: IProfileEpr = data.currentData
     const { data: order } = useGetOrderQuery<any>(id)
     const paymentTerm = new Date(order?.createdAt)

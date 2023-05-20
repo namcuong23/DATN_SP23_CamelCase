@@ -2,15 +2,16 @@ import { useEffect, useState } from 'react';
 import { message } from 'antd';
 import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
-import { createUserWithEmailAndPassword, FacebookAuthProvider, GoogleAuthProvider, sendEmailVerification, signInWithPopup } from 'firebase/auth';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { CgSpinner } from "react-icons/cg"
 import { useGetUserByEmailQuery, useSignupMutation } from '../../../service/auth';
 import { useAddProfileMutation } from '../../../service/manage_profile';
 import { auth } from '../../../firebase';
 import { useSignupAMutation } from '../../../service/admin';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import Swal from 'sweetalert2';
 import { toast } from 'react-toastify'
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -24,34 +25,16 @@ const Register = () => {
         setType(!type)
     }
 
-    const [email, setEmail] = useState('')
-    const changeInput = (e: any) => {
-        setEmail(e.target.value)
-    }
-    const { data: existUser } = useGetUserByEmailQuery<any>(email)
-    const { data: checkUser } = useGetUserEprByEmailQuery<any>(email)
-
     const signUp: SubmitHandler<any> = async (user: any) => {
         setLoading(true)
-        const email = user.email
-        const password = user.password
-        if (existUser) {
-            return toast.error('Email đã tồn tại.')
-        }
-
-        if (checkUser) {
-            return toast.warning('Email đã được đăng ký trên trang nhà tuyển dụng')
-        }
-
-        return await createUserWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential) => {
-                // Signed in 
-                const userInfo: any = userCredential.user;
-                const currentUser: any = auth.currentUser;
-                sendEmailVerification(currentUser)
-                    .then(() => {
-                        message.info('Email verification link sent!')
-                    })
+        const register: any = await signup({
+            ...user,
+            level_auth: 1
+        })
+        const { data: res } = register
+        if (res?.success) {
+            setLoading(false)
+            Swal.fire('Congratulations', 'Đăng ký thành công!', 'success').then(async () => {
                 await addProfile({
                     name: user.name,
                     email: user.email,
@@ -60,25 +43,17 @@ const Register = () => {
                         is_verified: false
                     },
                 })
-
-                const register = await signup({
+                await signupA({
                     ...user,
                     level_auth: 1
                 })
-                if (register) {
-                    await signupA({
-                        ...user,
-                        level_auth: 1
-                    })
-                    setLoading(false)
-                    navigate('/login')
-                    message.success("Created account successfully!")
-
-                }
+                navigate('/login')
             })
-            .catch((error) => {
-                setLoading(false)
-            });
+
+        } else {
+            setLoading(false)
+            toast.warning(res?.mes)
+        }
 
     }
 
@@ -193,8 +168,7 @@ const Register = () => {
                                             type="email"
                                             placeholder='Sử dụng email có thật để xác thực.'
                                             className={errors.email ? "form-control border-red-500 border-1" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                            name='email'
-                                            onChange={changeInput} />
+                                            name='email' />
                                         {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
                                         {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
                                         {/* {error != null && !errors.email ? <span className='text-red-500 fw-bold mt-1'>{error}</span> : ''} */}

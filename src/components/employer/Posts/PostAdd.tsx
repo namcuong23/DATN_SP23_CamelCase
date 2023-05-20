@@ -1,21 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
-import { Button, Form, Input, Select, message } from 'antd';
+import { Form, Input, Select, message } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
 import IPost from '../../../interface/post';
 import { useAddPostMutation } from '../../../service/post';
-import UseAuth from '../../auth/UseAuth';
 import { apiGetProvinces } from '../../../service/api';
-import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
-import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useAppSelector } from '../../../app/hook';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
 const PostAdd = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const [addPost] = useAddPostMutation()
-    const currentUser: any = UseAuth()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
-    const profile: IProfileEpr = data.currentData
+    const { email } = useAppSelector((res: any) => res.auth)
+    const data: any = useGetUserEprByEmailQuery(email)
+    const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])
 
     useEffect(() => {
@@ -28,9 +27,7 @@ const PostAdd = () => {
 
     const onHandleAdd: any = (post: IPost) => {
         try {
-            console.log({ ...post, post_status: null, user_id: profile?._id });
-
-            addPost({ ...post, post_status: null, user_id: profile?._id })
+            addPost({ ...post, post_status: null, user_id: user?._id })
             message.success('Dang tin thanh cong.')
             navigate('/home/posts')
         } catch (error) {

@@ -9,24 +9,26 @@ import {
     DeleteOutlined
 } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
-import UseAuth from '../../auth/UseAuth';
-import { useGetOrdersByUIdQuery, useRemoveOrderMutation } from '../../../service/employer/order';
+import {
+    useGetOrdersByUIdQuery,
+    useRemoveOrderMutation
+} from '../../../service/employer/order';
 import { useAppSelector } from '../../../app/hook';
-import IProfileEpr from '../../../interface/employer/profileEpr';
-import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
-type Props = {}
-
-const OrderList: any = (props: Props) => {
+const OrderList: any = () => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
     const text: string = 'Are you sure to delete this order?'
+    const navigate = useNavigate()
 
-    const currentUser: any = UseAuth()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
-    const profile: IProfileEpr = data.currentData
-    const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(profile?._id)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const data: any = useGetUserEprByEmailQuery(email)
+    const user: any = data.currentData
+    const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(user?._id)
+    console.log(orders);
+
     const [removeOrder] = useRemoveOrderMutation()
     interface DataType {
         key: React.Key
@@ -227,9 +229,9 @@ const OrderList: any = (props: Props) => {
         console.log('params', pagination, filters, sorter, extra);
     };
 
-    // if (!user.currentData) {
-    //     return navigate('/login-epr')
-    // }
+    if (isLoggedIn == false) {
+        return navigate('/login-epr')
+    }
 
     if (isLoading) {
         return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>

@@ -30,6 +30,30 @@ export const authEprApi = createApi({
         getUserEprByEmail: builder.query({
             query: (email: string) => `/epr-users/${email}/detail`,
             providesTags: ['authEpr']
+        }),
+        sendEmailEResetPass: builder.mutation({
+            query: (user: any) => ({
+                url: `/epr-users/forgotpassword/?email=${user.email}`,
+                method: 'POST',
+                body: user
+            }),
+            invalidatesTags: ['authEpr']
+        }),
+        resetEPassword: builder.mutation({
+            query: (user: any) => ({
+                url: '/epr-users/resetpassword',
+                method: 'PUT',
+                body: user
+            }),
+            invalidatesTags: ['authEpr']
+        }),
+        changePassEpr: builder.mutation({
+            query: (user: any) => ({
+                url: '/epr-users/changepassepr',
+                method: 'PUT',
+                body: user
+            }),
+            invalidatesTags: ['authEpr']
         })
     })
 })
@@ -38,4 +62,7 @@ export const {
     useRegisterWithEmployerMutation,
     useLoginWithEmployerMutation,
     useGetUserEprByEmailQuery,
+    useSendEmailEResetPassMutation,
+    useResetEPasswordMutation,
+    useChangePassEprMutation
 } = authEprApi

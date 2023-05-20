@@ -1,26 +1,20 @@
 import React from 'react'
-import { NavLink, useNavigate } from 'react-router-dom'
-import { Alert, Space, Spin, message } from 'antd'
+import { useNavigate } from 'react-router-dom'
+import { Alert, Space, Spin } from 'antd'
 import IPackage from '../../../interface/package'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { setCart } from '../../../app/actions/package'
 import { useGetAdmPackagesQuery } from '../../../service/admin/package'
 import IAdPackage from '../../../interface/admin/package'
+import { toast } from 'react-toastify'
 
-type Props = {}
-
-const PackageList = (props: Props) => {
+const PackageList = () => {
     const dispatch: any = useAppDispatch()
-    const data = useAppSelector(state => state.cart)
-
     const navigate = useNavigate()
     const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
     const onHandleAddToCart = (pack: IAdPackage) => {
-        message.success('Thêm thành công!')
+        toast.success('Thêm thành công!')
         const addToCart = dispatch(setCart(pack))
-        // if (addToCart) {
-
-        // }
     }
 
     const onHandleBuy = (pack: IPackage) => {

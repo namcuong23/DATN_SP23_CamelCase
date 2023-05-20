@@ -1,6 +1,6 @@
-import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
+import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { useGetPostsByUIdQuery } from '../../../service/post';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
@@ -10,21 +10,21 @@ import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
 import { useRemovePostMutation } from '../../../service/post'
-import UseAuth from '../../auth/UseAuth';
-import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
-import IProfileEpr from '../../../interface/employer/profileEpr';
 import { apiGetProvinces } from '../../../service/api';
 import IPost from '../../../interface/post';
+import { useAppSelector } from '../../../app/hook';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
 const PostList = (): any | null | JSX.Element => {
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
+    const navigate = useNavigate()
 
-    const currentUser: any = UseAuth()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
-    const profile: IProfileEpr = data.currentData
-    const { data: posts, error, isLoading } = useGetPostsByUIdQuery(profile?._id)
+    const { email, isLoggedIn } = useAppSelector((res) => res.auth);
+    const data: any = useGetUserEprByEmailQuery(email)
+    const user: any = data.currentData
+    const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
     const [provinces, setProvinces] = useState<any>([])
 
@@ -212,7 +212,7 @@ const PostList = (): any | null | JSX.Element => {
             render: (_: any, record: DataType) => (
                 <>
                     {
-                        record.post_status == null ? <Tag
+                        record.post_status == '' ? <Tag
                             color={'gold'}
                             key={'Đang chờ duyệt'}>
                             Đang chờ duyệt
@@ -252,13 +252,9 @@ const PostList = (): any | null | JSX.Element => {
         },
     ];
 
-    // const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
-    //     console.log('params', pagination, filters, sorter, extra);
-    // };
-
-    // if (!user.currentData) {
-    //     return navigate('/login-epr')
-    // }
+    if (isLoggedIn == false) {
+        return navigate('/login-epr')
+    }
 
     if (isLoading) {
         return <Space className='mt-16' direction="vertical" style={{ width: '100%' }}>

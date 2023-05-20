@@ -1,21 +1,31 @@
+import React, { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'react-toastify'
-import { useSendEmailResetPassMutation } from '../../../service/auth'
 import { useNavigate } from 'react-router-dom'
+import { useResetPasswordMutation } from '../../../service/auth'
+import Swal from 'sweetalert2'
+import { toast } from 'react-toastify'
 
-const ForgotPassEpe = () => {
+type Props = {}
+
+const ResetPassEpe = (props: Props) => {
+    const urlParams = new URLSearchParams(window.location.search)
+    const token: any = urlParams.get('token')
     const { register, handleSubmit, formState: { errors } } = useForm()
+    const [resetPassword] = useResetPasswordMutation()
     const navigate = useNavigate()
-    const [sendEmailResetPass] = useSendEmailResetPassMutation()
-    const sendEmail = async (user: any) => {
-        const send: any = await sendEmailResetPass(user)
-        const { data: rs } = send
-        if (rs?.success) {
-            navigate('/notice')
-        } else {
-            toast.warning(rs?.mes)
+    const resetPass = async ({ password, repass }: any) => {
+        if (password != repass) {
+            return toast.warning('Mật khẩu không khớp')
         }
-
+        const reset: any = await resetPassword({ token, password })
+        const { data: rs } = reset
+        if (rs?.success) {
+            return Swal.fire('Congratulations', 'Đổi mật khẩu thành công!', 'success').then(() => {
+                navigate('/login')
+            })
+        } else {
+            return toast.error(rs?.mes)
+        }
     }
     return (
         <>
@@ -187,25 +197,46 @@ const ForgotPassEpe = () => {
                                 </svg>
 
                             </div>
-                            <p>Hãy nhập email vào khung bên dưới. Chúng tôi sẽ gởi thông tin để bạn thay đổi mật khẩu vào email.</p>
-                            <form onSubmit={handleSubmit(sendEmail)}>
+                            <p className='text-center'>Hãy nhập mật khẩu mới để xác nhận thay đổi mật khẩu.</p>
+                            <form onSubmit={handleSubmit(resetPass)}>
                                 <div className="form-group">
-                                    <label className="text-dark">Email</label>
-                                    <input type="email"
-                                        {...register('email',
+                                    <label className="text-dark">Mật khẩu mới</label>
+                                    <input type="password"
+                                        {...register('password',
                                             {
                                                 required: true,
-                                                pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                                                minLength: 6,
+                                                maxLength: 50,
+                                                pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,50}$/
+                                            }
+                                        )}
+                                        placeholder=''
+                                        className="form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"
+                                        name='password' />
+                                    <p>Từ 6 đến 50 ký tự, 1 chữ hoa, 1 chữ thường.</p>
+                                    {errors.password && errors.password.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mật khẩu</span>}
+                                    {errors.password && errors.password.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu không hợp lệ.</span>}
+                                </div>
+
+                                <div className="form-group">
+                                    <label className="text-dark">Mật khẩu xác nhận</label>
+                                    <input type="password"
+                                        {...register('repass',
+                                            {
+                                                required: true,
+                                                minLength: 6,
+                                                maxLength: 50,
+                                                pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,50}$/
                                             }
                                         )}
                                         className="form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"
-                                        name='email' />
-                                    {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
-                                    {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
+                                        name='repass' />
+                                    {errors.repass && errors.repass.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mật khẩu xác nhận</span>}
+                                    {errors.repass && errors.repass.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu không hợp lệ.</span>}
                                 </div>
 
                                 <button className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
-                                    Gửi
+                                    Thay đổi
                                 </button>
 
                             </form>
@@ -217,4 +248,4 @@ const ForgotPassEpe = () => {
     )
 }
 
-export default ForgotPassEpe
+export default ResetPassEpe

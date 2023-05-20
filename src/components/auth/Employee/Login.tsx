@@ -3,16 +3,13 @@ import { message } from 'antd'
 import {
     FacebookAuthProvider,
     GoogleAuthProvider,
-    signInWithEmailAndPassword,
     signInWithPopup
 } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, NavLink } from 'react-router-dom'
 import { auth } from '../../../firebase'
-import { useGetUserByEmailQuery, useSigninMutation } from '../../../service/auth'
-import UseAuth from '../UseAuth'
+import { useSigninMutation } from '../../../service/auth'
 import { CgSpinner } from "react-icons/cg"
-import { NavLink } from 'react-router-dom'
 import { useAppDispatch } from '../../../app/hook'
 import { loginAuth } from '../../../app/actions/auth'
 import { toast } from 'react-toastify'
@@ -20,7 +17,6 @@ import { toast } from 'react-toastify'
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
-    const currentUser: any = UseAuth()
     const dispatch = useAppDispatch()
     const [signin] = useSigninMutation()
     const [type, setType] = useState(false)
@@ -29,54 +25,37 @@ const Login = () => {
         setType(!type)
     }
 
-    const [emailE, setEmail] = useState('')
-    const changeInput = (e: any) => {
-        setEmail(e.target.value)
-    }
-    const { data: existUser } = useGetUserByEmailQuery<any>(emailE)
-
     const signIn = async (user: any) => {
         setLoading(true)
-        const email = user.email
-        const password = user.password
-        const actionCodeSettings = {
-            // URL you want to redirect back to. The domain (www.example.com) for this
-            // URL must be in the authorized domains list in the Firebase Console.
-            url: 'http://127.0.0.1:5173/',
-            // This must be true.
-            handleCodeInApp: true
-        };
+        const login = await signin(user)
+        const { data: res }: any = login
+        if (res?.success) {
+            setLoading(false)
+            dispatch(loginAuth(res))
+            navigate('/')
 
-        if (emailE && !existUser) {
-            return toast.error("Không tìm thấy email.")
+        } else {
+            setLoading(false)
+            toast.warning(res.mes)
         }
 
-        return await signInWithEmailAndPassword(auth, email, password)
-            .then(async (userCredential: any) => {
-                // Signed in 
-                const login = await signin(user)
-                if (login) {
-                    const userInfo = userCredential.user;
-                    currentUser.displayName = userInfo.displayName
-                    setLoading(false)
-                    dispatch(loginAuth(currentUser))
-                    message.success('Login')
-                    navigate('/')
-                }
-            })
-            .catch((error) => {
-                setLoading(false)
-            });
+        // return await signInWithEmailAndPassword(auth, email, password)
+        //     .then(async (userCredential: any) => {
+        //         // Signed in 
+        //         const userInfo = userCredential.user;
+        //         currentUser.displayName = userInfo.displayName
+        //         setLoading(false)
+        //         dispatch(loginAuth(currentUser))
+        //         navigate('/')
+
+        //     })
+        //     .catch((error) => {
+        //         setLoading(false)
+        //     });
 
 
 
     }
-
-    // if (signIn) {
-    //     if (!user.currentData) {
-    //         return message.error('Tài khoản không tồn tại.')
-    //     }
-    // }
 
     const signInWithFacebook = async () => {
         const provider = new FacebookAuthProvider()
@@ -160,15 +139,19 @@ const Login = () => {
                                     })}
                                         type="email"
                                         className={errors.email ? "form-control border-1 border-red-500" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
-                                        name='email'
-                                        onChange={changeInput} />
+                                        name='email' />
                                     {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
                                     {errors.email && errors.email.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ.</span>}
                                 </div>
                                 <div className="form-group">
                                     <label className="text-dark fw-bold">Mật khẩu</label>
                                     <div className='relative flex items-center'>
-                                        <input {...register('password', { required: true, minLength: 6 })}
+                                        <input {...register('password', {
+                                            required: true,
+                                            minLength: 6,
+                                            maxLength: 50,
+                                            pattern: /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,50}$/
+                                        })}
                                             type={type ? 'text' : "password"}
                                             className={errors.password ? "form-control border-red-500" : "form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"}
                                             name='password'
@@ -184,7 +167,7 @@ const Login = () => {
 
 
                                     {errors.password && errors.password.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mật khẩu</span>}
-                                    {errors.password && errors.password.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu chứa từ 6 ký tự trở lên.</span>}
+                                    {errors.password && errors.password.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu không hợp lệ.</span>}
                                 </div>
                                 <div className="form-group">
                                     <div className='flex items-center justify-end'>
