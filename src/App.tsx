@@ -34,6 +34,8 @@ import CareerList from "./components/Admin/Career/CareerList"
 import ServicesEpr from "./components/employer/package/ServicesEpr"
 import HomeEmployer from './components/home/HomeEmployer'
 import Jobdone from './components/pages/Jobdone'
+import Job from './components/pages/Job'
+
 import "./App.css"
 import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
@@ -43,6 +45,9 @@ import 'react-toastify/dist/ReactToastify.css';
 import AccountMng from "./components/employee/profile/AccountMng"
 
 import LoginAdmin from "./components/auth/Admin/LoginAdmin"
+import Interview from "./components/pages/Interview"
+import ManageJob from "./components/pages/ManageJob"
+import RecruitmentDetails from "./components/pages/RecruitmentDetails"
 function App() {
   return (
     <div className="App">
@@ -87,6 +92,10 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
+          <Route path="interview" element={<Interview />} />
+          <Route path="managejob" element={<ManageJob />} />
+          <Route path="jobempolyee" element={<Job />} />
+          <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
           <Route path="profile" element={
             // <PrivateRoute>
             <Profile />
