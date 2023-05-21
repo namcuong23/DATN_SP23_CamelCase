@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 // import '../../../assets/img/admin/images/'\
 // import myImage from './src/assets/img/admin/images/logo.png';
 import myImage from '../../../assets/img/logo.jpg';
-import { AreaChartOutlined, DeploymentUnitOutlined, ReconciliationOutlined, TagsOutlined, UserOutlined } from '@ant-design/icons';
+import { AreaChartOutlined, DeploymentUnitOutlined, ReconciliationOutlined, TagsOutlined, UserOutlined, IdcardOutlined } from '@ant-design/icons';
 
 type Props = {}
 
@@ -55,6 +55,14 @@ const SideBar = (props: Props) => {
                 <li className="nk-menu-item has-sub w-full nk-menu-link ">
                   <span className="nk-menu-icon m-1"><DeploymentUnitOutlined /></span>
                   <span className="nk-menu-text">Quản lý bài Ngành nghề</span>
+                </li>
+              </Link>
+              <Link to="/admin/feedbacks">
+                <li className="nk-menu-item has-sub w-full ">
+                  <a href="#" className="nk-menu-link">
+                    <span className="nk-menu-icon m-1"><IdcardOutlined /></span>
+                    <span className="nk-menu-text">Quản lý Feedback</span>
+                  </a>
                 </li>
               </Link>
             </ul>
