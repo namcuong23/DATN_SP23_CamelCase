@@ -75,7 +75,6 @@ const PostList = (): any | null | JSX.Element => {
             removePost(id)
         }
     }
-
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,

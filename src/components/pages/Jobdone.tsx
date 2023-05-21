@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useGetJobdonesQuery } from '../../services/jobdone'
 
 type Props = {}
 
 const Jobdone = (props: Props) => {
-    const { data: jobdones = [], isLoading, error } = useGetJobdonesQuery()
-    if (isLoading) return <div>...isLoading</div>
-    if (error) return <div>error</div>
+    // const { data: jobdones = [], isLoading, error } = useGetJobdonesQuery()
+    // if (isLoading) return <div>...isLoading</div>
+    // if (error) return <div>error</div>
+    const [jobdone,setJobdone]= useState(false);
+    
     return (
         <div>
             <div className="bg-light">
@@ -99,9 +101,6 @@ const Jobdone = (props: Props) => {
                                 </div>
                                 <div className='myJob border bg-white pl-5 pt-3 rounded my-3'>
                                     <div className="row py-2">
-                                        <div className="col-3 ">
-                                            <a href="#" className='text-black'>Việc làm đã xem</a>
-                                        </div>
                                         <div className="col-3">
                                             <a href="#" className='text-black'>Việc làm đã lưu</a>
                                         </div>
@@ -110,22 +109,20 @@ const Jobdone = (props: Props) => {
                                         </div>
 
                                     </div>
-                                    {jobdones.map((jobdone) => (
                                         <div className='myJob border bg-white mr-3 py-3 rounded my-3 row'>
                                             <div className='col-2 pt-5'>
                                                 <img src="https://images.vietnamworks.com/pictureofcompany/f8/82482.jpg" className='border rounded px-2 py-4' />
                                             </div>
                                             <div className='col-8 '>
-                                                <a href="#" className='text-black'> <h3 className='fw-bold'>{jobdone.job_name}</h3></a>
+                                                <a href="#" className='text-black'> <h3 className='fw-bold'>Abc</h3></a>
                                                 <p>Fujitsu Vietnam Ltd</p>
                                                 <p className='address'>Ha Noi,Ho Chi Minh</p>
-                                                <p className='salary text-danger'>${jobdone.job_salary}</p>
+                                                <p className='salary text-danger'>$1000</p>
                                             </div>
                                             <div className='col-2'>
                                                 <button className='border border-danger rounded bg-white text-danger p-3 mt-2'>Ứng tuyển</button>
                                             </div>
                                         </div>
-                                    ))}
                                     <div className='note'>
                                         <p>Lưu ý: Bạn không xem được việc làm đã hết thời hạn đăng tuyển hoặc tạm ngưng nhận hồ sơ.</p>
                                     </div>

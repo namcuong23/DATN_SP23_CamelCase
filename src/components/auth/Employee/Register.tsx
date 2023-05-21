@@ -36,12 +36,10 @@ const Register = () => {
             Swal.fire('Congratulations', 'Đăng ký thành công!', 'success').then(async () => {
                 navigate('/login')
             })
-
         } else {
             setLoading(false)
             toast.warning(res?.mes)
         }
-
     }
 
     const signInWithFacebook = async () => {

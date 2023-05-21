@@ -39,7 +39,6 @@ import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
 import { ToastContainer } from "react-toastify"
-import 'react-toastify/dist/ReactToastify.css';
 import AccountMng from "./components/employee/profile/AccountMng"
 import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 import Cart from "./components/employer/package/Cart"
@@ -50,6 +49,9 @@ import ResetPassEpr from "./components/auth/Employer/ResetPassEpr"
 import ForgotPassNotice from "./components/auth/Employer/ForgotPassNotice"
 import AccEprMng from "./components/employer/profileEpr/AccEprMng"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
+import Infotmation from "./components/employee/profile/Infotmation"
+import MyJob from "./components/employee/profile/MyJob"
+import 'react-toastify/dist/ReactToastify.css';
 function App() {
   return (
     <div className="App">
@@ -93,6 +95,11 @@ function App() {
           } />
           <Route path="account-manage" element={<AccountMng />} />
           <Route path="feedbacks" element={<Feedback />} />
+          <Route path="profile" element={<Profile />} >
+            <Route index element={<Infotmation />} />
+            <Route path="myJob" element={<MyJob />} />
+            <Route path="information" element={<Infotmation />} />
+          </Route>
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -142,7 +149,7 @@ function App() {
       </Routes>
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={2000}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick
@@ -154,7 +161,7 @@ function App() {
       />
       {/* Same as */}
       <ToastContainer />
-    </div>
+    </div >
   )
 }
 

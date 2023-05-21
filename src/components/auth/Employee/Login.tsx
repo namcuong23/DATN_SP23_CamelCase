@@ -33,28 +33,10 @@ const Login = () => {
             setLoading(false)
             dispatch(loginAuth(res))
             navigate('/')
-
         } else {
             setLoading(false)
             toast.warning(res.mes)
         }
-
-        // return await signInWithEmailAndPassword(auth, email, password)
-        //     .then(async (userCredential: any) => {
-        //         // Signed in 
-        //         const userInfo = userCredential.user;
-        //         currentUser.displayName = userInfo.displayName
-        //         setLoading(false)
-        //         dispatch(loginAuth(currentUser))
-        //         navigate('/')
-
-        //     })
-        //     .catch((error) => {
-        //         setLoading(false)
-        //     });
-
-
-
     }
 
     const signInWithFacebook = async () => {

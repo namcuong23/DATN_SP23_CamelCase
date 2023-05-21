@@ -25,6 +25,9 @@ import { packageAdmApi } from "../service/admin/package";
 import { profileEprApi } from "../service/employer/profileEpr";
 import { personalInforApi } from "../services/personalInfor";
 import { feedbackApi } from "../services/feedback";
+import { jobsaveApi } from "../service/savejob";
+import { profileEpeApi } from "../service/profileEpe";
+import { jobdoneApi } from "../services/jobdone";
 
 const persistConfig = {
     key: 'root',
@@ -36,6 +39,9 @@ const rootReducer = combineReducers({
     auth: authReducer,
     cart: cartReducer,
     [postApi.reducerPath]: postApi.reducer,
+    [jobdoneApi.reducerPath]: jobdoneApi.reducer,
+    [profileEpeApi.reducerPath]: profileEpeApi.reducer,
+    [jobsaveApi.reducerPath]: jobsaveApi.reducer,
     [profileApi.reducerPath]: profileApi.reducer,
     [profileEprApi.reducerPath]: profileEprApi.reducer,
     [voucherApi.reducerPath]: voucherApi.reducer,
@@ -61,6 +67,9 @@ export const store = configureStore({
     }).concat(
         postApi.middleware,
         feedbackApi.middleware,
+        jobdoneApi.middleware,
+        jobsaveApi.middleware,
+        profileEpeApi.middleware,
         profileApi.middleware,
         profileEprApi.middleware,
         voucherApi.middleware,

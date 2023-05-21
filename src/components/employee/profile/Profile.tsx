@@ -97,6 +97,7 @@ const Profile: any = () => {
                 </div>
                 {/* CONTENT */}
                 <div className='flex items-start w-100 gap-3 p-3'>
+                    {/* Navbar */}
                     <aside className='rounded w-25 space-y-2'>
                         <section className='border-1 rounded bg-[#4A80F8] p-3'>
                             <div className='flex items-center space-x-4'>
