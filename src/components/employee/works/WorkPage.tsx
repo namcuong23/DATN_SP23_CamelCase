@@ -8,7 +8,7 @@ import UseAuth from "../../auth/UseAuth";
 import { useGetEprProfileQuery } from "../../../service/profileEpe";
 import { useAddJobsaveMutation, useGetJobsaveByUIdQuery } from "../../../service/savejob";
 import { toast } from "react-toastify";
-
+import { useSearchParams,useNavigate, createSearchParams } from "react-router-dom";
 type Props = {}
 
 const WorkPage = (props: Props) => {
@@ -41,10 +41,15 @@ const WorkPage = (props: Props) => {
     const [data, setData] = useState([])
     const [provinces, setProvinces] = useState<any>([])
     const [searchMessage, setSearchMessage] = useState("")
+    const [career,setCareer] = useState([])
+    const [params] = useSearchParams()
+    const searchParams = params.get('keyword')
+    const navigate = useNavigate()
     const [filterParams, setFilterParams] = useState({
-        key: "",
+        key: searchParams,
         work_location: "",
-        job_salary: ""
+        job_salary: "",
+        career : ""
     })
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -55,16 +60,23 @@ const WorkPage = (props: Props) => {
     }, [])
     useEffect(() => {
         loadData();
+        loadCareers()
     }, [])
 
     useEffect(() => {
         getSearch(filterParams)
-    }, [filterParams.work_location, filterParams.job_salary]
+    }, [filterParams.work_location, filterParams.job_salary,filterParams.career,searchParams]
     )
     const loadData = async () => {
         return await axios
             .get("http://localhost:4000/api/posts")
             .then((responsive) => setData(responsive.data))
+            .catch((error) => console.log(error))
+    }
+    const loadCareers  = async () => {
+        return await axios
+            .get("http://localhost:4000/api/careers")
+            .then((responsive) => setCareer(responsive.data))
             .catch((error) => console.log(error))
     }
     const resetSearch = (e: any) => {
@@ -90,6 +102,7 @@ const WorkPage = (props: Props) => {
     const handleSearch = async (e: any) => {
         e.preventDefault();
         getSearch(filterParams)
+        navigate(`/works?keyword=${filterParams.key}`)
     }
     //savejob
     const currentUser: any = UseAuth();
@@ -101,13 +114,13 @@ const WorkPage = (props: Props) => {
     const onHandleAdd: any = (item: any) => {
         try {
             addJobsave({ job_name: item.job_name, job_description: item.job_description, work_location: item.work_location, job_salary: item.job_salary, user_id: profile?._id });
-            console.log(item);
+            // console.log(item);
             toast.success("Da them Vafo Yeu Thich");
         } catch (error) {
             console.log(error);
         }
     }
-
+    const getSearchKey = () => {}
     return (
         <>
             <div className='min-h-[100vh]'>
@@ -141,11 +154,13 @@ const WorkPage = (props: Props) => {
                 </form>
                 {/* CONTENT */}
                 <div className="works-" style={{ backgroundColor: ' rgb(179, 206, 255)', width: '75%', height: '60px', margin: 'auto', borderRadius: '7px', display: 'flex' }}>
-                    <select name="cars" id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '10px', gap: '5px' }}>
-                        <option value="all">Tất Cả Nghề Nghiệp</option>
-                        <option value="saab">Saab</option>
-                        <option value="mercedes">Mercedes</option>
-                        <option value="audi">Audi</option>
+                    <select name="cars" onChange={(e) => setFilterParams({ ...filterParams, career: e.target.value })} id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '10px', gap: '5px' }}>
+                        <option value="">Tất Cả Nghề Nghiệp</option>
+                        {career && career.map((item:any) =>{
+                            return (
+                                <option value={item._id}>{item.name}</option>
+                            )
+                        })}
                     </select>
                     {/* luong */}
                     <select onChange={(e) => setFilterParams({ ...filterParams, job_salary: e.target.value })} name="cars" id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '30px', gap: '5px' }}>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useAppSelector } from '../../../app/hook';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import UseAuth from '../../auth/UseAuth';
@@ -17,6 +17,14 @@ const MyJob = () => {
   const { data: jobsaves } = useGetJobsaveByUIdQuery(profile?._id);
   //jobdone
   const { data: jobdones } = useGetJobdonesQuery(profile?._id)
+  console.log(jobdones);
+  const [dataJobdone, setDataJobdone] = useState<any>({jobdones})
+  useEffect(() => {
+    setDataJobdone(jobdones);
+  }, [jobdones])
+  console.log(dataJobdone);
+  
+  //remove
   const [removeJobsave] = useRemoveJobsaveMutation()
   const onHandleRemove = (id: any) => {
     if (window.confirm("Bạn có muốn xóa không ?")) {
@@ -29,6 +37,7 @@ const MyJob = () => {
     if (window.confirm("Bạn có muốn hủy ứng tuyển không ?")) {
       removeJobdone(id)
       toast.success("Hủy Ứng Tuyển Thành Công Việc Làm")
+      setDataJobdone(jobdones)
     }
   }
   const [addJobdone] = useAddJobdoneMutation()
@@ -42,7 +51,7 @@ const MyJob = () => {
   }
   return (
     //SaveJob
-    <div className="col-9">
+    <div className="container">
       <div className='myJob border bg-white pl-5 py-3 rounded '>
         <h3>Việc làm của tôi</h3>
       </div>
@@ -56,11 +65,11 @@ const MyJob = () => {
           </div>
 
         </div>
-        <div style={{ height: '100%' }}>
+        <div>
           {jobdone ?
-            jobdones?.map((item: any, index: any) => {
+            dataJobdone?.map((item: any, index: any) => {
               return (
-                <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row'>
+                <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row d-flex'>
                   <div className='col-2 pt-1'>
                     <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
                   </div>
@@ -77,7 +86,7 @@ const MyJob = () => {
             }
             ) :
             jobsaves?.map((item: any, index: any) =>
-              <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row'>
+              <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 pb-3 row'>
                 <div className='col-2 pt-1'>
                   <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
                 </div>
