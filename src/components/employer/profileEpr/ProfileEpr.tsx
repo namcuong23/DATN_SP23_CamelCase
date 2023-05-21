@@ -1,35 +1,38 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
-import {
-  useGetEprProfileQuery,
-  useUpdateEprProfileMutation
-} from '../../../service/employer/profileEpr'
-import IProfileEpr from '../../../interface/employer/profileEpr'
 import { useEffect } from 'react'
 import { useAppSelector } from '../../../app/hook'
 import { NavLink } from 'react-router-dom'
+import {
+  useGetUserEprByEmailQuery,
+  useUpdateUserEprMutation
+} from '../../../service/auth_employer'
+import IUserNTD from '../../../interface/employer/user_epr'
+import { toast } from 'react-toastify'
 
 const ProfileEpr = () => {
   const { email, isLoggedIn } = useAppSelector((res) => res.auth)
-  const { data: userEpr } = useGetEprProfileQuery(email)
-  const { register, handleSubmit, formState: { errors }, reset } = useForm<IProfileEpr>()
-  const [updateEprProfile] = useUpdateEprProfileMutation()
+  const { data: userEpr } = useGetUserEprByEmailQuery<any>(email)
+  const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
+  const [updateUser] = useUpdateUserEprMutation()
 
   useEffect(() => {
     reset(userEpr)
   }, [userEpr])
 
-  const handleUpdate: SubmitHandler<IProfileEpr> = (profileEpr: IProfileEpr) => {
-    updateEprProfile({
-      ...profileEpr,
+  const handleUpdate: SubmitHandler<IUserNTD> = async (userEprForm: IUserNTD) => {
+    const update: any = await updateUser({
+      ...userEprForm,
       _id: userEpr._id,
-      phone_props: {
-        phone: profileEpr.phone_props.phone,
-        is_verified: false,
-      },
-      birth_day: profileEpr.birth_day,
-      address: profileEpr.address,
-      desc_epr: profileEpr.desc_epr,
+      isEmailVerified: userEpr.isEmailVerified,
+      isPhoneVerified: userEpr.isPhoneVerified,
+      birth_day: userEprForm.birth_day,
+      address: userEprForm.address,
+      desc_epr: userEprForm.desc_epr,
     })
+    const { data: rs } = update
+    if (rs?.success) {
+      toast.success('Cập nhật thành công')
+    }
   }
 
   return (
@@ -83,16 +86,16 @@ const ProfileEpr = () => {
                 <div className='flex flex-col w-[50%]'>
                   <label className='text-[15px] font-[550]'> Điện thoại<span className='text-[#ca5b54]'>*</span> </label>
                   <input type="text"
-                    {...register("phone_props.phone", {
+                    {...register("phone", {
                       required: true,
                       minLength: 10,
                       pattern: /^(?:0\.(?:0[0-9]|[0-9]\d?)|[0-9]\d*(?:\.\d{1,2})?)(?:e[+-]?\d+)?$/
                     })}
-                    name='phone_props.phone'
+                    name='phone'
                     className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
-                  {errors.phone_props?.phone && errors.phone_props?.phone.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Số điện thoại.</span>}
-                  {errors.phone_props?.phone && errors.phone_props?.phone.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'> Số điện thoại phải có ít nhất 10 ký tự.</span>}
-                  {errors.phone_props?.phone && errors.phone_props?.phone.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Số điện thoại không hợp lệ.</span>}
+                  {errors.phone && errors.phone.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Số điện thoại.</span>}
+                  {errors.phone && errors.phone.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'> Số điện thoại phải có ít nhất 10 ký tự.</span>}
+                  {errors.phone && errors.phone.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Số điện thoại không hợp lệ.</span>}
                 </div>
               </div>
               <div className='flex items-center gap-x-10 w-full mb-2'>

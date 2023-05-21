@@ -1,37 +1,31 @@
 import React, { useEffect, useState } from 'react'
-import { useEditPersonalInforMutation, useGetPersonalInforsQuery, useGetPersonalInforQuery } from '../../services/personalInfor'
 import { useForm, SubmitHandler } from 'react-hook-form'
-import { useNavigate, useParams } from 'react-router-dom'
-import { IPersonalInfor } from '../../interfaces/personalInfor'
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
+import { useAppSelector } from '../../app/hook'
+import IUserNTV from '../../interface/user'
+import { useGetUserByEmailQuery } from '../../service/auth'
 type Props = {}
 
 const PersonalInfor = (props: Props) => {
-    const { data: personalInfor, isLoading, error } = useGetPersonalInforQuery<any>('643d8667388895fe4d363f6d')
-    console.log(personalInfor);
+    const { email } = useAppSelector((rs) => rs.auth)
+    const { data: user, isLoading, error } = useGetUserByEmailQuery<any>(email)
     const navigate = useNavigate()
     const {
         register,
         handleSubmit,
         reset,
-        formState: { errors },
-    } = useForm<IPersonalInfor>()
-
-    const { id } = useParams();
-    const [editPersonalInfor] = useEditPersonalInforMutation();
+        formState: { errors }
+    } = useForm<IUserNTV>()
 
     useEffect(() => {
-        reset(personalInfor as IPersonalInfor)
-    }, [personalInfor]);
+        reset(user)
+    }, [user]);
 
 
-    const onSubmit: SubmitHandler<IPersonalInfor> = (personalInfor) => {
-        editPersonalInfor(personalInfor)
-        try {
-            navigate('/personalInfors')
-        } catch (error) {
-
-        }
+    const onSubmit: SubmitHandler<IUserNTV> = (user) => {
+        console.log(user)
+        // editPersonalInfor(personalInfor)
+        // navigate('/personalInfors')
     }
     const [hidden, setHidden] = useState(true)
     const showForm = () => {
@@ -43,13 +37,10 @@ const PersonalInfor = (props: Props) => {
     if (isLoading) return <div>...isLoading</div>
     if (error) return <div>error</div>
     return (
-
-        <div>
-
-
-            <div className="bg-light">
+        <>
+            <div className="bg-gray-100 min-h-screen">
                 <div className="row">
-                    <div className='bg-gray-100 min-h-screen'>
+                    <div>
                         {/* SEARCH BAR */}
                         <div className='h-[80px] w-100 py-3 bg-white'>
                             <div className='container flex items-center justify-center h-100 w-100'>
@@ -82,7 +73,7 @@ const PersonalInfor = (props: Props) => {
                         </div>
                         {/* CONTENT */}
                         <div className='flex items-start w-100 gap-3 p-3'>
-                            <aside className='rounded w-25 space-y-2 col-3'>
+                            <aside className='rounded w-25 space-y-2'>
                                 <section className='border-1 rounded bg-[#4A80F8] p-3'>
                                     <div className='flex items-center space-x-4'>
                                         <div>
@@ -131,7 +122,7 @@ const PersonalInfor = (props: Props) => {
                                     </div>
                                 </section>
                             </aside>
-                            <div className="col-6">
+                            <div className="w-75">
                                 <div className='myJob border bg-white pl-5 py-3 rounded '>
                                     <h3 className='font-bold text-lg '>Hồ sơ của tôi</h3>
                                 </div>
@@ -166,49 +157,55 @@ const PersonalInfor = (props: Props) => {
                                                     <label className='text-gray-500'>Bằng Cấp Cao Nhất:</label> <label className='font-bold'>Cao đẳng</label>
                                                 </div>
                                             </div>
-                                            <a href="#" className=''>Tải hồ sơ</a>
                                         </div>
                                     </div>
                                 </div>
                                 {hidden ?
-                                    <div className='myJob border bg-white pl-5 pt-3 rounded my-3'>
+                                    <div className='myJob border bg-white rounded my-3 p-4'>
                                         <div className={hidden ? ' text-[#333333]' : ' text-[#333333] hidden '}>
+                                            <div className=''>
+                                                <div className='flex items-center justify-between'>
+                                                    <h1 className='font-bold text-2xl'>Thông tin cá nhân</h1>
+                                                    <button onClick={showForm}>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen" viewBox="0 0 16 16">
+                                                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
 
-                                            <div className='container'>
-                                                <div className='row'>
-                                                    <h1 className='font-bold text-2xl pb-3 col-10 row'>Thông tin cá nhân</h1>
-                                                    <div className='col-2 '>
-                                                        <Link to={`/personalInfors/${personalInfor?._id}`} onClick={showForm}>
-                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen" viewBox="0 0 16 16">
-                                                                <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
-                                                            </svg>
-                                                        </Link>
-
+                                                <div>
+                                                    <div className='flex items-center w-100 border-y-[1px] py-2 px-3'>
+                                                        <div className='w-50'>
+                                                            <label className='w-25'>Họ tên</label>
+                                                            <span className='font-bold'>{user?.name}</span>
+                                                        </div>
+                                                        <div className='w-50'>
+                                                            <label className='w-25'>Ngày sinh</label>
+                                                            <span className='font-bold'>{user?.birth_day}</span>
+                                                        </div>
                                                     </div>
-                                                </div>
-
-                                                <div className='row mt-3'>
-                                                    <div className='col row'><label className='col-3'>Email</label> <label className='font-bold col-9'>{personalInfor?.email}</label></div>
-                                                    <div className='col row'><label className='col-3'>Số điện thoại</label> <label className='font-bold col-9'>{personalInfor?.numberphone}</label></div>
-                                                    <hr className='px-1' />
-                                                </div>
-                                                <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Ngày sinh</label> <label className='font-bold col-9'>{personalInfor?.date}</label></div>
-                                                    <div className='col row'><label className='col-3'>Quốc tịch</label> <label className='font-bold col-9'>{personalInfor?.nationality}</label></div>
-                                                    <hr className='px-1' />
-                                                </div>
-                                                <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Giới tính</label> <label className='font-bold col-9'>{personalInfor?.sex}</label></div>
-                                                    <div className='col row'><label className='col-3'>Quốc gia</label> <label className='font-bold col-9'>{personalInfor?.nation}</label></div>
-                                                    <hr className='px-1' />
-                                                </div>
-                                                <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Tỉnh/Thành phố</label> <label className='font-bold col-9'>{personalInfor?.city}</label></div>
-                                                    <div className='col row'><label className='col-3'>Quận/Huyện</label> <label className='font-bold col-9'>{personalInfor?.district} </label></div>
-                                                </div>
-                                                <div className='row mt-5'>
-                                                    <div className='col row'><label className='col-3'>Địa chỉ</label> <label className='font-bold col-9'>{personalInfor?.address}</label></div>
-                                                    <div className='col row'><label className='col-3'></label> <label className='font-bold col-9'></label></div>
+                                                    <div className='border-b-[1px] py-2 px-3'>
+                                                        <label className='w-20'>Email</label>
+                                                        <span className='font-bold'>{user?.email}</span>
+                                                    </div>
+                                                    <div className='border-b-[1px] py-2 px-3'>
+                                                        <label className='w-20'>Số điện thoại</label>
+                                                        <label className='font-bold'>{user?.phone}</label>
+                                                    </div>
+                                                    <div className='flex items-center w-100 border-b-[1px] py-2 px-3'>
+                                                        <div className='w-50'>
+                                                            <label className='w-25'>Tỉnh/Thành phố</label>
+                                                            <span className='font-bold'>{user?.province}</span>
+                                                        </div>
+                                                        <div className='w-50'>
+                                                            <label className='w-25'>Quận/Huyện</label>
+                                                            <span className='font-bold'>{user?.district} </span>
+                                                        </div>
+                                                    </div>
+                                                    <div className='border-b-[1px] py-2 px-3'>
+                                                        <label className='w-20'>Địa chỉ</label>
+                                                        <span className='font-bold'>{user?.specific_address}</span>
+                                                    </div>
                                                 </div>
 
                                             </div>
@@ -228,22 +225,22 @@ const PersonalInfor = (props: Props) => {
                                                 </div>
                                                 <div className="mb-3 col-6">
                                                     <label className="form-label"><label className="text-red-400">*</label> Số điện thoại</label>
-                                                    <input type="number" className="form-control" {...register("numberphone", { required: true, minLength: 10 })} />
-                                                    {errors.numberphone?.type === "required" && <p className='text-danger'>Vui lòng nhập Số điện thoại</p>}
-                                                    {errors.numberphone?.type === "minLength" && <p className='text-danger'>Vui lòng nhập chính xác số điện thoại</p>}
+                                                    <input type="number" className="form-control" {...register("phone", { required: true, minLength: 10 })} />
+                                                    {errors.phone?.type === "required" && <p className='text-danger'>Vui lòng nhập Số điện thoại</p>}
+                                                    {errors.phone?.type === "minLength" && <p className='text-danger'>Vui lòng nhập chính xác số điện thoại</p>}
                                                 </div>
                                             </div>
 
                                             <div className='row mt-3'>
                                                 <div className="mb-3 col-6">
                                                     <label className="form-label"><label className="text-red-400">*</label> Ngày sinh</label>
-                                                    <input type="text" className="form-control" {...register("date", { required: true })} />
-                                                    {errors.date?.type === "required" && <p className='text-danger'>Vui lòng nhập Ngày sinh</p>}
+                                                    <input type="text" className="form-control" {...register("birth_day", { required: true })} />
+                                                    {errors.birth_day?.type === "required" && <p className='text-danger'>Vui lòng nhập Ngày sinh</p>}
                                                 </div>
                                                 <div className="mb-3 col-6" >
                                                     <label className="form-label"><label className="text-red-400">*</label> Quốc tịch</label>
-                                                    <input type="text" className="form-control" {...register("nationality", { required: true })} />
-                                                    {errors.nationality?.type === "required" && <p className='text-danger'>Vui lòng nhập Quốc tịch</p>}
+                                                    <input type="text" className="form-control" />
+                                                    {/* {errors.nationality?.type === "required" && <p className='text-danger'>Vui lòng nhập Quốc tịch</p>} */}
                                                 </div>
                                             </div>
                                             <div className='row mt-3'>
@@ -256,15 +253,15 @@ const PersonalInfor = (props: Props) => {
                                                 </div>
                                                 <div className="mb-3 col-6">
                                                     <label className="form-label"><label className="text-red-400">*</label> Quốc gia</label>
-                                                    <input type="text" className="form-control" {...register("nation", { required: true })} />
-                                                    {errors.nation?.type === "required" && <p className='text-danger'>Vui lòng nhập Quốc gia</p>}
+                                                    <input type="text" className="form-control" />
+                                                    {/* {errors.nation?.type === "required" && <p className='text-danger'>Vui lòng nhập Quốc gia</p>} */}
                                                 </div>
                                             </div>
                                             <div className='row mt-3'>
                                                 <div className="mb-3 col-6" >
                                                     <label className="form-label"><label className="text-red-400">*</label> Tỉnh/Thành phố</label>
-                                                    <input type="text" className="form-control" {...register("city", { required: true })} />
-                                                    {errors.city?.type === "required" && <p className='text-danger'>Vui lòng nhập Tỉnh/Thành phố</p>}
+                                                    <input type="text" className="form-control" {...register("province", { required: true })} />
+                                                    {errors.province?.type === "required" && <p className='text-danger'>Vui lòng nhập Tỉnh/Thành phố</p>}
                                                 </div>
                                                 <div className="mb-3 col-6">
                                                     <label className="form-label"><label className="text-red-400">*</label> Quận/Huyện</label>
@@ -275,8 +272,8 @@ const PersonalInfor = (props: Props) => {
                                             <div className='row mt-3'>
                                                 <div className="mb-3 col-6">
                                                     <label className="form-label"><label className="text-red-400">*</label> Địa chỉ</label>
-                                                    <input type="text" className="form-control" {...register("address", { required: true })} />
-                                                    {errors.address?.type === "required" && <p className='text-danger'>Vui lòng nhập địa chỉ cụ thể</p>}
+                                                    <input type="text" className="form-control" {...register("specific_address", { required: true })} />
+                                                    {errors.specific_address?.type === "required" && <p className='text-danger'>Vui lòng nhập địa chỉ cụ thể</p>}
                                                 </div>
                                             </div>
                                             <div className='row'>
@@ -295,7 +292,7 @@ const PersonalInfor = (props: Props) => {
 
 
                             </div>
-                            <div className="col-3">
+                            {/* <div className="col-3">
                                 <div className='myJob  pl-5 py-3 rounded-top bg-blue-200 border-top border-end border-start border-info border-opacity-10 '>
                                     <h3 className='font-bold text-lg '>Việc làm bạn sẽ thích</h3>
                                 </div>
@@ -325,13 +322,13 @@ const PersonalInfor = (props: Props) => {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                     </div >
                 </div>
 
             </div>
-        </div >
+        </ >
     )
 }
 

@@ -1,19 +1,22 @@
 import { useState, useEffect } from 'react'
-import ImanageProfile from '../../../interface/manageProfile'
-import { useGetProfileQuery } from '../../../service/manage_profile'
 import UseAuth from '../../auth/UseAuth'
-import { sendEmailVerification } from 'firebase/auth'
-import { message } from 'antd'
-import { NavLink } from 'react-router-dom'
+import { Modal } from 'antd'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { apiGetDistricts, apiGetProvinces } from '../../../service/api'
 import { useAppSelector } from '../../../app/hook'
+import { useActiveEmailMutation, useGetUserByEmailQuery, useSendEmailVerifiedMutation } from '../../../service/auth'
+import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
+import Swal from 'sweetalert2'
 
-const Profile = () => {
+const Profile: any = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+    const { register, handleSubmit, formState: { errors } } = useForm()
+    const navigate = useNavigate()
     const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(email)
-    const profile: ImanageProfile = data.currentData
+    const { data: user } = useGetUserByEmailQuery(email)
     const [hidden, setHidden] = useState(false)
+    const [open, setOpen] = useState(false);
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
 
@@ -36,15 +39,29 @@ const Profile = () => {
     const showForm = () => {
         setHidden(!hidden)
     }
-    const verifyEmail: any = () => {
-        sendEmailVerification(currentUser)
-            .then(() => {
-                message.info(`Email verification link sent to ${currentUser.email}`)
-            })
-            .catch((error) => {
-                const errorCode = error.code;
-            })
+
+    const [verifiedEmail] = useSendEmailVerifiedMutation()
+    const sendEmail = async () => {
+        const send: any = await verifiedEmail({ email })
+        const { data: rs } = send
+        if (rs?.success) {
+            toast.success(rs.mes)
+        }
+        setOpen(true)
     }
+    const [activeEmail] = useActiveEmailMutation()
+    const activeE: any = async ({ token }: any) => {
+        const active: any = await activeEmail({ email, token })
+        const { data: rs } = active
+        if (rs?.success) {
+            Swal.fire('Congratulation', 'Xác thực thành công', 'success')
+        }
+    }
+
+    if (isLoggedIn == false) {
+        return navigate('/login')
+    }
+
     return (
         <>
             {isLoggedIn ? <div className='bg-gray-100 min-h-screen'>
@@ -94,7 +111,7 @@ const Profile = () => {
                                     <img src="" alt="" />
                                 </div>
                                 <div>
-                                    <h3 className='text-[20px] font-[600] text-white'>{profile?.name}</h3>
+                                    <h3 className='text-[20px] font-[600] text-white'>{user?.name}</h3>
                                 </div>
                             </div>
                         </section>
@@ -140,6 +157,7 @@ const Profile = () => {
                     <main className='w-75 space-y-2'>
                         <section className='border-1 rounded bg-white'>
                             <h4 className='text-[#333333] text-[16px] py-3 px-4 font-[700]'>Hồ sơ của tôi</h4>
+
                         </section>
                         <section className='border-1 rounded bg-white py-4'>
                             <div className='px-4 pb-4'>
@@ -158,11 +176,11 @@ const Profile = () => {
                                                 <div className='flex items-center mx-3'>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Họ và tên</div>
-                                                        <div className='w-[62%] font-[700]'>{currentUser?.displayName ? currentUser?.displayName : profile?.name}</div>
+                                                        <div className='w-[62%] font-[700]'>{user ? currentUser?.displayName : user?.name}</div>
                                                     </div>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Ngày sinh</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.birth_day}</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.birth_day}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -170,29 +188,52 @@ const Profile = () => {
                                                 <div className='mx-3'>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Email</div>
-                                                        {currentUser?.email ?
-                                                            <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                {currentUser?.email}
-                                                                {
-                                                                    currentUser?.emailVerified ?
-                                                                        <span><i className='fas fa-check-circle text-green-500'></i></span>
-                                                                        :
-                                                                        <button onClick={verifyEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
-                                                                }
+                                                        <div className='w-[62%] font-[700] flex items-center gap-1'>
+                                                            {user?.email}
+                                                            {
+                                                                user?.isEmailVerified ?
+                                                                    <span><i className='fas fa-check-circle text-green-500'></i></span>
+                                                                    :
+                                                                    <div>
+                                                                        <button onClick={sendEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
+                                                                        <Modal
+                                                                            style={{ top: 147 }}
+                                                                            open={open}
+                                                                            onCancel={() => setOpen(false)}
+                                                                            okButtonProps={{ hidden: true }}
+                                                                            cancelButtonProps={{ hidden: true }}
+                                                                            width={700}
+                                                                        >
+                                                                            <h3 className='text-xl text-[#333333] border-b-[1px] pb-2 mb-2'>Xác thực Email</h3>
+                                                                            <form onSubmit={handleSubmit(activeE)}>
+                                                                                <div className="form-group">
+                                                                                    <label className="text-dark">Mã xác nhận</label>
+                                                                                    <input type="text"
+                                                                                        {...register('token', {
+                                                                                            required: true
+                                                                                        })}
+                                                                                        className="form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"
+                                                                                        name='token' />
+                                                                                    {errors.token && errors.token.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mã xác nhận</span>}
+                                                                                </div>
+                                                                                <div className='flex justify-end gap-x-3'>
+                                                                                    <button className='bg-[#F4F4F7] hover:bg-[#E9E9F2] py-1 px-2 rounded'
+                                                                                        type='button'
+                                                                                        onClick={() => setOpen(false)} >
+                                                                                        Hủy
+                                                                                    </button>
+                                                                                    <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-1 px-2 text-white rounded'
+                                                                                    >
+                                                                                        Xác nhận
+                                                                                    </button>
+                                                                                </div>
+                                                                            </form>
+                                                                        </Modal>
+                                                                    </div>
 
-                                                            </div>
-                                                            :
-                                                            <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                {profile?.email}
-                                                                {
-                                                                    currentUser?.emailVerified ?
-                                                                        <span><i className='fas fa-check-circle text-green-500'></i></span>
-                                                                        :
-                                                                        <button onClick={verifyEmail} className='font-[100] hover:text-[#fd7e14]' >Xác thực</button>
-                                                                }
+                                                            }
 
-                                                            </div>
-                                                        }
+                                                        </div>
 
                                                     </div>
                                                 </div>
@@ -202,10 +243,10 @@ const Profile = () => {
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Số điện thoại</div>
 
-                                                        {profile?.phone_props.phone ?
+                                                        {user?.phone ?
                                                             <>
                                                                 <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                    {profile?.phone_props.phone}
+                                                                    {user?.phone}
                                                                     <button className='font-[100]'>
                                                                         <NavLink className={'hover:text-[#fd7e14] hover:no-underline'} to={'/otp'}>Xác thực</NavLink>
                                                                     </button>
@@ -220,11 +261,11 @@ const Profile = () => {
                                                 <div className='flex items-center mx-3'>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Tỉnh/Thành phố</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.province}</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.province}</div>
                                                     </div>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Quận/Huyện</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.district}</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.district}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -232,7 +273,7 @@ const Profile = () => {
                                                 <div className='mx-3'>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Địa chỉ</div>
-                                                        <div className='w-[62%] font-[700]'>{profile?.specific_address}</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.specific_address}</div>
                                                     </div>
                                                 </div>
                                             </div>

@@ -1,11 +1,13 @@
 import React from 'react'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { useAppSelector } from '../../../app/hook'
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
 
 type Props = {}
 
 const Home = (props: Props) => {
-
+    const { email } = useAppSelector((rs) => rs.auth)
+    const { data: user } = useGetUserEprByEmailQuery<any>(email)
 
     return (
         <>
@@ -16,7 +18,7 @@ const Home = (props: Props) => {
                             <div className="col rounded" id="meo" style={{ backgroundImage: 'url("./src/assets/img/3.jpg")' }}>
                                 <div style={{ paddingTop: '25px', paddingLeft: '25px' }}>
                                     <h2>Chào mừng,</h2>
-                                    <h2 style={{ color: 'orange' }}>Tên nhà tuyển dụng</h2>
+                                    <h2 style={{ color: 'orange' }}>{user?.name}</h2>
                                     <p style={{ marginTop: '40px' }}>Đây là một số mẹo để bạn bắt đầu:</p>
                                     <a href="#"><img src="./src/assets/img/icon1.png" style={{ maxWidth: '20px' }} /> Câu hỏi thường
                                         gặp/Hướng dẫn</a>

@@ -7,13 +7,13 @@ import QRCode from 'qrcode.react';
 import IProfileEpr from '../../../interface/employer/profileEpr';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import { useAppSelector } from '../../../app/hook';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
 const OrderDetail = () => {
     const { id } = useParams()
     const navigate = useNavigate()
     const { email } = useAppSelector((rs) => rs.auth)
-    const data: any = useGetEprProfileQuery(email)
-    const profile: IProfileEpr = data.currentData
+    const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: order } = useGetOrderQuery<any>(id)
     const paymentTerm = new Date(order?.createdAt)
     paymentTerm.setDate(paymentTerm.getDate() + 1)
@@ -101,7 +101,7 @@ const OrderDetail = () => {
                         </div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Người tạo đơn: </label>
-                            <span className='font-[700]'>{profile?.name}</span>
+                            <span className='font-[700]'>{user?.name}</span>
                         </div>
                     </div>
                     <div>

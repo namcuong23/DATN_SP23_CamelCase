@@ -1,10 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-
-interface IAuth {
-    email: string,
-    password: string
-}
-
+import IUserNTD from "../interface/employer/user_epr";
 
 export const authEprApi = createApi({
     reducerPath: 'authEpr',
@@ -12,7 +7,7 @@ export const authEprApi = createApi({
     tagTypes: ['authEpr'],
     endpoints: (builder: any) => ({
         registerWithEmployer: builder.mutation({
-            query: (user: IAuth) => ({
+            query: (user: IUserNTD) => ({
                 url: '/signup/ntd',
                 method: 'POST',
                 body: user
@@ -20,7 +15,7 @@ export const authEprApi = createApi({
             invalidatesTags: ['authEpr']
         }),
         LoginWithEmployer: builder.mutation({
-            query: (user: IAuth) => ({
+            query: (user: IUserNTD) => ({
                 url: '/signin/ntd',
                 method: 'POST',
                 body: user
@@ -31,8 +26,16 @@ export const authEprApi = createApi({
             query: (email: string) => `/epr-users/${email}/detail`,
             providesTags: ['authEpr']
         }),
+        updateUserEpr: builder.mutation({
+            query: (user: IUserNTD) => ({
+                url: `/epr-users/${user._id}/edit`,
+                method: 'PUT',
+                body: user
+            }),
+            invalidateTags: ['authEpr']
+        }),
         sendEmailEResetPass: builder.mutation({
-            query: (user: any) => ({
+            query: (user: IUserNTD) => ({
                 url: `/epr-users/forgotpassword/?email=${user.email}`,
                 method: 'POST',
                 body: user
@@ -40,7 +43,7 @@ export const authEprApi = createApi({
             invalidatesTags: ['authEpr']
         }),
         resetEPassword: builder.mutation({
-            query: (user: any) => ({
+            query: (user: IUserNTD) => ({
                 url: '/epr-users/resetpassword',
                 method: 'PUT',
                 body: user
@@ -48,9 +51,25 @@ export const authEprApi = createApi({
             invalidatesTags: ['authEpr']
         }),
         changePassEpr: builder.mutation({
-            query: (user: any) => ({
+            query: (user: IUserNTD) => ({
                 url: '/epr-users/changepassepr',
                 method: 'PUT',
+                body: user
+            }),
+            invalidatesTags: ['authEpr']
+        }),
+        sendEmailVerified: builder.mutation({
+            query: (user: IUserNTD) => ({
+                url: '/epr-users/verifiedemail',
+                method: 'POST',
+                body: user
+            }),
+            invalidatesTags: ['authEpr']
+        }),
+        activeEmail: builder.mutation({
+            query: (user: IUserNTD) => ({
+                url: '/epr-users/activeEmail',
+                method: 'POST',
                 body: user
             }),
             invalidatesTags: ['authEpr']
@@ -64,5 +83,8 @@ export const {
     useGetUserEprByEmailQuery,
     useSendEmailEResetPassMutation,
     useResetEPasswordMutation,
-    useChangePassEprMutation
+    useChangePassEprMutation,
+    useUpdateUserEprMutation,
+    useSendEmailVerifiedMutation,
+    useActiveEmailMutation,
 } = authEprApi

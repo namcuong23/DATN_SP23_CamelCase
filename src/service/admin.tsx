@@ -7,9 +7,9 @@ interface IAuth {
     name: string;
     password: string
 }
-interface Block{
-    _id : string,
-    level_auth : string
+interface Block {
+    _id: string,
+    level_auth: string
 }
 export const adminApi = createApi({
     reducerPath: 'admin',
@@ -27,7 +27,7 @@ export const adminApi = createApi({
         }),
         signupA: builder.mutation({
             query: (user: IAuth) => ({
-                url: '/signin',
+                url: '/signup',
                 method: 'POST',
                 body: user
             }),
@@ -79,13 +79,13 @@ export const adminApi = createApi({
             providesTags: ['Career']
         }),
         blockUser: builder.mutation({
-            query: (body:Block) => ({
-              url: `/block`,
-              method: 'PATCH',
-              body: body,
+            query: (body: Block) => ({
+                url: `/block`,
+                method: 'PATCH',
+                body: body,
             }),
             invalidatesTags: ['User'],
-          }),
+        }),
     })
 });
 export const {

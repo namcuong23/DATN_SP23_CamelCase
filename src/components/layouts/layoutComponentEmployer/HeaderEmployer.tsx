@@ -3,23 +3,16 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { BsPersonCircle } from 'react-icons/bs'
 import { SettingOutlined, ShoppingCartOutlined } from "@ant-design/icons"
 import { Drawer, message } from 'antd';
-import UseAuth from '../../auth/UseAuth';
-import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-import { signOut } from 'firebase/auth';
-import { auth } from '../../../firebase';
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { logoutAuth } from '../../../app/actions/auth';
-import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
-import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import IUserNTD from '../../../interface/employer/user_epr';
 
 const HeaderEmployer = () => {
     const { email, isLoggedIn } = useAppSelector((res) => res.auth)
     const [open, setOpen] = useState(false);
-    const currentUser: any = UseAuth()
     const navigate = useNavigate()
-    const data: any = useGetEprProfileQuery(email)
-    const profile: IProfileEpr = data.currentData
-    const user = useGetUserEprByEmailQuery(email)
+    const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const dispatch = useAppDispatch()
 
     const showDrawer = () => {
@@ -105,8 +98,8 @@ const HeaderEmployer = () => {
                             <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
                                 <BsPersonCircle className='text-5xl text-[#474747]' />
                                 <div>
-                                    <h2 className='text-[20px] text-[#474747] font-[700]'>{profile?.name}</h2>
-                                    <div className='text-[15px]'>{profile?.email}</div>
+                                    <h2 className='text-[20px] text-[#474747] font-[700]'>{user?.name}</h2>
+                                    <div className='text-[15px]'>{user?.email}</div>
                                 </div>
                             </div>
                             <div className='pt-[90px] px-[10px]'>

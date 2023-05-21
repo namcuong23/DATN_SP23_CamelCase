@@ -1,23 +1,20 @@
 import { message } from '@pankod/refine-antd'
 import { NavLink, useNavigate } from 'react-router-dom'
 import UseAuth from '../../auth/UseAuth'
-import ImanageProfile from "../../../interface/manageProfile"
-import { useGetProfileQuery } from '../../../service/manage_profile'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { logoutAuth } from '../../../app/actions/auth'
+import { useGetUserByEmailQuery } from '../../../service/auth'
 
 const HeaderClient = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
     const currentUser: any = UseAuth()
     const navigate = useNavigate()
-    const data: any = useGetProfileQuery(email)
-    const profile: ImanageProfile = data.currentData
+    const { data: user } = useGetUserByEmailQuery(email)
     const dispatch = useAppDispatch()
 
     const onSignOut = async () => {
         try {
             dispatch(logoutAuth())
-            // await signOut(auth)
             navigate('/login')
         } catch (error: any) {
             message.error(error.message)
@@ -78,14 +75,14 @@ const HeaderClient = () => {
                                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
                                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
                                     </svg>
-                                    <span>{currentUser?.displayName ? currentUser?.displayName : profile?.name}</span>
+                                    <span>{user?.name}</span>
                                 </button>
                                 <div className="text-[#555555] dropdown-menu dropdown-not-login animated fadeIn userProfileMenu-homepage mt-4"
                                     aria-labelledby="dropdownMenuButton1">
                                     <div className='flex items-center justify-between px-4 py-3'>
                                         <div>
-                                            <h3 className='text-[17px] font-[700] pb-0'>{currentUser?.displayName ? currentUser?.displayName : profile?.name}</h3>
-                                            <h4 className='text-[13px] font-normal'>{currentUser?.email ? currentUser?.email : profile?.email}</h4>
+                                            <h3 className='text-[17px] font-[700] pb-0'>{user?.name}</h3>
+                                            <h4 className='text-[13px] font-normal'>{user?.email}</h4>
                                         </div>
                                         <div>
                                             <button className='border-1 border-[#FF7D55] text-[#FF7D55] px-2 py-1 rounded'>Cập nhật hồ sơ</button>

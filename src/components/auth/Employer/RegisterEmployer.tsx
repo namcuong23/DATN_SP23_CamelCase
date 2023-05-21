@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
-import { message, notification } from 'antd';
 import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
-import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { auth } from '../../../firebase';
-import { useGetUserEprByEmailQuery, useRegisterWithEmployerMutation } from '../../../service/auth_employer';
-import { useSignupAMutation } from '../../../service/admin';
-import { useAddEprProfileMutation } from '../../../service/employer/profileEpr';
-import { useGetUserByEmailQuery } from '../../../service/auth';
+import { useRegisterWithEmployerMutation } from '../../../service/auth_employer';
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2';
 
@@ -16,8 +10,6 @@ const RegisterEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signup] = useRegisterWithEmployerMutation()
-    const [signupA] = useSignupAMutation()
-    const [addEprProfile] = useAddEprProfileMutation()
     const [type, setType] = useState(false)
     const showPassword = () => {
         setType(!type)
@@ -26,23 +18,13 @@ const RegisterEmployer = () => {
     const signUp: SubmitHandler<any> = async (user: any) => {
         const register: any = await signup({
             ...user,
+            isEmailVerified: false,
+            isPhoneVerified: false,
             level_auth: 1
         })
         const { data: rs } = register
         if (rs?.success) {
             Swal.fire('Congratulations', 'Đăng ký thành công!', 'success').then(async () => {
-                await addEprProfile({
-                    name: user.name,
-                    email: user.email,
-                    phone_props: {
-                        phone: user.phone,
-                        is_verified: false,
-                    },
-                })
-                await signupA({
-                    ...user,
-                    level_auth: 1
-                })
                 navigate('/login-epr')
             })
 

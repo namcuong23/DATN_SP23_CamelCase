@@ -4,11 +4,9 @@ import { useForm } from 'react-hook-form';
 import { SubmitHandler } from 'react-hook-form/dist/types';
 import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { CgSpinner } from "react-icons/cg"
-import { useGetUserByEmailQuery, useSignupMutation } from '../../../service/auth';
-import { useAddProfileMutation } from '../../../service/manage_profile';
+import { useSignupMutation } from '../../../service/auth';
 import { auth } from '../../../firebase';
 import { useSignupAMutation } from '../../../service/admin';
-import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify'
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -18,7 +16,6 @@ const Register = () => {
     const navigate = useNavigate()
     const [signup] = useSignupMutation()
     const [signupA] = useSignupAMutation()
-    const [addProfile] = useAddProfileMutation()
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState(false)
     const showPassword = () => {
@@ -29,24 +26,14 @@ const Register = () => {
         setLoading(true)
         const register: any = await signup({
             ...user,
+            isEmailVerified: false,
+            isPhoneVerified: false,
             level_auth: 1
         })
         const { data: res } = register
         if (res?.success) {
             setLoading(false)
             Swal.fire('Congratulations', 'Đăng ký thành công!', 'success').then(async () => {
-                await addProfile({
-                    name: user.name,
-                    email: user.email,
-                    phone_props: {
-                        phone: user.phone,
-                        is_verified: false
-                    },
-                })
-                await signupA({
-                    ...user,
-                    level_auth: 1
-                })
                 navigate('/login')
             })
 

@@ -1,15 +1,13 @@
-interface IUserNTV {
+interface IUserNTD {
     _id: string;
     name: string;
     email: string;
     isEmailVerified: boolean;
     phone: string;
     isPhoneVerified: boolean;
-    desc: string;
+    desc_epr: string;
     birth_day: string;
-    province: string;
-    district: string;
-    specific_address: string;
+    address: string;
     password: string;
     passwordResetToken: string;
     passwordChangeAt: string;
@@ -17,4 +15,4 @@ interface IUserNTV {
     level_auth: number
 }
 
-export default IUserNTV
+export default IUserNTD
