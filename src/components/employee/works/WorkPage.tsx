@@ -6,7 +6,7 @@ import axios from "axios"
 import { formatCurrency } from '../../../utils/FormatCurrrency'
 import UseAuth from "../../auth/UseAuth";
 import { useGetEprProfileQuery } from "../../../service/profileEpe";
-import { useAddJobsaveMutation } from "../../../service/savejob";
+import { useAddJobsaveMutation, useGetJobsaveByUIdQuery } from "../../../service/savejob";
 import { toast } from "react-toastify";
 
 type Props = {}
@@ -95,10 +95,12 @@ const WorkPage = (props: Props) => {
     const currentUser: any = UseAuth();
     const dataUser: any = useGetEprProfileQuery(currentUser?.email);
     const profile: any = dataUser.currentData;
+    const { data: jobsaves } = useGetJobsaveByUIdQuery(profile?._id);
+    console.log(jobsaves);
     const [addJobsave] = useAddJobsaveMutation()
     const onHandleAdd: any = (item: any) => {
         try {
-            addJobsave({ job_name: item.job_name, job_description: item.job_description, job_salary: item.job_salary, user_id: profile?._id });
+            addJobsave({ job_name: item.job_name, job_description: item.job_description, work_location: item.work_location, job_salary: item.job_salary, user_id: profile?._id });
             console.log(item);
             toast.success("Da them Vafo Yeu Thich");
         } catch (error) {

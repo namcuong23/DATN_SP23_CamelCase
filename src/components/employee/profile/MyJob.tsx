@@ -4,19 +4,41 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import UseAuth from '../../auth/UseAuth';
 import { useGetEprProfileQuery } from '../../../service/profileEpe';
 import { useGetJobsaveByUIdQuery, useRemoveJobsaveMutation } from '../../../service/savejob';
+import { formatCurrency } from '../../../utils/FormatCurrrency';
+import { toast } from 'react-toastify';
+import { useAddJobdoneMutation, useRemoveJobdoneMutation } from '../../../service/jobdone';
+import { useGetJobdonesQuery } from '../../../service/jobdone';
 
 const MyJob = () => {
-  const authid = getAuth();
   const [jobdone, setJobdone] = useState(false);
   const currentUser: any = UseAuth()
   const data: any = useGetEprProfileQuery(currentUser?.email)
   const profile: any = data.currentData
-  const { data: jobsaves, error, isLoading } = useGetJobsaveByUIdQuery(profile?._id);
-  console.log(jobsaves);
-  console.log(profile?._id);
+  const { data: jobsaves } = useGetJobsaveByUIdQuery(profile?._id);
+  //jobdone
+  const { data: jobdones } = useGetJobdonesQuery(profile?._id)
   const [removeJobsave] = useRemoveJobsaveMutation()
   const onHandleRemove = (id: any) => {
-    removeJobsave(id)
+    if (window.confirm("Bạn có muốn xóa không ?")) {
+      removeJobsave(id)
+      toast.success("Xóa Thành Công Việc Làm")
+    }
+  }
+  const [removeJobdone] = useRemoveJobdoneMutation()
+  const onHandleRemoveJobdone = (id: any) => {
+    if (window.confirm("Bạn có muốn hủy ứng tuyển không ?")) {
+      removeJobdone(id)
+      toast.success("Hủy Ứng Tuyển Thành Công Việc Làm")
+    }
+  }
+  const [addJobdone] = useAddJobdoneMutation()
+  const onHandleAdd: any = (item: any) => {
+    try {
+      addJobdone({ job_name: item.job_name, job_description: item.job_description, work_location: item.work_location, job_salary: item.job_salary, user_id: profile?._id });
+      toast.success("Đã Ứng Tuyển Việc Làm Này");
+    } catch (error) {
+      console.log(error);
+    }
   }
   return (
     //SaveJob
@@ -35,32 +57,39 @@ const MyJob = () => {
 
         </div>
         <div style={{ height: '100%' }}>
-          {jobdone ? <div className='myJob border bg-white mr-3 py-3 rounded my-3 row'>
-            <div className='col-2 pt-5'>
-              <img src="https://images.vietnamworks.com/pictureofcompany/f8/82482.jpg" className='border rounded px-2 py-4' />
-            </div>
-            <div className='col-8 '>
-              <a href="#" className='text-black'> <h5 className='fw-bold'>Kỹ Sư Phòng Bảo Dưỡng Sửa Chữa (ME)</h5></a>
-              <p style={{ marginTop: '10px' }}>Fujitsu Vietnam Ltd</p>
-              <p className='address'>Ha Noi,Ho Chi Minh</p>
-              <p className='salary text-danger'>$1000</p>
-            </div>
-
-          </div> :
+          {jobdone ?
+            jobdones?.map((item: any, index: any) => {
+              return (
+                <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row'>
+                  <div className='col-2 pt-1'>
+                    <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
+                  </div>
+                  <div className='col-8 pt-1'>
+                    <a href="#" className='text-black'> <h5 className='fw-bold'>{item.job_name}</h5></a>
+                    <p>Fujitsu Vietnam Ltd</p>
+                    <p className='address'>{item.work_location}</p>
+                    <p className='salary text-danger'>{formatCurrency(item.job_salary)}/Giờ</p>
+                  </div>
+                  <div className='col-2 pt-5'>
+                    <button onClick={() => onHandleRemoveJobdone(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Hủy</button>
+                  </div>
+                </div>)
+            }
+            ) :
             jobsaves?.map((item: any, index: any) =>
-              <div key={index} className='myJob border bg-white mr-3 py-3 rounded my-3 row'>
+              <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row'>
                 <div className='col-2 pt-1'>
-                  <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-120 h-120' />
+                  <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
                 </div>
                 <div className='col-8 pt-1'>
-                  <a href="#" className='text-black'> <h3 className='fw-bold'>{item.job_name}</h3></a>
+                  <a href="#" className='text-black'> <h5 className='fw-bold'>{item.job_name}</h5></a>
                   <p>Fujitsu Vietnam Ltd</p>
-                  <p className='address'>Ha Noi,Ho Chi Minh</p>
-                  <p className='salary text-danger'>{item.job_salary}</p>
+                  <p className='address'>{item.work_location}</p>
+                  <p className='salary text-danger'>{formatCurrency(item.job_salary)}/Giờ</p>
                 </div>
                 <div className='col-2 pt-5'>
-                  <button className='border border-danger rounded bg-white text-danger p-3 mt-2'>Ứng tuyển</button>
-                  <button onClick={()=>onHandleRemove(item._id)} className='border border-danger rounded bg-white text-danger p-3 mt-2'>Xoa</button>
+                  <button onClick={() => onHandleAdd(item)} className='border border-primary rounded bg-white text-primary p-1 mt-2'>Ứng tuyển</button>
+                  <button onClick={() => onHandleRemove(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Xóa</button>
                 </div>
               </div>
             )}
