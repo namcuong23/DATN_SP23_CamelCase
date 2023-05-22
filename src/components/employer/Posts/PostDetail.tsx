@@ -13,6 +13,8 @@ const PostDetail = () => {
     const text: string = 'Are you sure to delete this CV?';
     const { data } = useGetCvsByPostIdQuery(post?._id)
     const cvs: any = data?.cvs
+    console.log(data);
+    
 
     const [removeCv] = useRemoveCvMutation()
     const onHandleRemove = (id: string) => {

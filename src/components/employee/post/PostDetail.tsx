@@ -7,25 +7,29 @@ import { useGetPostQuery } from '../../../service/post'
 import UseAuth from '../../auth/UseAuth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { NavLink } from 'react-router-dom'
+import { useAppSelector } from '../../../app/hook'
 
 const PostDetailEp = () => {
     const { id } = useParams()
     const { data: post } = useGetPostQuery(id)
-
-    const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
-    const user: any = useGetUserByEmailQuery(currentUser?.email)
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+    const { data: user } = useGetUserByEmailQuery(email)
     const [addCv] = useAddCvMutation()
+       
+
     const applyJob = () => {
+        const {name,email,phone,post_id} = user
         try {
+            
             const apply = addCv({
-                name: profile?.name,
-                email: profile?.email,
-                phone: profile?.phone,
-                date: profile?.birth_day,
-                post_id: post._id
+                name,
+                email,
+                phone,
+                date: user?.birth_day,
+                post_id: post._id,
+                user_id : user._id
             })
+
 
             if (apply) {
                 message.success('Nộp đơn thành công.')
@@ -131,21 +135,11 @@ const PostDetailEp = () => {
                                         <div>1 việc</div>
                                     </div>
                                 </div>
-                                {
-                                    user.currentData ?
-                                        <button
-                                            className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
-                                            onClick={applyJob}>
-                                            Nộp đơn
-                                        </button> :
-                                        <NavLink to={'/login'}>
-                                            <button
-                                                className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'>
-                                                Nộp đơn
-                                            </button>
-                                        </NavLink>
-                                }
-
+                                <button
+                                    className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
+                                    onClick={applyJob}>
+                                    Nộp đơn
+                                </button>
                             </div>
                         </div>
                     </div>

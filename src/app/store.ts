@@ -27,7 +27,7 @@ import { personalInforApi } from "../services/personalInfor";
 import { feedbackApi } from "../services/feedback";
 import { jobsaveApi } from "../service/savejob";
 import { profileEpeApi } from "../service/profileEpe";
-import { jobdoneApi } from "../services/jobdone";
+import { jobdoneApi } from "../service/jobdone";
 
 const persistConfig = {
     key: 'root',
