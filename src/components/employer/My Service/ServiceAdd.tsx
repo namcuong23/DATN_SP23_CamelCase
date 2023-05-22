@@ -1,40 +1,41 @@
 import React, { useEffect, useState } from 'react'
-import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
+import { BookOutlined } from '@ant-design/icons'
 import { Button, Form, Input, Select, message } from 'antd';
 import { NavLink, useNavigate } from 'react-router-dom';
-import IService from '../../../interface/employer/service';
 import { useCreateServiceMutation } from '../../../service/employer/service';
-import UseAuth from '../../auth/UseAuth';
-import { apiGetProvinces } from '../../../service/api';
-import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
-import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useAppSelector } from '../../../app/hook';
+import { useGetUserEprByEmailQuery, useUpdateUserEprMutation } from '../../../service/auth_employer';
+import { useAddAdmServiceMutation } from '../../../service/admin/service';
 
-const ServiceAdd = () => {
+const ServiceAdd = (): any => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const [addService] = useCreateServiceMutation()
-    const currentUser: any = UseAuth()
-    const data: any = useGetEprProfileQuery(currentUser?.email)
-    const profile: IProfileEpr = data.currentData
-    const [provinces, setProvinces] = useState<any>([])
-
-    useEffect(() => {
-        const fetchProvinces = async () => {
-            const { data: response }: any = await apiGetProvinces()
-            setProvinces(response?.results);
-        }
-        fetchProvinces()
-    }, [])
-
-    const onHandleAdd: any = (service: IService) => {
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { data: user } = useGetUserEprByEmailQuery<any>(email)
+    const [addAdmService] = useAddAdmServiceMutation()
+    const onHandleAdd: any = (service: any) => {
         try {
-            addService({ ...service })
+            addService({
+                ...service,
+                user_id: user?._id
+            })
+            addAdmService({
+                emailUser: email,
+                servicePrice: 1750000,
+                serviceStatus: true
+            })
             message.success('Tạo service thành công.')
             navigate('/home/services')
         } catch (error) {
             console.log(error);
         }
     }
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
+    }
+
     return (
         <>
             <div className='mt-4 w-100'>
@@ -74,6 +75,12 @@ const ServiceAdd = () => {
 
                                     ]}>
                                     <Input.TextArea rows={1} placeholder='Nhập thời gian' />
+                                </Form.Item>
+                                <Form.Item name="description" label="Mô tả"
+                                    rules={[
+
+                                    ]}>
+                                    <Input.TextArea rows={1} placeholder='Nhập mô tả' />
                                 </Form.Item>
                             </div>
                         </div>

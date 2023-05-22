@@ -1,22 +1,25 @@
 import React, { useEffect, useState } from 'react'
 type Props = {}
-import { Line } from '@ant-design/plots';
-import ChartUsers from '../../Admin/home/ChartLine/ChartUsers';
-import StatisticalPackage from '../../Admin/home/ChartLine/StatisticalPackage';
-import StatisticalPackagePie from '../../Admin/home/ChartLine/StatisticalPackagePie';
 import { useGetChartLineQuery } from '../../../service/admin/chartLine';
 import { ChartData } from '../../../interface/admin/chartData';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
 import { SerializedError } from '@reduxjs/toolkit/dist/createAsyncThunk';
-import ChartNTD from '../../Admin/home/ChartLine/ChartNTD';
-import ChartNTV from '../../Admin/home/ChartLine/ChartNTV';
-import { calculatePercentageChange } from '../../Admin/home/ChartLine/helpers/calculatePercentageChange';
+import ChartUsers from './ChartLine/ChartUsers';
+import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
+import ChartNTD from './ChartLine/ChartNTD';
+import ChartNTV from './ChartLine/ChartNTV';
+import StatisticalPackage from './ChartLine/StatisticalPackage';
+import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
+import { useGetAdmServicesQuery } from '../../../service/admin/service';
 const HomeAdmin = (props: Props) => {
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
   useEffect(() => {
     setChartState(Chart)
   }, [])
+
+  const { data: serviceAdm } = useGetAdmServicesQuery<any>()
+  console.log(serviceAdm)
 
   return (
     <div className="nk-content text-sm">
@@ -29,7 +32,7 @@ const HomeAdmin = (props: Props) => {
                   <h3 className="nk-block-title page-title">Dashboard</h3>
                 </div>
                 {/* .nk-block-head-content */}
-            
+
                 {/* .nk-block-head-content */}
               </div>
               {/* .nk-block-between */}
@@ -367,13 +370,13 @@ const HomeAdmin = (props: Props) => {
                     <div className="nk-tb-list mt-n2">
                       <div className="nk-tb-item nk-tb-head">
                         <div className="nk-tb-col">
-                          <span>#id</span>
+                          <span>STT</span>
                         </div>
                         <div className="nk-tb-col tb-col-sm">
-                          <span>Tên</span>
+                          <span>Email</span>
                         </div>
                         <div className="nk-tb-col tb-col-md">
-                          <span>Thời gian</span>
+                          <span>Ngày mua</span>
                         </div>
                         <div className="nk-tb-col">
                           <span>Số tiền</span>
@@ -382,161 +385,35 @@ const HomeAdmin = (props: Props) => {
                           <span className="d-none d-sm-inline">Trạng thái</span>
                         </div>
                       </div>
-                      <div className="nk-tb-item">
-                        <div className="nk-tb-col">
-                          <span className="tb-lead">
-                            <a href="#">#95954</a>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col tb-col-sm">
-                          <div className="user-card">
-                            <div className="user-avatar sm bg-purple-dim">
-                              <span>AB</span>
-                            </div>
-                            <div className="user-name">
-                              <span className="tb-lead">Abu Bin Ishtiyak</span>
+                      {serviceAdm?.map((rs: any, index: number) =>
+                        <div className="nk-tb-item">
+                          <div className="nk-tb-col">
+                            <span className="tb-lead">
+                              <a href="#">{index + 1}</a>
+                            </span>
+                          </div>
+                          <div className="nk-tb-col tb-col-sm">
+                            <div className="user-card">
+                              <div className="user-name">
+                                <span className="tb-lead">{rs?.emailUser}</span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="nk-tb-col tb-col-md">
-                          <span className="tb-sub">02/11/2020</span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="tb-sub tb-amount">
-                            4,596.75
-                            <span>USD</span>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="badge badge-dot badge-dot-xs bg-success">
-                            Paid
-                          </span>
-                        </div>
-                      </div>
-                      <div className="nk-tb-item">
-                        <div className="nk-tb-col">
-                          <span className="tb-lead">
-                            <a href="#">#95850</a>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col tb-col-sm">
-                          <div className="user-card">
-                            <div className="user-avatar sm bg-azure-dim">
-                              <span>DE</span>
-                            </div>
-                            <div className="user-name">
-                              <span className="tb-lead">Desiree Edwards</span>
-                            </div>
+                          <div className="nk-tb-col tb-col-md">
+                            <span className="tb-sub">{(new Date(rs?.createdAt)).toLocaleDateString()}</span>
+                          </div>
+                          <div className="nk-tb-col">
+                            <span className="tb-sub tb-amount">
+                              {(rs?.servicePrice).toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+                            </span>
+                          </div>
+                          <div className="nk-tb-col">
+                            <span className="badge badge-dot badge-dot-xs bg-success">
+                              Khả dụng
+                            </span>
                           </div>
                         </div>
-                        <div className="nk-tb-col tb-col-md">
-                          <span className="tb-sub">02/02/2020</span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="tb-sub tb-amount">
-                            596.75
-                            <span>USD</span>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="badge badge-dot badge-dot-xs bg-danger">
-                            Cancelled
-                          </span>
-                        </div>
-                      </div>
-                      <div className="nk-tb-item">
-                        <div className="nk-tb-col">
-                          <span className="tb-lead">
-                            <a href="#">#95812</a>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col tb-col-sm">
-                          <div className="user-card">
-                            <div className="user-avatar sm bg-warning-dim">
-                              <img src="./images/avatar/b-sm.jpg" alt="" />
-                            </div>
-                            <div className="user-name">
-                              <span className="tb-lead">Blanca Schultz</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="nk-tb-col tb-col-md">
-                          <span className="tb-sub">02/01/2020</span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="tb-sub tb-amount">
-                            199.99
-                            <span>USD</span>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="badge badge-dot badge-dot-xs bg-success">
-                            Paid
-                          </span>
-                        </div>
-                      </div>
-                      <div className="nk-tb-item">
-                        <div className="nk-tb-col">
-                          <span className="tb-lead">
-                            <a href="#">#95256</a>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col tb-col-sm">
-                          <div className="user-card">
-                            <div className="user-avatar sm bg-purple-dim">
-                              <span>NL</span>
-                            </div>
-                            <div className="user-name">
-                              <span className="tb-lead">Naomi Lawrence</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="nk-tb-col tb-col-md">
-                          <span className="tb-sub">01/29/2020</span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="tb-sub tb-amount">
-                            1099.99
-                            <span>USD</span>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="badge badge-dot badge-dot-xs bg-success">
-                            Paid
-                          </span>
-                        </div>
-                      </div>
-                      <div className="nk-tb-item">
-                        <div className="nk-tb-col">
-                          <span className="tb-lead">
-                            <a href="#">#95135</a>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col tb-col-sm">
-                          <div className="user-card">
-                            <div className="user-avatar sm bg-success-dim">
-                              <span>CH</span>
-                            </div>
-                            <div className="user-name">
-                              <span className="tb-lead">Cassandra Hogan</span>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="nk-tb-col tb-col-md">
-                          <span className="tb-sub">01/29/2020</span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="tb-sub tb-amount">
-                            1099.99
-                            <span>USD</span>
-                          </span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="badge badge-dot badge-dot-xs bg-warning">
-                            Due
-                          </span>
-                        </div>
-                      </div>
+                      )}
                     </div>
                   </div>
                   {/* .card */}

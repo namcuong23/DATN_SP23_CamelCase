@@ -1,16 +1,20 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
-import UseAuth from '../components/auth/UseAuth';
+import { useAppSelector } from '../app/hook';
 
 type LayoutPrivateProps = {
     children: React.ReactElement
 }
 
 const PrivateRoute: any = ({ children }: LayoutPrivateProps) => {
-    const currentUser: any = UseAuth();
+    const { isLoggedIn } = useAppSelector((rs) => rs.authAdm)
     const navigate = useNavigate();
-    if (!currentUser) return navigate('/login');
-    return children
+    if (isLoggedIn) return children
+    useEffect(() => {
+        return navigate('/login-admin');
+    }, [])
+
+
 }
 
 export default PrivateRoute

@@ -52,6 +52,7 @@ import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import PostEdit from "./components/employer/posts/PostEdit"
 import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import PrivateRoute from "./privateRoute/PrivateRoute"
 function App() {
   return (
     <div className="App">
@@ -124,7 +125,11 @@ function App() {
         </Route>
 
         {/* ADMIN */}
-        <Route path='/admin' element={<LayoutAdmin />}>
+        <Route path='/admin' element={
+          <PrivateRoute>
+            <LayoutAdmin />
+          </PrivateRoute>
+        }>
           <Route index element={<HomeAdmin />} />
           <Route path="users-management" element={<UsersManage />} />
           <Route path='vouchers' element={<VoucherList />} />

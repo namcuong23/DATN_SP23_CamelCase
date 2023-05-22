@@ -6,9 +6,8 @@ export const serviceApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
     tagTypes: ['service'],
     endpoints: (builder) => ({
-        
-        getServices: builder.query<IService[], void>({
-            query: () => '/services',
+        getServices: builder.query<IService[], string>({
+            query: (uid: string) => `/services/${uid}`,
             providesTags: ['service']
         }),
         createService: builder.mutation({

@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useEffect } from 'react'
 import { useAppSelector } from '../../../app/hook'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
   useGetUserEprByEmailQuery,
   useUpdateUserEprMutation
@@ -9,11 +9,12 @@ import {
 import IUserNTD from '../../../interface/employer/user_epr'
 import { toast } from 'react-toastify'
 
-const ProfileEpr = () => {
+const ProfileEpr = (): any => {
   const { email, isLoggedIn } = useAppSelector((res) => res.auth)
   const { data: userEpr } = useGetUserEprByEmailQuery<any>(email)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
   const [updateUser] = useUpdateUserEprMutation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     reset(userEpr)
@@ -30,6 +31,10 @@ const ProfileEpr = () => {
     if (rs?.success) {
       toast.success('Cập nhật thành công')
     }
+  }
+
+  if (!isLoggedIn) {
+    return navigate('/login-epr')
   }
 
   return (

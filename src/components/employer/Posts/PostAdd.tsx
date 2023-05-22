@@ -9,12 +9,12 @@ import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetCareersQuery } from '../../../service/admin';
 
-const PostAdd = () => {
+const PostAdd = (): any => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
     const { data: career, error, isLoading } = useGetCareersQuery()
     const [addPost] = useAddPostMutation()
-    const { email } = useAppSelector((res: any) => res.auth)
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])
@@ -36,6 +36,11 @@ const PostAdd = () => {
             console.log(error);
         }
     }
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
+    }
+
     return (
         <>
             <div className='mt-4 w-100'>

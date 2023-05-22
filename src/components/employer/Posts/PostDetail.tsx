@@ -1,13 +1,16 @@
 import { message, Modal, Popconfirm, Space, Table } from 'antd'
 import { useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useGetPostQuery } from '../../../service/post'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { useGetCvsByPostIdQuery, useRemoveCvMutation } from '../../../service/manage_cv'
+import { useAppSelector } from '../../../app/hook'
 
-const PostDetail = () => {
+const PostDetail = (): any => {
     const { id } = useParams()
+    const { isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const navigate = useNavigate()
     const { data: post } = useGetPostQuery(id);
     const [open, setOpen] = useState(false);
     const text: string = 'Are you sure to delete this CV?';
@@ -81,6 +84,11 @@ const PostDetail = () => {
             ),
         },
     ];
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
+    }
+
     return (
         <>
             <div className=''>
