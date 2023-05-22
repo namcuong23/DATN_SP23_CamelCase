@@ -97,6 +97,8 @@ function App() {
           <Route path="jobempolyee" element={<Job />} />
           <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
           <Route path="account-manage" element={<AccountMng />} />
+          <Route path="feedbacks" element={<Feedback />} />
+          <Route path="myjob" element={<MyJob />} >
           <Route path="profile" element={<Profile />} >
             <Route index element={<Infotmation />} />
             <Route path="myJob" element={<MyJob />} />

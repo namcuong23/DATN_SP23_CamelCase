@@ -24,11 +24,16 @@ export const jobdoneApi: any = createApi({
                 credentials: 'omit'
             }),
             invalidatesTags: ['JobDone']
-        })
+        }),
+        getJobApplyByUId: builder.query({
+            query: (uid: string) => `/user-cvs/${uid}`,
+            providesTags: ['JobDone']
+        }),
     })
 })
 export const {
     useGetJobdonesQuery,
     useAddJobdoneMutation,
-    useRemoveJobdoneMutation
+    useRemoveJobdoneMutation,
+    useGetJobApplyByUIdQuery
 } = jobdoneApi

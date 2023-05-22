@@ -9,6 +9,10 @@ export const jobsaveApi: any = createApi({
             query: (uid: string) => `/jobsave/${uid}`,
             providesTags: ['JobSave']
         }),
+        getJobApplyByUId: builder.query({
+            query: (uid: string) => `/user-cvs/${uid}`
+            // providesTags: ['JobSave']
+        }),
         addJobsave: builder.mutation({
             query: (jobsave: any) => ({
                 url: '/jobsave',

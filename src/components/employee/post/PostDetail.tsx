@@ -3,31 +3,58 @@ import { useParams } from 'react-router-dom'
 import { useAddCvMutation } from '../../../service/manage_cv'
 import { useGetPostQuery } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
+import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 
-const PostDetailEp = () => {
+const PostDetailEp = (): any => {
     const { id } = useParams()
     const { data: post } = useGetPostQuery(id)
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
     const { data: user } = useGetUserByEmailQuery(email)
     const [addCv] = useAddCvMutation()
-    const applyJob = async () => {
-        const address = `${user?.specific_address} ${user?.district} ${user?.province}`
-        const apply = await addCv({
-            name: user?.name,
-            email: user?.email,
-            phone: user?.phone,
-            image: user?.image,
-            address: address,
-            description: user?.description,
-            age: user?.age,
-            gender: user?.gender,
-            status: null,
-            post_id: post._id
-        })
-        const { data: rs } = apply
-        if (rs?.success) {
-            message.success(rs?.mes)
+
+
+    const applyJob = () => {
+        const { name, email, phone, post_id } = user
+        try {
+
+            const apply = addCv({
+                name,
+                email,
+                phone,
+                date: user?.birth_day,
+                post_id: post._id,
+                user_id: user._id
+            })
+
+
+            if (apply) {
+                message.success('Nộp đơn thành công.')
+            }
+        } catch (error) {
+            console.log(error);
+            const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+            const { data: user } = useGetUserByEmailQuery(email)
+            const [addCv] = useAddCvMutation()
+            const applyJob = async () => {
+                const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+                const apply = await addCv({
+                    name: user?.name,
+                    email: user?.email,
+                    phone: user?.phone,
+                    image: user?.image,
+                    address: address,
+                    description: user?.description,
+                    age: user?.age,
+                    gender: user?.gender,
+                    status: null,
+                    post_id: post._id
+                })
+                const { data: rs } = apply
+                if (rs?.success) {
+                    message.success(rs?.mes)
+                }
+            }
         }
     }
     return (
@@ -108,6 +135,73 @@ const PostDetailEp = () => {
                             <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2F500x600_122893.png&w=1920&q=75" style={{ marginTop: '0.8em' }} />
                             <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2F3.%20500x600_123080.jpg&w=1920&q=75" style={{ marginTop: '0.8em' }} />
                             <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2F500x600_122998.png&w=1920&q=75" style={{ marginTop: '0.8em' }} />
+                            <div />
+                            <div className='col-4'>
+                                <div className='border-1 shadow-sm p-4'>
+                                    <div className='pb-2'>
+                                        <h2 className='font-semibold text-xl mb-3'>Thông tin công việc</h2>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Id công việc: </div>
+                                            <div>01</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Ngày đăng: </div>
+                                            <div>13/03/2023, 22:59</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Chỉ còn: </div>
+                                            <div>5 ngày 8 giờ</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Địa điểm: </div>
+                                            <div>Hà Nội</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Ngân sách: </div>
+                                            <div>
+                                                1.000.000đ - 10.000.000đ</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Hình thức làm việc: </div>
+                                            <div className='text-orange-500 font-semibold'>Online</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Hình thức trả lương: </div>
+                                            <div>Trả theo dự án</div>
+                                        </div>
+                                    </div>
+                                    <div className='my-2'>
+                                        <h2 className='font-semibold text-xl py-2'>Thông tin khách hàng</h2>
+                                        <div>
+
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Đến từ: </div>
+                                            <div>Hà Nội</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Tham gia: </div>
+                                            <div>23/02/2023</div>
+                                        </div>
+                                        <div className='flex mb-2'>
+                                            <div className="w-[150px] text-gray-500">Đã đăng: </div>
+                                            <div>1 việc</div>
+                                        </div>
+                                    </div>
+                                    {
+                                        isLoggedIn ?
+                                            <button
+                                                className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
+                                                onClick={applyJob}>
+                                                Ứng tuyển
+                                            </button> :
+                                            <div className='bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5'>
+                                                Đăng nhập để ứng tuyển
+                                            </div>
+                                    }
+
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
