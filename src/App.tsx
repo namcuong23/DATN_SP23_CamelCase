@@ -88,17 +88,17 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
-          <Route path="profile" element={
+          {/* <Route path="profile" element={
             // <PrivateRoute>
             <Profile />
             // </PrivateRoute>
-          } />
+          } /> */}
           <Route path="account-manage" element={<AccountMng />} />
           <Route path="feedbacks" element={<Feedback />} />
           <Route path="profile" element={<Profile />} >
             <Route index element={<Infotmation />} />
             <Route path="myJob" element={<MyJob />} />
-            <Route path="information" element={<Infotmation />} />
+            {/* <Route path="information" element={<Infotmation />} /> */}
           </Route>
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>

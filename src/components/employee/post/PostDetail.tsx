@@ -1,37 +1,33 @@
 import { message } from 'antd'
 import { useParams } from 'react-router-dom'
-import ImanageProfile from '../../../interface/manageProfile'
 import { useAddCvMutation } from '../../../service/manage_cv'
-import { useGetProfileQuery } from '../../../service/manage_profile'
 import { useGetPostQuery } from '../../../service/post'
-import UseAuth from '../../auth/UseAuth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
-import { NavLink } from 'react-router-dom'
+import { useAppSelector } from '../../../app/hook'
 
 const PostDetailEp = () => {
     const { id } = useParams()
     const { data: post } = useGetPostQuery(id)
-
-    const currentUser: any = UseAuth()
-    const data: any = useGetProfileQuery(currentUser?.email)
-    const profile: ImanageProfile = data.currentData
-    const user: any = useGetUserByEmailQuery(currentUser?.email)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { data: user } = useGetUserByEmailQuery(email)
     const [addCv] = useAddCvMutation()
-    const applyJob = () => {
-        try {
-            const apply = addCv({
-                name: profile?.name,
-                email: profile?.email,
-                phone: profile?.phone,
-                date: profile?.birth_day,
-                post_id: post._id
-            })
-
-            if (apply) {
-                message.success('Nộp đơn thành công.')
-            }
-        } catch (error) {
-            console.log(error);
+    const applyJob = async () => {
+        const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+        const apply = await addCv({
+            name: user?.name,
+            email: user?.email,
+            phone: user?.phone,
+            image: user?.image,
+            address: address,
+            description: user?.description,
+            date: user?.birth_day,
+            gender: user?.gender,
+            status: false,
+            post_id: post._id
+        })
+        const { data: rs } = apply
+        if (rs?.success) {
+            message.success(rs?.mes)
         }
     }
     return (
@@ -132,18 +128,15 @@ const PostDetailEp = () => {
                                     </div>
                                 </div>
                                 {
-                                    user.currentData ?
+                                    isLoggedIn ?
                                         <button
                                             className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
                                             onClick={applyJob}>
-                                            Nộp đơn
+                                            Ứng tuyển
                                         </button> :
-                                        <NavLink to={'/login'}>
-                                            <button
-                                                className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'>
-                                                Nộp đơn
-                                            </button>
-                                        </NavLink>
+                                        <div className='bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5'>
+                                            Đăng nhập để ứng tuyển
+                                        </div>
                                 }
 
                             </div>

@@ -6,7 +6,9 @@ interface IUserNTD {
     phone: string;
     isPhoneVerified: boolean;
     desc_epr: string;
-    birth_day: string;
+    image: string;
+    gender: string;
+    age: string;
     address: string;
     password: string;
     passwordResetToken: string;

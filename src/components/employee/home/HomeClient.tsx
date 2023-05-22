@@ -3,6 +3,7 @@ import { useGetPostsQuery } from '../../../service/post'
 import { useState } from 'react'
 const HomeClient = () => {
   const { data: posts } = useGetPostsQuery()
+  console.log(posts)
   const [searchValue, setSearchValue] = useState()
   const navigate = useNavigate()
   return (

@@ -25,7 +25,7 @@ const ProfileEpr = () => {
       _id: userEpr._id,
       isEmailVerified: userEpr.isEmailVerified,
       isPhoneVerified: userEpr.isPhoneVerified,
-      birth_day: userEprForm.birth_day,
+      age: userEprForm.age,
       address: userEprForm.address,
       desc_epr: userEprForm.desc_epr,
     })
@@ -109,7 +109,7 @@ const ProfileEpr = () => {
                 <div className='flex flex-col w-[50%]'>
                   <label className='text-[15px] font-[550]'> Ngày sinh: </label>
                   <input type="text"
-                    {...register("birth_day")}
+                    {...register("age")}
                     name='birth_day'
                     className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
                 </div>

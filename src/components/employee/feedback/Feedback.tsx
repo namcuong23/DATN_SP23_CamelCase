@@ -2,18 +2,16 @@ import React from 'react'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { IFeedback } from '../../../interfaces/feedback';
-import { useGetProfileQuery } from '../../../service/manage_profile'
-import ImanageProfile from '../../../interface/manageProfile'
 import { useGetUserByEmailQuery } from '../../../service/auth'
-import UseAuth from '../../auth/UseAuth'
 import { MessageType } from 'antd/es/message/interface';
 import { message } from 'antd';
+import { useAppSelector } from '../../../app/hook';
 type Props = {}
 
 const Feedback = (props: Props) => {
   const [addFeedback, { isLoading }] = useAddFeedbackMutation();
-  const currentUser: any = UseAuth()
-  const data: any = useGetProfileQuery(currentUser?.email)
+  const { email } = useAppSelector((rs) => rs.auth)
+  const { data: user } = useGetUserByEmailQuery(email)
 
   const {
     register,
@@ -24,7 +22,7 @@ const Feedback = (props: Props) => {
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
-      feedback_email: currentUser?.email
+      feedback_email: email
     })
     const confirm: MessageType = message.info('Gửi yêu cầu thành công')
     try {
@@ -44,9 +42,9 @@ const Feedback = (props: Props) => {
                   <input type="text" className='bg-[#F4F4F7] h-100 w-[100%] text-gray-600 focus:outline-none' placeholder='Nhập câu hỏi cần giải đáp' {...register("feedback_question", { required: true })} />
                   {errors.feedback_question?.type === "required" && <p className='text-danger font-bold w-200'>Vui lòng nhập câu hỏi của bạn !</p>}
                 </div>
-                <div className='hidden'>
-                  {currentUser?.email}
-                </div>
+                {/* <div className='hidden'>
+                  {email}
+                </div> */}
               </div>
               <div className='h-100'>
                 <div className='h-100'>
