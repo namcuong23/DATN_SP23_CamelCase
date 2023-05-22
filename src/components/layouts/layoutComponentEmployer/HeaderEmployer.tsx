@@ -8,6 +8,18 @@ import { logoutAuth } from '../../../app/actions/auth';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import IUserNTD from '../../../interface/employer/user_epr';
 
+import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
+import IProfileEpr from '../../../interface/employer/profileEpr';
+import ImanageProfile from '../../../interface/manageProfile'
+import IPost from '../../../interface/post'
+import { useGetProfileQuery } from '../../../service/manage_profile'
+import { useGetPostsQuery } from '../../../service/post'
+import { WhatsAppOutlined } from '@ant-design/icons'
+import { useAddFeedbackMutation } from '../../../services/feedback'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { IFeedback } from '../../../interfaces/feedback'
+import { MessageType } from 'antd/es/message/interface'
+import { Button, Modal } from 'antd';
 const HeaderEmployer = () => {
     const { email, isLoggedIn } = useAppSelector((res) => res.auth)
     const [open, setOpen] = useState(false);
@@ -31,6 +43,37 @@ const HeaderEmployer = () => {
             message.info(error.message)
         }
     }
+    const profiles: any = useGetProfileQuery(email)
+    const [addFeedback, { isLoading }] = useAddFeedbackMutation();
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm<IFeedback>()
+    const onSubmit: SubmitHandler<IFeedback> = (data) => {
+        addFeedback({
+            ...data,
+            feedback_email: email
+        })
+        const confirm: MessageType = message.info('Gửi yêu cầu thành công')
+        try {
+        } catch (error) {
+
+        }
+    }
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
     return (
         <>
             {/* Header */}
@@ -151,6 +194,34 @@ const HeaderEmployer = () => {
                         </div>
                     }
                 </Drawer>
+            </div>
+            <div className="float-contact ">
+                <Button className='bg-[#f52b72] text-white m-2' onClick={showModal}>
+                    <WhatsAppOutlined /> Hỗ trợ
+                </Button>
+                <Modal title="Đóng góp ý kiến" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className='h-[80px] w-100 py-3 bg-white'>
+                            <div className='container flex items-center justify-center h-100 w-100'>
+                                <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2'>
+                                    <div className='h-100 flex items-center bg-[#F4F4F7] w-[100%] border rounded'>
+                                        <input type="text" className='bg-[#F4F4F7] h-100 w-[100%] text-gray-600 focus:outline-none' placeholder='Nhập câu hỏi cần giải đáp' {...register("feedback_question", { required: true })} />
+                                        {errors.feedback_question?.type === "required" && <p className='text-danger font-bold w-200'>Vui lòng nhập câu hỏi của bạn !</p>}
+                                    </div>
+                                    {/* <div className='hidden'>
+                    {currentUser?.email}
+                  </div> */}
+                                </div>
+                                <div className='h-100'>
+                                    <div className='h-100'>
+                                        <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded h-100 px-10'>Gửi</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </form>
+                </Modal>
             </div>
         </>
     )

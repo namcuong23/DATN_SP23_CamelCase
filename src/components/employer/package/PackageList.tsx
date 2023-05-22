@@ -8,9 +8,10 @@ import { useGetAdmPackagesQuery } from '../../../service/admin/package'
 import IAdPackage from '../../../interface/admin/package'
 import { toast } from 'react-toastify'
 
-const PackageList = () => {
+const PackageList = (): any => {
     const dispatch: any = useAppDispatch()
     const navigate = useNavigate()
+    const { isLoggedIn } = useAppSelector((rs) => rs.auth)
     const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
     const onHandleAddToCart = (pack: IAdPackage) => {
         toast.success('Thêm thành công!')
@@ -34,6 +35,11 @@ const PackageList = () => {
             <Alert message="Error!!!" type="error" />
         </Space>
     }
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
+    }
+
     return (
         <>
             <section className='min-h-screen'>

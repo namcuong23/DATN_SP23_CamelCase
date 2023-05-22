@@ -23,20 +23,26 @@ import cartReducer from "../reducer/package";
 import { orderApi } from "../service/employer/order";
 import { packageAdmApi } from "../service/admin/package";
 import { profileEprApi } from "../service/employer/profileEpr";
+import { serviceApi } from "../service/employer/service";
 import { personalInforApi } from "../services/personalInfor";
 import { feedbackApi } from "../services/feedback";
 import { jobsaveApi } from "../service/savejob";
 import { profileEpeApi } from "../service/profileEpe";
 import { jobdoneApi } from "../service/jobdone";
+import { jobdoneApi } from "../services/jobdone";
+import { chartLine } from "../service/admin/chartLine";
+import { serviceAdmApi } from "../service/admin/service";
+import authAdmReducer from "../reducer/authAdm";
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth', 'cart']
+    whitelist: ['auth', 'authAdm', 'cart']
 }
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    authAdm: authAdmReducer,
     cart: cartReducer,
     [postApi.reducerPath]: postApi.reducer,
     [jobdoneApi.reducerPath]: jobdoneApi.reducer,
@@ -54,6 +60,9 @@ const rootReducer = combineReducers({
     [packageAdmApi.reducerPath]: packageAdmApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [personalInforApi.reducerPath]: personalInforApi.reducer,
+    [serviceApi.reducerPath]: serviceApi.reducer,
+    [chartLine.reducerPath]: chartLine.reducer,
+    [serviceAdmApi.reducerPath]: serviceAdmApi.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -81,7 +90,10 @@ export const store = configureStore({
         packageAdmApi.middleware,
         adminApi.middleware,
         orderApi.middleware,
-        personalInforApi.middleware
+        personalInforApi.middleware,
+        serviceApi.middleware,
+        chartLine.middleware,
+        serviceAdmApi.middleware,
     )
 })
 

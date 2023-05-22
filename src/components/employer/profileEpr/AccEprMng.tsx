@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import {
     useActiveEmailMutation,
@@ -12,7 +12,7 @@ import { useAppSelector } from '../../../app/hook'
 import Swal from 'sweetalert2'
 import { Modal } from 'antd'
 
-const AccEprMng = () => {
+const AccEprMng = (): any => {
     const [open, setOpen] = useState(false)
     const [openC, setOpenC] = useState(false)
     const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
@@ -35,6 +35,7 @@ const AccEprMng = () => {
         }
     }
 
+    const navigate = useNavigate()
     const [verifiedEmail] = useSendEmailVerifiedMutation()
     const sendEmail = async () => {
         const send: any = await verifiedEmail({ email })
@@ -52,6 +53,11 @@ const AccEprMng = () => {
             Swal.fire('Congratulation', 'Xác thực thành công', 'success')
         }
     }
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
+    }
+
     return (
         <>
             <div className='bg-white min-h-screen flex items-start px-12 py-8 gap-14 text-[#474747]'>

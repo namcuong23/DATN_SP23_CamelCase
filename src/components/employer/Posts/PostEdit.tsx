@@ -8,7 +8,7 @@ import { apiGetProvinces } from '../../../service/api'
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
 import { useAppSelector } from '../../../app/hook';
 
-const PostEdit = () => {
+const PostEdit = (): any => {
     const navigate = useNavigate()
     const { id } = useParams();
     const [form] = Form.useForm();
@@ -16,7 +16,7 @@ const PostEdit = () => {
     form.setFieldsValue(post)
 
     const [editPost] = useEditPostMutation()
-    const { email } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])
@@ -43,6 +43,10 @@ const PostEdit = () => {
         } catch (error) {
 
         }
+    }
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
     }
 
     return (

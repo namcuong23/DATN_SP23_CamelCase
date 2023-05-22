@@ -1,7 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useEffect } from 'react'
 import { useAppSelector } from '../../../app/hook'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import {
   useGetUserEprByEmailQuery,
   useUpdateUserEprMutation
@@ -9,11 +9,12 @@ import {
 import IUserNTD from '../../../interface/employer/user_epr'
 import { toast } from 'react-toastify'
 
-const ProfileEpr = () => {
+const ProfileEpr = (): any => {
   const { email, isLoggedIn } = useAppSelector((res) => res.auth)
   const { data: userEpr } = useGetUserEprByEmailQuery<any>(email)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
   const [updateUser] = useUpdateUserEprMutation()
+  const navigate = useNavigate()
 
   useEffect(() => {
     reset(userEpr)
@@ -25,14 +26,15 @@ const ProfileEpr = () => {
       _id: userEpr._id,
       isEmailVerified: userEpr.isEmailVerified,
       isPhoneVerified: userEpr.isPhoneVerified,
-      birth_day: userEprForm.birth_day,
-      address: userEprForm.address,
-      desc_epr: userEprForm.desc_epr,
     })
     const { data: rs } = update
     if (rs?.success) {
       toast.success('Cập nhật thành công')
     }
+  }
+
+  if (!isLoggedIn) {
+    return navigate('/login-epr')
   }
 
   return (
@@ -107,10 +109,10 @@ const ProfileEpr = () => {
                     className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
                 </div>
                 <div className='flex flex-col w-[50%]'>
-                  <label className='text-[15px] font-[550]'> Ngày sinh: </label>
+                  <label className='text-[15px] font-[550]'> Tuổi: </label>
                   <input type="text"
-                    {...register("birth_day")}
-                    name='birth_day'
+                    {...register("age")}
+                    name='age'
                     className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
                 </div>
               </div>

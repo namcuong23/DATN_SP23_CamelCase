@@ -1,21 +1,25 @@
 import { useState, useEffect } from 'react'
-import UseAuth from '../../auth/UseAuth'
 import { Modal } from 'antd'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { apiGetDistricts, apiGetProvinces } from '../../../service/api'
 import { useAppSelector } from '../../../app/hook'
-import { useActiveEmailMutation, useGetUserByEmailQuery, useSendEmailVerifiedMutation } from '../../../service/auth'
-import { useForm } from 'react-hook-form'
+import {
+    useActiveEmailMutation,
+    useGetUserByEmailQuery,
+    useSendEmailVerifiedMutation,
+    useUpdateUserMutation
+} from '../../../service/auth'
+import { SubmitHandler, useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2'
+import IUserNTV from '../../../interface/user'
 
 const Profile: any = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
-    const { register, handleSubmit, formState: { errors } } = useForm()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm()
     const navigate = useNavigate()
-    const currentUser: any = UseAuth()
     const { data: user } = useGetUserByEmailQuery(email)
-    const [hidden, setHidden] = useState(false)
+    const [hidden, setHidden] = useState(true)
     const [open, setOpen] = useState(false);
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
@@ -25,19 +29,17 @@ const Profile: any = () => {
             const { data: response }: any = await apiGetProvinces()
             setProvinces(response?.results);
         }
+        reset(user)
         fetchProvinces()
-    }, [])
+    }, [user])
 
     const changeSelect = (event: any) => {
+        const rs = provinces.filter((res: any) => res.province_name == event.target.value)
         const fetchDistricts = async () => {
-            const { data: response }: any = await apiGetDistricts(event.target.value)
+            const { data: response }: any = await apiGetDistricts(rs[0].province_id)
             setDistricts(response?.results);
         }
         fetchDistricts()
-    }
-
-    const showForm = () => {
-        setHidden(!hidden)
     }
 
     const [verifiedEmail] = useSendEmailVerifiedMutation()
@@ -55,6 +57,19 @@ const Profile: any = () => {
         const { data: rs } = active
         if (rs?.success) {
             Swal.fire('Congratulation', 'Xác thực thành công', 'success')
+        }
+    }
+    const [updateUser] = useUpdateUserMutation()
+    const handleUpdate: SubmitHandler<any> = async (userForm: any) => {
+        const update: any = await updateUser({
+            ...userForm,
+            _id: user._id,
+            isEmailVerified: user.isEmailVerified,
+            isPhoneVerified: user.isPhoneVerified,
+        })
+        const { data: rs } = update
+        if (rs?.success) {
+            toast.success('Cập nhật thành công')
         }
     }
 
@@ -166,22 +181,27 @@ const Profile: any = () => {
                             </div>
                         </section>
                         <section className='border-1 rounded bg-white py-4'>
-                            <div className='px-4 pb-4'>
+                            <div className='px-4 pb-4 flex items-center justify-between'>
                                 <h4 className='text-[22px] font-[700] text-[#333333]'>Thông tin cá nhân</h4>
+                                {hidden ? <button onClick={() => setHidden(false)}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen" viewBox="0 0 16 16">
+                                        <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
+                                    </svg>
+                                </button> : ''}
                             </div>
                             <div>
                                 {
-                                    !hidden ?
+                                    hidden ?
                                         <div className={'px-4 text-[#333333]'}>
                                             <div className='border-y py-3'>
                                                 <div className='flex items-center mx-3'>
                                                     <div className='w-50 flex items-center'>
                                                         <div className='w-[38%]'>Họ và tên</div>
-                                                        <div className='w-[62%] font-[700]'>{user ? currentUser?.displayName : user?.name}</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.name}</div>
                                                     </div>
                                                     <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Ngày sinh</div>
-                                                        <div className='w-[62%] font-[700]'>{user?.birth_day}</div>
+                                                        <div className='w-[38%]'>Số điện thoại</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.phone}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -240,21 +260,14 @@ const Profile: any = () => {
                                                 </div>
                                             </div>
                                             <div className='border-b py-3'>
-                                                <div className='mx-3'>
+                                                <div className='flex items-center mx-3'>
                                                     <div className='w-50 flex items-center'>
-                                                        <div className='w-[38%]'>Số điện thoại</div>
-
-                                                        {user?.phone ?
-                                                            <>
-                                                                <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                                    {user?.phone}
-                                                                    <button className='font-[100]'>
-                                                                        <NavLink className={'hover:text-[#fd7e14] hover:no-underline'} to={'/otp'}>Xác thực</NavLink>
-                                                                    </button>
-                                                                </div>
-                                                            </> : ""
-                                                        }
-
+                                                        <div className='w-[38%]'>Tuổi</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.age}</div>
+                                                    </div>
+                                                    <div className='w-50 flex items-center'>
+                                                        <div className='w-[38%]'>Giới tính</div>
+                                                        <div className='w-[62%] font-[700]'>{user?.gender}</div>
                                                     </div>
                                                 </div>
                                             </div>
@@ -280,58 +293,84 @@ const Profile: any = () => {
                                             </div>
                                         </div> :
                                         <div className={'px-4 text-[#333333]'}>
-                                            form
-                                            <form>
-                                                <div className='border-y py-3'>
-                                                    <div className='flex items-center mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Họ và tên</div>
-                                                            <div className='w-[62%] font-[700]'></div>
+                                            <form onSubmit={handleSubmit(handleUpdate)}>
+                                                <div className='py-2'>
+                                                    <div className='flex items-center mx-3 gap-x-2'>
+                                                        <div className='w-50 flex flex-col'>
+                                                            <label>Họ và tên <span className='text-red-500'>*</span></label>
+                                                            <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                                                                {...register("name", {
+                                                                    required: true,
+                                                                    pattern: /^(?!.*\d)(?!.*[`!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~])/
+                                                                })} />
+                                                            {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
+                                                            {errors.name && errors.name.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Tên không hợp lệ.</span>}
                                                         </div>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Ngày sinh</div>
-                                                            <div className='w-[62%] font-[700]'></div>
+                                                        <div className='w-50 flex flex-col'>
+                                                            <div className='mb-[8px]'>Số điện thoại <span className='text-red-500'>*</span></div>
+                                                            <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                                                                {...register("phone", {
+                                                                    required: true,
+                                                                    minLength: 10,
+                                                                    pattern: /^(?:0\.(?:0[0-9]|[0-9]\d?)|[0-9]\d*(?:\.\d{1,2})?)(?:e[+-]?\d+)?$/
+                                                                })} />
+                                                            {errors.phone && errors.phone.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Số điện thoại.</span>}
+                                                            {errors.phone && errors.phone.type == 'minLength' && <span className='text-red-500 fw-bold mt-1'> Số điện thoại phải có ít nhất 10 ký tự.</span>}
+                                                            {errors.phone && errors.phone.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Số điện thoại không hợp lệ.</span>}
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className='border-b py-3'>
+                                                <div className='py-2'>
                                                     <div className='mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Email</div>
-                                                            <div className='w-[62%] font-[700]'></div>
+                                                        <div className='mb-[8px]'>Email <span className='text-red-500'>*</span></div>
+                                                        <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                                                            {...register("email", {
+                                                                required: true,
+                                                                pattern: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+                                                            })} />
+                                                        {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email</span>}
+                                                        {errors.email && errors.email.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Email không hợp lệ</span>}
+                                                    </div>
+                                                </div>
+                                                <div className='py-2'>
+                                                    <div className='flex items-center mx-3 gap-x-2'>
+                                                        <div className='w-50 flex flex-col'>
+                                                            <div className='mb-[8px]'>Giới tính</div>
+                                                            <select  {...register('gender')} defaultValue={0} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                                                                <option value={0}>--Chọn Giới tính--</option>
+                                                                <option value="Nam">Nam</option>
+                                                                <option value="Nữ">Nữ</option>
+                                                            </select>
+                                                        </div>
+                                                        <div className='w-50 flex flex-col'>
+                                                            <label>Tuổi</label>
+                                                            <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                                                                {...register('age')} />
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className='border-b py-3'>
-                                                    <div className='mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Số điện thoại</div>
-                                                            <div className='w-[62%] font-[700]'></div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div className='border-b py-3'>
-                                                    <div className='flex items-center mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Tỉnh/Thành phố</div>
-                                                            <select name="province" onChange={changeSelect}>
-                                                                <option value="0">--Chọn Tỉnh/Thành phố--</option>
+                                                <div className='py-3'>
+                                                    <div className='flex items-center gap-x-2 mx-3'>
+                                                        <div className='w-50 flex flex-col'>
+                                                            <div className='mb-[8px]'>Tỉnh/Thành phố</div>
+                                                            <select  {...register('province')} defaultValue={0} onChange={changeSelect} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                                                                <option value={0}>--Chọn Tỉnh/Thành phố--</option>
                                                                 {
                                                                     provinces ? provinces?.map((province: any) =>
-                                                                        <option key={province.province_id} value={province.province_id}>
+                                                                        <option key={province.province_id} value={province.province_name}>
                                                                             {province.province_name}
                                                                         </option>
                                                                     ) : ''
                                                                 }
                                                             </select>
                                                         </div>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Quận/Huyện</div>
-                                                            <select name="district">
-                                                                <option value="0">--Chọn Quận/Huyện--</option>
+                                                        <div className='w-50 flex flex-col'>
+                                                            <div className='mb-[8px]'>Quận/Huyện</div>
+                                                            <select {...register('district')} defaultValue={0} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                                                                <option value={0}>--Chọn Quận/Huyện--</option>
                                                                 {
                                                                     districts ? districts?.map((district: any) =>
-                                                                        <option key={district.district_id} value={district.district_id}>
+                                                                        <option key={district.district_id} value={district.district_name}>
                                                                             {district.district_name}
                                                                         </option>
                                                                     ) : ''
@@ -340,19 +379,23 @@ const Profile: any = () => {
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className='border-0 py-3'>
+                                                <div className='py-3'>
                                                     <div className='mx-3'>
-                                                        <div className='w-50 flex items-center'>
-                                                            <div className='w-[38%]'>Địa chỉ</div>
-                                                            <div className='w-[62%] font-[700]'></div>
+                                                        <div className='flex flex-col'>
+                                                            <div className='mb-[8px]'>Địa chỉ</div>
+                                                            <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                                                                {...register('specific_address')} />
                                                         </div>
                                                     </div>
+                                                </div>
+                                                <div className='flex items-center justify-end gap-x-2 mt-2'>
+                                                    <button type='button' onClick={() => setHidden(true)} className='border-1 border-[#333333] hover:border-[#005AFF] hover:text-[#005AFF] px-3 text-[#333333] rounded p-[8px]'>Hủy</button>
+                                                    <button type='submit' className='bg-[#005AFF] text-white font-[700] rounded p-[8px]'>Lưu</button>
                                                 </div>
                                             </form>
                                         </div>
                                 }
                             </div>
-                            <button className='bg-[#005AFF] mx-3 text-white font-[700] rounded p-[8px]' onClick={showForm}>Chỉnh sửa</button>
                         </section>
                     </main>
                 </div>

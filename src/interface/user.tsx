@@ -6,7 +6,9 @@ interface IUserNTV {
     phone: string;
     isPhoneVerified: boolean;
     desc: string;
-    birth_day: string;
+    age: string;
+    image: string;
+    gender: string;
     province: string;
     district: string;
     specific_address: string;

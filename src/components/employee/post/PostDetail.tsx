@@ -1,12 +1,12 @@
 import { message } from 'antd'
 import { useParams } from 'react-router-dom'
-import ImanageProfile from '../../../interface/manageProfile'
 import { useAddCvMutation } from '../../../service/manage_cv'
-import { useGetProfileQuery } from '../../../service/manage_profile'
 import { useGetPostQuery } from '../../../service/post'
-import UseAuth from '../../auth/UseAuth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
+<<<<<<< HEAD
 import { NavLink } from 'react-router-dom'
+=======
+>>>>>>> 6aa06276b1ebe8e861e66b7b21df2eb5d5adc0c5
 import { useAppSelector } from '../../../app/hook'
 
 const PostDetailEp = () => {
@@ -36,6 +36,26 @@ const PostDetailEp = () => {
             }
         } catch (error) {
             console.log(error);
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { data: user } = useGetUserByEmailQuery(email)
+    const [addCv] = useAddCvMutation()
+    const applyJob = async () => {
+        const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+        const apply = await addCv({
+            name: user?.name,
+            email: user?.email,
+            phone: user?.phone,
+            image: user?.image,
+            address: address,
+            description: user?.description,
+            date: user?.birth_day,
+            gender: user?.gender,
+            status: false,
+            post_id: post._id
+        })
+        const { data: rs } = apply
+        if (rs?.success) {
+            message.success(rs?.mes)
         }
     }
     return (
@@ -135,11 +155,26 @@ const PostDetailEp = () => {
                                         <div>1 việc</div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
                                 <button
                                     className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
                                     onClick={applyJob}>
                                     Nộp đơn
                                 </button>
+=======
+                                {
+                                    isLoggedIn ?
+                                        <button
+                                            className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
+                                            onClick={applyJob}>
+                                            Ứng tuyển
+                                        </button> :
+                                        <div className='bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5'>
+                                            Đăng nhập để ứng tuyển
+                                        </div>
+                                }
+
+>>>>>>> 6aa06276b1ebe8e861e66b7b21df2eb5d5adc0c5
                             </div>
                         </div>
                     </div>

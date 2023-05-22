@@ -27,7 +27,7 @@ export const authApi: any = createApi({
             query: (email: string) => `/epe-users/${email}/detail`,
             providesTags: ['authEpe']
         }),
-        updateUsser: builder.mutation({
+        updateUser: builder.mutation({
             query: (user: IUserNTV) => ({
                 url: `/epe-users/${user._id}/edit`,
                 method: 'PUT',

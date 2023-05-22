@@ -9,10 +9,10 @@ import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 
-const OrderDetail = () => {
+const OrderDetail = (): any => {
     const { id } = useParams()
     const navigate = useNavigate()
-    const { email } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: order } = useGetOrderQuery<any>(id)
     const paymentTerm = new Date(order?.createdAt)
@@ -82,6 +82,10 @@ const OrderDetail = () => {
         downloadLink.click();
         document.body.removeChild(downloadLink);
     };
+
+    if (!isLoggedIn) {
+        return navigate('/login-epr')
+    }
 
     return (
         <>

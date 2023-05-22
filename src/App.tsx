@@ -7,7 +7,6 @@ import Login from "./components/auth/Employee/Login"
 import OTPAuth from "./components/auth/OTPAuth"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
-import Feedback from "./components/employee/feedback/Feedback"
 import Profile from "./components/employee/profile/Profile"
 import LayoutAdmin from "./components/layouts/LayoutAdmin"
 import PostDetailEp from "./components/employee/post/PostDetail"
@@ -18,23 +17,9 @@ import PackageList from "./components/employer/package/PackageList"
 import OrderList from "./components/employer/package/OrderList"
 import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
-import PostList from "./components/employer/posts/PostList"
-import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
-import PostAdd from "./components/employer/posts/PostAdd"
-import PostEdit from "./components/employer/posts/PostEdit"
-import PostDetail from "./components/employer/posts/PostDetail"
-import HomeAdmin from "./components/admin/home/HomeAdmin"
-import UsersManage from "./components/admin/home/UsersManage"
-import VoucherList from "./components/admin/Voucher/VoucherList"
-import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/admin/Post/PostAdmin"
-import CareerAdd from "./components/admin/Career/CareerAdd"
-import CareerList from "./components/admin/Career/CareerList"
-import ServicesEpr from "./components/employer/package/ServicesEpr"
 import HomeEmployer from './components/home/HomeEmployer'
 import Jobdone from './components/pages/Jobdone'
-import "./App.css"
+import Job from './components/pages/Job'
 import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
@@ -52,6 +37,25 @@ import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import Infotmation from "./components/employee/profile/Infotmation"
 import MyJob from "./components/employee/profile/MyJob"
 import 'react-toastify/dist/ReactToastify.css';
+import ServiceList from "./components/employer/My Service/ServiceList"
+import ServiceAdd from "./components/employer/My Service/ServiceAdd"
+import PrivateRoute from "./privateRoute/PrivateRoute"
+import Interview from "./components/pages/Interview"
+import ManageJob from "./components/pages/ManageJob"
+import RecruitmentDetails from "./components/pages/RecruitmentDetails"
+import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
+import PostList from "./components/employer/posts/PostList"
+import PostAdd from "./components/employer/posts/PostAdd"
+import PostEdit from "./components/employer/posts/PostEdit"
+import PostDetail from "./components/employer/posts/PostDetail"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import UsersManage from "./components/admin/home/UsersManage"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import CareerList from "./components/admin/Career/CareerList"
+import CareerAdd from "./components/admin/Career/CareerAdd"
 function App() {
   return (
     <div className="App">
@@ -88,14 +92,23 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
+          {/* <Route path="profile" element={
+          <Route path="interview" element={<Interview />} />
+          <Route path="managejob" element={<ManageJob />} />
+          <Route path="jobempolyee" element={<Job />} />
+          <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
           <Route path="profile" element={
             // <PrivateRoute>
             <Profile />
             // </PrivateRoute>
-          } />
+          } /> */}
           <Route path="account-manage" element={<AccountMng />} />
           <Route path="feedbacks" element={<Feedback />} />
           <Route path="myjob" element={<MyJob />} >
+          <Route path="profile" element={<Profile />} >
+            <Route index element={<Infotmation />} />
+            <Route path="myJob" element={<MyJob />} />
+            {/* <Route path="information" element={<Infotmation />} /> */}
           </Route>
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
@@ -106,6 +119,8 @@ function App() {
           <Route path='profile-epr' element={<ProfileEpr />} />
           <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
+          <Route path='services' element={<ServiceList />} />
+          <Route path='services/add' element={<ServiceAdd />} />
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />
           <Route path='posts/:id' element={<PostDetail />} />
@@ -115,13 +130,16 @@ function App() {
           <Route path='orders/:id/detail' element={<OrderDetail />} />
           <Route path='notice' element={<OrderNotice />} />
           <Route path='cart' element={<Cart />} />
-          <Route path='services' element={<ServicesEpr />} />
+          {/* <Route path='services' element={<ServicesEpr />} /> */}
           <Route path='manage-cv' element={<ProfileList />} />
-          <Route path="feedbacks" element={<Feedback />} />
         </Route>
 
         {/* ADMIN */}
-        <Route path='/admin' element={<LayoutAdmin />}>
+        <Route path='/admin' element={
+          <PrivateRoute>
+            <LayoutAdmin />
+          </PrivateRoute>
+        }>
           <Route index element={<HomeAdmin />} />
           <Route path="users-management" element={<UsersManage />} />
           <Route path='vouchers' element={<VoucherList />} />

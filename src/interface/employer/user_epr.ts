@@ -6,13 +6,15 @@ interface IUserNTD {
     phone: string;
     isPhoneVerified: boolean;
     desc_epr: string;
-    birth_day: string;
+    image: string;
+    gender: string;
+    age: string;
     address: string;
     password: string;
     passwordResetToken: string;
     passwordChangeAt: string;
     passwordResetExpires: string;
-    level_auth: number
+    level_auth: number;
 }
 
 export default IUserNTD
