@@ -38,7 +38,7 @@ const HomeClient = () => {
                 </div>
                 <div className="carousel-inner">
                     <div className="carousel-item active">
-                        <img src="src/image/banner-home1.jpg" className="d-block w-100" alt="..." />
+                        <img src="https://fjwp.s3.amazonaws.com/blog/wp-content/uploads/2020/11/11061946/part-time-hours-1024x512.png" className="d-block w-100" alt="..." />
                     </div>
                     <div className="carousel-item">
                         <img src="src/image/banner-home2.jpg" className="d-block w-100" alt="..." />
@@ -71,10 +71,10 @@ const HomeClient = () => {
                     <span className="carousel-control-next-icon" aria-hidden="true" />
                     <span className="visually-hidden">Next</span>
                 </button>
-                <div className='position-absolute top-50 start-50 translate-middle' style={{ background: 'rgba(0,0,0,.4)', height: '5em' , width:'70%', borderRadius: '0.5em'}}>
+                <div className='position-absolute top-50 start-50 translate-middle' style={{ background: 'rgba(0,0,0,.4)', height: '6em' , width:'70%', borderRadius: '0.5em'}}>
                     <div className="input-group mb-3 p-3 " style={{ width: '100%', display: 'inline-flex' }}>
                         <div className="border border-right-0 input-group-text" id="basic-addon1" style={{ background: 'white', display: 'inline-block' }}>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search mt-2" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search " viewBox="0 0 16 16">
                                 <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                             </svg>
                         </div>
@@ -93,7 +93,7 @@ const HomeClient = () => {
                 </div>
             </div>
             <div className="content" >
-                <section className="sectionBlock sectionBlock_has-padding-touch sectionBlock_featured-company lunar-new-year animated fadeIn take-1-second">
+                {/* <section className="sectionBlock sectionBlock_has-padding-touch sectionBlock_featured-company lunar-new-year animated fadeIn take-1-second">
                     <div className="" style={{ width: '85%', margin: '0 auto' }}><div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
                         <h2 className="sectionBlock__title">Các Công Ty Hàng Đầu</h2>
                     </div>
@@ -151,7 +151,7 @@ const HomeClient = () => {
                             </div>
                         </div>
                     </div>
-                </section>
+                </section> */}
                 <div className="px-4 text-center py-4" style={{ width: '85%', margin: '0 auto' }}>
 
                 </div>
@@ -520,7 +520,7 @@ const HomeClient = () => {
                     </button>
                 </div>
                 <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs pb-5">
-                    <div className="p-0" style={{ width: '85%', margin: '0 auto' }}>
+                  <div className="p-0" style={{ width: '85%', height:'400px', margin: '0 auto' }}>
                         <div className="is-flex justify-between align-center section-title">
                             <h2 className="sectionBlock__title">Việc Làm Tốt Nhất</h2>
                             <div className="sectionBlock__link">
@@ -573,7 +573,7 @@ const HomeClient = () => {
                 <section className="sectionBlock sectionBlock_hot-categories" >
                     <div className="" style={{ width: '85%', margin: '0 auto' }}>
                         <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
-                            <h2 className="sectionBlock__title">Ngành Nghề Trọng Điểm</h2>
+                            <h2 className="sectionBlock__title pb-5">Ngành Nghề Trọng Điểm</h2>
                         </div>
                         <div className="sectionBlock__content" style={{ height: '100%' }}>
                             <div id="hot-cagories" className="sc-dvwKko jrSuUk"><div className="sc-jtcaXd dhnMFx">

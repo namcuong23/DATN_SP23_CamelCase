@@ -157,16 +157,16 @@ const PostDetail = () => {
                                 </div>
                                 <div className='cuong1'>
                                     <p>
-                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53', width: '80%' }}>Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Khách Hàng Doanh Nghiệp Lớn</a>
-                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Công Ty Cổ Phần Tập Đoàn Masterise</a>
-                                        <div style={{ color: '#999', fontSize: '13px' }}>Hồ Chí Minh</div>
-                                        <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: 23-05-2023</span>
-                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>Thương lượng</div>
+                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53', width: '100%', padding:"2px 0" }}>{post?.job_name}</a>
+                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px', padding:"2px 0" }}>Giới tính: {post?.gender }</a>
+                                        <div style={{ color: '#999', fontSize: '13px', padding:"2px 0" }}>{post?.work_location}</div>
+                                        <span style={{ color: '#999', fontSize: '13px', padding:"2px 0" }}>Ngày đăng tin: {(new Date(post?.createdAt)).toLocaleDateString()}</span>
+                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>{post?.job_salary }</div>
                                     </p>
                                 </div>
-                                <button type="button" className="btn" id="related-jobs-search">
+                                {/* <button type="button" className="btn" id="related-jobs-search">
                                     Ứng tuyển ngay
-                                </button>
+                                </button> */}
                             </div>
                         </div>
                     </div>
@@ -247,7 +247,7 @@ const PostDetail = () => {
                                         </div>
                                         <div className='flex mb-2'>
                                             <div className="w-[150px] text-gray-500">Ngày đăng: </div>
-                                            <div>{post?.createdAt}</div>
+                                            <div>{(new Date(post?.createdAt)).toLocaleDateString()}</div>
                                         </div>
                                         <div className='flex mb-2'>
                                             <div className="w-[150px] text-gray-500">Chỉ còn: </div>

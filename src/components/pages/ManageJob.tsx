@@ -1,7 +1,28 @@
 import React from 'react'
 import HeaderSearchhJob from '../layouts/layoutComponentClient/HeaderSearchhJob'
+import IPost from '../../interface/post'
+import { useGetPostsQuery } from '../../service/post'
+import { useState ,useEffect} from 'react';
 
 const ManageJob = () => {
+    const { data: posts, error, isLoading } = useGetPostsQuery()
+    if (isLoading) return <div>...isLoading</div>
+    if (error) return <div>error</div>
+    console.log(posts)
+    const [postData, setPostData] = useState([]);
+    const up30m = posts.filter((post: any) => {
+        // Lọc các bài đăng có điều kiện cần
+        return post.job_salary > 300000;
+    })
+    useEffect(() => {
+        setPostData(up30m);
+    }, []);
+    console.log(postData)
+    
+
+    
+
+    
     return (
         <>
             <HeaderSearchhJob />
@@ -110,89 +131,27 @@ const ManageJob = () => {
                 <div className='pt-3'>
                     <div className="block-job-list" >
                         <div className='content-manage-job'>
-                            <div className='content-manage-job1 border'>
-                                <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
-                                    <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                        <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                    </a>
+                           {postData?.map((post: IPost) => (
+                                <div className='content-manage-job1 border mt-3' key='{post}'>
+                                    <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
+                                        <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
+                                            <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
+                                        </a>
+                                    </div>
+                                    <div className='cuong1'>
+                                        <p>
+                                           <a href='#' className='job-title fs-5' style={{ color: '#ff4a53', width: '36em' }}>{post.job_name}</a>
+                                           <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Hình thức làm việc: {post.working_form}</a>
+                                            <div style={{ color: '#999', fontSize: '13px' }}>Nơi làm việc: {post?.work_location}</div>
+                                            <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tuyển: {(new Date(post.createdAt)).toLocaleDateString()}</span>
+                                            <div style={{ color: '#ff7d55', fontWeight: 500 }}>Mức lương: {post.job_salary}</div>
+                                        </p>
+                                    </div>
                                 </div>
-                                <div className='cuong1'>
-                                    <p>
-                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53', width: '80%' }}>Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Khách Hàng Doanh Nghiệp Lớn</a>
-                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Công Ty Cổ Phần Tập Đoàn Masterise</a>
-                                        <div style={{ color: '#999', fontSize: '13px' }}>Hồ Chí Minh</div>
-                                        <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: 23-05-2023</span>
-                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>Thương lượng</div>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='content-manage-job2 border'>
-                                <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
-                                    <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                        <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2Fc5%2F11125337.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                    </a>
-                                </div>
-                                <div className='cuong1'>
-                                    <p>
-                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53' }}>Digital & Media Director</a>
-                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Shindengen Vietnam Co., Ltd</a>
-                                        <div style={{ color: '#999', fontSize: '13px' }}>Hải Dương, Hà Nội, Hưng Yên</div>
-                                        <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: 21-04-2023</span>
-                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>Thương lượng</div>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='content-manage-job2 border'>
-                                <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
-                                    <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                        <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2Fec%2F10888325.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                    </a>
-                                </div>
-                                <div className='cuong1'>
-                                    <p>
-                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53' }}>Assistant Project Marketing Manager</a>
-                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Công Ty Cổ Phần Tập Đoàn Masterise</a>
-                                        <div style={{ color: '#999', fontSize: '13px' }}>Hồ Chí Minh</div>
-                                        <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: 09-03-2023</span>
-                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>Thương lượng</div>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='content-manage-job2 border'>
-                                <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
-                                    <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                        <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2Ffc%2F11125241.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                    </a>
-                                </div>
-                                <div className='cuong1'>
-                                    <p>
-                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53' }}>Digital Marketing (Làm Việc Tại Khánh Hòa)</a>
-                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Công Ty TNHH Thương Mại Khatoco</a>
-                                        <div style={{ color: '#999', fontSize: '13px' }}>Khánh Hòa, Hồ Chí Minh</div>
-                                        <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: 10-02-2023</span>
-                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>Thương lượng</div>
-                                    </p>
-                                </div>
-                            </div>
-                            <div className='content-manage-job2'>
-                                <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
-                                    <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                        <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                    </a>
-                                </div>
-                                <div className='cuong1'>
-                                    <p>
-                                        <a href='#' className='job-title fs-5' style={{ color: '#ff4a53' }}>Tổ Trưởng Chuyền Sản Xuất - Hưng Yên</a>
-                                        <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Shindengen Vietnam Co., Ltd</a>
-                                        <div style={{ color: '#999', fontSize: '13px' }}>Hải Dương, Hà Nội, Hưng Yên</div>
-                                        <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: 06-04-2023</span>
-                                        <div style={{ color: '#ff7d55', fontWeight: 500 }}>Thương lượng</div>
-                                    </p>
-                                </div>
-                            </div>
+                            ))}  
                         </div>
                         <div className='' id="banner-list-job">
-                            <p className='py-3 pl-3 fs-6 border border-bottom-0' style={{ background: '#white', color: 'black' }}>Công Ty Hàng Đầu</p>
+                            <p className='py-3 pl-3 fs-6 border border-bottom-0 m-0' style={{ background: '#white', color: 'black' }}>Công Ty Hàng Đầu</p>
                             <div className='border border-top-0' style={{ paddingBottom: '0.9em' }} >
                                 <img src='https://tse3.mm.bing.net/th?id=OIP.cLyW0WdrOvk6Nq7ehtoRxwHaEK&pid=Api&P=0' />
                                 <p style={{ padding: '10px 0 0 ', textAlign: 'center', fontSize: '1em', fontWeight: 'bold' }}>Công Ty cổ phần MISA</p>

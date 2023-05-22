@@ -48,6 +48,7 @@ import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 import Interview from "./components/pages/Interview"
 import ManageJob from "./components/pages/ManageJob"
 import RecruitmentDetails from "./components/pages/RecruitmentDetails"
+import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
 function App() {
   return (
     <div className="App">
@@ -121,6 +122,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           <Route path='services' element={<ServicesEpr />} />
           <Route path='manage-cv' element={<ProfileList />} />
+          <Route path='manage-profile' element={<ManageProfileDetail />} />
         </Route>
 
         {/* ADMIN */}
