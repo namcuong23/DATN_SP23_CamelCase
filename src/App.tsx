@@ -17,10 +17,9 @@ import PackageList from "./components/employer/package/PackageList"
 import OrderList from "./components/employer/package/OrderList"
 import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
-import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
 import HomeEmployer from './components/home/HomeEmployer'
 import Jobdone from './components/pages/Jobdone'
-import "./App.css"
+import Job from './components/pages/Job'
 import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
@@ -40,19 +39,23 @@ import MyJob from "./components/employee/profile/MyJob"
 import 'react-toastify/dist/ReactToastify.css';
 import ServiceList from "./components/employer/My Service/ServiceList"
 import ServiceAdd from "./components/employer/My Service/ServiceAdd"
+import PrivateRoute from "./privateRoute/PrivateRoute"
+import Interview from "./components/pages/Interview"
+import ManageJob from "./components/pages/ManageJob"
+import RecruitmentDetails from "./components/pages/RecruitmentDetails"
+import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
 import PostList from "./components/employer/posts/PostList"
 import PostAdd from "./components/employer/posts/PostAdd"
+import PostEdit from "./components/employer/posts/PostEdit"
 import PostDetail from "./components/employer/posts/PostDetail"
 import HomeAdmin from "./components/admin/home/HomeAdmin"
 import UsersManage from "./components/admin/home/UsersManage"
 import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
 import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
 import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
-import PostEdit from "./components/employer/posts/PostEdit"
-import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
-import PrivateRoute from "./privateRoute/PrivateRoute"
 function App() {
   return (
     <div className="App">
@@ -90,6 +93,11 @@ function App() {
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
           {/* <Route path="profile" element={
+          <Route path="interview" element={<Interview />} />
+          <Route path="managejob" element={<ManageJob />} />
+          <Route path="jobempolyee" element={<Job />} />
+          <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
+          <Route path="profile" element={
             // <PrivateRoute>
             <Profile />
             // </PrivateRoute>

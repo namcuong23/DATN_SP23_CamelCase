@@ -4,7 +4,6 @@ import UseAuth from '../../auth/UseAuth'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { logoutAuth } from '../../../app/actions/auth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
-import myImage from '../../../assets/img/logo.jpg';
 
 const HeaderClient = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
@@ -25,7 +24,7 @@ const HeaderClient = () => {
         <>
             <div className="sticky top-0 z-[1000] sc-lkcIho hIprbQ menu-homepage ">
                 <NavLink to={'/'} className='cursor-pointer mr-10'>
-                    <img className='w-[100px] h-[100px]' src={myImage} alt="" />
+                    <img className='w-[50px] h-[50px]' src="https://i.imgur.com/EKE76Ii.png" alt="" />
                 </NavLink>
                 <div className="sc-jtJlRs fqkDtm" data-text="Việc làm" tabIndex={0}>
                     <span className='flex items-center space-x-1'>
