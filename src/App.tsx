@@ -18,19 +18,9 @@ import PackageList from "./components/employer/package/PackageList"
 import OrderList from "./components/employer/package/OrderList"
 import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
-import PostList from "./components/employer/posts/PostList"
+
 import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
-import PostAdd from "./components/employer/posts/PostAdd"
-import PostEdit from "./components/employer/posts/PostEdit"
-import PostDetail from "./components/employer/posts/PostDetail"
-import HomeAdmin from "./components/admin/home/HomeAdmin"
-import UsersManage from "./components/admin/home/UsersManage"
-import VoucherList from "./components/admin/Voucher/VoucherList"
-import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/admin/Post/PostAdmin"
-import CareerAdd from "./components/admin/Career/CareerAdd"
-import CareerList from "./components/admin/Career/CareerList"
+
 import ServicesEpr from "./components/employer/package/ServicesEpr"
 import HomeEmployer from './components/home/HomeEmployer'
 import Jobdone from './components/pages/Jobdone'
@@ -52,6 +42,20 @@ import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import Infotmation from "./components/employee/profile/Infotmation"
 import MyJob from "./components/employee/profile/MyJob"
 import 'react-toastify/dist/ReactToastify.css';
+import PostList from "./components/employer/Posts/PostList"
+import PostAdd from "./components/employer/Posts/PostAdd"
+import PostDetail from "./components/employer/Posts/PostDetail"
+import PostEdit from "./components/employer/Posts/PostEdit"
+import HomeAdmin from "./components/Admin/home/HomeAdmin"
+import UsersManage from "./components/Admin/home/UsersManage"
+import VoucherList from "./components/Admin/Voucher/VoucherList"
+import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/Admin/Post/PostAdmin"
+import CareerList from "./components/Admin/Career/CareerList"
+import CareerAdd from "./components/Admin/Career/CareerAdd"
+import ServiceList from "./components/employer/My Service/ServiceList"
+import ServiceAdd from "./components/employer/My Service/ServiceAdd"
 function App() {
   return (
     <div className="App">
@@ -109,6 +113,8 @@ function App() {
           <Route path='profile-epr' element={<ProfileEpr />} />
           <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
+          <Route path='services' element={<ServiceList />} />
+          <Route path='services/add' element={<ServiceAdd />} />
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />
           <Route path='posts/:id' element={<PostDetail />} />
