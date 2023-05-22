@@ -310,7 +310,7 @@ const PostAdmin = () => {
                         <div className="nk-block-head nk-block-head-sm">
                             <div className="nk-block-between">
                                 <div className="nk-block-head-content">
-                                    <h4 className="nk-block-title page-title">Dashboard</h4>
+                                    <h4 className="nk-block-title page-title">Quản lý tin tuyển dụng</h4>
                                 </div>{/* .nk-block-head-content */}
                             </div>{/* .nk-block-between */}
                         </div>{/* .nk-block-head */}

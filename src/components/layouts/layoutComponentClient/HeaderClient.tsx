@@ -4,6 +4,7 @@ import UseAuth from '../../auth/UseAuth'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { logoutAuth } from '../../../app/actions/auth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
+import myImage from '../../../assets/img/logo.jpg';
 
 const HeaderClient = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
@@ -24,7 +25,7 @@ const HeaderClient = () => {
         <>
             <div className="sticky top-0 z-[1000] sc-lkcIho hIprbQ menu-homepage ">
                 <NavLink to={'/'} className='cursor-pointer mr-10'>
-                    <img className='w-[50px] h-[50px]' src="https://i.imgur.com/EKE76Ii.png" alt="" />
+                    <img className='w-[100px] h-[100px]' src={myImage} alt="" />
                 </NavLink>
                 <div className="sc-jtJlRs fqkDtm" data-text="Việc làm" tabIndex={0}>
                     <span className='flex items-center space-x-1'>
@@ -47,7 +48,7 @@ const HeaderClient = () => {
                     </div>
                 </div>
                 <ul className="cMKKZy listMenu-homepage">
-                    <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" href="#" data-text="Phỏng vấn" tabIndex={0}>Phỏng vấn</a></li>
+                    <li><NavLink to={'/interview'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Phỏng vấn" tabIndex={0}>Phỏng vấn</NavLink></li>
                     <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" href="#" data-text="Công ty" tabIndex={0}>Công ty</a></li>
                     <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li>
                 </ul >

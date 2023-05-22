@@ -29,11 +29,11 @@ const CareerAdd = () => {
                     <div className='d-flex align-items-top'>
                         <div>
                             <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border border-4 border-success p-3 rounded-circle' />
+                                className='text-success border-4 border-success p-3 rounded-circle' />
                         </div>
                         <div className='w-100 ms-3'>
-                            <div className='fs-4'>Tên gói</div>
-                            <Form.Item name="name" label="Tên gói career dành cho khách hàng"
+                            <div className='fs-4'>Tên ngành nghề</div>
+                            <Form.Item name="name" label="Tên ngành nghề"
                                 rules={[
                                     { required: true, message: "Please input your name." },
                                 ]}>

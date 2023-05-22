@@ -219,64 +219,6 @@ const Interview = () => {
                             </div>
                         </div>
                     </div>
-                    <div className='border' id="favorite-job" style={{ background: 'white' }}>
-                        <div className='' id="favorite-job2">
-                            <h3 style={{ padding: '1.25em 0.75em 0 1.5em', fontWeight: 600 }}>CÔNG VIỆC BẠN SẼ THÍCH</h3>
-                            <div className="overflow-hidden pb-3">
-                                <div className="row gy-5">
-                                    <div className="col-6 ">
-                                        <div>
-                                            <div className='view-job2'>
-                                                <a className='job-logo' href='#' style={{ height: "56px", width: "56px" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                                <div className='job-info'>
-                                                    <div><a className='job-title' style={{ fontSize: '1.25rem' }} href='#'>Headhunter</a></div>
-                                                    <p><a href='#' style={{ fontSize: '1em' }}>NavigosNavigosNavigosNavigosNavigosNavigos</a></p>
-                                                    <div style={{ color: 'blue', fontSize: '0.75em' }}>Thương lượng</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6 pl-4">
-                                        <div>
-                                            <div className='view-job2'>
-                                                <a className='job-logo' href='#' style={{ height: "56px", width: "56px" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                                <div className='job-info'>
-                                                    <div><a className='job-title' style={{ fontSize: '1.25rem' }} href='#'>Headhunter</a></div>
-                                                    <p><a href='#' style={{ fontSize: '1em' }}>NavigosNavigosNavigosNavigosNavigosNavigos</a></p>
-                                                    <div style={{ color: 'blue', fontSize: '0.75em' }}>Thương lượng</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6 ">
-                                        <div>
-                                            <div className='view-job2'>
-                                                <a className='job-logo' href='#' style={{ height: "56px", width: "56px" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                                <div className='job-info'>
-                                                    <div><a className='job-title' style={{ fontSize: '1.25rem' }} href='#'>Headhunter</a></div>
-                                                    <p><a href='#' style={{ fontSize: '1em' }}>NavigosNavigosNavigosNavigosNavigosNavigos</a></p>
-                                                    <div style={{ color: 'blue', fontSize: '0.75em' }}>Thương lượng</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="col-6 pl-4">
-                                        <div>
-                                            <div className='view-job2'>
-                                                <a className='job-logo' href='#' style={{ height: "56px", width: "56px" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                                <div className='job-info'>
-                                                    <div><a className='job-title' style={{ fontSize: '1.25rem' }} href='#'>Headhunterdasssssssssssssssssssssssssssssssssssssssssssss</a></div>
-                                                    <p><a href='#' style={{ fontSize: '1em' }}>NavigosNavigosNavigosNavigosNavigosNavigos</a></p>
-                                                    <div style={{ color: 'blue', fontSize: '0.75em' }}>Thương lượng</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
                 </div>
             </div >
         </>

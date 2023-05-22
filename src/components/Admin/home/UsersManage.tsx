@@ -1,5 +1,5 @@
-import React, { useRef, useState } from 'react'
-import { useBlockUserMutation, useGetUsersQuery, useUpdateUserMutation } from '../../../service/admin'
+import React, { useRef, useState, useEffect } from 'react'
+import { useBlockUserMutation, useUpdateUserMutation } from '../../../service/admin'
 import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps, message } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import { User } from '../../../interface/admin/users';
@@ -7,8 +7,13 @@ import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Popconfirm } from 'antd';
 import { Modal } from "antd";
+import { useGetUsersQuery } from '../../../service/auth';
+import { useGetUsersEprQuery } from '../../../service/auth_employer';
 const UsersManage = () => {
-  const { data: Users, error, isLoading } = useGetUsersQuery();
+  const { data: userEpe } = useGetUsersQuery();
+  const { data: userEpr } = useGetUsersEprQuery('');
+  const users = userEpe.concat(userEpr)
+  console.log(users)
   const [updateUser, { isLoading: isUpdating, isSuccess }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
   const [block] = useBlockUserMutation();
@@ -20,6 +25,7 @@ const UsersManage = () => {
     level_auth: number;
     email: string;
   }
+
   const [selectedRecord, setSelectedRecord] = useState<RecordselectedRecord | undefined>();
 
   const searchInput = useRef<InputRef>(null);
@@ -38,7 +44,7 @@ const UsersManage = () => {
   }
   type DataIndex = keyof DataType;
 
-  const data = Users?.map((item, index) => ({
+  const data = users?.map((item: any, index: any) => ({
     key: String(index),
     _id: String(item._id),
     name: String(item.name),
@@ -157,7 +163,7 @@ const UsersManage = () => {
   const handleDelete = (record: string, level: string) => {
     console.log(record);
     const body = {
-      _id:record,level_auth : level
+      _id: record, level_auth: level
     }
     block(body)
 
@@ -294,7 +300,7 @@ const UsersManage = () => {
             <div className="nk-block-head nk-block-head-sm">
               <div className="nk-block-between">
                 <div className="nk-block-head-content">
-                  <h4 className="nk-block-title page-title">Dashboard</h4>
+                  <h4 className="nk-block-title page-title">Quản lý người dùng</h4>
                 </div>{/* .nk-block-head-content */}
               </div>{/* .nk-block-between */}
             </div>{/* .nk-block-head */}

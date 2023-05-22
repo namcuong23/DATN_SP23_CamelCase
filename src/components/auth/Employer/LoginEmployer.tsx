@@ -12,7 +12,6 @@ import { useGetUserEprByEmailQuery, useLoginWithEmployerMutation } from '../../.
 import { useAppDispatch } from '../../../app/hook'
 import { loginAuth } from '../../../app/actions/auth'
 import { toast } from 'react-toastify'
-import myImage from '../../../assets/img/logo.jpg';
 
 const LoginEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -41,7 +40,7 @@ const LoginEmployer = () => {
                 <div className='w-full flex'>
                     <aside className='bg-gradient-to-b from-[#001744] to-[#0053EB] w-[35%] min-h-screen'>
                         <span className='text-2xl text-white flex justify-center p-[50%]'>
-                            <img width={150} height={150} src={myImage} alt="" />
+                            <img width={150} height={150} src={'https://i.imgur.com/EKE76Ii.png'} alt="" />
                         </span>
                     </aside>
                     <main className='w-[65%] flex flex-col justify-between mt-[100px]'>

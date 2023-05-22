@@ -34,7 +34,23 @@ export const cvApi: any = createApi({
                 credentials: 'omit'
             }),
             invalidatesTags: ['Cv']
-        })
+        }),
+        approveCv: builder.mutation({
+            query: (id: string) => ({
+                url: `/cvs/${id}/duyet`,
+                method: 'PUT',
+                body: id
+            }),
+            invalidatesTags: ['Cv']
+        }),
+        refuseCv: builder.mutation({
+            query: (id: string) => ({
+                url: `/cvs/${id}/tuchoi`,
+                method: 'PUT',
+                body: id
+            }),
+            invalidatesTags: ['Cv']
+        }),
     })
 })
 
@@ -44,4 +60,6 @@ export const {
     useGetCvQuery,
     useAddCvMutation,
     useRemoveCvMutation,
+    useApproveCvMutation,
+    useRefuseCvMutation,
 } = cvApi

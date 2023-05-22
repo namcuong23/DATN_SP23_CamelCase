@@ -92,16 +92,10 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
-          {/* <Route path="profile" element={
           <Route path="interview" element={<Interview />} />
           <Route path="managejob" element={<ManageJob />} />
           <Route path="jobempolyee" element={<Job />} />
           <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
-          <Route path="profile" element={
-            // <PrivateRoute>
-            <Profile />
-            // </PrivateRoute>
-          } /> */}
           <Route path="account-manage" element={<AccountMng />} />
           <Route path="profile" element={<Profile />} >
             <Route index element={<Infotmation />} />
@@ -134,9 +128,9 @@ function App() {
 
         {/* ADMIN */}
         <Route path='/admin' element={
-          <PrivateRoute>
-            <LayoutAdmin />
-          </PrivateRoute>
+          // <PrivateRoute>
+          <LayoutAdmin />
+          // </PrivateRoute>
         }>
           <Route index element={<HomeAdmin />} />
           <Route path="users-management" element={<UsersManage />} />

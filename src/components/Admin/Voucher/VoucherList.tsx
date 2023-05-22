@@ -10,7 +10,7 @@ import { MessageType } from 'antd/es/message/interface';
 type Props = {}
 const VoucherList = () => {
     const { data: vouchers, error, isLoading } = useGetVouchersQuery()
-    const remove = 'Bạn có muốn xoá gói voucher này?';
+    const remove = 'Bạn có muốn xoá gói này?';
     const [removeVoucher] = useRemoveVoucherMutation()
     let index = 0
     const onHandleRemove = (id: string) => {
@@ -38,6 +38,7 @@ const VoucherList = () => {
         {
             title: 'Giá',
             dataIndex: 'package_price',
+            render: (_, record) => (<div>{(record.package_price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>)
         },
         {
             title: 'Thời gian hiệu lực',

@@ -10,22 +10,15 @@ type Props = {}
 const SideBar = (props: Props) => {
   return (
     <div className="nk-sidebar nk-sidebar-fixed is-light " data-content="sidebarMenu">
-      <div className="nk-sidebar-element nk-sidebar-head">
-        <div className="">
-
-          <a href="html/index.html" className="">
-            <img className="w-75 mt-2" src={myImage} alt="logo" />
-          </a>
-
-        </div>
-        <div className="nk-menu-trigger me-n2">
-
+      <div className="nk-sidebar-element nk-sidebar-head border-b-[1px] py-1">
+        <div className="pl-12">
+          <img className="mt-2" width={130} height={130} src={myImage} alt="logo" />
         </div>
       </div>
       <div className="nk-sidebar-element">
         <div className="nk-sidebar-content">
           <div className="" data-simplebar>
-            <ul className="nk-menu">
+            <ul className="nk-menu mt-3">
 
               <Link to='/admin'>
                 <li className="nk-menu-item has-sub w-full nk-menu-link ">
@@ -58,11 +51,9 @@ const SideBar = (props: Props) => {
                 </li>
               </Link>
               <Link to="/admin/feedbacks">
-                <li className="nk-menu-item has-sub w-full ">
-                  <a href="#" className="nk-menu-link">
-                    <span className="nk-menu-icon m-1"><IdcardOutlined /></span>
-                    <span className="nk-menu-text">Quản lý Feedback</span>
-                  </a>
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">
+                  <span className="nk-menu-icon m-1"><IdcardOutlined /></span>
+                  <span className="nk-menu-text">Quản lý Feedback</span>
                 </li>
               </Link>
             </ul>
