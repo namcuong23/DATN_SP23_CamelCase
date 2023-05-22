@@ -7,7 +7,6 @@ import Login from "./components/auth/Employee/Login"
 import OTPAuth from "./components/auth/OTPAuth"
 import Home from "./components/employer/home/HomeEmployer"
 import WorkPage from "./components/employee/works/WorkPage"
-import Feedback from "./components/employee/feedback/Feedback"
 import Profile from "./components/employee/profile/Profile"
 import LayoutAdmin from "./components/layouts/LayoutAdmin"
 import PostDetailEp from "./components/employee/post/PostDetail"
@@ -78,7 +77,6 @@ function App() {
             <Profile />
             // </PrivateRoute>
           } />
-          <Route path="feedbacks" element={<Feedback />} />
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -98,7 +96,6 @@ function App() {
           <Route path='cart' element={<Cart />} />
           <Route path='services' element={<ServicesEpr />} />
           <Route path='manage-cv' element={<ProfileList />} />
-          <Route path="feedbacks" element={<Feedback />} />
         </Route>
 
         {/* ADMIN */}
