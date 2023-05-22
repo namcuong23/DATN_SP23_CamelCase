@@ -2,19 +2,19 @@ import React, { useEffect, useState } from 'react'
 type Props = {}
 import { useGetChartLineQuery, useGetHistoryOrderQuery } from '../../../service/admin/chartLine';
 import { ChartData } from '../../../interface/admin/chartData';
-import ChartUsers from '../../Admin/home/ChartLine/ChartUsers';
-import { calculatePercentageChange } from '../../Admin/home/ChartLine/helpers/calculatePercentageChange';
-import ChartNTD from '../../Admin/home/ChartLine/ChartNTD';
-import ChartNTV from '../../Admin/home/ChartLine/ChartNTV';
-import StatisticalPackage from '../../Admin/home/ChartLine/StatisticalPackage';
-import StatisticalPackagePie from '../../Admin/home/ChartLine/StatisticalPackagePie';
 import { useGetAdmServicesQuery } from '../../../service/admin/service';
 import { Order } from '../../../interface/admin/order';
+import ChartUsers from './ChartLine/ChartUsers';
+import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
+import ChartNTD from './ChartLine/ChartNTD';
+import ChartNTV from './ChartLine/ChartNTV';
+import StatisticalPackage from './ChartLine/StatisticalPackage';
+import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 const HomeAdmin = (props: Props) => {
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
   const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
-  const [PackageHistory,setPackageHistory] = useState<Order[]>([]);
+  const [PackageHistory, setPackageHistory] = useState<Order[]>([]);
   useEffect(() => {
     setChartState(Chart)
   }, [Chart])
@@ -284,7 +284,7 @@ const HomeAdmin = (props: Props) => {
                           </li>
                         </ul>
                         <div className="nk-ecwg8-ck">
-                          <StatisticalPackage PackageHistory = {HistoryPackage}/>
+                          <StatisticalPackage PackageHistory={HistoryPackage} />
                         </div>
                         <div className="chart-label-group ps-5">
                           <div className="chart-label">Time 1</div>
@@ -306,7 +306,7 @@ const HomeAdmin = (props: Props) => {
                             <h6 className="text-xl text-center">Thống kê gói đăng ký</h6>
                           </div>
                         </div>
-                        <div className="align-center h-72"><StatisticalPackagePie PackageHistory = {HistoryPackage}/></div>
+                        <div className="align-center h-72"><StatisticalPackagePie PackageHistory={HistoryPackage} /></div>
                       </div>
                       {/* .card-inner */}
                     </div>
@@ -408,19 +408,19 @@ const HomeAdmin = (props: Props) => {
                             </span>
                           </div>
                           {
-                            data?data?.order_status === true ?
-                            <div className="nk-tb-col">
-                            <span className="badge badge-dot badge-dot-xs bg-success">
-                              Đã thanh toán
-                            </span>
-                          </div>:
-                          <div className="nk-tb-col">
-                            <span className="badge badge-dot badge-dot-xs bg-warning">
-                              Đang chờ duyệt
-                            </span>
-                          </div>
-                          : 'loading'
-                          
+                            data ? data?.order_status === true ?
+                              <div className="nk-tb-col">
+                                <span className="badge badge-dot badge-dot-xs bg-success">
+                                  Đã thanh toán
+                                </span>
+                              </div> :
+                              <div className="nk-tb-col">
+                                <span className="badge badge-dot badge-dot-xs bg-warning">
+                                  Đang chờ duyệt
+                                </span>
+                              </div>
+                              : 'loading'
+
                           }
                         </div>
                       )}
