@@ -3,59 +3,40 @@ import { useParams } from 'react-router-dom'
 import { useAddCvMutation } from '../../../service/manage_cv'
 import { useGetPostQuery } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
-import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
+import { useAddJobdoneMutation } from '../../../service/jobdone'
 
 const PostDetailEp = (): any => {
     const { id } = useParams()
     const { data: post } = useGetPostQuery(id)
-    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
     const { data: user } = useGetUserByEmailQuery(email)
     const [addCv] = useAddCvMutation()
+    const [addJobdone] = useAddJobdoneMutation()
 
-
-    const applyJob = () => {
-        const { name, email, phone, post_id } = user
-        try {
-
-            const apply = addCv({
-                name,
-                email,
-                phone,
-                date: user?.birth_day,
-                post_id: post._id,
-                user_id: user._id
-            })
-
-
-            if (apply) {
-                message.success('Nộp đơn thành công.')
-            }
-        } catch (error) {
-            console.log(error);
-            const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
-            const { data: user } = useGetUserByEmailQuery(email)
-            const [addCv] = useAddCvMutation()
-            const applyJob = async () => {
-                const address = `${user?.specific_address} ${user?.district} ${user?.province}`
-                const apply = await addCv({
-                    name: user?.name,
-                    email: user?.email,
-                    phone: user?.phone,
-                    image: user?.image,
-                    address: address,
-                    description: user?.description,
-                    age: user?.age,
-                    gender: user?.gender,
-                    status: null,
-                    post_id: post._id
-                })
-                const { data: rs } = apply
-                if (rs?.success) {
-                    message.success(rs?.mes)
-                }
-            }
+    const applyJob = async () => {
+        const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+        await addJobdone({
+            ...post,
+            user_id: user?._id
+        })
+        const apply = await addCv({
+            name: user?.name,
+            email: user?.email,
+            phone: user?.phone,
+            image: user?.image,
+            address: address,
+            description: user?.description,
+            age: user?.age,
+            gender: user?.gender,
+            status: null,
+            post_id: post._id
+        })
+        const { data: rs } = apply
+        if (rs?.success) {
+            message.success(rs?.mes)
         }
+
     }
     return (
         <>

@@ -5,7 +5,7 @@ import { formatCurrency } from '../../../utils/FormatCurrrency';
 import { toast } from 'react-toastify';
 import { NavLink } from 'react-router-dom';
 import { useGetUserByEmailQuery } from '../../../service/auth';
-import { useGetJobApplyByUIdQuery } from '../../../service/jobdone';
+import { useGetJobApplyByUIdQuery, useGetJobdonesQuery, useRemoveJobdoneMutation } from '../../../service/jobdone';
 import axios from 'axios';
 
 const MyJob = () => {
@@ -13,10 +13,12 @@ const MyJob = () => {
   const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
   const [dataJobdone, setDataJobdone] = useState([]);
   const { data: user } = useGetUserByEmailQuery(email)
-  const { data: jobapply } = useGetJobApplyByUIdQuery(user?._id);
+  const { data: jobapply } = useGetJobdonesQuery(user?._id);
   const { data: jobsaves } = useGetJobsaveByUIdQuery(user?._id);
+  const [removeJobdone] = useRemoveJobdoneMutation()
+  console.log(jobapply)
   useEffect(() => {
-    if (!jobapply.post) {
+    if (!jobapply?.post) {
       setDataJobdone([])
     } else {
       setDataJobdone(jobapply.post)
@@ -30,24 +32,10 @@ const MyJob = () => {
       toast.success("Xóa Thành Công Việc Làm")
     }
   }
-  const handleRemoveJobDone = async (post_id: any) => {
-
-
-    const params = {
-      post_id,
-      user_id: user?._id
-    }
-    if (window.confirm("Bạn có muốn xóa không ?")) {
-      await axios({
-        method: "DELETE",
-        url: "http://localhost:4000/api/user-cvs",
-        params
-
-      })
-      setDataJobdone()
-      toast.success("Hủy Ứng Tuyển Thành Công")
-    }
-  }
+  // const handleRemoveJobDone = async (post_id: any) => {
+  //   removeJobdone(post_id)
+  //   toast.success("Hủy Ứng Tuyển Thành Công")
+  // }
   return (
     //SaveJob
     <>
@@ -158,7 +146,7 @@ const MyJob = () => {
               </div>
               <div>
                 {jobdone ?
-                  dataJobdone?.map((item: any, index: any) => {
+                  jobapply?.map((item: any, index: any) => {
                     return (
                       <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row d-flex'>
                         <div className='col-2 pt-1'>
@@ -171,7 +159,7 @@ const MyJob = () => {
                           <p className='salary text-danger'>{formatCurrency(item.job_salary)}/Giờ</p>
                         </div>
                         <div className='col-2 pt-5'>
-                          <button onClick={() => handleRemoveJobDone(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Hủy</button>
+                          {/* <button onClick={() => handleRemoveJobDone(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Hủy</button> */}
                         </div>
                       </div>)
                   }

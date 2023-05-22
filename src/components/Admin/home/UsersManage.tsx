@@ -12,7 +12,7 @@ import { useGetUsersEprQuery } from '../../../service/auth_employer';
 const UsersManage = () => {
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
-  const users = userEpe.concat(userEpr)
+  const users = userEpe?.concat(userEpr)
   console.log(users)
   const [updateUser, { isLoading: isUpdating, isSuccess }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
@@ -46,12 +46,12 @@ const UsersManage = () => {
 
   const data = users?.map((item: any, index: any) => ({
     key: String(index),
-    _id: String(item._id),
-    name: String(item.name),
-    phone: String(item.phone),
-    level_auth: Number(item.level_auth),
-    email: String(item.email),
-    password: String(item.password)
+    _id: String(item?._id),
+    name: String(item?.name),
+    phone: String(item?.phone),
+    level_auth: Number(item?.level_auth),
+    email: String(item?.email),
+    password: String(item?.password)
   }))
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
