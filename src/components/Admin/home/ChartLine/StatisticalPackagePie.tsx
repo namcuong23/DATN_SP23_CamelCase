@@ -1,21 +1,33 @@
+// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { Pie } from '@ant-design/plots';
+import { Order } from '../../../../interface/admin/order';
+interface ChildComponentProps {
+  PackageHistory: Order[];
+}
+interface ChartData {
+  [x: string]: any;
+  Date: string;
+  scales: string,
+}
+const StatisticalPackagePie : React.FC<ChildComponentProps> = ({ PackageHistory }) =>{
 
-const StatisticalPackagePie = () => {
+  const Dangky = PackageHistory?.filter((data)=>{
+    return data.order_status == true;
+  })
+  const DangCho =PackageHistory?.filter((data)=>{
+    return data.order_status == false;
+  })
   const data = [
     {
       type: 'Đăng ký',
-      value: 27,
+      value: Dangky?.length,
     },
     {
       type: 'Đang chờ',
-      value: 25,
+      value: DangCho?.length,
 
-    },
-    {
-      type: 'Hủy',
-      value: 18,
     },
   ];
   const config = {

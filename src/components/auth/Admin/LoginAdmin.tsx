@@ -2,20 +2,23 @@
 import React from 'react'
 import { Form, Input, Button, Checkbox } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
-import { useSignupAMutation } from '../../../service/admin';
+import { useSigninAdminMutation } from '../../../service/admin';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import { loginAdmAuth } from '../../../app/actions/authAdm';
+import { useAppDispatch } from '../../../app/hook';
 
 type Props = {}
 
 const LoginAdmin = (props: Props) => {
     const navigate = useNavigate();
-    const [signInMutation]  = useSignupAMutation()
+    const [signInMutation]  = useSigninAdminMutation();
+    const dispatch = useAppDispatch()
     const signIn = async (username: string, password: string) => {
         try {
           const result = await signInMutation({
             name: username,
-            password
+            password: password
           });
       
           if ('error' in result) {
@@ -25,6 +28,7 @@ const LoginAdmin = (props: Props) => {
             const user = result.data;
             message.success('User signed in');
             // Handle login success logic
+            dispatch(loginAdmAuth());
             navigate('/admin');
           }
         } catch (error) {

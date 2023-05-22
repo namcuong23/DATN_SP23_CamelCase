@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react'
 type Props = {}
-import { useGetChartLineQuery } from '../../../service/admin/chartLine';
+import { useGetChartLineQuery, useGetHistoryOrderQuery } from '../../../service/admin/chartLine';
 import { ChartData } from '../../../interface/admin/chartData';
-import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query';
-import { SerializedError } from '@reduxjs/toolkit/dist/createAsyncThunk';
-import ChartUsers from './ChartLine/ChartUsers';
-import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
-import ChartNTD from './ChartLine/ChartNTD';
-import ChartNTV from './ChartLine/ChartNTV';
-import StatisticalPackage from './ChartLine/StatisticalPackage';
-import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
+import ChartUsers from '../../Admin/home/ChartLine/ChartUsers';
+import { calculatePercentageChange } from '../../Admin/home/ChartLine/helpers/calculatePercentageChange';
+import ChartNTD from '../../Admin/home/ChartLine/ChartNTD';
+import ChartNTV from '../../Admin/home/ChartLine/ChartNTV';
+import StatisticalPackage from '../../Admin/home/ChartLine/StatisticalPackage';
+import StatisticalPackagePie from '../../Admin/home/ChartLine/StatisticalPackagePie';
 import { useGetAdmServicesQuery } from '../../../service/admin/service';
+import { Order } from '../../../interface/admin/order';
 const HomeAdmin = (props: Props) => {
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
+  const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
+  const [PackageHistory,setPackageHistory] = useState<Order[]>([]);
   useEffect(() => {
     setChartState(Chart)
-  }, [])
-
-  const { data: serviceAdm } = useGetAdmServicesQuery<any>()
-  console.log(serviceAdm)
-
+  }, [Chart])
+  useEffect(() => {
+    setPackageHistory(HistoryPackage)
+  }, [HistoryPackage])
   return (
     <div className="nk-content text-sm">
       <div className="container-fluid">
@@ -243,7 +243,7 @@ const HomeAdmin = (props: Props) => {
                                     alt=""
                                   />
                                 </div>
-                                <span className=''> % vs. last week</span>
+                                {/* <span className=''> % vs. last week</span> */}
                               </div>
                             </span>
                           </div>
@@ -273,18 +273,18 @@ const HomeAdmin = (props: Props) => {
                           <li>
                             <div className="">
                               <span className="dot dot-lg sq text-sm" data-bg="#6576ff" />
-                              <span className='text-[#6576ff] font-bold'>Tổng gói đăng ký</span>
+                              {/* <span className='text-[#6576ff] font-bold'>Tổng gói đăng ký</span> */}
                             </div>
                           </li>
                           <li>
                             <div className="">
                               <span className="dot dot-lg sq " data-bg="" />
-                              <span className='text-[#eb6459] font-bold'>Tổng gói đã hủy</span>
+                              {/* <span className='text-[#eb6459] font-bold'>Tổng gói đã hủy</span> */}
                             </div>
                           </li>
                         </ul>
                         <div className="nk-ecwg8-ck">
-                          <StatisticalPackage />
+                          <StatisticalPackage PackageHistory = {HistoryPackage}/>
                         </div>
                         <div className="chart-label-group ps-5">
                           <div className="chart-label">Time 1</div>
@@ -306,7 +306,7 @@ const HomeAdmin = (props: Props) => {
                             <h6 className="text-xl text-center">Thống kê gói đăng ký</h6>
                           </div>
                         </div>
-                        <div className="align-center h-72"><StatisticalPackagePie /></div>
+                        <div className="align-center h-72"><StatisticalPackagePie PackageHistory = {HistoryPackage}/></div>
                       </div>
                       {/* .card-inner */}
                     </div>
@@ -373,7 +373,7 @@ const HomeAdmin = (props: Props) => {
                           <span>STT</span>
                         </div>
                         <div className="nk-tb-col tb-col-sm">
-                          <span>Email</span>
+                          <span>Id nguời dùng</span>
                         </div>
                         <div className="nk-tb-col tb-col-md">
                           <span>Ngày mua</span>
@@ -385,7 +385,7 @@ const HomeAdmin = (props: Props) => {
                           <span className="d-none d-sm-inline">Trạng thái</span>
                         </div>
                       </div>
-                      {serviceAdm?.map((rs: any, index: number) =>
+                      {PackageHistory?.map((data, index: number) =>
                         <div className="nk-tb-item">
                           <div className="nk-tb-col">
                             <span className="tb-lead">
@@ -395,23 +395,33 @@ const HomeAdmin = (props: Props) => {
                           <div className="nk-tb-col tb-col-sm">
                             <div className="user-card">
                               <div className="user-name">
-                                <span className="tb-lead">{rs?.emailUser}</span>
+                                <span className="tb-lead">{data?._id}</span>
                               </div>
                             </div>
                           </div>
                           <div className="nk-tb-col tb-col-md">
-                            <span className="tb-sub">{(new Date(rs?.createdAt)).toLocaleDateString()}</span>
+                            <span className="tb-sub">{(new Date(data?.createdAt)).toLocaleDateString()}</span>
                           </div>
                           <div className="nk-tb-col">
                             <span className="tb-sub tb-amount">
-                              {(rs?.servicePrice).toLocaleString('vi', { style: 'currency', currency: 'VND' })}
+                              {(data?.order_price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}
                             </span>
                           </div>
-                          <div className="nk-tb-col">
+                          {
+                            data?data?.order_status === true ?
+                            <div className="nk-tb-col">
                             <span className="badge badge-dot badge-dot-xs bg-success">
-                              Khả dụng
+                              Đã thanh toán
+                            </span>
+                          </div>:
+                          <div className="nk-tb-col">
+                            <span className="badge badge-dot badge-dot-xs bg-warning">
+                              Đang chờ duyệt
                             </span>
                           </div>
+                          : 'loading'
+                          
+                          }
                         </div>
                       )}
                     </div>
