@@ -10,6 +10,7 @@ interface IPost {
     work_location: string;
     post_status: boolean | string;
     user_id: string;
+    length:number
 }
 
 export default IPost

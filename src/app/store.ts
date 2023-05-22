@@ -28,6 +28,7 @@ import { feedbackApi } from "../services/feedback";
 import { jobsaveApi } from "../service/savejob";
 import { profileEpeApi } from "../service/profileEpe";
 import { jobdoneApi } from "../services/jobdone";
+import { chartLine } from "../service/admin/chartLine";
 
 const persistConfig = {
     key: 'root',
@@ -54,6 +55,7 @@ const rootReducer = combineReducers({
     [packageAdmApi.reducerPath]: packageAdmApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [personalInforApi.reducerPath]: personalInforApi.reducer,
+    [chartLine.reducerPath]: chartLine.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -81,7 +83,8 @@ export const store = configureStore({
         packageAdmApi.middleware,
         adminApi.middleware,
         orderApi.middleware,
-        personalInforApi.middleware
+        personalInforApi.middleware,
+        chartLine.middleware
     )
 })
 
