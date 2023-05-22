@@ -8,10 +8,12 @@ import UseAuth from '../../auth/UseAuth';
 import { apiGetProvinces } from '../../../service/api';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import IProfileEpr from '../../../interface/employer/profileEpr';
+import { useGetCareersQuery } from '../../../service/admin';
 
 const PostAdd = () => {
     const [form] = Form.useForm();
     const navigate = useNavigate()
+    const { data: career, error, isLoading } = useGetCareersQuery()
     const [addPost] = useAddPostMutation()
     const currentUser: any = UseAuth()
     const data: any = useGetEprProfileQuery(currentUser?.email)
@@ -99,6 +101,18 @@ const PostAdd = () => {
                                         // { type: 'number', message: 'This is not a number.' }
                                     ]}>
                                     <Input />
+                                </Form.Item>
+                                <Form.Item name="career" label="Ngành Nghề"
+                                    rules={[{ required: true, message: 'Please input career.' }]}>
+                                    {/* <Input /> */}
+                                    <Select defaultValue={'0'}>
+                                        <Select.Option value='0'>- Chọn Ngành Nghề -</Select.Option>
+                                        {
+                                            career ? career?.map((item: any) =>
+                                                <Select.Option value={item._id}>{item.name}</Select.Option>
+                                            ) : ''
+                                        }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="work_location" label="Khu vực"
                                     rules={[{ required: true, message: 'Please input work location.' }]}>

@@ -56,7 +56,7 @@ const Profile = () => {
     }
     return (
         <>
-            <div className='bg-gray-100 min-h-screen'>
+            <div className='bg-gray-100 min-h-screen' style={{ height: '100%' }}>
                 {/* SEARCH BAR */}
                 <div className='h-[80px] w-100 py-3 bg-white'>
                     <div className='container flex items-center justify-center h-100 w-100'>
