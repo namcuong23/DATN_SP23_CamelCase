@@ -28,7 +28,7 @@ const ServiceAdd = () => {
 
     const onHandleAdd: any = (service: IService) => {
         try {
-            addService({ ...service})
+            addService({ ...service })
             message.success('Tạo service thành công.')
             navigate('/home/services')
         } catch (error) {
@@ -65,14 +65,13 @@ const ServiceAdd = () => {
                                 <div className='fs-4'>Giá tiền</div>
                                 <Form.Item name="price" label="Giá"
                                     rules={[
-                                        { required: true, message: 'Please input your job description.' },
-                                        { min: 10, message: 'This field is must be at least 10 characters.' }
+                                        { required: true, message: 'Please input your job description.' }
                                     ]}>
                                     <Input.TextArea rows={1} placeholder='Nhập giá' />
                                 </Form.Item>
                                 <Form.Item name="day" label="Thời gian"
                                     rules={[
-                                    
+
                                     ]}>
                                     <Input.TextArea rows={1} placeholder='Nhập thời gian' />
                                 </Form.Item>

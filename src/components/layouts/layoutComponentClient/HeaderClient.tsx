@@ -4,6 +4,7 @@ import UseAuth from '../../auth/UseAuth'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { logoutAuth } from '../../../app/actions/auth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
+import myImage from '../../../assets/img/logo.jpg';
 
 const HeaderClient = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
@@ -24,7 +25,7 @@ const HeaderClient = () => {
         <>
             <div className="sticky top-0 z-[1000] sc-lkcIho hIprbQ menu-homepage ">
                 <NavLink to={'/'} className='cursor-pointer mr-10'>
-                    <img className='w-[50px] h-[50px]' src="https://www.corsair.com/ww/en/medias/sys_master/images/images/hb5/h6b/9597775020062/CA-9011185-NA/Gallery/VIRTUOSO_CARBON_01/-CA-9011185-NA-Gallery-VIRTUOSO-CARBON-01.png_515Wx515H" alt="" />
+                    <img className='w-[100px] h-[100px]' src={myImage} alt="" />
                 </NavLink>
                 <div className="sc-jtJlRs fqkDtm" data-text="Việc làm" tabIndex={0}>
                     <span className='flex items-center space-x-1'>

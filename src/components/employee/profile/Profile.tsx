@@ -61,7 +61,6 @@ const Profile: any = () => {
     }
     const [updateUser] = useUpdateUserMutation()
     const handleUpdate: SubmitHandler<any> = async (userForm: any) => {
-        console.log(userForm)
         const update: any = await updateUser({
             ...userForm,
             _id: user._id,
@@ -294,7 +293,7 @@ const Profile: any = () => {
                                             </div>
                                         </div> :
                                         <div className={'px-4 text-[#333333]'}>
-                                            <form>
+                                            <form onSubmit={handleSubmit(handleUpdate)}>
                                                 <div className='py-2'>
                                                     <div className='flex items-center mx-3 gap-x-2'>
                                                         <div className='w-50 flex flex-col'>
@@ -337,14 +336,11 @@ const Profile: any = () => {
                                                     <div className='flex items-center mx-3 gap-x-2'>
                                                         <div className='w-50 flex flex-col'>
                                                             <div className='mb-[8px]'>Giới tính</div>
-                                                            <div className='flex items-center gap-x-2 mx-3'>
-                                                                <div>
-                                                                    <input type="radio" value={'nam'} /> Nam
-                                                                </div>
-                                                                <div>
-                                                                    <input type="radio" value={'nữ'} /> Nữ
-                                                                </div>
-                                                            </div>
+                                                            <select  {...register('gender')} defaultValue={0} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                                                                <option value={0}>--Chọn Giới tính--</option>
+                                                                <option value="Nam">Nam</option>
+                                                                <option value="Nữ">Nữ</option>
+                                                            </select>
                                                         </div>
                                                         <div className='w-50 flex flex-col'>
                                                             <label>Tuổi</label>
@@ -357,8 +353,8 @@ const Profile: any = () => {
                                                     <div className='flex items-center gap-x-2 mx-3'>
                                                         <div className='w-50 flex flex-col'>
                                                             <div className='mb-[8px]'>Tỉnh/Thành phố</div>
-                                                            <select  {...register('province')} onChange={changeSelect} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
-                                                                <option value="0">--Chọn Tỉnh/Thành phố--</option>
+                                                            <select  {...register('province')} defaultValue={0} onChange={changeSelect} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                                                                <option value={0}>--Chọn Tỉnh/Thành phố--</option>
                                                                 {
                                                                     provinces ? provinces?.map((province: any) =>
                                                                         <option key={province.province_id} value={province.province_name}>
@@ -370,8 +366,8 @@ const Profile: any = () => {
                                                         </div>
                                                         <div className='w-50 flex flex-col'>
                                                             <div className='mb-[8px]'>Quận/Huyện</div>
-                                                            <select {...register('district')} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
-                                                                <option value="0">--Chọn Quận/Huyện--</option>
+                                                            <select {...register('district')} defaultValue={0} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                                                                <option value={0}>--Chọn Quận/Huyện--</option>
                                                                 {
                                                                     districts ? districts?.map((district: any) =>
                                                                         <option key={district.district_id} value={district.district_name}>
@@ -394,7 +390,7 @@ const Profile: any = () => {
                                                 </div>
                                                 <div className='flex items-center justify-end gap-x-2 mt-2'>
                                                     <button type='button' onClick={() => setHidden(true)} className='border-1 border-[#333333] hover:border-[#005AFF] hover:text-[#005AFF] px-3 text-[#333333] rounded p-[8px]'>Hủy</button>
-                                                    <button type='button' onClick={handleUpdate} className='bg-[#005AFF] text-white font-[700] rounded p-[8px]'>Lưu</button>
+                                                    <button type='submit' className='bg-[#005AFF] text-white font-[700] rounded p-[8px]'>Lưu</button>
                                                 </div>
                                             </form>
                                         </div>

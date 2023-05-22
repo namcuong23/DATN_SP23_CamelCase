@@ -10,6 +10,7 @@ import { useSignupAMutation } from '../../../service/admin';
 import Swal from 'sweetalert2';
 import { toast } from 'react-toastify'
 import { NavLink, useNavigate } from 'react-router-dom';
+import myImage from '../../../assets/img/logo.jpg';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -82,7 +83,9 @@ const Register = () => {
     return (
         <>
             <div className="border-0 text-dark relative">
-                <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500]'>EMPLOYEE</div>
+                <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
+                    <img width={150} height={150} src={myImage} alt="" />
+                </div>
                 <div className="absolute top-[40%] left-[27%] bg-white">
                     {/* Nested Row within Card Body */}
                     <div className="">

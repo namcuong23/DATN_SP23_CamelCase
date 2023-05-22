@@ -42,20 +42,20 @@ import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import Infotmation from "./components/employee/profile/Infotmation"
 import MyJob from "./components/employee/profile/MyJob"
 import 'react-toastify/dist/ReactToastify.css';
-import PostList from "./components/employer/Posts/PostList"
-import PostAdd from "./components/employer/Posts/PostAdd"
-import PostDetail from "./components/employer/Posts/PostDetail"
-import PostEdit from "./components/employer/Posts/PostEdit"
-import HomeAdmin from "./components/Admin/home/HomeAdmin"
-import UsersManage from "./components/Admin/home/UsersManage"
-import VoucherList from "./components/Admin/Voucher/VoucherList"
-import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/Admin/Post/PostAdmin"
-import CareerList from "./components/Admin/Career/CareerList"
-import CareerAdd from "./components/Admin/Career/CareerAdd"
 import ServiceList from "./components/employer/My Service/ServiceList"
 import ServiceAdd from "./components/employer/My Service/ServiceAdd"
+import PostList from "./components/employer/posts/PostList"
+import PostAdd from "./components/employer/posts/PostAdd"
+import PostDetail from "./components/employer/posts/PostDetail"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import UsersManage from "./components/admin/home/UsersManage"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import CareerList from "./components/admin/Career/CareerList"
+import CareerAdd from "./components/admin/Career/CareerAdd"
+import PostEdit from "./components/employer/posts/PostEdit"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
 function App() {
   return (
     <div className="App">
@@ -124,7 +124,7 @@ function App() {
           <Route path='orders/:id/detail' element={<OrderDetail />} />
           <Route path='notice' element={<OrderNotice />} />
           <Route path='cart' element={<Cart />} />
-          <Route path='services' element={<ServicesEpr />} />
+          {/* <Route path='services' element={<ServicesEpr />} /> */}
           <Route path='manage-cv' element={<ProfileList />} />
           <Route path="feedbacks" element={<Feedback />} />
         </Route>

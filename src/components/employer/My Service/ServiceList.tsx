@@ -80,17 +80,18 @@ const ServiceList = () => {
         </Space>
     return (
         <>
-            <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
-                <div>
-                    <h2 className='mt-0 text-xl'>Dịch vụ của tôi</h2>
-                </div>
-                <div className='bg-success rounded px-3 py-2'>
-                    <NavLink to={'/home/services/add'} className='text-white text-decoration-none'>
+            <div className='min-h-screen'>
+                {/* <div className='flex items-center justify-between pr-4'>
+                    <h2 className='px-3 text-2xl py-2'>Dịch vụ của tôi</h2>
+                    <NavLink to={'/home/services/add'} className='bg-[#FE7D55] text-white text-decoration-none py-1 px-2 rounded'>
                         Tạo gói mới
                     </NavLink>
-                </div>
+                </div> */}
+                <h2 className='px-3 text-2xl py-2'>Dịch vụ của tôi</h2>
+
+                <Table columns={columns} dataSource={services} onChange={onChange} className='mx-3' />
             </div>
-            <Table columns={columns} dataSource={services} onChange={onChange} className='mx-3' />
+
         </>
     )
 }
