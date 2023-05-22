@@ -9,9 +9,14 @@ export const chartLine = createApi({
             query: () => '/chartLine',
             providesTags: ['chartLine']
         }),
+        getHistoryOrder:builder.query({
+            query: () => '/orders',
+            providesTags: ['chartLine']
+        }),
     })
 })
 
 export const {
     useGetChartLineQuery,
+    useGetHistoryOrderQuery
 } = chartLine
