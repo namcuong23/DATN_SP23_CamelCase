@@ -56,6 +56,7 @@ import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
 import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
+import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
 function App() {
   return (
     <div className="App">
@@ -125,6 +126,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           {/* <Route path='services' element={<ServicesEpr />} /> */}
           <Route path='manage-cv' element={<ProfileList />} />
+          <Route path='manage-profile' element={<ManageProfileDetail />} />
         </Route>
 
         {/* ADMIN */}
