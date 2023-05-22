@@ -2464,7 +2464,6 @@ textarea.form-control-lg {
   background-size: contain;
   border: 1px solid rgba(0, 0, 0, 0.25);
   appearance: none;
-  color-adjust: exact;
 }
 .form-check-input[type=checkbox] {
   border-radius: 0.25em;
@@ -16129,7 +16128,7 @@ textarea.textarea-auto {
 }
 .custom-control-vertical {
   flex-direction: column;
-  align-items: start;
+
 }
 .custom-control-vertical > * {
   width: 100%;
@@ -34347,7 +34346,7 @@ p > span > .icon.ni {
   display: flex;
   justify-content: space-between;
   margin-bottom: 1.25rem;
-  align-items: start;
+
 }
 .project-title {
   display: flex;
