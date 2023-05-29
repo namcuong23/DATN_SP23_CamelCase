@@ -126,7 +126,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           {/* <Route path='services' element={<ServicesEpr />} /> */}
           <Route path='manage-cv' element={<ProfileList />} />
-          <Route path='manage-profile' element={<ManageProfileDetail />} />
+          <Route path='manage-profile/:id' element={<ManageProfileDetail />} />
         </Route>
 
         {/* ADMIN */}

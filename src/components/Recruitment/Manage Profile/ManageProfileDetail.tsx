@@ -1,103 +1,95 @@
 import React, { useState } from 'react'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { Popconfirm, Space, Table, Modal } from 'antd';
-import { useGetProfileQuery } from '../../../service/manage_profile';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { useParams } from 'react-router-dom';
+import { useGetCvQuery } from '../../../service/manage_cv';
 
 const ManageProfileDetail = () => {
-    const { id } = useParams();
-    const { data: profile } = useGetProfileQuery(id)
-    console.log(profile)
-    const [open, setOpen] = useState(false);
-    const text: string = 'Are you sure to delete this post?';
+  const { id } = useParams();
+  const { data: cv } = useGetCvQuery(id)
+  const [open, setOpen] = useState(false);
+  const text: string = 'Are you sure to delete this post?';
 
-    // useEffect(() => {
-    //   const { job_name } = useParams();
-    //   console.log(job_name)
-    //   const { post } = useGetPostQuery(id)
-    //   console.log(post)
-    // }, [])
+  const showModal = () => {
+    setOpen(true);
+  };
 
-    const showModal = () => {
-        setOpen(true);
-    };
+  const handleCancel = (e: React.MouseEvent<HTMLElement>) => {
+    console.log(e);
+    setOpen(false);
+  };
 
-    const handleCancel = (e: React.MouseEvent<HTMLElement>) => {
-        console.log(e);
-        setOpen(false);
-    };
+  const dataSource = [
+    {
+      key: '1',
+      namejob: 'Công việc trông trẻ',
+      birthday: "01/01/2023",
+      email: 'example@gmail.com',
+      phone: '01234565789',
+      submitAt: '01/01/2023',
+    },
+    {
+      key: '2',
+      namejob: 'Công việc phục vụ quán',
+      birthday: "01/01/2023",
+      email: 'example@gmail.com',
+      phone: '01234565789',
+      submitAt: '01/01/2023',
+    },
+  ];
 
-    const dataSource = [
-        {
-            key: '1',
-            namejob: 'Công việc trông trẻ',
-            birthday: "01/01/2023",
-            email: 'example@gmail.com',
-            phone: '01234565789',
-            submitAt: '01/01/2023',
-        },
-        {
-            key: '2',
-            namejob: 'Công việc phục vụ quán',
-            birthday: "01/01/2023",
-            email: 'example@gmail.com',
-            phone: '01234565789',
-            submitAt: '01/01/2023',
-        },
-    ];
+  const columns = [
+    {
+      title: 'Họ và tên',
+      dataIndex: 'namejob',
+      key: 'name',
+    },
+    {
+      title: 'Ngày sinh',
+      dataIndex: 'birthday',
+      key: 'birthday',
+    },
+    {
+      title: 'Email',
+      dataIndex: 'email',
+      key: 'email',
+    },
+    {
+      title: 'Số điện thoại',
+      dataIndex: 'phone',
+      key: 'phone',
+    },
+    {
+      title: 'Ngày nộp',
+      dataIndex: 'submitAt',
+      key: 'submitAt',
+    },
+    {
+      title: 'Hành động',
+      dataIndex: 'key',
+      key: 'key',
+      render: (_: any, record: any) => (
+        <Space size="middle">
+          {/* <NavLink to={`/home/posts/${record._id}`}> */}
+          <EyeOutlined className='text-dark' />
+          {/* </NavLink> */}
+          <Popconfirm placement="top"
+            title={text}
+            // onConfirm={() => onHandleRemove(record._id)}
+            okText="Yes"
+            cancelText="No">
+            <DeleteOutlined className='text-danger' />
+          </Popconfirm>
 
-    const columns = [
-        {
-            title: 'Họ và tên',
-            dataIndex: 'namejob',
-            key: 'name',
-        },
-        {
-            title: 'Ngày sinh',
-            dataIndex: 'birthday',
-            key: 'birthday',
-        },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'phone',
-            key: 'phone',
-        },
-        {
-            title: 'Ngày nộp',
-            dataIndex: 'submitAt',
-            key: 'submitAt',
-        },
-        {
-            title: 'Hành động',
-            dataIndex: 'key',
-            key: 'key',
-            render: (_: any, record: any) => (
-                <Space size="middle">
-                    {/* <NavLink to={`/home/posts/${record._id}`}> */}
-                    <EyeOutlined className='text-dark' />
-                    {/* </NavLink> */}
-                    <Popconfirm placement="top"
-                        title={text}
-                        // onConfirm={() => onHandleRemove(record._id)}
-                        okText="Yes"
-                        cancelText="No">
-                        <DeleteOutlined className='text-danger' />
-                    </Popconfirm>
-
-                </Space>
-            ),
-        },
-    ]
+        </Space>
+      ),
+    },
+  ]
   return (
-        <>
+    <>
 
-<section style={{ fontSize: '16px' }}>
+      <section style={{ fontSize: '16px' }}>
         <div className="container py-5 bg-white" style={{ width: '80%', margin: '0 auto' }}>
           <div className="row" style={{ padding: '0 2em' }}>
             <div className="" style={{ width: '70%', margin: '0 auto', float: 'left' }}>
@@ -120,16 +112,16 @@ const ManageProfileDetail = () => {
                       <p className="mb-0">Tên ứng viên</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className=" mb-0">{profile?.name}</p>
+                      <p className=" mb-0">{cv?.name}</p>
                     </div>
                   </div>
                   <hr />
                   <div className="row py-3">
                     <div className="col-sm-3">
-                      <p className="mb-0">Ngày sinh</p>
+                      <p className="mb-0">Tuổi</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className=" mb-0">{profile?.time}</p>
+                      <p className=" mb-0">{cv?.age}</p>
                     </div>
                   </div>
                   <hr />
@@ -138,7 +130,7 @@ const ManageProfileDetail = () => {
                       <p className="mb-0">Số điện thoại</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className=" mb-0">{profile?.phone}</p>
+                      <p className=" mb-0">{cv?.phone}</p>
                     </div>
                   </div>
                   <hr />
@@ -147,7 +139,7 @@ const ManageProfileDetail = () => {
                       <p className="mb-0">Email</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className=" mb-0">{profile?.email}</p>
+                      <p className=" mb-0">{cv?.email}</p>
                     </div>
                   </div>
                   <hr />
@@ -156,50 +148,50 @@ const ManageProfileDetail = () => {
                       <p className="mb-0">Ngày nộp</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className=" mb-0">{profile?.date}</p>
+                      <p className=" mb-0">{new Date(cv?.createdAt).toLocaleDateString()}</p>
                     </div>
                   </div>
                   <hr />
                   <div className="row py-3">
                     <div className="col-sm-3 ">
-                      <p className="mb-0">Address</p>
+                      <p className="mb-0">Địa chỉ</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className=" mb-0">Bay Area, San Francisco, CA</p>
+                      <p className=" mb-0">{cv?.address}</p>
                     </div>
                   </div>
                   <hr />
-                  <div className="row py-3">
+                  {/* <div className="row py-3">
                     <div className="col-sm-3 ">
                       <p className="mb-0">Công việc đã nộp</p>
                     </div>
                     <div className="col-sm-9">
-                      <p className="mb-0 text-decoration-underline"  style={{color:'blue'}} onClick={showModal}>
+                      <p className="mb-0 text-decoration-underline" style={{ color: 'blue' }} onClick={showModal}>
                         Xem
                       </p>
                       <Modal
-                          title="Việc Làm Đã Nộp"
-                          open={open}
-                          onCancel={handleCancel}
-                          okButtonProps={{ hidden: true }}
-                          cancelButtonProps={{ hidden: true }}
-                          width={1000}
-                        >
-                          <Table dataSource={dataSource} columns={columns}
-                            pagination={{ defaultPageSize: 6 }}
-                          />
+                        title="Việc Làm Đã Nộp"
+                        open={open}
+                        onCancel={handleCancel}
+                        okButtonProps={{ hidden: true }}
+                        cancelButtonProps={{ hidden: true }}
+                        width={1000}
+                      >
+                        <Table dataSource={dataSource} columns={columns}
+                          pagination={{ defaultPageSize: 6 }}
+                        />
 
-                        </Modal>
+                      </Modal>
                     </div>
-                  </div>
+                  </div> */}
                   <hr />
                   <div className="row py-3">
                     <div className="col-sm-3 ">
-                      <p className="mb-0">Lời nhắn</p>
+                      <p className="mb-0">Mô tả</p>
                     </div>
                     <div className="col-sm-9 mb-5 text-break">
                       <p className="h-[70px] mb-0" style={{ height: '9em', wordBreak: 'break-word' }}>
-                        {profile?.note}
+                        {cv?.description}
                       </p>
                     </div>
                   </div>
@@ -217,12 +209,12 @@ const ManageProfileDetail = () => {
             </div>
           </div>
         </div>
-      </section>    
-            <div className='mt-16'>
-                <FooterEmployer />
-            </div>
-        </>
-    )
+      </section>
+      <div className='mt-16'>
+        <FooterEmployer />
+      </div>
+    </>
+  )
 }
 
 export default ManageProfileDetail
