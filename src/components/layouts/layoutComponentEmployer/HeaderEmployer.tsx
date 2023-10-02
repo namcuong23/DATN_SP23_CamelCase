@@ -113,7 +113,9 @@ const HeaderEmployer = () => {
                             </span>
                         </NavLink>
                     </li>
-                    <li className='p-3 text-decoration-none text-white'><a>Báo cáo</a></li>
+                    <li className='p-3 text-decoration-none text-white'><NavLink to={'/Report'}>
+                           Hỗ trợ
+                        </NavLink></li>
                 </ul>
                 <ul className='flex items-center'>
                     <li className='p-3 pr-4 text-decoration-none'>

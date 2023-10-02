@@ -57,6 +57,7 @@ import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
+import Report from "./components/employer/report/Report"
 function App() {
   return (
     <div className="App">
@@ -154,9 +155,12 @@ function App() {
         <Route path='/personalInfors' element={<LayoutClient />}>
           <Route index element={<PersonalInfor />} />
           <Route path="/personalInfors/:id" element={<PersonalInfor />} />
+          
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
+        <Route path="/report" element={<Report/>}></Route>
       </Routes>
+    
       <ToastContainer
         position="top-right"
         autoClose={5000}
