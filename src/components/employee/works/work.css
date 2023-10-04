@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.text-hover:hover{
+  color: red;
+}
+.text-hover .p:hover{
+  color: red;
+}
+.price p{
+  width: 200px;
+}
 .react-tel-input .form-control{
     @apply !w-full py-6 !text-base;
 }

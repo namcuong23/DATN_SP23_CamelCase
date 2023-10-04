@@ -162,7 +162,8 @@ const WorkPage = (props: Props) => {
                         </form>
                     </div>
                     <div className="menu-nav-related">
-                        <NavLink to={'/jobempolyee'}>
+                        <p style={{ display: 'flex', gap: '10px' }}>Trang Chủ  <BsArrowRight style={{ marginTop: '4px' }} /> Việc Làm</p>
+                        <NavLink to={'/jobempolyee'} className={"text-hover"}>
                             <span>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -174,10 +175,10 @@ const WorkPage = (props: Props) => {
                                 >
                                     <path d="M6.5 1A1.5 1.5 0 0 0 5 2.5V3H1.5A1.5 1.5 0 0 0 0 4.5v8A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-8A1.5 1.5 0 0 0 14.5 3H11v-.5A1.5 1.5 0 0 0 9.5 1h-3zm0 1h3a.5.5 0 0 1 .5.5V3H6v-.5a.5.5 0 0 1 .5-.5zm1.886 6.914L15 7.151V12.5a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5V7.15l6.614 1.764a1.5 1.5 0 0 0 .772 0zM1.5 4h13a.5.5 0 0 1 .5.5v1.616L8.129 7.948a.5.5 0 0 1-.258 0L1 6.116V4.5a.5.5 0 0 1 .5-.5z" />
                                 </svg>
-                                <span className='mr-3' style={{ color: 'black', padding: '1em' }}>Việc làm</span>
+                                <span className='mr-3 p'  style={{ padding: '1em' }}>Việc làm</span>
                             </span>
                         </NavLink>
-                        <NavLink to={'/managejob'}>
+                        <NavLink to={'/managejob'} className={"text-hover"}>
                             <span className='mx-3'>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -189,10 +190,10 @@ const WorkPage = (props: Props) => {
                                 >
                                     <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
                                 </svg>
-                                <span style={{ color: 'black', padding: '1em' }}>Việc làm quản lí</span>
+                                <span className='mr-3 p' style={{ padding: '1em' }}>Việc làm quản lí</span>
                             </span>
                         </NavLink>
-                        <NavLink to={'/interview'}>
+                        <NavLink to={'/interview'} className={"text-hover"}>
                             <span className='mx-3'>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -205,10 +206,10 @@ const WorkPage = (props: Props) => {
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                     <path d="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z" />
                                 </svg>
-                                <span style={{ color: 'black', padding: '1em' }}>Câu hỏi phỏng vấn</span>
+                                <span className='mr-3 p' style={{ padding: '1em' }}>Câu hỏi phỏng vấn</span>
                             </span>
                         </NavLink>
-                        <NavLink to={'/wage'}>
+                        <NavLink to={'/wage'} className={"text-hover"}>
                             <span className='mx-3'>
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
@@ -222,7 +223,7 @@ const WorkPage = (props: Props) => {
                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z" />
                                     <path d="M8 13.5a5.5 5.5 0 1 1 0-11 5.5 5.5 0 0 1 0 11zm0 .5A6 6 0 1 0 8 2a6 6 0 0 0 0 12z" />
                                 </svg>
-                                <span style={{ color: 'black', padding: '1em' }}>Mức lương</span>
+                                <span className='mr-3 p' style={{padding: '1em' }}>Mức lương</span>
                             </span>
                         </NavLink>
                     </div>
@@ -255,14 +256,13 @@ const WorkPage = (props: Props) => {
                 {/* works */}
                 <div className="content-works" style={{ margin: 'auto', marginTop: '20px', display: 'flex', width: '75%', justifyContent: 'space-between' }}>
                     <div className="list-works" >
-                        <p style={{ display: 'flex', gap: '10px' }}>Trang Chủ  <BsArrowRight style={{ marginTop: '4px' }} /> Việc Làm</p>
                         {searchMessage}
                         {data.length === 0 ? (
                             <h2>Data Not Found</h2>
                         ) : (
                             data?.map((item: any, index: any) => (
 
-                                <div key={index} className="works-item" style={{ gap: '10px', backgroundColor: '#f0f7ff', display: 'flex', border: '1px solid rgb(179, 206, 255)', borderRadius: '3px', height: '220px', width: '800px', marginTop: '20px' }}>
+                                <div key={index} className="works-item" style={{ gap: '10px', backgroundColor: '#f0f7ff', display: 'flex', border: '1px solid rgb(179, 206, 255)', borderRadius: '3px', height: '220px', width: '750px', marginTop: '20px' }}>
                                     <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
                                         <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
                                             <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
@@ -270,13 +270,13 @@ const WorkPage = (props: Props) => {
                                     </div>
                                     <div className="works-text" style={{ marginTop: '35px', marginLeft: '10px' }}>
                                         <h6>{item?.job_name}</h6>
-                                        <p>Hình Thức Làm Việc : {item.working_form}</p>
-                                        <p> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
-                                        <p>Địa Điểm Làm Việc: {item.work_location}</p>
+                                        <p style={{ marginTop: '5px' }}>Hình Thức Làm Việc : {item.working_form}</p>
+                                        <p style={{ marginTop: '5px' }}> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
+                                        <p style={{ marginTop: '5px' }}>Địa Điểm Làm Việc: {item.work_location}</p>
                                     </div>
-                                    <div className="negotiate" style={{ marginTop: '25px', marginLeft: '190px' }}>
-                                        <p style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(item.job_salary)}/Giờ </p>
-                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} style={{ color: 'black', width: '20px', height: '20px', marginTop: '100px', marginLeft: '60px' }} />
+                                    <div className="price" style={{ marginTop: '25px', marginLeft:"75px" }}>
+                                        <p style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(item.job_salary)}/Giờ </p>    
+                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} style={{ color: 'black', width: '20px', height: '20px', marginTop: '100px', marginLeft: '150px' }} />
                                     </div>
                                 </div>
                             ))
