@@ -24,7 +24,7 @@ const LayoutClient = (props: Props) => {
             <div>
                 <Outlet />
             </div>
-            {/* <FooterClient /> */}
+            <FooterClient />
         </div>
     )
 }
