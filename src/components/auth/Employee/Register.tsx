@@ -25,6 +25,8 @@ const Register = () => {
     }
 
     const signUp: SubmitHandler<any> = async (user: any) => {
+        console.log(user);
+        
         setLoading(true)
         const register: any = await signup({...user})
         const { data: res } = register
