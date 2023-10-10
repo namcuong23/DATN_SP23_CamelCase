@@ -5,6 +5,7 @@ import { useGetPostQuery } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
 import { useAddJobdoneMutation } from '../../../service/jobdone'
+import { formatCurrency } from '../../../utils/FormatCurrrency'
 
 const PostDetailEp = (): any => {
     const { id } = useParams()
