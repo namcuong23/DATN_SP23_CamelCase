@@ -1,17 +1,35 @@
+import { useState, useRef } from 'react';
 import { message } from '@pankod/refine-antd'
 import { NavLink, useNavigate } from 'react-router-dom'
-import UseAuth from '../../auth/UseAuth'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
 import { logoutAuth } from '../../../app/actions/auth'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
+import classNames from 'classnames/bind';
+import styles from './HeaderClient.module.scss';
+import { useDecodedToken } from '../../../utils/hooks';
+
+const cx = classNames.bind(styles);
 
 const HeaderClient = () => {
-    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
-    const currentUser: any = UseAuth()
+    const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
+    // const decodedToken: any = useDecodedToken(token)
+    // console.log(decodedToken)
     const navigate = useNavigate()
-    const { data: user } = useGetUserByEmailQuery(email)
+    const {data: user} = useGetUserByEmailQuery(email)
+    
     const dispatch = useAppDispatch()
+    const [showModal, setShowModal] = useState(true)
+    const [isActive, setIsActive] = useState(false)
+    const modalRef: any = useRef()
+
+    const handleOpenModalNotify = () => {
+        setShowModal(false);
+    }
+
+    const handleCloseModalNotify = () => {
+        setShowModal(true);
+    }
 
     const onSignOut = async () => {
         try {
@@ -23,7 +41,7 @@ const HeaderClient = () => {
     }
     return (
         <>
-            <div className="sticky top-0 z-[1000] sc-lkcIho hIprbQ menu-homepage ">
+            <div className="sticky top-0 z-[997] sc-lkcIho hIprbQ menu-homepage ">
                 <NavLink to={'/'} className='cursor-pointer mr-10'>
                     <img className='w-[100px] h-[100px]' src={myImage} alt="" />
                 </NavLink>
@@ -49,21 +67,20 @@ const HeaderClient = () => {
                 </div>
                 <ul className="cMKKZy listMenu-homepage">
                     <li><NavLink to={'/interview'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Phỏng vấn" tabIndex={0}>Phỏng vấn</NavLink></li>
-                    <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" href="#" data-text="Công ty" tabIndex={0}>Công ty</a></li>
+                    <li><NavLink to={'/company'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Công ty" tabIndex={0}>Công ty</NavLink></li>
                     <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li>
                 </ul >
                 <div className="sc-gCLdxd eAZlAg rightNavigation-homepage" >
                     <NavLink to={'/home'} tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
-                    <div className="sc-iMJOuO hHYTlq NotificationIcon" tabIndex={0}>
-                        <div className="notification-icon">
+                    <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
+                        <div className="notify-btn notification-icon">
                             <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
                                 <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 16 L 4.4648438 17.15625 L 4.4628906 17.15625 A 1 1 0 0 0 4 18 A 1 1 0 0 0 5 19 L 12 19 L 19 19 A 1 1 0 0 0 20 18 A 1 1 0 0 0 19.537109 17.15625 L 18 16 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 10 20 C 10 21.1 10.9 22 12 22 C 13.1 22 14 21.1 14 20 L 10 20 z">
                                 </path>
                             </svg>
                         </div>
-                        <div className="new-notification" id="desktopRedDotContainer" />
-                    </div>
+                    </button>
                     {
                         isLoggedIn ?
                             <div>
@@ -111,7 +128,7 @@ const HeaderClient = () => {
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M11.2 2.3999C10.316 2.3999 9.59998 3.1159 9.59998 3.9999H3.19998C2.31598 3.9999 1.59998 4.7159 1.59998 5.5999V12.7999C1.59998 13.6839 2.31598 14.3999 3.19998 14.3999H20.8C21.684 14.3999 22.4 13.6839 22.4 12.7999V5.5999C22.4 4.7159 21.684 3.9999 20.8 3.9999H14.4C14.4 3.1159 13.684 2.3999 12.8 2.3999H11.2ZM12 11.1999C12.4416 11.1999 12.8 11.5583 12.8 11.9999C12.8 12.4415 12.4416 12.7999 12 12.7999C11.5584 12.7999 11.2 12.4415 11.2 11.9999C11.2 11.5583 11.5584 11.1999 12 11.1999ZM1.59998 15.5546V18.3999C1.59998 19.2839 2.31598 19.9999 3.19998 19.9999H20.8C21.684 19.9999 22.4 19.2839 22.4 18.3999V15.5546C21.9272 15.8298 21.3856 15.9999 20.8 15.9999H3.19998C2.61438 15.9999 2.07278 15.8298 1.59998 15.5546Z" fill="#888888"></path>
                                             </svg>
-                                            <NavLink to='/myjob'><span className='text-[14px] pl-[10px]'>Việc làm của tôi</span></NavLink>
+                                            <NavLink to='/myjob'><span className='text-[14px] pl-[10px] text-[#677793]'>Việc làm của tôi</span></NavLink>
                                         </button>
                                     </div>
                                     <div className='mx-3' onClick={onSignOut}>
@@ -212,8 +229,128 @@ const HeaderClient = () => {
                                 </ul>
                             </div>
                     }
-                </div >
-            </div >
+                </div>
+            </div>
+            <div ref={modalRef} onClick={handleCloseModalNotify} className={cx('container', {
+                'd-none': showModal,
+            })}>
+                    <div className={cx('modal')} onClick={(e: any) => {
+                        e.stopPropagation();
+                    }}>
+                        <div className={cx('modal-header')}>
+                            <div className={cx('modal-header__icon')}>
+                                <i className="fa-regular fa-bell"></i>
+                            </div>
+                            <div className={cx('modal-header__title')}>
+                                <h2>Thông báo & Tin tức</h2>
+                                <p>Nhận thông báo tin tức hoặc công việc</p>
+                            </div>
+                            <button onClick={handleCloseModalNotify} className={cx('modal-header__btn')}>
+                                <i className="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+
+                        <div className={cx('modal-body')}>
+                            <div className={cx('modal-body__tabs')}>
+                                <span onClick={() => setIsActive(false)} className={cx('modal-body__tabs-notify', {
+                                    active: isActive === false
+                                })}>Thông báo</span>
+                                <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
+                                    active: isActive
+                                })}>Tin tức</span>
+                            </div>
+
+                            {
+                                isActive ? 
+                                <>
+                                    <div className={cx('modal-body__news')}>
+                                        <h6 className={cx('modal-body__news-title')}>
+                                            Follow kênh LinkedIn của VietnamWorks
+                                        </h6>
+                                        <p className={cx('modal-body__news-content')}>
+                                            Trang LinkedIn của VietnamWorks - nơi cập nhật các thông tin bổ ích, nhanh chóng cho người tìm việc và nhà tuyển dụng, theo dõi ngay!
+                                        </p>
+                                        <div className={cx('modal-body__news-info')}>
+                                            <span>Mở rộng</span>
+                                            <span>18 Tháng 9 2023</span>
+                                        </div>
+                                    </div>
+                                    <div className={cx('modal-body__news')}>
+                                        <h6 className={cx('modal-body__news-title')}>
+                                            Follow kênh LinkedIn của VietnamWorks
+                                        </h6>
+                                        <p className={cx('modal-body__news-content')}>
+                                            Trang LinkedIn của VietnamWorks - nơi cập nhật các thông tin bổ ích, nhanh chóng cho người tìm việc và nhà tuyển dụng, theo dõi ngay!
+                                        </p>
+                                        <div className={cx('modal-body__news-info')}>
+                                            <span>Mở rộng</span>
+                                            <span>18 Tháng 9 2023</span>
+                                        </div>
+                                    </div>
+                                </>
+                                : 
+                                <>
+                                    <div className={cx('modal-body__msg')}>
+                                        Cập nhật hồ sơ để tìm thấy công việc phù hợp. 
+                                        <span>Cập nhật</span>
+                                    </div>
+                                    <div className={cx('modal-body__content')}>
+                                        <div className={cx('modal-body__content-notify')}>
+                                            <span className={cx('notify-img')}>
+                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
+                                                <span>
+                                                    <i className="fa-solid fa-heart"></i>
+                                                </span>
+                                            </span>
+                                            <div className={cx('notify-content')}>
+                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng'>
+                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng
+                                                </span>
+                                                <div className={cx('notify-desc')}>
+                                                    <span className={cx('notify-status')}>đã lưu</span>
+                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className={cx('modal-body__content-notify')}>
+                                            <span className={cx('notify-img')}>
+                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
+                                                <span>
+                                                    <i className="fa-solid fa-heart"></i>
+                                                </span>
+                                            </span>
+                                            <div className={cx('notify-content')}>
+                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng'>
+                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng
+                                                </span>
+                                                <div className={cx('notify-desc')}>
+                                                    <span className={cx('notify-status')}>đã lưu</span>
+                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </>
+                            }
+
+                            
+                        </div>
+
+                        <div className={cx('modal-footer')}>
+                            <div className={cx('modal-footer__icon')}>
+                                <i className="fa-regular fa-bell"></i>
+                            </div>
+
+                            <div className={cx('modal-footer__content')}>
+                                <span className={cx('modal-footer__content-link')}>Công việc mới</span> hấp dẫn dành riêng cho bạn!
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {/* {
+                showModal && 
+                
+            } */}
         </ >
     )
 }

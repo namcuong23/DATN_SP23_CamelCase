@@ -57,6 +57,7 @@ import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
+import Company from "./components/pages/Company"
 function App() {
   return (
     <div className="App">
@@ -100,6 +101,7 @@ function App() {
           <Route path="account-manage" element={<AccountMng />} />
           <Route path="myjob" element={<MyJob />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="company" element={<Company />} />
           {/* <Route index element={<Infotmation />} />
             <Route path="myJob" element={<MyJob />} />
             <Route path="information" element={<Infotmation />} /> */}

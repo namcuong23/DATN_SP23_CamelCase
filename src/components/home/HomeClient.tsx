@@ -149,7 +149,7 @@ const HomeClient = (props: Props) => {
 
         </section>
         <section className="sectionBlock sectionBlock_hot-categories">
-          <div className="container ">
+          <div className="container">
             <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
               <h2 className="sectionBlock__title">Ngành Nghề Trọng Điểm</h2>
             </div>

@@ -128,7 +128,7 @@ const HomeClient = (): any => {
           </div>
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch sectionBlock_featured-company lunar-new-year animated fadeIn take-1-second">
-          <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
+          <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
             <h2 className="sectionBlock__title">Các Công Ty Hàng Đầu</h2>
           </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
@@ -242,7 +242,7 @@ const HomeClient = (): any => {
         </section>
         <section className="sectionBlock sectionBlock_hot-categories">
           <div className="container ">
-            <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
+            <div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
               <h2 className="sectionBlock__title">Ngành Nghề Trọng Điểm</h2>
             </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>

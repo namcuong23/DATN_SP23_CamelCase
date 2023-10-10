@@ -29,7 +29,6 @@ import { feedbackApi } from "../services/feedback";
 import { jobsaveApi } from "../service/savejob";
 import { profileEpeApi } from "../service/profileEpe";
 import { jobdoneApi } from "../service/jobdone";
-import { jobdoneApi } from "../services/jobdone";
 import { chartLine } from "../service/admin/chartLine";
 import { serviceAdmApi } from "../service/admin/service";
 import authAdmReducer from "../reducer/authAdm";

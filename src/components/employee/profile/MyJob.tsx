@@ -13,10 +13,10 @@ const MyJob = () => {
   const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
   const [dataJobdone, setDataJobdone] = useState([]);
   const { data: user } = useGetUserByEmailQuery(email)
+    
   const { data: jobapply } = useGetJobdonesQuery(user?._id);
   const { data: jobsaves } = useGetJobsaveByUIdQuery(user?._id);
   const [removeJobdone] = useRemoveJobdoneMutation()
-  console.log(jobapply)
   useEffect(() => {
     if (!jobapply?.post) {
       setDataJobdone([])

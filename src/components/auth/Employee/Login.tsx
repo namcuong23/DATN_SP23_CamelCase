@@ -9,11 +9,12 @@ import { useForm } from 'react-hook-form'
 import { useNavigate, NavLink } from 'react-router-dom'
 import { auth } from '../../../firebase'
 import { useSigninMutation } from '../../../service/auth'
-import { CgSpinner } from "react-icons/cg"
 import { useAppDispatch } from '../../../app/hook'
 import { loginAuth } from '../../../app/actions/auth'
 import { toast } from 'react-toastify'
 import myImage from '../../../assets/img/logo.jpg';
+
+import './AuthEpe.css'
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -46,7 +47,6 @@ const Login = () => {
             .then((result: any) => {
                 // The signed-in user info.
                 const user = result.user;
-                console.log(user);
 
                 // This gives you a Facebook Access Token. You can use it to access the Facebook API.
                 const credential: any = FacebookAuthProvider.credentialFromResult(result);
@@ -56,9 +56,7 @@ const Login = () => {
             })
             .catch((error) => {
                 // Handle Errors here.
-                const errorCode = error.code;
-                console.log(errorCode)
-
+                console.log(error.message)
             });
 
     }
@@ -164,12 +162,13 @@ const Login = () => {
                                     </div>
                                 </div>
 
-                                <button onClick={signIn} className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
+                                <button className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                     {
-                                        loading &&
-                                        <CgSpinner size={20} className="mt-1 animate-spin" />
+                                        loading ?
+                                        <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                        : 'Đăng nhập'
                                     }
-                                    Đăng nhập
+                                    
                                 </button>
 
                             </form>

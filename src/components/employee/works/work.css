@@ -1424,3 +1424,8 @@ a:hover {
   padding: 0.5em 2em;
   height: 6em;
 }
+
+.no-image {
+  margin-left: 50%;
+  transform: translateX(-50%);
+}
