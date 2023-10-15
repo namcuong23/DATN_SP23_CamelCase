@@ -16,7 +16,7 @@ import IUserNTV from '../../../interface/user'
 
 const Profile: any = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
-    const { register, handleSubmit, formState: { errors }, reset } = useForm()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<any>()
     const navigate = useNavigate()
     const { data: user } = useGetUserByEmailQuery(email)
     const [hidden, setHidden] = useState(true)
@@ -60,17 +60,21 @@ const Profile: any = () => {
         }
     }
     const [updateUser] = useUpdateUserMutation()
-    const handleUpdate: SubmitHandler<any> = async (userForm: any) => {
-        const update: any = await updateUser({
+    const handleUpdate: SubmitHandler<IUserNTV> = async (userForm: IUserNTV) => {
+        console.log('1');
+        
+        await updateUser({
             ...userForm,
             _id: user._id,
             isEmailVerified: user.isEmailVerified,
             isPhoneVerified: user.isPhoneVerified,
+        }).then((res: any) => {
+            const { data } = res
+            if (data?.success) {
+                toast.success('Cập nhật thành công')
+            }
         })
-        const { data: rs } = update
-        if (rs?.success) {
-            toast.success('Cập nhật thành công')
-        }
+        
     }
 
     if (isLoggedIn == false) {
@@ -360,7 +364,7 @@ const Profile: any = () => {
                                                 </div>
                                                 <div className='flex items-center justify-end gap-x-2 mt-2'>
                                                     <button type='button' onClick={() => setHidden(true)} className='border-1 border-[#333333] hover:border-[#005AFF] hover:text-[#005AFF] px-3 text-[#333333] rounded p-[8px]'>Hủy</button>
-                                                    <button type='submit' className='bg-[#005AFF] text-white font-[700] rounded p-[8px]'>Lưu</button>
+                                                    <button className='bg-[#005AFF] text-white font-[700] rounded p-[8px]'>Lưu</button>
                                                 </div>
                                             </form>
                                         </div>
