@@ -116,7 +116,7 @@ const WorkPage = (props: Props) => {
             addJobsave({
                 working_form: item.working_form, job_name: item.job_name, job_description: item.job_description, work_location: item.work_location, job_salary: item.job_salary, user_id: user?._id
             });
-            toast.success("Da them Vafo Yeu Thich");
+            toast.success("Đã thêm vào mục yêu thích");
         } catch (error) {
             console.log(error);
         }
@@ -176,7 +176,7 @@ const WorkPage = (props: Props) => {
                                     </div>
                                     <div className="price" style={{ marginTop: '25px', marginLeft:"75px" }}>
                                         <p style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(item.job_salary)}/Giờ </p>    
-                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} style={{ color: 'black', width: '20px', height: '20px', marginTop: '100px', marginLeft: '150px' }} />
+                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} className="heart" style={{ width: '20px', height: '20px', marginTop: '100px', marginLeft: '150px' }} />
                                     </div>
                                 </div>
                             ))
