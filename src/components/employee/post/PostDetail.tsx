@@ -6,38 +6,62 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
 import { useAddJobdoneMutation } from '../../../service/jobdone'
 import { formatCurrency } from '../../../utils/FormatCurrrency'
-
+import './postDetail.scss'
+import { useAddJobsaveMutation } from '../../../service/savejob'
 const PostDetailEp = (): any => {
-    const { id } = useParams()
-    const { data: post } = useGetPostQuery(id)
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
-    const { data: user } = useGetUserByEmailQuery(email)
-    const [addCv] = useAddCvMutation()
-    const [addJobdone] = useAddJobdoneMutation()
-
-    const applyJob = async () => {
-        const address = `${user?.specific_address} ${user?.district} ${user?.province}`
-        await addJobdone({
-            ...post,
-            user_id: user?._id
-        })
-        const apply = await addCv({
-            name: user?.name,
-            email: user?.email,
-            phone: user?.phone,
-            image: user?.image,
-            address: address,
-            description: user?.description,
-            age: user?.age,
-            gender: user?.gender,
-            status: null,
-            post_id: post._id
-        })
-        const { data: rs } = apply
-        if (rs?.success) {
-            message.success(rs?.mes)
-        }
-
+  const { id } = useParams()
+  const { data: post } = useGetPostQuery(id)
+  const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+  const { data: user } = useGetUserByEmailQuery(email)
+  const [addCv] = useAddCvMutation()
+  const [addJobdone] = useAddJobdoneMutation()
+  const [addJobsave] = useAddJobsaveMutation()
+  const applyJob = async () => {
+    const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+    await addJobdone({
+      ...post,
+      user_id: user?._id
+    })
+    const apply = await addCv({
+      name: user?.name,
+      email: user?.email,
+      phone: user?.phone,
+      image: user?.image,
+      address: address,
+      description: user?.description,
+      age: user?.age,
+      gender: user?.gender,
+      status: null,
+      post_id: post._id
+    })
+    const { data: rs } = apply
+    if (rs?.success) {
+      message.success(rs?.mes)
+    }
+  }
+  //savejob
+  const saveJob = async () => {
+    const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+    await addJobsave({
+      ...post,
+      user_id: user?._id
+    })
+    const save = await addCv({
+      name: user?.name,
+      email: user?.email,
+      phone: user?.phone,
+      image: user?.image,
+      address: address,
+      description: user?.description,
+      age: user?.age,
+      gender: user?.gender,
+      status: null,
+      post_id: post._id
+    })
+    const { data: rs } = save
+    if (rs?.success) {
+      message.success("Lưu thành công")
+    }
   }
   return (
     <>
@@ -103,6 +127,19 @@ const PostDetailEp = (): any => {
                     </p>
                   </div>
                 </div>
+                <div className=''>
+                  {isLoggedIn ? (
+                    <button onClick={saveJob} className="btn  p-2 heart m-2" data-evt-type="save-job">
+                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="20px" height="20px">
+                        <path d="M 15 7 C 7.832031 7 2 12.832031 2 20 C 2 34.761719 18.695313 42.046875 24.375 46.78125 L 25 47.3125 L 25.625 46.78125 C 31.304688 42.046875 48 34.761719 48 20 C 48 12.832031 42.167969 7 35 7 C 30.945313 7 27.382813 8.925781 25 11.84375 C 22.617188 8.925781 19.054688 7 15 7 Z M 15 9 C 18.835938 9 22.1875 10.96875 24.15625 13.9375 L 25 15.1875 L 25.84375 13.9375 C 27.8125 10.96875 31.164063 9 35 9 C 41.085938 9 46 13.914063 46 20 C 46 32.898438 31.59375 39.574219 25 44.78125 C 18.40625 39.574219 4 32.898438 4 20 C 4 13.914063 8.914063 9 15 9 Z"></path>
+                      </svg>
+                    </button>
+                  ) : (
+                    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
+                      Đăng nhập để lưu 
+                    </div>
+                  )}
+                </div>
                 <div className="w-[170px] h-[50px]">
                   {isLoggedIn ? (
                     <button
@@ -133,7 +170,7 @@ const PostDetailEp = (): any => {
                   padding: "32px",
                   background: "white",
                   gap: "30px",
-                  gridTemplateColumns : "1fr 352px"
+                  gridTemplateColumns: "1fr 352px"
                 }}
               >
                 <div className="flex flex-col p-3">
@@ -268,62 +305,62 @@ const PostDetailEp = (): any => {
                       <hr />
                     </div>
                   </div>
-                  <div style={{ border: '1px solid #b3ceff'}} className="mt-5 rounded-xl p-3">
+                  <div style={{ border: '1px solid #b3ceff' }} className="mt-5 rounded-xl p-3">
                     <span className="text-[18px] block font-semibold leading-5 mb-4">Công việc tương tự</span>
-                    <div style={{border: '1px solid rgb(241, 241, 241)'}} className="job-similar rounded-xl p-3 flex w-full justify-between">
-                    <div  className="bg-white rounded-xl h-[86px] w-[86px] p-1">
-                    <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo"/>
+                    <div style={{ border: '1px solid rgb(241, 241, 241)' }} className="job-similar rounded-xl p-3 flex w-full justify-between">
+                      <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
+                        <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                      </div>
+                      <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
+                        <span className="truncate block font-semibold leading-5">Project Director</span>
+                        <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
+                        <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
+                        <span className="truncate block">Hà Nội</span>
+                      </div>
                     </div>
-                    <div className="min-w-[0] flex flex-col w-[124px]" style={{gap : '4px'}}>
-                            <span className="truncate block font-semibold leading-5">Project Director</span>
-                            <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
-                            <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
-                            <span className="truncate block">Hà Nội</span>
+                    <div style={{ border: '1px solid rgb(241, 241, 241)' }} className="job-similar rounded-xl p-3 flex w-full justify-between">
+                      <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
+                        <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                      </div>
+                      <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
+                        <span className="truncate block font-semibold leading-5">Project Director</span>
+                        <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
+                        <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
+                        <span className="truncate block">Hà Nội</span>
+                      </div>
                     </div>
+                    <div style={{ border: '1px solid rgb(241, 241, 241)' }} className="job-similar rounded-xl p-3 flex w-full justify-between">
+                      <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
+                        <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                      </div>
+                      <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
+                        <span className="truncate block font-semibold leading-5">Project Director</span>
+                        <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
+                        <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
+                        <span className="truncate block">Hà Nội</span>
+                      </div>
                     </div>
-                    <div style={{border: '1px solid rgb(241, 241, 241)'}} className="job-similar rounded-xl p-3 flex w-full justify-between">
-                    <div  className="bg-white rounded-xl h-[86px] w-[86px] p-1">
-                    <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo"/>
+                    <div style={{ border: '1px solid rgb(241, 241, 241)' }} className="job-similar rounded-xl p-3 flex w-full justify-between">
+                      <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
+                        <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                      </div>
+                      <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
+                        <span className="truncate block font-semibold leading-5">Project Director</span>
+                        <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
+                        <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
+                        <span className="truncate block">Hà Nội</span>
+                      </div>
                     </div>
-                    <div className="min-w-[0] flex flex-col w-[124px]" style={{gap : '4px'}}>
-                            <span className="truncate block font-semibold leading-5">Project Director</span>
-                            <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
-                            <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
-                            <span className="truncate block">Hà Nội</span>
-                    </div>
-                    </div>
-                    <div style={{border: '1px solid rgb(241, 241, 241)'}} className="job-similar rounded-xl p-3 flex w-full justify-between">
-                    <div  className="bg-white rounded-xl h-[86px] w-[86px] p-1">
-                    <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo"/>
-                    </div>
-                    <div className="min-w-[0] flex flex-col w-[124px]" style={{gap : '4px'}}>
-                            <span className="truncate block font-semibold leading-5">Project Director</span>
-                            <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
-                            <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
-                            <span className="truncate block">Hà Nội</span>
-                    </div>
-                    </div>
-                    <div style={{border: '1px solid rgb(241, 241, 241)'}} className="job-similar rounded-xl p-3 flex w-full justify-between">
-                    <div  className="bg-white rounded-xl h-[86px] w-[86px] p-1">
-                    <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo"/>
-                    </div>
-                    <div className="min-w-[0] flex flex-col w-[124px]" style={{gap : '4px'}}>
-                            <span className="truncate block font-semibold leading-5">Project Director</span>
-                            <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
-                            <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
-                            <span className="truncate block">Hà Nội</span>
-                    </div>
-                    </div>
-                    <div style={{border: '1px solid rgb(241, 241, 241)'}} className="job-similar rounded-xl p-3 flex w-full justify-between">
-                    <div  className="bg-white rounded-xl h-[86px] w-[86px] p-1">
-                    <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo"/>
-                    </div>
-                    <div className="min-w-[0] flex flex-col w-[124px]" style={{gap : '4px'}}>
-                            <span className="truncate block font-semibold leading-5">Project Director</span>
-                            <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
-                            <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
-                            <span className="truncate block">Hà Nội</span>
-                    </div>
+                    <div style={{ border: '1px solid rgb(241, 241, 241)' }} className="job-similar rounded-xl p-3 flex w-full justify-between">
+                      <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
+                        <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                      </div>
+                      <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
+                        <span className="truncate block font-semibold leading-5">Project Director</span>
+                        <span className="truncate block font-[14px] leading-4">Công Ty TNHH Giáo Dục Và Đào Tạo Vinacademy</span>
+                        <span className="truncate block text-[14px] leading-4 text-red-400">Thương lượng</span>
+                        <span className="truncate block">Hà Nội</span>
+                      </div>
                     </div>
                   </div>
                 </div>

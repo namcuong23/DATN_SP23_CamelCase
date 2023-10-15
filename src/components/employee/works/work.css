@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+.heart:hover{
+  color: red;
+}
 .text-hover:hover{
   color: red;
 }

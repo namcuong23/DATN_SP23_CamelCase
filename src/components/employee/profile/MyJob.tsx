@@ -7,13 +7,14 @@ import { NavLink } from 'react-router-dom';
 import { useGetUserByEmailQuery } from '../../../service/auth';
 import { useGetJobApplyByUIdQuery, useGetJobdonesQuery, useRemoveJobdoneMutation } from '../../../service/jobdone';
 import axios from 'axios';
+import './myjob.scss'
 
 const MyJob = () => {
   const [jobdone, setJobdone] = useState(false);
   const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
   const [dataJobdone, setDataJobdone] = useState([]);
   const { data: user } = useGetUserByEmailQuery(email)
-    
+
   const { data: jobapply } = useGetJobdonesQuery(user?._id);
   const { data: jobsaves } = useGetJobsaveByUIdQuery(user?._id);
   const [removeJobdone] = useRemoveJobdoneMutation()
@@ -27,9 +28,9 @@ const MyJob = () => {
   //remove
   const [removeJobsave] = useRemoveJobsaveMutation()
   const onHandleRemove = (id: any) => {
-    if (window.confirm("Bạn có muốn xóa không ?")) {
+    if (window.confirm("Bạn có muốn bỏ lưu không ?")) {
       removeJobsave(id)
-      toast.success("Xóa Thành Công Việc Làm")
+      toast.success("Bỏ lưu việc làm thành công")
     }
   }
   // const handleRemoveJobDone = async (post_id: any) => {
@@ -40,6 +41,7 @@ const MyJob = () => {
     //SaveJob
     <>
       <div className='bg-gray-100 min-h-screen'>
+
         {/* CONTENT */}
         <div className='flex items-start w-100 gap-3 p-3'>
           {/* Navbar */}
@@ -114,53 +116,55 @@ const MyJob = () => {
                 </div>
 
               </div>
-              <div>
-                {jobdone ?
-                  jobapply?.map((item: any, index: any) => {
-                    return (
-                      <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row d-flex'>
+              <div className=''>
+                <div>
+                  {jobdone ?
+                    jobapply?.map((item: any, index: any) => {
+                      return (
+                        <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 row d-flex'>
+                          <div className='col-2 pt-1'>
+                            <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
+                          </div>
+                          <div className='col-8 pt-1'>
+                            <a href="#" className='text-black'> <h5 className='fw-bold'>{item.job_name}</h5></a>
+                            <p className='mt-2'>Hình Thức : {item.working_form}</p>
+                            <p className='address'>Địa Điểm Làm Việc : {item.work_location}</p>
+                            <p className='salary text-danger'>{formatCurrency(item.job_salary)}/Giờ</p>
+                          </div>
+                          <div className='col-2 pt-5'>
+                            {/* <button onClick={() => handleRemoveJobDone(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Hủy</button> */}
+                          </div>
+                        </div>)
+                    }
+                    ) :
+                    jobsaves?.map((item: any, index: any) =>
+
+                      <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 pb-3 row'>
                         <div className='col-2 pt-1'>
                           <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
                         </div>
                         <div className='col-8 pt-1'>
-                          <a href="#" className='text-black'> <h5 className='fw-bold'>{item.job_name}</h5></a>
-                          <p className='mt-2'>Hình Thức : {item.working_form}</p>
-                          <p className='address'>Địa Điểm Làm Việc : {item.work_location}</p>
+                          <NavLink to={`/posts/${item._id}`}> <a href="#" className='text-black'> <h5 className='fw-bold'>{item.job_name}</h5></a></NavLink>
+                          <p className='mt-2'>{item.working_form}</p>
+                          <p className='address'>{item.work_location}</p>
                           <p className='salary text-danger'>{formatCurrency(item.job_salary)}/Giờ</p>
                         </div>
                         <div className='col-2 pt-5'>
-                          {/* <button onClick={() => handleRemoveJobDone(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Hủy</button> */}
+                          <button onClick={() => onHandleRemove(item._id)} className='border border-danger rounded  unsave p-1 ml-2 mt-2 '>Bỏ lưu</button>
                         </div>
-                      </div>)
-                  }
-                  ) :
-                  jobsaves?.map((item: any, index: any) =>
+                      </div>
+                    )}
+                </div>
 
-                    <div key={index} className='myJob border bg-white mr-3 py-2 rounded my-2 pb-3 row'>
-                      <div className='col-2 pt-1'>
-                        <img src="https://picsum.photos/200" className='border rounded px-2 py-4 w-60 h-30' />
-                      </div>
-                      <div className='col-8 pt-1'>
-                        <NavLink to={`/posts/${item._id}`}> <a href="#" className='text-black'> <h5 className='fw-bold'>{item.job_name}</h5></a></NavLink>
-                        <p className='mt-2'>{item.working_form}</p>
-                        <p className='address'>{item.work_location}</p>
-                        <p className='salary text-danger'>{formatCurrency(item.job_salary)}/Giờ</p>
-                      </div>
-                      <div className='col-2 pt-5'>
-                        <button onClick={() => onHandleRemove(item._id)} className='border border-danger rounded bg-white text-danger p-1 ml-2 mt-2'>Xóa</button>
-                      </div>
-                    </div>
-                  )}
-              </div>
-
-              <div className='note'>
-                <p>Lưu ý: Bạn không xem được việc làm đã hết thời hạn đăng tuyển hoặc tạm ngưng nhận hồ sơ.</p>
+                <div className='note'>
+                  <p>Lưu ý: Bạn không xem được việc làm đã hết thời hạn đăng tuyển hoặc tạm ngưng nhận hồ sơ.</p>
+                </div>
               </div>
             </div>
 
           </div>
         </div>
-      </div >
+      </div>
     </>
   )
 }
