@@ -127,6 +127,11 @@ const CareerList = () => {
             dataIndex: 'name',
             ...getColumnSearchProps('name'),
         },
+        {
+            title : 'Ảnh mô tả',
+            dataIndex : 'image',
+            render: (image) => <img width={50} src={image} key={image} />,
+        },
 
 
 
