@@ -68,6 +68,7 @@ export const adminApi = createApi({
         }),
         addCareer: builder.mutation<ICareer, Omit<ICareer, '_id'>>({
             query: (career: ICareer) => ({
+                
                 url: '/careers',
                 method: 'POST',
                 body: career

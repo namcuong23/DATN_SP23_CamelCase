@@ -43,14 +43,18 @@ const WorkPage = (props: Props) => {
     const [searchMessage, setSearchMessage] = useState("")
     const [career, setCareer] = useState([])
     const [params] = useSearchParams()
-    const searchParams = params.get('keyword')
+    const searchParams = params.get('keyword');
+    const careerParams = params.get('career');
+   
+    
     const navigate = useNavigate()
     const [filterParams, setFilterParams] = useState({
         key: searchParams,
         work_location: "",
         job_salary: "",
-        career: ""
+        career: careerParams,
     })
+    console.log(filterParams.career);
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
@@ -59,13 +63,15 @@ const WorkPage = (props: Props) => {
         fetchProvinces()
     }, [])
     useEffect(() => {
-        loadData();
+        if(!careerParams){
+            loadData();
+        }
         loadCareers()
     }, [])
 
     useEffect(() => {
         getSearch(filterParams)
-    }, [filterParams.work_location, filterParams.job_salary, filterParams.career, searchParams]
+    }, [filterParams.work_location, filterParams.job_salary, filterParams.career, searchParams,careerParams]
     )
     const loadData = async () => {
         return await axios
@@ -83,17 +89,17 @@ const WorkPage = (props: Props) => {
         e.preventDefault()
         setSearchMessage("")
         setFilterParams({ ...filterParams, key: "" })
-        loadData()
+        navigate('/works')
+            loadData()
     }
     const getSearch = async (params: any) => {
-        setData([])
+        setData([]);
         try {
             const { data } = await axios({
                 url: `http://localhost:4000/api/search`,
                 params
             })
-            console.log('abc', data);
-
+            
             setData(data.data);
             setSearchMessage(data.message)
         }
@@ -122,7 +128,11 @@ const WorkPage = (props: Props) => {
         }
     }
     console.log(data);
-
+    const searchCareer = (e) => {
+        setFilterParams({ ...filterParams, career: e.target.value })
+        const search = searchParams ? searchParams : ""
+        navigate(`/works?keyword=${search}&career=${e.target.value}`)
+    }
     const getSearchKey = () => { }
     return (
         <>
@@ -130,7 +140,7 @@ const WorkPage = (props: Props) => {
                 
                 {/* CONTENT */}
                 <div className="" style={{ marginTop: '10px', backgroundColor: 'rgb(229, 238, 255)', width: '75%', height: '60px', margin: 'auto', borderRadius: '7px', display: 'flex' }}>
-                    <select name="cars" onChange={(e) => setFilterParams({ ...filterParams, career: e.target.value })} id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '10px', gap: '5px' }}>
+                    <select value={filterParams.career} name="cars" onChange={(e) => searchCareer(e)} id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '10px', gap: '5px' }}>
                         <option value="">Tất Cả Nghề Nghiệp</option>
                         {career && career.map((item: any) => {
                             return (
