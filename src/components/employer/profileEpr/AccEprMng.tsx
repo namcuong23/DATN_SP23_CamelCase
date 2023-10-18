@@ -20,19 +20,21 @@ const AccEprMng = (): any => {
     const { register, handleSubmit, formState: { errors } } = useForm()
     const [changePassEpr] = useChangePassEprMutation()
     const changePass = async ({ oldpass, newpass, confirmpass }: any) => {
-        if (newpass != confirmpass) {
-            return toast.warning('Mật khẩu không khớp')
-        }
+        console.log('alo');
+        
+        // if (newpass != confirmpass) {
+        //     return toast.warning('Mật khẩu không khớp')
+        // }
 
-        const change: any = await changePassEpr({ email, oldpass, newpass })
-        const { data: rs } = change
-        if (rs?.success) {
-            return Swal.fire('Congratulation', 'Đổi mật khẩu thành công', 'success').then(() => {
-                window.location.reload()
-            })
-        } else {
-            return toast.error(rs?.mes)
-        }
+        // const change: any = await changePassEpr({ email, oldpass, newpass })
+        // const { data: rs } = change
+        // if (rs?.success) {
+        //     return Swal.fire('Congratulation', 'Đổi mật khẩu thành công', 'success').then(() => {
+        //         window.location.reload()
+        //     })
+        // } else {
+        //     return toast.error(rs?.mes)
+        // }
     }
 
     const navigate = useNavigate()
@@ -192,8 +194,8 @@ const AccEprMng = (): any => {
                                             {errors.confirmpass && errors.confirmpass.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu không hợp lệ.</span>}
                                         </div>
                                         <div className='flex justify-end gap-x-3'>
-                                            <button onClick={() => setOpen(false)} className='hover:border-[#FD6333] hover:text-[#FD6333] border-1 border-[#979797] text-[#979797] py-1 px-8 text-[16px] rounded'>Hủy</button>
-                                            <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-8 text-[16px] rounded'>Lưu</button>
+                                            <button onClick={() => setOpenC(false)} className='hover:border-[#FD6333] hover:text-[#FD6333] border-1 border-[#979797] text-[#979797] py-1 px-8 text-[16px] rounded'>Hủy</button>
+                                            <button type="submit" className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-8 text-[16px] rounded'>Lưu</button>
                                         </div>
                                     </form> : ''
                                 }
