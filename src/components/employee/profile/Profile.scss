@@ -1,0 +1,30 @@
+.unsave{
+    color: red;
+}
+.unsave:hover{
+    background-color: rgb(242, 104, 104);
+    color: white;
+}
+
+@keyframes loading-icon {
+    from  {
+        transform: rotate(0);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.loading-icon {
+    animation: loading-icon 0.8s linear infinite;
+}
+
+// My Job
+.job-name {
+    display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    overflow: hidden;
+}

@@ -19,8 +19,6 @@ const Infotmation = (props: Props) => {
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
 
-    console.log(currentUser);
-
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()

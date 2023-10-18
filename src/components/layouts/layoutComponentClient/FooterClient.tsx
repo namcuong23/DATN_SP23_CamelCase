@@ -2,10 +2,10 @@ import React from 'react'
 
 type Props = {}
 
-const FooterClient = (props: Props) => {
+const FooterClient: any = (props: Props) => {
     return (
         <div>
-            <footer className="vnw mt-20">
+            <footer className="vnw">
                 <div className="footer lunar-new-year animated fadeIn">
                     <div className="footer__container">
                         <div className="columns is-hidden-tablet footer__sitemap is-gapless mb-5">
@@ -38,6 +38,7 @@ const FooterClient = (props: Props) => {
                                     <li className="footer__link-head">VietnamWorks</li>
                                     <li><a href="#" target="_blank" className='' title="Về VietnamWorks">Về VietnamWorks</a></li>
                                     <li><a href="#" title="Liên Hệ">Liên Hệ</a></li>
+                                    <li><a href="send:abc@gmail.com" title="Liên Hệ">abc@gmail.com</a></li>
                                     <li><a href="#" target="_blank" title="Hỏi Đáp">Hỏi Đáp</a></li>
                                     <li><a href="#" title="Thỏa Thuận Sử Dụng">Thỏa Thuận Sử Dụng</a></li>
                                     <li><a href="#" title="Quy Định Bảo Mật">Quy Định Bảo Mật</a></li>

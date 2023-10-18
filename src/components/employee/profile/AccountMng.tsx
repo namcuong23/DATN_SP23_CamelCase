@@ -34,36 +34,6 @@ const AccountMng = () => {
     return (
         <>
             <div className='bg-gray-100 min-h-screen'>
-                {/* SEARCH BAR */}
-                <div className='h-[80px] w-100 py-3 bg-white'>
-                    <div className='container flex items-center justify-center h-100 w-100'>
-                        <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2 rounded'>
-                            <div className='h-100 flex items-center bg-[#F4F4F7] w-[65%]'>
-                                <button className='w-[10%] flex justify-center'>
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-search text-black" viewBox="0 0 16 16">
-                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                                    </svg>
-                                </button>
-                                <input type="text" className='bg-[#F4F4F7] h-100 w-[90%] text-gray-600 focus:outline-none' placeholder='Tìm kiếm việc làm, công ty, kỹ năng' />
-                            </div>
-                            <div className='flex items-center bg-[#F4F4F7] border-l-[1px] border-[#979797] h-[24px] mr-1'></div>
-                            <div className='h-100 flex items-center bg-[#F4F4F7] w-[35%] px-3'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 384 512">
-                                    <path d="M172.268 501.67C26.97 291.031 0 269.413 0 192 0 85.961 85.961 0 192 0s192 85.961 192 192c0 77.413-26.97 99.031-172.268 309.67-9.535 13.774-29.93 13.773-39.464 0zM192 272c44.183 0 80-35.817 80-80s-35.817-80-80-80-80 35.817-80 80 35.817 80 80 80z" />
-                                </svg>
-                                <select name="" id="" className='bg-[#F4F4F7] focus:outline-none w-100 pl-2'>
-                                    <option value="0" selected>Tất cả địa điểm</option>
-                                    <option value="1">Vĩnh Phúc</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div className='h-100'>
-                            <div className='h-100'>
-                                <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded h-100 px-10'>Tìm kiếm</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 {/* CONTENT */}
                 <div className='flex items-start w-100 gap-3 p-3'>
                     <aside className='rounded w-25 space-y-2'>
@@ -106,12 +76,12 @@ const AccountMng = () => {
                         </section>
                         <section className='border-1 bg-white'>
                             <div>
-                                <button className='flex items-center p-[17px] w-100 border rounded hover:bg-[#EBF2FF] text-[#333333]'>
+                                <NavLink to={'/myjob'} className='flex items-center p-[17px] w-100 border rounded hover:bg-[#EBF2FF] text-[#333333]'>
                                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M11.2 2.3999C10.316 2.3999 9.59998 3.1159 9.59998 3.9999H3.19998C2.31598 3.9999 1.59998 4.7159 1.59998 5.5999V12.7999C1.59998 13.6839 2.31598 14.3999 3.19998 14.3999H20.8C21.684 14.3999 22.4 13.6839 22.4 12.7999V5.5999C22.4 4.7159 21.684 3.9999 20.8 3.9999H14.4C14.4 3.1159 13.684 2.3999 12.8 2.3999H11.2ZM12 11.1999C12.4416 11.1999 12.8 11.5583 12.8 11.9999C12.8 12.4415 12.4416 12.7999 12 12.7999C11.5584 12.7999 11.2 12.4415 11.2 11.9999C11.2 11.5583 11.5584 11.1999 12 11.1999ZM1.59998 15.5546V18.3999C1.59998 19.2839 2.31598 19.9999 3.19998 19.9999H20.8C21.684 19.9999 22.4 19.2839 22.4 18.3999V15.5546C21.9272 15.8298 21.3856 15.9999 20.8 15.9999H3.19998C2.61438 15.9999 2.07278 15.8298 1.59998 15.5546Z" fill="#888888"></path>
                                     </svg>
                                     <span className='text-[14px] pl-[10px]'>Việc làm của tôi</span>
-                                </button>
+                                </NavLink>
                             </div>
                         </section>
                         <section className='border-1 bg-white'>

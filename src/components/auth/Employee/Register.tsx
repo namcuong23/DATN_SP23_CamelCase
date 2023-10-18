@@ -12,11 +12,12 @@ import { toast } from 'react-toastify'
 import { NavLink, useNavigate } from 'react-router-dom';
 import myImage from '../../../assets/img/logo.jpg';
 
+import './AuthEpe.css'
+
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
     const [signup] = useSignupMutation()
-    const [signupA] = useSignupAMutation()
     const [loading, setLoading] = useState(false)
     const [type, setType] = useState(false)
     const showPassword = () => {
@@ -24,13 +25,10 @@ const Register = () => {
     }
 
     const signUp: SubmitHandler<any> = async (user: any) => {
+        console.log(user);
+        
         setLoading(true)
-        const register: any = await signup({
-            ...user,
-            isEmailVerified: false,
-            isPhoneVerified: false,
-            level_auth: 1
-        })
+        const register: any = await signup({...user})
         const { data: res } = register
         if (res?.success) {
             setLoading(false)
@@ -191,10 +189,11 @@ const Register = () => {
                                     <div>
                                         <button onClick={signUp} className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                             {
-                                                loading &&
-                                                <CgSpinner size={20} className="mt-1 animate-spin" />
+                                                loading ?
+                                                <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                                : 'Đăng ký'
                                             }
-                                            Đăng ký
+                                            
                                         </button>
                                     </div>
                                 </form>

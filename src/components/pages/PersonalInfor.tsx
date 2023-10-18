@@ -8,8 +8,7 @@ type Props = {}
 
 const PersonalInfor = (props: Props) => {
     const { email } = useAppSelector((rs) => rs.auth)
-    const { data: user, isLoading, error } = useGetUserByEmailQuery<any>(email)
-    const navigate = useNavigate()
+    const { data: user, isLoading, error } = useGetUserByEmailQuery(email)
     const {
         register,
         handleSubmit,

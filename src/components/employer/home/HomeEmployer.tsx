@@ -9,8 +9,7 @@ type Props = {}
 
 const Home = (props: Props): any => {
     const { email, isLoggedIn } = useAppSelector((res) => res.auth);
-    const data: any = useGetUserEprByEmailQuery(email)
-    const user: any = data.currentData;
+    const {data: user}: any = useGetUserEprByEmailQuery(email)
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const [postData, setPostData] = useState<IPost[]>([]);
     const navigate = useNavigate()

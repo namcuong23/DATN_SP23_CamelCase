@@ -1,37 +1,31 @@
-import { NavLink, useNavigate } from 'react-router-dom'
-import { useGetPostsQuery } from '../../../service/post'
 import { useState } from 'react'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
+import { useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
 import { MessageType } from 'antd/es/message/interface'
-import { message } from 'antd'
-import { Button, Modal } from 'antd';
+import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
+import { useGetCareersQuery } from '../../../service/admin';
+
+import './HomeClient.css'
+
 const HomeClient = (): any => {
   const { data: posts } = useGetPostsQuery()
   const { email } = useAppSelector((rs) => rs.auth)
   const [searchValue, setSearchValue] = useState()
   const navigate = useNavigate()
-  const [addFeedback, { isLoading }] = useAddFeedbackMutation();
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<IFeedback>()
+  const [addFeedback] = useAddFeedbackMutation();
+  const { data: careers } = useGetCareersQuery()  
+  const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
       feedback_email: email
     })
     const confirm: MessageType = message.info('Gửi yêu cầu thành công')
-    try {
-    } catch (error) {
-
-    }
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -46,7 +40,7 @@ const HomeClient = (): any => {
   };
   return (
     <div>
-      <div id="pageContentWrapper">
+      <div id="pageContentWrapper" className='pb-[4px]'>
         <div id="carouselExampleIndicators" className="carousel slide">
           <div className="carousel-indicators">
             <button
@@ -120,7 +114,7 @@ const HomeClient = (): any => {
                 aria-label="Username"
                 aria-describedby="basic-addon1"
               />
-              <button onClick={() => navigate(`works?keyword=${searchValue}`)} type="button" className="btn ml-3 rounded-start" id="related-jobs-search">
+              <button onClick={() => navigate(`works?q=${searchValue}`)} type="button" className="btn ml-3 rounded-start" id="related-jobs-search">
                 Tìm kiếm
               </button>
             </div>
@@ -128,7 +122,7 @@ const HomeClient = (): any => {
           </div>
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch sectionBlock_featured-company lunar-new-year animated fadeIn take-1-second">
-          <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
+          <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
             <h2 className="sectionBlock__title">Các Công Ty Hàng Đầu</h2>
           </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
@@ -242,7 +236,7 @@ const HomeClient = (): any => {
         </section>
         <section className="sectionBlock sectionBlock_hot-categories">
           <div className="container ">
-            <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
+            <div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
               <h2 className="sectionBlock__title">Ngành Nghề Trọng Điểm</h2>
             </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
@@ -356,6 +350,21 @@ const HomeClient = (): any => {
                     </div>
                   </div>
                 </div>
+                {/* <div className="grid  grid-cols-4">
+                 { careers && careers.map((item:any) => {
+                  return  <div className='my-2'>
+                    <div  className="wrap-item">
+                      <div style={{width:'290px',height:'210px'}} className="category-item">
+                        <Link to={`works?career=${item._id}`}><img width={60} style={{height:'60px'}} src={item.image} />
+                          <div className="wrap-name">
+                            <h3 className="title truncate-text-2-line">{item.name}</h3>
+                          </div>
+                        </Link>
+                      </div>
+                    </div>
+                </div>
+                 } ) }
+                </div> */}
               </div>
               </div>
             </div>
@@ -421,7 +430,7 @@ const HomeClient = (): any => {
                 <a href="http://hrinsider.vietnamworks.com" title="Xem Tất Cả" className="is-hidden-mobile" rel="noreferrer">Xem Tất Cả</a>
               </div>
             </div>
-            <div className="sectionBlock__content" style={{ height: '100%' }}>
+            <div className="sectionBlock__content mb-4" style={{ height: '100%' }}>
               <div className="article-wrapper">
                 <article>
                   <div className="cardBlock">
@@ -438,9 +447,12 @@ const HomeClient = (): any => {
                           </div>
                         </a>
                       </div>
-                      <div className="cardBlock__content" title="Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở."><div className="clamp-lines "><div id="clamped-content-card-content" aria-hidden="true">Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.
-                      </div>
-                      </div>
+                      <div className="cardBlock__content content-title" title="Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.">
+                        <div className="clamp-lines ">
+                          <div id="clamped-content-card-content" aria-hidden="true">
+                            Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.
+                          </div>
+                        </div>
                       </div>
                       <div className="cardBlock__category ellipsis">
                         <span className="cardBlock__point" />

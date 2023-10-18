@@ -5,6 +5,7 @@ interface IUserNTV {
     isEmailVerified: boolean;
     phone: string;
     isPhoneVerified: boolean;
+    birth_day: string;
     desc: string;
     age: string;
     image: string;
@@ -16,6 +17,9 @@ interface IUserNTV {
     passwordResetToken: string;
     passwordChangeAt: string;
     passwordResetExpires: string;
+    accessToken: string;
+    verifiedToken: string;
+    tokenExpires: string;
     level_auth: number
 }
 

@@ -1,47 +1,168 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {};
 
 const FooterEmployer = (props: Props) => {
-    return (
-        <>
-            {/* Footer */}
-            <div className='bg-[#001744] text-white mt-3'>
-                <div className="container px-4 py-5" id="hanging-icons">
-                    <h2 className="pb-2 border-bottom">Thông tin</h2>
-                    <div className="row g-4 py-5 row-cols-1 row-cols-lg-3">
-                        <div className="col d-flex align-items-start">
-                            <div className="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-                            </div>
-                            <div>
-                                <h3 className="fs-2">Công ty</h3>
-                                <p style={{ paddingTop: '30px' }}>Ho Chi Minh City: (84 28) 3925 8456</p>
-                                <p>Hanoi: (84 24) 3944 0568</p>
-                                <p>Jobsupport@vietnamworks.com</p>
-                            </div>
-                        </div>
-                        <div className="col d-flex align-items-start">
-                            <div className="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-                            </div>
-                            <div>
-                                <h3 className="fs-2">Company</h3>
-                                <p style={{ paddingTop: '30px' }}>Về chúng tôi</p>
-                                <p>Cam kết bảo mật</p>
-                                <p>Điều khoản sử dụng</p>
-                                <p>nội bộ nhân sự</p>
-                                <p>Câu hỏi thường gặp</p>
-                            </div>
-                        </div>
-                        <div className="col d-flex align-items-start">
-                            <div className="icon-square text-bg-light d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3">
-                            </div>
-                            <h3 className="fs-2">Ứng dụng di động</h3>
-                        </div>
-                    </div>
+  return (
+    <>
+      {/* Footer */}
+      <div className="bg-[#001744] text-white mt-3">
+        <div className="container py-8" id="hanging-icons">
+          <div className="footer-information grid grid-cols-4 gap-[115px]">
+            <div className="footer-col w-[256px] ">
+              <h3 className="text-[16px] font-semibold leading-[20px] tracking-normal">
+                Thông tin liên hệ
+              </h3>
+              <div className="text-[14px] font-normal mt-4">
+                <div className="flex pb-1">
+                  <img
+                    className="mr-[10px]"
+                    src="https://employer.vietnamworks.com/v2/img/icons/icon_footer_phone.svg"
+                    alt=""
+                  />
+                  <a className="text-white" href="">
+                    {" "}
+                    Hồ Chí Minh: (84 28) 3925 8456
+                  </a>
                 </div>
+                <div className="flex py-1">
+                  <img
+                    className="mr-[10px]"
+                    src="https://employer.vietnamworks.com/v2/img/icons/icon_footer_phone.svg"
+                    alt=""
+                  />
+                  <a className="text-white" href="">
+                    {" "}
+                    Hà Nội: (84 24) 3944 0568
+                  </a>
+                </div>
+                <div className="flex py-1">
+                  <img
+                    className="mr-[10px]"
+                    src="https://employer.vietnamworks.com/v2/img/icons/icon_footer_email.svg"
+                    alt=""
+                  />
+                  <a className="text-white" href="">
+                    Jobsupport@vietnamworks.com
+                  </a>
+                </div>
+              </div>
             </div>
-        </>
-    )
-}
+            <div className="footer-col w-[131px]">
+              <h3 className="text-[16px] font-semibold leading-[20px] tracking-normal">
+                Công ty
+              </h3>
+              <div className="text-[14px] font-normal mt-4 ">
+                <div className="flex pb-1 ">
+                  <a className="text-white" href="">
+                    {" "}
+                    Giới Thiệu
+                  </a>
+                </div>
+                <div className="flex py-1">
+                  <a className="text-white" href="">
+                    {" "}
+                    Bảo Mật Thông Tin
+                  </a>
+                </div>
+                <div className="flex py-1">
+                  <a className="text-white" href="">
+                    {" "}
+                    Quy Định Sử Dụng
+                  </a>
+                </div>
+                <div className="flex py-1">
+                  <a className="text-white" href="">
+                    HR Insider
+                  </a>
+                </div>
+                <div className="flex py-1">Hỏi Đáp</div>
+              </div>
+            </div>
+            <div className="footer-col w-[139px]">
+              <h3 className="text-[16px] font-semibold leading-[20px] tracking-normal">
+                Ứng dụng di động
+              </h3>
+              <div className="text-[14px] font-normal mt-4">
+                <div className="flex pb-1">
+                  <a href="">
+                    <img
+                      className="mr-[10px] w-[121px]"
+                      src="https://images.vietnamworks.com/gen/app-store-badge-vi.png"
+                      alt=""
+                    />
+                  </a>
+                </div>
+                <div className="flex py-1">
+                  <a href="">
+                    <img
+                      className="mr-[10px] w-[121px]"
+                      src="https://images.vietnamworks.com/gen/google-play-badge-vi.png"
+                      alt=""
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div className="footer-col w-[203px]">
+              <h3 className="text-[16px] font-semibold leading-[20px] tracking-normal">
+                Kết Nối Với VietnamWorks
+              </h3>
+              <div className="text-[14px] font-normal mt-4">
+                <div className="flex pb-8">
+                  <a className="pr-1" href="">
+                    {" "}
+                    <img
+                      src="	https://employer.vietnamworks.com/v2/img/icons/icon_footer_linkedin.svg"
+                      width={25}
+                      alt=""
+                    />
+                  </a>
+                  <a className="pl-1" href="">
+                    {" "}
+                    <img
+                      src="	https://employer.vietnamworks.com/v2/img/icons/icon_footer_facebook.svg"
+                      width={25}
+                      alt=""
+                    />
+                  </a>
+                </div>
+                <div className="flex py-1">
+                  <span className="text-[16px] font-semibold leading-[20px] tracking-normal">
+                    Chứng nhận bởi
+                  </span>
+                </div>
+                <div className="flex py-1">
+                  <a
+                    href="http://online.gov.vn/HomePage/WebsiteDisplay.aspx?DocId=17746"
+                    target="_blank"
+                  >
+                    <img
+                      alt=""
+                      title=""
+                      src="https://images.vietnamworks.com/img/dadangky.jpgx?v=1"
+                      width="124"
+                    />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-export default FooterEmployer
+        <div className="flex flex-col align-center pb-4">
+          <div className=" my-4 h-[1px] w-9/12 bg-white"></div>
+          <p className="m-0 font-normal tracking-normal leading-4 opacity-75 text-[12px]">
+            Bản Quyền © Công Ty Cổ Phần Navigos Group Việt Nam
+          </p>
+          <p className="m-0 font-normal tracking-normal leading-4  opacity-75 text-[12px]">
+            Tầng 20, tòa nhà E.Town Central, 11 Đoàn Văn Bơ, Phường 13, Quận 4,
+            TP.HCM, Vietnam
+          </p>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default FooterEmployer;

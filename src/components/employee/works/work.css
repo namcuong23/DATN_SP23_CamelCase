@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.heart:hover{
+  color: red;
+}
+.text-hover:hover{
+  color: red;
+}
+.text-hover .p:hover{
+  color: red;
+}
+.price p{
+  width: 200px;
+}
 .react-tel-input .form-control{
     @apply !w-full py-6 !text-base;
 }
@@ -21,6 +33,14 @@
     100% {
         transform: rotate(360deg);
     }
+}
+
+.work-text__name {
+  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
 }
 
 #loading-area{
@@ -1414,4 +1434,9 @@ a:hover {
   align-items: center;
   padding: 0.5em 2em;
   height: 6em;
+}
+
+.no-image {
+  margin-left: 50%;
+  transform: translateX(-50%);
 }
