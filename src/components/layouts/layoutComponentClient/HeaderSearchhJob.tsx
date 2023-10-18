@@ -1,9 +1,34 @@
-import React from 'react'
-import { NavLink } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { NavLink, Navigate, useNavigate } from 'react-router-dom'
+import { apiGetProvinces } from '../../../service/api'
 
 import './Layout.css'
 
 const HeaderSearchhJob = () => {
+    const [provinces, setProvinces] = useState<any>([])
+    const navigate=useNavigate()
+    const [searchItem,setSearchItem]=useState('')
+    let keyword = new URLSearchParams(location.search).get('keyword')
+    const handelSearchInput=(event:any)=>{
+        setSearchItem(event.target.value)
+    }
+const handelSubmitData=()=>{
+    navigate(`/works?keyword=${searchItem}`)
+    if (keyword) {
+        setSearchItem(keyword)
+      } else {
+        setSearchItem('')
+      }
+} 
+   useEffect(() => {
+    const fetchProvinces = async () => {
+        const { data: response }: any = await apiGetProvinces()
+        setProvinces(response?.results);
+    }
+    fetchProvinces()
+}, [])
+console.log(provinces)
+
     return (
         <>
             <div className='h-[80px] w-100 py-3 bg-white'>
@@ -15,7 +40,7 @@ const HeaderSearchhJob = () => {
                                         <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
                                     </svg>
                                 </button>
-                                <input type="text" className='bg-[#F4F4F7] h-100 w-[90%] text-gray-600 focus:outline-none' placeholder='Tìm kiếm việc làm, công ty, kỹ năng' />
+                                <input type="text" className='bg-[#F4F4F7] h-100 w-[90%] text-gray-600 focus:outline-none' placeholder='Tìm kiếm việc làm, công ty, kỹ năng' onChange={handelSearchInput}/>
                             </div>
                             <div className='flex items-center bg-[#F4F4F7] border-l-[1px] border-[#979797] h-[24px] mr-1'></div>
                             <div className='h-100 flex items-center bg-[#F4F4F7] w-[35%] px-3'>
@@ -24,13 +49,16 @@ const HeaderSearchhJob = () => {
                                 </svg>
                                 <select name="" id="" className='bg-[#F4F4F7] focus:outline-none w-100 pl-2'>
                                     <option value="0" selected>Tất cả địa điểm</option>
-                                    <option value="1">Vĩnh Phúc</option>
+                                    {provinces?.map((item:any,index:any)=>(
+                                         <option value={index+1} key={index+1}>{item.province_name}</option>
+                                    ))}
+                                   
                                 </select>
                             </div>
                         </div>
                         <div className='h-100'>
                             <div className='h-100'>
-                                <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded h-100 px-10'>Tìm kiếm</button>
+                                <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded h-100 px-10' onClick={handelSubmitData}>Tìm kiếm</button>
                             </div>
                         </div>
                     </div>
