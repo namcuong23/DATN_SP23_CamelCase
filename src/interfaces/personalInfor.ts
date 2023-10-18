@@ -4,7 +4,7 @@ export interface IPersonalInfor {
     numberphone: number,
     date: string,
     nationality: string,
-    sex: string,
+    gender: string,
     nation: string,
     city: string,
     district: string,

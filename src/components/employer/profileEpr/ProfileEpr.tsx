@@ -60,6 +60,7 @@ const ProfileEpr = (): any => {
           <h2 className='text-[22px] tracking-normal py-1 pb-3 mb-3 border-b-[1px]'>Thông tin NTD</h2>
           <div>
             <form onSubmit={handleSubmit(handleUpdate)}>
+
               <div className='flex flex-col gap-x-10 w-full mb-2'>
                 <label className='text-[15px] font-[550]'>Tên NTD<span className='text-[#ca5b54]'>*</span> </label>
                 <input type="text"
@@ -72,6 +73,7 @@ const ProfileEpr = (): any => {
                 {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
                 {errors.name && errors.name.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Tên không hợp lệ.</span>}
               </div>
+              
               <div className='flex items-center gap-x-10 w-full mb-2'>
                 <div className='flex flex-col w-[50%]'>
                   <label className='text-[15px] font-[550]'> Email<span className='text-[#ca5b54]'>*</span> </label>

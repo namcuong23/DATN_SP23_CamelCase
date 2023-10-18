@@ -96,7 +96,14 @@ const HeaderEmployer = () => {
 
                         </NavLink>
                     </li>
-                    <li className='p-3 text-decoration-none text-white'><a>Ứng viên</a></li>
+                    <li className='p-3 text-decoration-none text-white'>
+                        <NavLink to={'/home/candidates'}
+                            className='d-flex align-items-center text-decoration-none text-white'>
+                            <span className='hover:text-orange-400'>
+                                Ứng viên
+                            </span>
+                        </NavLink>
+                    </li>
                     <li className='p-3 text-decoration-none text-white'>
                         <NavLink to={'/home/packages'}
                             className='d-flex align-items-center text-decoration-none text-white'>
@@ -140,6 +147,7 @@ const HeaderEmployer = () => {
                         <div>
                             <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
                                 <BsPersonCircle className='text-5xl text-[#474747]' />
+                                {user?.image}
                                 <div>
                                     <h2 className='text-[20px] text-[#474747] font-[700]'>{user?.name}</h2>
                                     <div className='text-[15px]'>{user?.email}</div>

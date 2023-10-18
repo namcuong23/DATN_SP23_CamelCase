@@ -9,6 +9,7 @@ interface IProfileEpr {
     birth_day: string;
     address: string;
     desc_epr: string;
+    image: string;
 }
 
 export default IProfileEpr;

@@ -21,6 +21,7 @@ import { packageApi } from "../service/package";
 import authReducer from "../reducer/auth";
 import cartReducer from "../reducer/package";
 import { orderApi } from "../service/employer/order";
+import { candidateApi } from "../service/employer/candidate";
 import { packageAdmApi } from "../service/admin/package";
 import { profileEprApi } from "../service/employer/profileEpr";
 import { serviceApi } from "../service/employer/service";
@@ -29,7 +30,6 @@ import { feedbackApi } from "../services/feedback";
 import { jobsaveApi } from "../service/savejob";
 import { profileEpeApi } from "../service/profileEpe";
 import { jobdoneApi } from "../service/jobdone";
-import { jobdoneApi } from "../services/jobdone";
 import { chartLine } from "../service/admin/chartLine";
 import { serviceAdmApi } from "../service/admin/service";
 import authAdmReducer from "../reducer/authAdm";
@@ -63,6 +63,7 @@ const rootReducer = combineReducers({
     [serviceApi.reducerPath]: serviceApi.reducer,
     [chartLine.reducerPath]: chartLine.reducer,
     [serviceAdmApi.reducerPath]: serviceAdmApi.reducer,
+    [candidateApi.reducerPath]: candidateApi.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -94,6 +95,7 @@ export const store = configureStore({
         serviceApi.middleware,
         chartLine.middleware,
         serviceAdmApi.middleware,
+        candidateApi.middleware
     )
 })
 
