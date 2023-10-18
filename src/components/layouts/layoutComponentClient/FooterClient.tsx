@@ -2,7 +2,7 @@ import React from 'react'
 
 type Props = {}
 
-const FooterClient = (props: Props) => {
+const FooterClient: any = (props: Props) => {
     return (
         <div>
             <footer className="vnw">

@@ -1,12 +1,14 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
 
+import './Layout.css'
+
 const HeaderSearchhJob = () => {
     return (
         <>
             <div className='h-[80px] w-100 py-3 bg-white'>
-                    <div className='container flex items-center justify-center h-100 w-100'>
-                        <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2 rounded'>
+                    <div className='search-job flex items-center h-100 w-75'>
+                        <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2 rounded overflow-hidden flex-1'>
                             <div className='h-100 flex items-center bg-[#F4F4F7] w-[65%]'>
                                 <button className='w-[10%] flex justify-center'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-search text-black" viewBox="0 0 16 16">

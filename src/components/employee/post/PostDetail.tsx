@@ -5,13 +5,14 @@ import { useGetPostQuery } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
 import { useAddJobdoneMutation } from '../../../service/jobdone'
-import { formatCurrency } from '../../../utils/FormatCurrrency'
-import './postDetail.scss'
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useAddJobsaveMutation } from '../../../service/savejob'
+import useDateFormat from '../../../utils/hooks/FormatDate'
+import './postDetail.scss';
 const PostDetailEp = (): any => {
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
-  const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+  const { email, isLoggedIn, token } = useAppSelector((rs) => rs.auth)
   const { data: user } = useGetUserByEmailQuery(email)
   const [addCv] = useAddCvMutation()
   const [addJobdone] = useAddJobdoneMutation()
@@ -106,8 +107,8 @@ const PostDetailEp = (): any => {
                     <p>
                       <a
                         href="#"
-                        className="job-title"
-                        style={{ fontSize: "27px" }}
+                        className="job-name"
+                        style={{ fontSize: "26px" }}
                       >
                         {post?.job_name}
                       </a>
@@ -116,7 +117,7 @@ const PostDetailEp = (): any => {
                       </div>
                       <span style={{ color: "#999", fontSize: "13px" }}>
                         Ngày đăng tin:{" "}
-                        {new Date(post?.createdAt).toLocaleDateString()}
+                        {useDateFormat(post?.createdAt)}
                       </span>
                       <div style={{ color: "#ff7d55", fontWeight: 500 }}>
                         {post?.job_salary?.toLocaleString("vi", {
@@ -246,16 +247,7 @@ const PostDetailEp = (): any => {
                         NGÀY ĐĂNG TUYỂN
                       </span>
                       <span className="text-[#333333] block font-thin text-[15px]">
-                        {post?.createdAt}
-                      </span>
-                      <hr />
-                    </div>
-                    <div className="pb-[15px]">
-                      <span className="text-[#949697] block font-thin text-[13px]">
-                        TÊN CÔNG VIỆC
-                      </span>
-                      <span className="text-[#333333] block font-thin text-[15px]">
-                        {post?.job_name}
+                        {useDateFormat(post?.createdAt)}
                       </span>
                       <hr />
                     </div>
@@ -297,7 +289,7 @@ const PostDetailEp = (): any => {
                     </div>
                     <div className="pb-[15px]">
                       <span className="text-[#949697] block font-thin text-[13px]">
-                        SỐ LƯỢNG YÊU CẦU
+                        GIỚI TÍNH
                       </span>
                       <span className="text-[#333333] block font-thin text-[15px]">
                         {post?.gender}

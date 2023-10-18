@@ -2,19 +2,18 @@ import { AiOutlineHeart } from "react-icons/ai"
 import { useEffect, useState } from 'react'
 import { apiGetProvinces } from '../../../service/api';
 import axios from "axios"
-import { formatCurrency } from '../../../utils/FormatCurrrency'
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useAddJobsaveMutation } from "../../../service/savejob";
 import { toast } from "react-toastify";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../../app/hook";
 import { useGetUserByEmailQuery } from "../../../service/auth";
 import './work.css'
-type Props = {}
 
-const WorkPage = (props: Props) => {
+const WorkPage = () => {
     const salaryOptions = [
         {
-            title: "Lương Theo Giờ",
+            title: "Mức lương",
             salary: []
         },
         {
@@ -43,7 +42,7 @@ const WorkPage = (props: Props) => {
     const [searchMessage, setSearchMessage] = useState("")
     const [career, setCareer] = useState([])
     const [params] = useSearchParams()
-    const searchParams = params.get('keyword');
+    const searchParams = params.get('q');
     const careerParams = params.get('career');
    
     
@@ -111,7 +110,7 @@ const WorkPage = (props: Props) => {
     const handleSearch = async (e: any) => {
         e.preventDefault();
         getSearch(filterParams)
-        navigate(`/works?keyword=${filterParams.key}`)
+        navigate(`/works?q=${filterParams.key}`)
     }
     //savejob
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
@@ -127,35 +126,34 @@ const WorkPage = (props: Props) => {
             console.log(error);
         }
     }
-    console.log(data);
-    const searchCareer = (e) => {
+    
+    const searchCareer = (e: any) => {
         setFilterParams({ ...filterParams, career: e.target.value })
         const search = searchParams ? searchParams : ""
-        navigate(`/works?keyword=${search}&career=${e.target.value}`)
+        navigate(`/works?q=${search}&career=${e.target.value}`)
     }
     const getSearchKey = () => { }
+    
     return (
         <>
             <div style={{ background: 'white' }} className='min-h-[100vh] pb-4'>
                 
                 {/* CONTENT */}
-                <div className="" style={{ marginTop: '10px', backgroundColor: 'rgb(229, 238, 255)', width: '75%', height: '60px', margin: 'auto', borderRadius: '7px', display: 'flex' }}>
-                    <select value={filterParams.career} name="cars" onChange={(e) => searchCareer(e)} id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '10px', gap: '5px' }}>
+                <div className="p-[10px]" style={{ marginTop: '10px', backgroundColor: 'rgb(229, 238, 255)', margin:'auto', width: '75%', borderRadius: '7px', display: 'flex' }}>
+                    <select className="px-[4px] border rounded" value={filterParams.career || ""} name="cars" onChange={(e) => searchCareer(e)} id="cars" style={{ height: "40px", minWidth: '80px' , borderRadius: '4px', outline: 'none',  gap: '5px' }}>
                         <option value="">Tất Cả Nghề Nghiệp</option>
-                        {career && career.map((item: any) => {
-                            return (
-                                <option value={item._id}>{item.name}</option>
-                            )
-                        })}
+                        {career && career.map((item: any) => (
+                            <option value={item._id}>{item.name}</option>
+                        ))}
                     </select>
                     {/* luong */}
-                    <select onChange={(e) => setFilterParams({ ...filterParams, job_salary: e.target.value })} name="cars" id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '30px', gap: '5px' }}>
+                    <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams, job_salary: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
                         {salaryOptions && salaryOptions.map((item: any) => {
                             return <option value={item.salary}>{item.title}</option>
                         })}
                     </select>
-                    <select onChange={(e) => setFilterParams({ ...filterParams, work_location: e.target.value })} name="cars" id="cars" style={{ height: "40px", width: '170px', borderRadius: '4px', outline: 'none', marginTop: '8px', marginLeft: '30px', gap: '5px' }}>
-                        <option value="">Địa Chỉ</option>
+                    <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams, work_location: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
+                        <option value="">Khu vực</option>
                         {
                             provinces ? provinces?.map((province: any) =>
                                 <option value={province.province_name}>{province.province_name}</option>
@@ -166,39 +164,43 @@ const WorkPage = (props: Props) => {
                 {/* works */}
                 <div className="content-works" style={{ margin: 'auto', marginTop: '20px', display: 'flex', width: '75%', justifyContent: 'space-between' }}>
                     <div className="list-works" >
-                        {searchMessage}
-                        {data.length === 0 ? (
-                            <h2>Data Not Found</h2>
-                        ) : (
+                        {
+                            searchParams ? 
+                            searchMessage
+                            : <span> Trang chủ &gt; Việc làm &gt; Tất cả việc làm </span>
+                        }
+                        {
                             data?.map((item: any, index: any) => (
-
-                                <div key={index} className="works-item" style={{ gap: '10px', backgroundColor: '#f0f7ff', display: 'flex', border: '1px solid rgb(179, 206, 255)', borderRadius: '3px', height: '220px', width: '750px', marginTop: '20px' }}>
-                                    <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border' id='logo-area-wrapper'>
-                                        <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                            <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                        </a>
+                                <div key={index} className="flex items-start justify-between bg-[#f0f7ff] hover:bg-[#fff] w-100 p-[16px] mt-[12px] border-[1px] border-[#a0c1ff] rounded-[6px]">
+                                    <div className="flex items-center m-0 w-[84%]">
+                                        <div className='mr-[16px]'>
+                                            <a className="rounded-[6px]" style={{ background: 'white', justifyContent: 'center', display: 'flex' }}>
+                                                <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '120px', height: 'auto', margin: '20px 0px' }} />
+                                            </a>
+                                        </div>
+                                        <div className="w-100">
+                                            <a href="" className="work-text__name m-0 font-medium text-[#333] text-[16px] hover:text-[#ff7d55]">{item?.job_name}</a>
+                                            <p className="m-0">Hình Thức Làm Việc : {item.working_form}</p>
+                                            <p className="m-0"> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
+                                            <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary)}</span> | {item.work_location}</p>
+                                        </div>
                                     </div>
-                                    <div className="works-text" style={{ marginTop: '35px', marginLeft: '10px' }}>
-                                        <h6>{item?.job_name}</h6>
-                                        <p style={{ marginTop: '5px' }}>Hình Thức Làm Việc : {item.working_form}</p>
-                                        <p style={{ marginTop: '5px' }}> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
-                                        <p style={{ marginTop: '5px' }}>Địa Điểm Làm Việc: {item.work_location}</p>
-                                    </div>
-                                    <div className="price" style={{ marginTop: '25px', marginLeft:"75px" }}>
-                                        <p style={{ color: 'red', fontWeight: 'bold' }}>{formatCurrency(item.job_salary)}/Giờ </p>    
-                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} className="heart" style={{ width: '20px', height: '20px', marginTop: '100px', marginLeft: '150px' }} />
-                                    </div>
+                                    <button className="text-[#5591ff] hover:bg-[#f0f7ff] p-[6px] rounded-full">
+                                        <AiOutlineHeart onClick={() => onHandleAdd(item)} style={{ width: '20px', height: '20px' }} />
+                                    </button>
                                 </div>
                             ))
-                        )}
+                        }
                     </div>
-                    <div className='' id="banner-list-job">
-                        <p className='py-3 pl-3 fs-6 border border-bottom-0' style={{ background: '#white', color: 'black' }}>Công Ty Hàng Đầu</p>
-                        <div className='border border-top-0' style={{ paddingBottom: '0.9em' }} >
-                            <img className="no-image" src='https://tse3.mm.bing.net/th?id=OIP.cLyW0WdrOvk6Nq7ehtoRxwHaEK&pid=Api&P=0' />
-                            <p style={{ padding: '10px 0 0 ', textAlign: 'center', fontSize: '1em', fontWeight: 'bold' }}>Công Ty cổ phần MISA</p>
-                            <p style={{ textAlign: 'center', padding: '10px 0 0 ' }}>Trở thành Marketer chuyên nghiệp cùng MISA ngay hôm nay</p>
-                            <div style={{ textAlign: 'center', padding: '10px 0 0 ', fontSize: '0.9em', color: "blue" }}><a href='#'>9 vị trí đang ứng</a></div>
+                    <div className='ml-[16px]' id="banner-list-job">
+                        <div className="border rounded">
+                            <p className='py-3 pl-3 fs-6' style={{ background: '#white', color: 'black' }}>Công Ty Hàng Đầu</p>
+                            <div className='' style={{ paddingBottom: '0.9em' }} >
+                                <img className="no-image" src='https://tse3.mm.bing.net/th?id=OIP.cLyW0WdrOvk6Nq7ehtoRxwHaEK&pid=Api&P=0' />
+                                <p style={{ padding: '10px 0 0 ', textAlign: 'center', fontSize: '1em', fontWeight: 'bold' }}>Công Ty cổ phần MISA</p>
+                                <p style={{ textAlign: 'center', padding: '10px 0 0 ' }}>Trở thành Marketer chuyên nghiệp cùng MISA ngay hôm nay</p>
+                                <div style={{ textAlign: 'center', padding: '10px 0 0 ', fontSize: '0.9em', color: "blue" }}><a href='#'>9 vị trí đang ứng</a></div>
+                            </div>
                         </div>
                         <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2F500x600_122855.png&w=1920&q=75" style={{ marginTop: '0.8em' }} />
                         <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2F500x600_122998.png&w=1920&q=75" style={{ marginTop: '0.8em' }} />

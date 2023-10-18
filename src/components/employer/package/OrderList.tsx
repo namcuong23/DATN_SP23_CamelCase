@@ -23,7 +23,7 @@ const OrderList: any = () => {
     const text: string = 'Are you sure to delete this order?'
     const navigate = useNavigate()
 
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs: any) => rs.auth)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(user?._id)

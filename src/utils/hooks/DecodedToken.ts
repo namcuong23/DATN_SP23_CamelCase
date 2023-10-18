@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-export const useDecodedToken: any = (token: string) => {
+const useDecodedToken: any = (token: string) => {
     try {
         const secretKey = 'login_token';
 
@@ -11,3 +11,5 @@ export const useDecodedToken: any = (token: string) => {
         return null;
     }
 }
+
+export default useDecodedToken

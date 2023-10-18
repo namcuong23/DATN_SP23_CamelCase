@@ -1,39 +1,31 @@
+import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { useGetPostsQuery } from '../../../service/post'
-import { useState } from 'react'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
 import { MessageType } from 'antd/es/message/interface'
-import { message } from 'antd'
-import { Button, Modal } from 'antd';
+import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
 import { useGetCareersQuery } from '../../../service/admin';
-import slugify from 'slugify';
+
+import './HomeClient.css'
+
 const HomeClient = (): any => {
   const { data: posts } = useGetPostsQuery()
   const { email } = useAppSelector((rs) => rs.auth)
   const [searchValue, setSearchValue] = useState()
   const navigate = useNavigate()
-  const [addFeedback, { isLoading }] = useAddFeedbackMutation();
+  const [addFeedback] = useAddFeedbackMutation();
   const { data: careers } = useGetCareersQuery()  
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm<IFeedback>()
+  const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
       feedback_email: email
     })
     const confirm: MessageType = message.info('Gửi yêu cầu thành công')
-    try {
-    } catch (error) {
-
-    }
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -48,7 +40,7 @@ const HomeClient = (): any => {
   };
   return (
     <div>
-      <div id="pageContentWrapper">
+      <div id="pageContentWrapper" className='pb-[4px]'>
         <div id="carouselExampleIndicators" className="carousel slide">
           <div className="carousel-indicators">
             <button
@@ -122,7 +114,7 @@ const HomeClient = (): any => {
                 aria-label="Username"
                 aria-describedby="basic-addon1"
               />
-              <button onClick={() => navigate(`works?keyword=${searchValue}`)} type="button" className="btn ml-3 rounded-start" id="related-jobs-search">
+              <button onClick={() => navigate(`works?q=${searchValue}`)} type="button" className="btn ml-3 rounded-start" id="related-jobs-search">
                 Tìm kiếm
               </button>
             </div>
@@ -249,7 +241,116 @@ const HomeClient = (): any => {
             </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
               <div id="hot-cagories" className="sc-dvwKko jrSuUk"><div className="sc-jtcaXd dhnMFx">
-                <div className="grid  grid-cols-4">
+                <div className="sc-dkSuNL gvXlWC ">
+                  <div className='row'>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-tai-chinh-dau-tu-i59-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true"><img src="https://images02.vietnamworks.com/mobile_banner/43615b63f0b281d216616f74630fb274.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Tài chính / Đầu tư</h3>
+                            </div>
+                            <p className="total">1124 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-ban-hang-i33-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/39fc1e25eac4528661800fe9e28267ca.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Bán hàng</h3>
+                            </div>
+                            <p className="total">1045 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-it-phan-mem-i35-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/4196a5fa1e29ac68a2f8e1a7f2df9086.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">IT - Phần mềm</h3>
+                            </div>
+                            <p className="total">817 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-ngan-hang-i42-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/23689c11d14510257843715c9ab51106.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Ngân hàng</h3>
+                            </div>
+                            <p className="total">656 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className='mt-5 row'>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-marketing-i27-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/85667b6343cc3133b2eb70c8486c592b.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Marketing</h3>
+                            </div>
+                            <p className="total">617 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-hanh-chanh-thu-ky-i2-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/1bc3dd0e7376dcbd8561d6780a64dd6e.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Hành chánh / Thư ký</h3>
+                            </div>
+                            <p className="total">592 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-ke-toan-i1-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/5f7c2e72ad9117e6189de072f4dc87a7.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Kế toán</h3>
+                            </div>
+                            <p className="total">592 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="sc-gJwTLC gsSTVe col-3">
+                      <div className="wrap-item">
+                        <div className="category-item">
+                          <a href="https://www.vietnamworks.com/viec-lam-dien-dien-tu-i64-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
+                            <img src="https://images02.vietnamworks.com/mobile_banner/5eca9f2f6165e80fc5f7bda53b3490f3.png" alt="category icon" />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">Điện / Điện tử</h3>
+                            </div>
+                            <p className="total">563 <span>Việc Làm</span></p>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                {/* <div className="grid  grid-cols-4">
                  { careers && careers.map((item:any) => {
                   return  <div className='my-2'>
                     <div  className="wrap-item">
@@ -258,13 +359,12 @@ const HomeClient = (): any => {
                           <div className="wrap-name">
                             <h3 className="title truncate-text-2-line">{item.name}</h3>
                           </div>
-                          {/* <p className="total">1124 <span>Việc Làm</span></p> */}
                         </Link>
                       </div>
                     </div>
                 </div>
                  } ) }
-                </div>
+                </div> */}
               </div>
               </div>
             </div>
@@ -330,7 +430,7 @@ const HomeClient = (): any => {
                 <a href="http://hrinsider.vietnamworks.com" title="Xem Tất Cả" className="is-hidden-mobile" rel="noreferrer">Xem Tất Cả</a>
               </div>
             </div>
-            <div className="sectionBlock__content" style={{ height: '100%' }}>
+            <div className="sectionBlock__content mb-4" style={{ height: '100%' }}>
               <div className="article-wrapper">
                 <article>
                   <div className="cardBlock">
@@ -347,9 +447,12 @@ const HomeClient = (): any => {
                           </div>
                         </a>
                       </div>
-                      <div className="cardBlock__content" title="Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở."><div className="clamp-lines "><div id="clamped-content-card-content" aria-hidden="true">Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.
-                      </div>
-                      </div>
+                      <div className="cardBlock__content content-title" title="Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.">
+                        <div className="clamp-lines ">
+                          <div id="clamped-content-card-content" aria-hidden="true">
+                            Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.
+                          </div>
+                        </div>
                       </div>
                       <div className="cardBlock__category ellipsis">
                         <span className="cardBlock__point" />

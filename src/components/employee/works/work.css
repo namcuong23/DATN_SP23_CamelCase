@@ -35,6 +35,14 @@
     }
 }
 
+.work-text__name {
+  display: block;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
 #loading-area{
   width: 25px;
   height: 25px;
