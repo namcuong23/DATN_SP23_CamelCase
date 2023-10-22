@@ -10,6 +10,10 @@ export const postApi: any = createApi({
             query: () => '/posts',
             providesTags: ['Post']
         }),
+        getPostsByCareer: builder.query<IPost,string>({
+            query: (query:any) => `/posts?career=${query['career']}&id=${query['id']}`,
+            providesTags: ['Post']
+        }),
         getPost: builder.query<IPost, string>({
             query: (id: string) => `/posts/${id}/detail`,
             providesTags: ['Post']
@@ -78,6 +82,7 @@ export const formatDate = (inputDate: string): any => {
 
 export const {
     useGetPostsQuery,
+    useGetPostsByCareerQuery,
     useGetPostsByUIdQuery,
     useGetPostsDefUIdQuery,
     useGetPostQuery,
