@@ -99,27 +99,7 @@ const HomeClient = (): any => {
             <span className="carousel-control-next-icon" aria-hidden="true" />
             <span className="visually-hidden">Next</span>
           </button>
-          <div className='position-absolute top-50 start-50 translate-middle' style={{ background: 'rgba(0,0,0,.4)', height: '5em', width: '70%', borderRadius: '0.5em' }}>
-            <div className="input-group p-[10px]" style={{ width: '100%', display: 'inline-flex' }}>
-              <div className="border border-right-0 input-group-text" id="basic-addon1" style={{ background: 'white', display: 'inline-block' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                </svg>
-              </div>
-              <input
-                onChange={(e: any) => setSearchValue(e.target.value)}
-                type="text"
-                className="form-control border border-left-0 py-4 rounded-end"
-                placeholder="Tìm kiếm việc làm, công ty, kỹ năng"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-              <button onClick={() => navigate(`works?q=${searchValue}`)} type="button" className="btn ml-3 rounded-start" id="related-jobs-search">
-                Tìm kiếm
-              </button>
-            </div>
 
-          </div>
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch sectionBlock_featured-company lunar-new-year animated fadeIn take-1-second">
           <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">

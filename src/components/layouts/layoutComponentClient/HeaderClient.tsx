@@ -7,7 +7,6 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
-import { useDecodedToken } from '../../../utils/hooks';
 
 const cx = classNames.bind(styles);
 
