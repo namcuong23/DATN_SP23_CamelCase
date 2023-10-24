@@ -10,22 +10,20 @@ import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
 import { useGetCareersQuery } from '../../../service/admin';
 
+import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import './HomeClient.css'
 
 const HomeClient = (): any => {
   const { data: posts } = useGetPostsQuery()
   const { email } = useAppSelector((rs) => rs.auth)
-  const [searchValue, setSearchValue] = useState()
-  const navigate = useNavigate()
-  const [addFeedback] = useAddFeedbackMutation();
-  const { data: careers } = useGetCareersQuery()  
+  const [addFeedback] = useAddFeedbackMutation(); 
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
       feedback_email: email
     })
-    const confirm: MessageType = message.info('Gửi yêu cầu thành công')
+    message.info('Gửi yêu cầu thành công')
   }
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -39,9 +37,10 @@ const HomeClient = (): any => {
     setIsModalOpen(false);
   };
   return (
-    <div>
-      <div id="pageContentWrapper" className='pb-[4px]'>
-        <div id="carouselExampleIndicators" className="carousel slide">
+    <>
+      <div className="home-banner">
+        <HeaderSearchhJob className='bg' />
+        <div id="carouselExampleIndicators" className="carousel slide home-banner__item">
           <div className="carousel-indicators">
             <button
               type="button"
@@ -99,37 +98,16 @@ const HomeClient = (): any => {
             <span className="carousel-control-next-icon" aria-hidden="true" />
             <span className="visually-hidden">Next</span>
           </button>
-          <div className='position-absolute top-50 start-50 translate-middle' style={{ background: 'rgba(0,0,0,.4)', height: '5em', width: '70%', borderRadius: '0.5em' }}>
-            <div className="input-group p-[10px]" style={{ width: '100%', display: 'inline-flex' }}>
-              <div className="border border-right-0 input-group-text" id="basic-addon1" style={{ background: 'white', display: 'inline-block' }}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">
-                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
-                </svg>
-              </div>
-              <input
-                onChange={(e: any) => setSearchValue(e.target.value)}
-                type="text"
-                className="form-control border border-left-0 py-4 rounded-end"
-                placeholder="Tìm kiếm việc làm, công ty, kỹ năng"
-                aria-label="Username"
-                aria-describedby="basic-addon1"
-              />
-              <button onClick={() => navigate(`works?q=${searchValue}`)} type="button" className="btn ml-3 rounded-start" id="related-jobs-search">
-                Tìm kiếm
-              </button>
-            </div>
-
-          </div>
         </div>
-        <section className="sectionBlock sectionBlock_has-padding-touch sectionBlock_featured-company lunar-new-year animated fadeIn take-1-second">
+        <section className="sectionBlock sectionBlock_has-padding-touch fadeIn">
           <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
-            <h2 className="sectionBlock__title">Các Công Ty Hàng Đầu</h2>
+            <h2 className="sectionBlock__title text-[#fff]">Các Công Ty Hàng Đầu</h2>
           </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
               <div className="featured-companies"><div className="companyBlock " style={{ flexBasis: '33.33%' }}>
                 <a href="https://www.vietnamworks.com/company/metub-network?utm_campaign_navi=6293455&utm_medium_navi=viplogo&utm_source_navi=vnw_homepage&utm_term_navi=new-homepage" target="_blank" rel="noreferrer">
                   <div className="companyBlock__box" role="img" aria-label="Metub Vietnam tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn.">
-                    <img src="https://images.vietnamworks.com/logo/M2B_viplogo_119863.jpg" alt="" />
+                    <img className='mx-auto' src="https://images.vietnamworks.com/logo/M2B_viplogo_119863.jpg" alt="" />
                     <div className="companyBlock__content">
                       <div className="companyBlock__name is-uppercase">Metub Vietnam</div>
                       <span className="companyBlock__tag">Việc mới</span>
@@ -139,7 +117,8 @@ const HomeClient = (): any => {
               </div>
                 <div className="companyBlock " style={{ flexBasis: '33.33%' }}>
                   <a href="https://www.vietnamworks.com/nha-tuyen-dung/e1527856?utm_campaign_navi=1527856&utm_medium_navi=viplogo&utm_source_navi=vnw_homepage&utm_term_navi=new-homepage" target="_blank" rel="noreferrer">
-                    <div className="companyBlock__box" role="img" aria-label="ORION VIETNAM tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn."><img src="https://images.vietnamworks.com/logo/130x130-O_121814.jpg" alt="" />
+                    <div className="companyBlock__box" role="img" aria-label="ORION VIETNAM tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn.">
+                      <img className='mx-auto' src="https://images.vietnamworks.com/logo/130x130-O_121814.jpg" alt="" />
                       <div className="companyBlock__content">
                         <div className="companyBlock__name is-uppercase">ORION VIETNAM</div>
                         <span className="companyBlock__tag">Việc mới</span>
@@ -150,7 +129,7 @@ const HomeClient = (): any => {
                 <div className="companyBlock " style={{ flexBasis: '33.33%' }}>
                   <a href="https://www.vietnamworks.com/company/Mcredit?utm_campaign_navi=4139866&utm_medium_navi=viplogo&utm_source_navi=vnw_homepage&utm_term_navi=new-homepage" target="_blank" rel="noreferrer">
                     <div className="companyBlock__box" role="img" aria-label="MB SHINSEI (Mcredit) tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn.">
-                      <img src="https://images.vietnamworks.com/logo/130x130-m_118018.jpg" alt="" />
+                      <img className='mx-auto' src="https://images.vietnamworks.com/logo/130x130-m_118018.jpg" alt="" />
                       <div className="companyBlock__content"><div className="companyBlock__name is-uppercase">MB SHINSEI (Mcredit)</div>
                         <span className="companyBlock__tag">Việc mới</span>
                       </div>
@@ -160,17 +139,8 @@ const HomeClient = (): any => {
                 <div className="companyBlock " style={{ flexBasis: '33.33%' }}>
                   <a href="https://www.vietnamworks.com/nha-tuyen-dung/lg-electronics-vietnam-sales-marketing-hcm-office-c81523?utm_campaign_navi=1895848&utm_medium_navi=viplogo&utm_source_navi=vnw_homepage&utm_term_navi=new-homepage" target="_blank" rel="noreferrer">
                     <div className="companyBlock__box" role="img" aria-label="LG Electronics Vietnam tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn.">
-                      <img src="https://images.vietnamworks.com/logo/new_120278.jpg" alt="" />
+                      <img className='mx-auto' src="https://images.vietnamworks.com/logo/new_120278.jpg" alt="" />
                       <div className="companyBlock__content"><div className="companyBlock__name is-uppercase">LG Electronics Vietnam</div>
-                        <span className="companyBlock__tag">Việc mới</span>
-                      </div>
-                    </div>
-                  </a>
-                </div>
-                <div className="companyBlock " style={{ flexBasis: '33.33%' }}>
-                  <a href="https://www.vietnamworks.com/nha-tuyen-dung/e3746753/?utm_campaign_navi=3746753&utm_medium_navi=viplogo&utm_source_navi=vnw_homepage&utm_term_navi=new-homepage" target="_blank" rel="noreferrer">
-                    <div className="companyBlock__box" role="img" aria-label="TRỞ THÀNH KỸ SƯ CNTT MOBIFONE tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn."><img src="https://images.vietnamworks.com/logo/130x130-MBf_120892.jpg" alt="" />
-                      <div className="companyBlock__content"><div className="companyBlock__name is-uppercase">TRỞ THÀNH KỸ SƯ CNTT MOBIFONE</div>
                         <span className="companyBlock__tag">Việc mới</span>
                       </div>
                     </div>
@@ -180,6 +150,8 @@ const HomeClient = (): any => {
             </div>
           </div>
         </section>
+      </div>
+      <div id="pageContentWrapper" className='pb-[4px]'>
         <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
           <div className="container p-0">
             <div className="is-flex justify-between align-center section-title">
@@ -196,9 +168,9 @@ const HomeClient = (): any => {
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
                           posts ?
-                            posts.map((post: any) =>
+                            posts.map((post: any, index: number) =>
                               post.post_status == true ?
-                                <NavLink to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                                <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                                   <div key={post._id}>
                                     <div className="swiper-slide">
                                       <div className="jobBlock recoJobs__job animated fadeIn take-1-second ">
@@ -350,21 +322,7 @@ const HomeClient = (): any => {
                     </div>
                   </div>
                 </div>
-                {/* <div className="grid  grid-cols-4">
-                 { careers && careers.map((item:any) => {
-                  return  <div className='my-2'>
-                    <div  className="wrap-item">
-                      <div style={{width:'290px',height:'210px'}} className="category-item">
-                        <Link to={`works?career=${item._id}`}><img width={60} style={{height:'60px'}} src={item.image} />
-                          <div className="wrap-name">
-                            <h3 className="title truncate-text-2-line">{item.name}</h3>
-                          </div>
-                        </Link>
-                      </div>
-                    </div>
-                </div>
-                 } ) }
-                </div> */}
+                
               </div>
               </div>
             </div>
@@ -471,7 +429,13 @@ const HomeClient = (): any => {
         <Button className='bg-[#f52b72] text-white m-2' onClick={showModal}>
           <WhatsAppOutlined /> Hỗ trợ
         </Button>
-        <Modal title="Đóng góp ý kiến" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <Modal 
+          title="Đóng góp ý kiến" 
+          open={isModalOpen} 
+          onCancel={handleCancel}
+          okButtonProps={{ hidden: true }}
+          cancelButtonProps={{ hidden: true }}
+        >
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className='h-[80px] w-100 py-3 bg-white'>
               <div className='container flex items-center justify-center h-100 w-100'>
@@ -480,9 +444,6 @@ const HomeClient = (): any => {
                     <input type="text" className='bg-[#F4F4F7] h-100 w-[100%] text-gray-600 focus:outline-none' placeholder='Nhập câu hỏi cần giải đáp' {...register("feedback_question", { required: true })} />
                     {errors.feedback_question?.type === "required" && <p className='text-danger font-bold w-200'>Vui lòng nhập câu hỏi của bạn !</p>}
                   </div>
-                  {/* <div className='hidden'>
-                    {currentUser?.email}
-                  </div> */}
                 </div>
                 <div className='h-100'>
                   <div className='h-100'>
@@ -496,7 +457,7 @@ const HomeClient = (): any => {
         </Modal>
       </div>
 
-    </div>
+    </>
   )
 }
 

@@ -1,0 +1,12 @@
+/* Header Search Job */
+.search-job {
+    margin-left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+}
+
+.search-job.bg {
+    padding: 16px;
+    background-color: rgba(0,0,0,.15);
+    border-radius: 12px;
+}

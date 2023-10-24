@@ -9,6 +9,7 @@ import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useAddJobsaveMutation } from '../../../service/savejob'
 import useDateFormat from '../../../utils/hooks/FormatDate'
 import './postDetail.scss';
+import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 const PostDetailEp = (): any => {
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
@@ -66,8 +67,11 @@ const PostDetailEp = (): any => {
   }
   return (
     <>
+      <div className='bg-white'>
+        <HeaderSearchhJob className={'py-[16px]'} />
+      </div>
       <div
-        className="recruitment-details"
+        className="recruitment-details mt-[16px]"
         style={{ background: "#f7f7f7", paddingBottom: "1em" }}
       >
         <div className="row">

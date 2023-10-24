@@ -24,7 +24,6 @@ import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
 import { ToastContainer } from "react-toastify"
-import AccountMng from "./components/employee/profile/AccountMng"
 import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 import Cart from "./components/employer/package/Cart"
 import ResetPassEpe from "./components/auth/Employee/ResetPassEpe"
@@ -34,12 +33,9 @@ import ResetPassEpr from "./components/auth/Employer/ResetPassEpr"
 import ForgotPassNotice from "./components/auth/Employer/ForgotPassNotice"
 import AccEprMng from "./components/employer/profileEpr/AccEprMng"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
-import Infotmation from "./components/employee/profile/Infotmation"
-import MyJob from "./components/employee/profile/MyJob"
 import 'react-toastify/dist/ReactToastify.css';
 import ServiceList from "./components/employer/My Service/ServiceList"
 import ServiceAdd from "./components/employer/My Service/ServiceAdd"
-import PrivateRoute from "./privateRoute/PrivateRoute"
 import Interview from "./components/pages/Interview"
 import ManageJob from "./components/pages/ManageJob"
 import RecruitmentDetails from "./components/pages/RecruitmentDetails"
@@ -99,14 +95,8 @@ function App() {
           <Route path="managejob" element={<ManageJob />} />
           <Route path="jobempolyee" element={<Job />} />
           <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
-          <Route path="account-manage" element={<AccountMng />} />
-          <Route path="myjob" element={<MyJob />} />
           <Route path="profile" element={<Profile />} />
           <Route path="company" element={<Company />} />
-          {/* <Route index element={<Infotmation />} />
-            <Route path="myJob" element={<MyJob />} />
-            <Route path="information" element={<Infotmation />} /> */}
-          {/* </Route> */}
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -127,16 +117,13 @@ function App() {
           <Route path='orders/:id/detail' element={<OrderDetail />} />
           <Route path='notice' element={<OrderNotice />} />
           <Route path='cart' element={<Cart />} />
-          {/* <Route path='services' element={<ServicesEpr />} /> */}
           <Route path='manage-cv' element={<ProfileList />} />
           <Route path='manage-profile/:id' element={<ManageProfileDetail />} />
         </Route>
 
         {/* ADMIN */}
         <Route path='/admin' element={
-          // <PrivateRoute>
           <LayoutAdmin />
-          // </PrivateRoute>
         }>
           <Route index element={<HomeAdmin />} />
           <Route path="users-management" element={<UsersManage />} />
@@ -175,7 +162,6 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
       <ToastContainer />
     </div >
   )

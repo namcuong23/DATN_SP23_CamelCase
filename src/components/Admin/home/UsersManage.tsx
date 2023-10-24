@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import { useBlockUserMutation, useUpdateUserMutation } from '../../../service/admin'
 import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps, message } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
@@ -13,7 +13,6 @@ const UsersManage = () => {
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
   const users = userEpe?.concat(userEpr)
-  console.log(users)
   const [updateUser, { isLoading: isUpdating, isSuccess }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
   const [block] = useBlockUserMutation();

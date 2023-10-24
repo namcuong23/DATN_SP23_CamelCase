@@ -1,3 +1,16 @@
+.home-banner {
+    background: linear-gradient(270deg, #005aff 0%, #001744 100%);
+    padding-bottom: 32px;
+}
+
+.home-banner__item {
+    width: 80%;
+    margin: 32px 0 0 50%;
+    transform: translateX(-50%);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
 .content-title {
     height: auto;
     display: block;
