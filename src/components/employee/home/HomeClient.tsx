@@ -98,6 +98,7 @@ const HomeClient = (): any => {
             <span className="carousel-control-next-icon" aria-hidden="true" />
             <span className="visually-hidden">Next</span>
           </button>
+
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch fadeIn">
           <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">

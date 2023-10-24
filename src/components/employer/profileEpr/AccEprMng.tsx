@@ -13,6 +13,36 @@ import Swal from 'sweetalert2'
 import { Modal } from 'antd'
 
 const AccEprMng = (): any => {
+    const [imageBase64, setImageBase64] = useState<any>('');
+    const getEventResult = (event: any) => {
+        if (event && event.target && typeof event.target.result == 'string') {
+            return event.target.result;
+        }
+
+        return '';
+    };
+
+    const handleChangeFile = (event: any) => {
+        const file = event.target.files[0];
+        if (!file) {
+            console.log('Không có file');
+            return;
+        } else if (file.size > 500000) {
+            console.log('File quá lớn');
+            return;
+        } 
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const image = new Image();
+            if (e && e.target) {
+                image.src = getEventResult(e);
+                console.log(image.width, image.height, file.size, file.type);
+                setImageBase64(e.target.result);
+            }
+        };
+        reader.readAsDataURL(file);
+    };
+
     const [open, setOpen] = useState(false)
     const [openC, setOpenC] = useState(false)
     const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
@@ -198,6 +228,7 @@ const AccEprMng = (): any => {
                                             {errors.confirmpass && errors.confirmpass.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng xác nhận Mật khẩu mới</span>}
                                             {errors.confirmpass && errors.confirmpass.type != 'required' && <span className='text-red-500 fw-bold mt-1'>Mật khẩu không hợp lệ.</span>}
                                         </div>
+                                        
                                         <div className='flex justify-end gap-x-3'>
                                             {/* <button onClick={() => setOpenC(false)} className='hover:border-[#FD6333] hover:text-[#FD6333] border-1 border-[#979797] text-[#979797] py-1 px-8 text-[16px] rounded'>Hủy</button> */}
                                             <button type='submit' className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-8 text-[16px] rounded'>Lưu</button>

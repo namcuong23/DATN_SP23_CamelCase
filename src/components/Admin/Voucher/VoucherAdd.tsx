@@ -20,15 +20,11 @@ const VoucherAdd = () => {
     }
     return (
         <>
-            <div style={{ maxWidth: '700px' }} className='mx-auto'>
+            <div style={{ maxWidth: '800px' }} className='mx-10'>
                 <h1 className='mb-3 text-center fw-normal'>Tạo gói mới</h1>
                 <Form onFinish={onHandleAdd} form={form} name="add" layout="vertical">
 
-                    <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
+                    <div  style={{ width: '1000px' }}>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Tên gói</div>
                             <Form.Item name="package_name" label="Tên gói dịch vụ dành cho khách hàng"
@@ -40,11 +36,7 @@ const VoucherAdd = () => {
                         </div>
                     </div>
 
-                    <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
+                    <div  style={{ width: '1000px' }}>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Mô tả</div>
                             <Form.Item name="package_desc" label="Thông tin chi tiết về gói dịch vụ này"
@@ -56,11 +48,7 @@ const VoucherAdd = () => {
                         </div>
                     </div>
 
-                    <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
+                    <div  style={{ width: '1000px' }}>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Giá</div>
                             <Form.Item name="package_price" label="Thông tin về giá tiền"
@@ -72,11 +60,7 @@ const VoucherAdd = () => {
                         </div>
                     </div>
 
-                    <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
+                    <div  style={{ width: '1000px' }}>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thời gian hiệu lực</div>
                             <Form.Item name="package_day" label="Thời gian hiệu lực"

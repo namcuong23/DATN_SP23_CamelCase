@@ -1,6 +1,7 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { useEffect } from 'react'
 import { useAppSelector } from '../../../app/hook'
+import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   useGetUserEprByEmailQuery,
@@ -15,7 +16,35 @@ const ProfileEpr = (): any => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
   const [updateUser] = useUpdateUserEprMutation()
   const navigate = useNavigate()
+  const [imageBase64, setImageBase64] = useState<any>('');
+  const getEventResult = (event: any) => {
+    if (event && event.target && typeof event.target.result == 'string') {
+      return event.target.result;
+    }
 
+    return '';
+  };
+
+  const handleChangeFile = (event: any) => {
+    const file = event.target.files[0];
+    if (!file) {
+      console.log('Không có file');
+      return;
+    } else if (file.size > 500000) {
+      console.log('File quá lớn');
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const image = new Image();
+      if (e && e.target) {
+        image.src = getEventResult(e);
+        console.log(image.width, image.height, file.size, file.type);
+        setImageBase64(e.target.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
   useEffect(() => {
     reset(userEpr)
   }, [userEpr])
@@ -59,6 +88,7 @@ const ProfileEpr = (): any => {
           <h2 className='text-[22px] tracking-normal py-1 pb-3 mb-3 border-b-[1px]'>Thông tin NTD</h2>
           <div>
             <form onSubmit={handleSubmit(handleUpdate)}>
+
               <div className='flex flex-col gap-x-10 w-full mb-2'>
                 <label className='text-[15px] font-[550]'>Tên NTD<span className='text-[#ca5b54]'>*</span> </label>
                 <input type="text"
@@ -71,6 +101,7 @@ const ProfileEpr = (): any => {
                 {errors.name && errors.name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên.</span>}
                 {errors.name && errors.name.type == 'pattern' && <span className='text-red-500 fw-bold mt-1'>Tên không hợp lệ.</span>}
               </div>
+
               <div className='flex items-center gap-x-10 w-full mb-2'>
                 <div className='flex flex-col w-[50%]'>
                   <label className='text-[15px] font-[550]'> Email<span className='text-[#ca5b54]'>*</span> </label>
@@ -123,6 +154,16 @@ const ProfileEpr = (): any => {
                   rows={7}
                   className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
               </div>
+
+              <div className="mb-3">
+                <label className="form-label">Ảnh</label>
+                <input className="form-control" type="file" {...register( 'image', )} onChange={(event) => handleChangeFile(event)}/>
+                <div className="form-text" style={{ color: 'red' }}>
+                  {errors.image ? errors.image.message : ''}
+                </div>
+                <img src={imageBase64} width={100} alt="" />
+              </div>
+              
               <div className='flex justify-end pt-2'>
                 <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-10 text-[16px] rounded'>Lưu</button>
               </div>
