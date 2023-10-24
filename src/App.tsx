@@ -25,7 +25,6 @@ import PersonalInfor from './components/pages/PersonalInfor'
 import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
 import { ToastContainer } from "react-toastify"
-import AccountMng from "./components/employee/profile/AccountMng"
 import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 import Cart from "./components/employer/package/Cart"
 import ResetPassEpe from "./components/auth/Employee/ResetPassEpe"
@@ -34,9 +33,6 @@ import ForgotPassEpr from "./components/auth/Employer/ForgotPassEpr"
 import ResetPassEpr from "./components/auth/Employer/ResetPassEpr"
 import ForgotPassNotice from "./components/auth/Employer/ForgotPassNotice"
 import AccEprMng from "./components/employer/profileEpr/AccEprMng"
-
-import Infotmation from "./components/employee/profile/Infotmation"
-import MyJob from "./components/employee/profile/MyJob"
 import 'react-toastify/dist/ReactToastify.css';
 import ServiceList from "./components/employer/My Service/ServiceList"
 // import ServiceAdd from "./components/employer/My Service/ServiceAdd"
@@ -46,22 +42,22 @@ import RecruitmentDetails from "./components/pages/RecruitmentDetails"
 import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
 
 import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
-import FeedbackList from "./components/Admin/Feedback/FeedbackList"
-import Candidate from "./components/employer/Candidate/candidate"
-import PostList from "./components/employer/Posts/PostList"
-import PostAdd from "./components/employer/Posts/PostAdd"
-import PostEdit from "./components/employer/Posts/PostEdit"
-import PostDetail from "./components/employer/Posts/PostDetail"
-import HomeAdmin from "./components/Admin/home/HomeAdmin"
-import UsersManage from "./components/Admin/home/UsersManage"
-import VoucherList from "./components/Admin/Voucher/VoucherList"
-import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/Admin/Post/PostAdmin"
-import CareerList from "./components/Admin/Career/CareerList"
-import CareerAdd from "./components/Admin/Career/CareerAdd"
 import Company from "./components/pages/Company"
 import Report from "./components/employer/report/Report"
+import PostList from "./components/employer/posts/PostList"
+import PostAdd from "./components/employer/posts/PostAdd"
+import PostEdit from "./components/employer/posts/PostEdit"
+import PostDetail from "./components/employer/posts/PostDetail"
+import Candidate from "./components/employer/Candidate/candidate"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import UsersManage from "./components/admin/home/UsersManage"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import CareerList from "./components/admin/Career/CareerList"
+import CareerAdd from "./components/admin/Career/CareerAdd"
+import FeedbackList from "./components/admin/Feedback/FeedbackList"
 function App() {
   return (
     <div className="App">
@@ -102,14 +98,8 @@ function App() {
           <Route path="managejob" element={<ManageJob />} />
           <Route path="jobempolyee" element={<Job />} />
           <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
-          <Route path="account-manage" element={<AccountMng />} />
-          <Route path="myjob" element={<MyJob />} />
           <Route path="profile" element={<Profile />} />
           <Route path="company" element={<Company />} />
-          {/* <Route index element={<Infotmation />} />
-            <Route path="myJob" element={<MyJob />} />
-            <Route path="information" element={<Infotmation />} /> */}
-          {/* </Route> */}
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 
@@ -130,16 +120,13 @@ function App() {
           <Route path='orders/:id/detail' element={<OrderDetail />} />
           <Route path='notice' element={<OrderNotice />} />
           <Route path='cart' element={<Cart />} />
-          {/* <Route path='services' element={<ServicesEpr />} /> */}
           <Route path='manage-cv' element={<ProfileList />} />
           <Route path='manage-profile/:id' element={<ManageProfileDetail />} />
         </Route>
 
         {/* ADMIN */}
         <Route path='/admin' element={
-          // <PrivateRoute>
           <LayoutAdmin />
-          // </PrivateRoute>
         }>
           <Route index element={<HomeAdmin />} />
           <Route path="users-management" element={<UsersManage />} />
@@ -178,7 +165,6 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      {/* Same as */}
       <ToastContainer />
     </div >
   )

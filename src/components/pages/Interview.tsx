@@ -1,11 +1,14 @@
 import React from 'react'
-import HeaderSearchhJob from '../layouts/layoutComponentClient/HeaderSearchhJob'
+import HeaderSearchhJob from '../layouts/HeaderSearchhJob'
 
 const Interview = () => {
     return (
         <>
             <div>
                 {/* ****head */}
+                <div className='bg-white'>
+                    <HeaderSearchhJob className={'py-[16px]'} />
+                </div>
                 {/* ****conntent */}
                 <div style={{ background: '#f7f7f7', paddingBottom: '2em' }}>
                     <div className=" pt-3" >
@@ -52,14 +55,6 @@ const Interview = () => {
                                 </div>
                             </div>
                             <div className='w-[30%] mx-[8px]'>
-                                <div className='bg-[#fff] p-[16px] rounded-[8px]'>
-                                    <h4 className='text-[22px] py-[10px] text-[#005aff]'>Tìm việc ngay</h4>
-                                    <div className='flex item-center h-[40px] border border-[#ccc] rounded-[4px] pr-[8px] cursor-pointer'>
-                                        <i className="fa-solid fa-magnifying-glass leading-[100%] flex item-center justify-center px-[8px] py-[12px]"></i>
-                                        <input className='leading-[100%] focus:outline-none w-100' type="text" placeholder='Vị trí tuyển dụng' />
-                                    </div>
-                                </div>
-
                                 <div className='border border-0 rounded-[8px] overflow-hidden w-100 bg-[#fff] mt-[12px]'>
                                     <p className='py-4 pl-[16px] fs-6' style={{ background: '#e5eeff', color: 'black' }}>Việc làm liên quan</p>
                                     <div className='flex items-center pb-[16px]'>

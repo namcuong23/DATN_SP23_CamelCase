@@ -50,6 +50,8 @@ const AccEprMng = (): any => {
     const { register, handleSubmit, formState: { errors } } = useForm()
     const [changePassEpr] = useChangePassEprMutation()
     const changePass = async ({ oldpass, newpass, confirmpass }: any) => {
+        console.log('1');
+        
         if (newpass != confirmpass) {
             return toast.warning('Mật khẩu không khớp')
         }
@@ -151,7 +153,9 @@ const AccEprMng = (): any => {
                                                                     onClick={() => setOpen(false)} >
                                                                     Hủy
                                                                 </button>
-                                                                <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-1 px-2 text-white rounded'
+                                                                <button 
+                                                                    className='bg-[#FE7D55] hover:bg-[#FD6333] py-1 px-2 text-white rounded'
+                                                                    type='submit'
                                                                 >
                                                                     Xác nhận
                                                                 </button>
@@ -174,8 +178,11 @@ const AccEprMng = (): any => {
                             </div>
                             <div className='pt-2'>
                                 <button onClick={() => setOpenC(!openC)} className='text-[#1C88E5] hover:text-[#FD6333]'>Thay đổi mật khẩu</button>
-                                {
-                                    openC ? <form onSubmit={handleSubmit(changePass)} className='w-[500px] mt-2'>
+                                <form 
+                                    onSubmit={handleSubmit(() => console.log('1'))} 
+                                    className='w-[500px] mt-2'
+                                    // style={{ display: openC ? '' : 'none' }}
+                                    >
                                         <div className='flex flex-col gap-x-10 mb-2'>
                                             <label className='text-[15px] font-[550]'>Mật khẩu hiện tại</label>
                                             <input type="password"
@@ -223,11 +230,10 @@ const AccEprMng = (): any => {
                                         </div>
                                         
                                         <div className='flex justify-end gap-x-3'>
-                                            <button onClick={() => setOpen(false)} className='hover:border-[#FD6333] hover:text-[#FD6333] border-1 border-[#979797] text-[#979797] py-1 px-8 text-[16px] rounded'>Hủy</button>
-                                            <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-8 text-[16px] rounded'>Lưu</button>
+                                            {/* <button onClick={() => setOpenC(false)} className='hover:border-[#FD6333] hover:text-[#FD6333] border-1 border-[#979797] text-[#979797] py-1 px-8 text-[16px] rounded'>Hủy</button> */}
+                                            <button type='submit' className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-8 text-[16px] rounded'>Lưu</button>
                                         </div>
-                                    </form> : ''
-                                }
+                                    </form>
                             </div>
                         </div>
 

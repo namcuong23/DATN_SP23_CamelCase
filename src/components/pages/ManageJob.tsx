@@ -1,5 +1,5 @@
 import React from 'react'
-import HeaderSearchhJob from '../layouts/layoutComponentClient/HeaderSearchhJob'
+import HeaderSearchhJob from '../layouts/HeaderSearchhJob'
 import IPost from '../../interface/post'
 import { useGetPostsQuery } from '../../service/post'
 import { useState ,useEffect} from 'react';

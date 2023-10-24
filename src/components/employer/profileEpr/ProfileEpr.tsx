@@ -48,7 +48,6 @@ const ProfileEpr = (): any => {
   useEffect(() => {
     reset(userEpr)
   }, [userEpr])
-
   const handleUpdate: SubmitHandler<IUserNTD> = async (userEprForm: IUserNTD) => {
     const update: any = await updateUser({
       ...userEprForm,
