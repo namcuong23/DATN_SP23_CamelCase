@@ -225,11 +225,6 @@ const Candidate = (): any | null | JSX.Element => {
                         <div>
                             <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Ứng viên phù hợp</h2>
                         </div>
-                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-3 py-2'>
-                            <NavLink to={'/home/candidates/add'} className='text-white text-decoration-none'>
-                                Đăng tin
-                            </NavLink>
-                        </div>
                     </div>
                     <Table columns={columns} dataSource={dataSource} />
                 </div>

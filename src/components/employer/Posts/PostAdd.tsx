@@ -48,10 +48,6 @@ const PostAdd = (): any => {
                 <Form onFinish={onHandleAdd} form={form} name="add" layout="vertical">
                     <div className='max-w-[700px] mx-auto'>
                         <div className='d-flex align-items-top'>
-                            <div className=''>
-                                <BookOutlined style={{ fontSize: '300%' }}
-                                    className='text-[#002B7D] border-4 border-[#002B7D] p-3 rounded-circle' />
-                            </div>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4 fw-'>Việc cần tuyển</div>
                                 <Form.Item name="job_name" label="Tên công việc cần tuyển"
@@ -63,10 +59,6 @@ const PostAdd = (): any => {
                             </div>
                         </div>
                         <div className='d-flex align-items-top'>
-                            <div>
-                                <BookOutlined style={{ fontSize: '300%' }}
-                                    className='text-[#002B7D] border-4 border-[#002B7D] p-3 rounded-circle' />
-                            </div>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4'>Thông tin về yêu cầu tuyển dụng</div>
                                 <Form.Item name="job_description" label="Mô tả công việc"
@@ -135,10 +127,6 @@ const PostAdd = (): any => {
                             </div>
                         </div>
                         <div className='d-flex align-items-top'>
-                            <div>
-                                <MoneyCollectOutlined style={{ fontSize: '300%' }}
-                                    className='text-[#002B7D] border-4 border-[#002B7D] p-3 rounded-circle' />
-                            </div>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4'>Ngân sách dự kiến</div>
                                 <Form.Item name="job_salary" label="Số tiền chi trả dự kiến"

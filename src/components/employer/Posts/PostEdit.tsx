@@ -56,10 +56,6 @@ const PostEdit = (): any => {
                 <Form layout="vertical" onFinish={onHandleEdit} form={form}>
                     <div className='max-w-[700px] mx-auto'>
                         <div className='d-flex align-items-top'>
-                            <div>
-                                <BookOutlined style={{ fontSize: '300%' }}
-                                    className='text-[#002B7D] border-4 border-[#002B7D] p-3 rounded-circle' />
-                            </div>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4'>Việc cần tuyển</div>
                                 <Form.Item name="job_name" label="Tên công việc cần tuyển"
@@ -71,10 +67,6 @@ const PostEdit = (): any => {
                             </div>
                         </div>
                         <div className='d-flex align-items-top'>
-                            <div>
-                                <BookOutlined style={{ fontSize: '300%' }}
-                                    className='text-[#002B7D] border-4 border-[#002B7D] p-3 rounded-circle' />
-                            </div>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4'>Thông tin về yêu cầu tuyển dụng</div>
                                 <Form.Item name="job_description" label="Mô tả công việc"
@@ -126,10 +118,6 @@ const PostEdit = (): any => {
                             </div>
                         </div>
                         <div className='d-flex align-items-top'>
-                            <div>
-                                <MoneyCollectOutlined style={{ fontSize: '300%' }}
-                                    className='text-[#002B7D] border-4 border-[#002B7D] p-3 rounded-circle' />
-                            </div>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4'>Ngân sách dự kiến</div>
                                 <Form.Item name="job_salary" label="Số tiền chi trả dự kiến"
@@ -144,7 +132,7 @@ const PostEdit = (): any => {
                     </div>
                     <div className='text-center sticky bottom-0 bg-gray-100 border-t-2 py-3'>
                         <div>
-                            <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white text-[16px] py-2 px-8 rounded' type="submit">
+                            <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-gray text-[16px] py-2 px-8 rounded' type="submit">
                                 Sửa
                             </button>
                             <NavLink to={'/home/posts'}>
