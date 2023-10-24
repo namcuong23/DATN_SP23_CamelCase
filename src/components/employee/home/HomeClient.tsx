@@ -12,6 +12,7 @@ import { useGetCareersQuery } from '../../../service/admin';
 
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import './HomeClient.css'
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 
 const HomeClient = (): any => {
   const { data: posts } = useGetPostsQuery()
@@ -154,7 +155,7 @@ const HomeClient = (): any => {
       </div>
       <div id="pageContentWrapper" className='pb-[4px]'>
         <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
-          <div className="container p-0">
+          <div style={{maxWidth : '100%'}} className="container p-0">
             <div className="is-flex justify-between align-center section-title">
               <h2 className="sectionBlock__title">Việc Làm Tốt Nhất</h2>
               <div className="sectionBlock__link">
@@ -184,7 +185,9 @@ const HomeClient = (): any => {
                                             <div className="columns is-mobile is-multiline justify-between">
                                               <div className="column jobBlock__info">
                                                 <div className="jobBlock__title truncate-text-2-line">{post.job_name}</div>
-                                                <p className="jobBlock__company truncate-text">{post.job_description}</p>
+                                                <p className="jobBlock__company truncate-text leading-[16px]">{post.user_id?.name}</p>
+                                                <div className='text-red-500 leading-[18px]'>{formatCurrency(post.job_salary)}</div>
+                                                <div className='leading-[18px]'>{post.work_location}</div>
                                               </div>
                                               <span className="tag tag_hot">Hot</span>
                                             </div>
