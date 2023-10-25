@@ -9,6 +9,7 @@ import { Popconfirm } from 'antd';
 import { Modal } from "antd";
 import { useGetUsersQuery } from '../../../service/auth';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
+
 const UsersManage = () => {
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');

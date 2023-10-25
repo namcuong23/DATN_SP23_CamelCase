@@ -179,7 +179,7 @@ const AccEprMng = (): any => {
                             <div className='pt-2'>
                                 <button onClick={() => setOpenC(!openC)} className='text-[#1C88E5] hover:text-[#FD6333]'>Thay đổi mật khẩu</button>
                                 <form 
-                                    onSubmit={handleSubmit(() => console.log('1'))} 
+                                    onSubmit={handleSubmit(changePass)} 
                                     className='w-[500px] mt-2'
                                     // style={{ display: openC ? '' : 'none' }}
                                     >

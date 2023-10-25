@@ -69,16 +69,16 @@ const HomeClient = (): any => {
               <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Favery_hrbn2_122980.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
             <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Favery_hrbn2_122980.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
+              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fbanvien_hrbn_124682.png&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
             <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Favery_hrbn2_122980.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
+              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fitechwx_hrbn_124589.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
             <div className="carousel-item">
               <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2FCarlsb_hrbn1_122809.png&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
             <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2FLgelec_hrbn1_119708.png&w=1920&q=75" className="d-block w-100" alt="..." />
+              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fnab_hrbnOct2_124666.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
           </div>
           <button
@@ -102,9 +102,10 @@ const HomeClient = (): any => {
 
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch fadeIn">
-          <div className="container "><div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
-            <h2 className="sectionBlock__title text-[#fff]">Các Công Ty Hàng Đầu</h2>
-          </div>
+          <div className="home-banner__company">
+            <div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
+              <h2 className="sectionBlock__title text-[#fff]">Các Công Ty Hàng Đầu</h2>
+            </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
               <div className="featured-companies"><div className="companyBlock " style={{ flexBasis: '33.33%' }}>
                 <a href="https://www.vietnamworks.com/company/metub-network?utm_campaign_navi=6293455&utm_medium_navi=viplogo&utm_source_navi=vnw_homepage&utm_term_navi=new-homepage" target="_blank" rel="noreferrer">
@@ -154,7 +155,7 @@ const HomeClient = (): any => {
         </section>
       </div>
       <div id="pageContentWrapper" className='pb-[4px]'>
-        <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
+        <section className="home-content__jobs sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
           <div style={{maxWidth : '100%'}} className="container p-0">
             <div className="is-flex justify-between align-center section-title">
               <h2 className="sectionBlock__title">Việc Làm Tốt Nhất</h2>
@@ -163,7 +164,7 @@ const HomeClient = (): any => {
               </div>
             </div>
             <div className=''>
-              <div className="sectionBlock__content" style={{ height: '100%' }}>
+              <div className="" style={{ height: '100%', padding: '9px 25px 25px' }}>
                 <div className="swiper-container">
                   <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
                     <div className="sc-jtcaXd dhnMFx">
@@ -173,28 +174,15 @@ const HomeClient = (): any => {
                             posts.map((post: any, index: number) =>
                               post.post_status == true ?
                                 <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-                                  <div key={post._id}>
-                                    <div className="swiper-slide">
-                                      <div className="jobBlock recoJobs__job animated fadeIn take-1-second ">
-                                        <div className="columns is-mobile cursor-pointer">
-                                          <div className="column jobBlock__leftCol has-text-centered">
-                                            <img src="https://images.vietnamworks.com/pictureofcompany/3d/10195707.jpg"
-                                              className="jobBlock__logo" />
-                                          </div>
-                                          <div className="column jobBlock__rightCol">
-                                            <div className="columns is-mobile is-multiline justify-between">
-                                              <div className="column jobBlock__info">
-                                                <div className="jobBlock__title truncate-text-2-line">{post.job_name}</div>
-                                                <p className="jobBlock__company truncate-text leading-[16px]">{post.user_id?.name}</p>
-                                                <div className='text-red-500 leading-[18px]'>{formatCurrency(post.job_salary)}</div>
-                                                <div className='leading-[18px]'>{post.work_location}</div>
-                                              </div>
-                                              <span className="tag tag_hot">Hot</span>
-                                            </div>
-                                          </div>
-                                        </div>
-                                      </div>
+                                  <div key={post._id} className='job'>
+                                    <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
+                                      className="job-img" />
+                                    <div className="job-info">
+                                      <h4 className="job-namee">{post.job_name}</h4>
+                                      <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
+                                      <p className='job-location'>{post.work_location}</p>
                                     </div>
+                                    <span className="tag tag_hot">Hot</span>
                                   </div>
                                 </NavLink> : ""
                             )
@@ -211,7 +199,7 @@ const HomeClient = (): any => {
 
         </section>
         <section className="sectionBlock sectionBlock_hot-categories">
-          <div className="container ">
+          <div className="home-content__careers">
             <div className="is-flex justify-between align-center section-title lunar-new-year-bottom mb-[16px]">
               <h2 className="sectionBlock__title">Ngành Nghề Trọng Điểm</h2>
             </div>
@@ -333,7 +321,7 @@ const HomeClient = (): any => {
           </div>
         </section>
         <section className="sectionBlock job-corner animated fadeIn take-1-second ">
-          <div className="container ">
+          <div className="home-content__banner-b">
             <div className="is-flex justify-between align-center section-title lunar-new-year-bottom" />
             <div className="sectionBlock__content" style={{ height: '100%' }}>
               <div className="columns">
@@ -348,9 +336,14 @@ const HomeClient = (): any => {
           </div>
         </section>
         <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
-          <div className="container p-0">
-            <div className="is-flex justify-between align-center section-title"><h2 className="sectionBlock__title">Việc Làm Gợi Ý</h2><div className="sectionBlock__link"><a href="/viec-lam-goi-y">Xem Tất Cả</a></div></div>
-            <div className="sectionBlock__content" style={{ height: '100%' }}>
+          <div className="home-content__sug-job">
+            <div className="flex justify-between align-center section-title bg-[#f2f7ff] py-[20px] pl-[40px] pr-[25px]">
+              <h2 className="sectionBlock__title m-0">Việc Làm Gợi Ý</h2>
+              <div className="sectionBlock__link">
+                <a href="/viec-lam-goi-y">Xem Tất Cả</a>
+              </div>
+            </div>
+            <div className="sectionBlock__content p-[24px]" style={{ height: '100%' }}>
               <div className="swiper-container">
                 <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
                   <div className="sc-jtcaXd dhnMFx">
@@ -385,7 +378,7 @@ const HomeClient = (): any => {
 
         </section>
         <section className="sectionBlock hr-insider">
-          <div className="container ">
+          <div className="home-content__advises">
             <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
               <h2 className="sectionBlock__title">Tư vấn nghề nghiệp từ HR Insider</h2>
               <div className="sectionBlock__link">
