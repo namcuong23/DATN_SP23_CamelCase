@@ -91,13 +91,7 @@ const ServiceList = (): any => {
     return (
         <>
             <div className='min-h-screen'>
-                <div className='flex items-center justify-between pr-4'>
-                    <h2 className='px-3 text-2xl py-2'>Dịch vụ của tôi</h2>
-                    <NavLink to={'/home/services/add'} className='bg-[#FE7D55] text-white text-decoration-none py-1 px-2 rounded'>
-                        Tạo gói mới
-                    </NavLink>
-                </div>
-                {/* <h2 className='px-3 text-2xl py-2'>Dịch vụ của tôi</h2> */}
+                <h2 className='px-3 text-2xl py-2'>Dịch vụ của tôi</h2>
 
                 <Table columns={columns} dataSource={services} onChange={onChange} className='mx-3' />
             </div>

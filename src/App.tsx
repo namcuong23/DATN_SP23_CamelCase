@@ -35,7 +35,7 @@ import ForgotPassNotice from "./components/auth/Employer/ForgotPassNotice"
 import AccEprMng from "./components/employer/profileEpr/AccEprMng"
 import 'react-toastify/dist/ReactToastify.css';
 import ServiceList from "./components/employer/My Service/ServiceList"
-import ServiceAdd from "./components/employer/My Service/ServiceAdd"
+// import ServiceAdd from "./components/employer/My Service/ServiceAdd"
 import Interview from "./components/pages/Interview"
 import ManageJob from "./components/pages/ManageJob"
 import RecruitmentDetails from "./components/pages/RecruitmentDetails"
@@ -110,7 +110,7 @@ function App() {
           <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
           <Route path='services' element={<ServiceList />} />
-          <Route path='services/add' element={<ServiceAdd />} />
+          {/* <Route path='services/add' element={<ServiceAdd />} /> */}
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />
           <Route path='posts/:id' element={<PostDetail />} />

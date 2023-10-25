@@ -120,9 +120,14 @@ const HeaderEmployer = () => {
                             </span>
                         </NavLink>
                     </li>
-                    <li className='p-3 text-decoration-none text-white'><NavLink to={'/Report'}>
-                           Hỗ trợ
-                        </NavLink></li>
+                    <li className='p-3 text-decoration-none text-white'>
+                        <NavLink to={'/report'}
+                            className='d-flex align-items-center text-decoration-none text-white'>
+                            <span className='hover:text-orange-400'>
+                            Hỗ trợ
+                            </span>
+                        </NavLink>
+                    </li>
                 </ul>
                 <ul className='flex items-center'>
                     <li className='p-3 pr-4 text-decoration-none'>
