@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 
@@ -15,13 +15,22 @@ import {
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob';
 
 const Profile: any = () => {
-    const [id, setId] = useState<number>(1)
+    const [param, setParam] = useSearchParams()
+    const key = param.get('tab')
     const profilePages = [
-        {id: 1, icon: <InformationIcon />, title: 'Hồ sơ của tôi', page: Infotmation},
-        {id: 2, icon: <MyJobIcon />, title: 'Việc làm của tôi', page: MyJob},
-        {id: 3, icon: <AccountMngIcon />, title: 'Quản lý tài khoản', page: AccountMng},
+        {id: 1, icon: <InformationIcon />, title: 'Hồ sơ của tôi', page: Infotmation, tab: 'information'},
+        {id: 2, icon: <MyJobIcon />, title: 'Việc làm của tôi', page: MyJob, tab: 'my-job'},
+        {id: 3, icon: <AccountMngIcon />, title: 'Quản lý tài khoản', page: AccountMng, tab: 'account-manage'},
     ]
-    let Component = profilePages[id-1].page;
+
+    let Component = profilePages[0].page;
+    if (key) {
+        profilePages.map((profilePage: any) => {
+            if (key === profilePage.tab) {
+                Component = profilePage.page;
+            }
+        })
+    }
 
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
@@ -70,10 +79,10 @@ const Profile: any = () => {
                             profilePages.map((profilePage: any, index) => (
                                 <section className='border-1 bg-white' key={index}>
                                     <button 
-                                        onClick={() => setId(profilePage.id)} 
+                                        onClick={() => setParam({tab: profilePage.tab})} 
                                         className={'flex items-center p-[17px] w-100 border rounded hover:bg-[#EBF2FF] text-[#333333]'}
                                         style={{
-                                            backgroundColor: id === profilePage.id ? '#EBF2FF' : ''
+                                            backgroundColor: key === profilePage.tab ? '#EBF2FF' : ''
                                         }}
                                     >
                                         {profilePage.icon}
