@@ -25,6 +25,7 @@ const ProfileEpr = (): any => {
     return '';
   };
 
+  
   const handleChangeFile = (event: any) => {
     const file = event.target.files[0];
     if (!file) {
@@ -45,6 +46,8 @@ const ProfileEpr = (): any => {
     };
     reader.readAsDataURL(file);
   };
+
+
   useEffect(() => {
     reset(userEpr)
   }, [userEpr])

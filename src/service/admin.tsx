@@ -79,14 +79,25 @@ export const adminApi = createApi({
             query: () => '/careers',
             providesTags: ['Career']
         }),
+
         blockUser: builder.mutation({
-            query: (body: Block) => ({
-                url: `/block`,
-                method: 'PATCH',
-                body: body,
+            query: (user: any) => ({
+                url: `/users/block`,
+                method: 'PUT',
+                body: user,
             }),
             invalidatesTags: ['User'],
         }),
+
+        unlockUser: builder.mutation({
+            query: (user: any) => ({
+                url: `/users/unlock`,
+                method: 'PUT',
+                body: user,
+            }),
+            invalidatesTags: ['User'],
+        }),
+        
     })
 });
 export const {
@@ -98,5 +109,6 @@ export const {
     useRemoveCareerMutation,
     useSigninAdminMutation,
     useSignupAMutation,
-    useBlockUserMutation
+    useBlockUserMutation,
+    useUnlockUserMutation,
 } = adminApi

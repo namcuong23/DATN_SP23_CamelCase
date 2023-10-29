@@ -45,7 +45,7 @@ const Profile: any = () => {
             <div className='bg-white'>
                 <HeaderSearchhJob className={'py-[16px]'} />
             </div>
-            {isLoggedIn ? <div className='bg-gray-100 min-h-screen mb-[260px]'>
+            {isLoggedIn ? <div className='bg-gray-100 min-h-screen'>
                 {/* CONTENT */}
                 <div className='flex items-start w-100 gap-3 p-3'>
                     {/* Navbar */}
