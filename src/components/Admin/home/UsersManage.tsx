@@ -8,6 +8,7 @@ import { Popconfirm } from 'antd';
 import { Modal } from "antd";
 import { useGetUsersQuery } from '../../../service/auth';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
+
 const UsersManage = () => {
   const text_X = 'Bạn xác nhận từ chối bài viết này?';
   const text_V = 'Bạn xác nhận duyệt bài viết này?';

@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react'
-type Props = {}
+import { useEffect, useState } from 'react'
 import { useGetChartLineQuery, useGetHistoryOrderQuery } from '../../../service/admin/chartLine';
 import { ChartData } from '../../../interface/admin/chartData';
-import { useGetAdmServicesQuery } from '../../../service/admin/service';
 import { Order } from '../../../interface/admin/order';
 import ChartUsers from './ChartLine/ChartUsers';
 import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
@@ -10,7 +8,8 @@ import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import StatisticalPackage from './ChartLine/StatisticalPackage';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
-const HomeAdmin = (props: Props) => {
+
+const HomeAdmin = () => {
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
   const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
