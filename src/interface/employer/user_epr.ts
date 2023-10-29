@@ -14,7 +14,7 @@ interface IUserNTD {
     passwordResetToken: string;
     passwordChangeAt: string;
     passwordResetExpires: string;
-    level_auth: number;
+    role: string;
 }
 
 export default IUserNTD

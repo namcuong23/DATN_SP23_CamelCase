@@ -20,7 +20,8 @@ interface IUserNTV {
     accessToken: string;
     verifiedToken: string;
     tokenExpires: string;
-    level_auth: number
+    role: number;
+    status: boolean | string;
 }
 
 export default IUserNTV

@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react'
-import { useBlockUserMutation, useUpdateUserMutation } from '../../../service/admin'
+import { useBlockUserMutation, useUnlockUserMutation, useUpdateUserMutation } from '../../../service/admin'
 import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps, message } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
-import { User } from '../../../interface/admin/users';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Popconfirm } from 'antd';
@@ -10,12 +9,17 @@ import { Modal } from "antd";
 import { useGetUsersQuery } from '../../../service/auth';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
 const UsersManage = () => {
+  const text_X = 'Bạn xác nhận từ chối bài viết này?';
+  const text_V = 'Bạn xác nhận duyệt bài viết này?';
+
+
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
   const users = userEpe?.concat(userEpr)
   const [updateUser, { isLoading: isUpdating, isSuccess }] = useUpdateUserMutation();
   const [modalVisible, setModalVisible] = useState(false);
   const [block] = useBlockUserMutation();
+  const [unlock] = useUnlockUserMutation();
   interface RecordselectedRecord {
     _id: string;
     name: string;
@@ -23,6 +27,8 @@ const UsersManage = () => {
     password: string;
     level_auth: number;
     email: string;
+    role: string;
+    isBlock: boolean | string;
   }
 
   const [selectedRecord, setSelectedRecord] = useState<RecordselectedRecord | undefined>();
@@ -39,7 +45,10 @@ const UsersManage = () => {
     phone: string;
     level_auth: number;
     email: string;
-    password: string
+    password: string;
+    role: string;
+    isBlock: boolean | string;
+
   }
   type DataIndex = keyof DataType;
 
@@ -50,7 +59,10 @@ const UsersManage = () => {
     phone: String(item?.phone),
     level_auth: Number(item?.level_auth),
     email: String(item?.email),
-    password: String(item?.password)
+    password: String(item?.password),
+    role: String(item?.role),
+    isBlock: Boolean(item?.isBlock),
+
   }))
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
@@ -159,27 +171,24 @@ const UsersManage = () => {
         text
       ),
   })
-  const handleDelete = (record: string, level: string) => {
-    console.log(record);
-    const body = {
-      _id: record, level_auth: level
-    }
-    block(body)
 
+  const handleBlock = (user: any) => {
+    console.log(user);
+    block(user)
   }
+
+  const handleUnlock = (user: any) => {
+    console.log(user);
+    unlock(user)
+  }
+
   const columns: ColumnsType<DataType> = [
     {
-      title: 'id',
-      dataIndex: '_id',
-      filteredValue: filteredInfo._id || null,
-      onFilter: (value, record) => {
-        // Áp dụng logic lọc tại đây
-        return typeof value === 'string' && record.name.includes(value);
-      },
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortOrder: sortedInfo.columnKey === 'name' ? sortedInfo.order : null,
-      ellipsis: true,
-      width: 200,
+      title: 'Role',
+      dataIndex: 'role',
+      key: 'role',
+      filteredValue: filteredInfo.role || null,
+      ...getColumnSearchProps('role'),
     },
     {
       title: 'Name',
@@ -204,7 +213,7 @@ const UsersManage = () => {
     {
       title: 'Action',
       key: 'action',
-      render: (_, record) => (
+      render: (_, record: any) => (
 
         <Space size="middle">
 
@@ -250,29 +259,32 @@ const UsersManage = () => {
               </Form.Item>
             </Form>
           </Modal>
-          {record.level_auth != 0 ? <Popconfirm
+
+          {record.isBlock  ? <Popconfirm
             title="Are you sure to block this guy?"
-            onConfirm={() => handleDelete(record._id, "0")}
+            onConfirm={() => handleUnlock(record)}
             okText="Yes"
             okButtonProps={{
               className: 'bg-red-500',
             }}
             cancelText="No"
           >
-            <Button type="default" className="bg-red-400">
-              Block
+            <Button type="default" className="bg-blue-500">
+              Unlock
             </Button>
-          </Popconfirm> : <Popconfirm
-            title="Unblock this guy?"
-            onConfirm={() => handleDelete(record._id, "1")}
+          </Popconfirm> : 
+          <Popconfirm
+            title="Unlock this guy?"
+            onConfirm={() => handleBlock(record)}
+            
             okText="Yes"
             okButtonProps={{
               className: 'bg-blue-500',
             }}
             cancelText="No"
           >
-            <Button type="default" className="bg-blue-500">
-              UnLock
+            <Button type="default" className="bg-red-400">
+              BLock
             </Button>
           </Popconfirm>}
 

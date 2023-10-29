@@ -89,128 +89,10 @@ const Infotmation = () => {
 
             </section>
             <section className='border-1 rounded bg-white py-4 mt-[8px]'>
-                <div className='px-4 pb-4'>
-                    <h4 className='text-[22px] font-[700] text-[#333333]'>Hoàn chỉnh hồ sơ</h4>
-                </div>
-            </section>
-            <section className='border-1 rounded bg-white py-4 mt-[8px]'>
                 <div className='px-4 pb-4 flex items-center justify-between'>
                     <h4 className='text-[22px] font-[700] text-[#333333]'>Thông tin cá nhân</h4>
-                    {hidden ? <button onClick={() => setHidden(false)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-pen" viewBox="0 0 16 16">
-                            <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z" />
-                        </svg>
-                    </button> : ''}
                 </div>
                 <div>
-                    {
-                        hidden ?
-                            <div className={'px-4 text-[#333333]'}>
-                                <div className='border-y py-3'>
-                                    <div className='flex items-center mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Họ và tên</div>
-                                            <div className='w-[62%] font-[700]'>{user?.name}</div>
-                                        </div>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Số điện thoại</div>
-                                            <div className='w-[62%] font-[700]'>{user?.phone}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='border-b py-3'>
-                                    <div className='mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Email</div>
-                                            <div className='w-[62%] font-[700] flex items-center gap-1'>
-                                                {user?.email}
-                                                {
-                                                    user?.isEmailVerified ?
-                                                        <span><i className='fas fa-check-circle text-green-500'></i></span>
-                                                        :
-                                                        <div>
-                                                            {
-                                                                loading ? <i className="loading-icon fa-solid fa-circle-notch"></i>
-                                                                :
-                                                                <button onClick={sendEmail} className='font-[100] hover:text-[#fd7e14] flex items-center justify-content-center' >
-                                                                        Xác thực
-                                                                </button>
-                                                            }
-                                                            <Modal
-                                                                style={{ top: 147 }}
-                                                                open={open}
-                                                                onCancel={() => setOpen(false)}
-                                                                okButtonProps={{ hidden: true }}
-                                                                cancelButtonProps={{ hidden: true }}
-                                                                width={700}
-                                                            >
-                                                                <h3 className='text-xl text-[#333333] border-b-[1px] pb-2 mb-2'>Xác thực Email</h3>
-                                                                <form onSubmit={handleSubmit(activeE)}>
-                                                                    <div className="form-group">
-                                                                        <label className="text-dark">Mã xác nhận</label>
-                                                                        <input type="text"
-                                                                            {...register('token', {
-                                                                                required: true
-                                                                            })}
-                                                                            className="form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"
-                                                                            name='token' />
-                                                                        {errors.token && errors.token.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mã xác nhận</span>}
-                                                                    </div>
-                                                                    <div className='flex justify-end gap-x-3'>
-                                                                        <button className='bg-[#F4F4F7] hover:bg-[#E9E9F2] py-1 px-2 rounded'
-                                                                            type='button'
-                                                                            onClick={() => setOpen(false)} >
-                                                                            Hủy
-                                                                        </button>
-                                                                        <button className='bg-[#FE7D55] hover:bg-[#FD6333] py-1 px-2 text-white rounded'
-                                                                        >
-                                                                            Xác nhận
-                                                                        </button>
-                                                                    </div>
-                                                                </form>
-                                                            </Modal>
-                                                        </div>
-
-                                                }
-
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='border-b py-3'>
-                                    <div className='flex items-center mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Tuổi</div>
-                                            <div className='w-[62%] font-[700]'>{user?.age}</div>
-                                        </div>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Giới tính</div>
-                                            <div className='w-[62%] font-[700]'>{user?.gender}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='border-b py-3'>
-                                    <div className='flex items-center mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Tỉnh/Thành phố</div>
-                                            <div className='w-[62%] font-[700]'>{user?.province}</div>
-                                        </div>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Quận/Huyện</div>
-                                            <div className='w-[62%] font-[700]'>{user?.district}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className='border-0 py-3'>
-                                    <div className='mx-3'>
-                                        <div className='w-50 flex items-center'>
-                                            <div className='w-[38%]'>Địa chỉ</div>
-                                            <div className='w-[62%] font-[700]'>{user?.specific_address}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> :
                             <div className={'px-4 text-[#333333]'}>
                                 <form onSubmit={handleSubmit(handleUpdate)}>
                                     <div className='py-2'>
@@ -313,7 +195,7 @@ const Infotmation = () => {
                                     </div>
                                 </form>
                             </div>
-                    }
+                    
                 </div>
             </section>
         </>
