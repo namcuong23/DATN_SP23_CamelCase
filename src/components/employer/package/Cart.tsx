@@ -17,7 +17,7 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 const Cart = (): any => {
     const dispatch: any = useAppDispatch()
     const navigate = useNavigate()
-    const text: string = 'Are you sure to delete this item?'
+    const text: string = 'Bạn có muốn xóa gói khỏi giỏ hàng ?'
 
     const onHandleRemove = (id: string) => {
         dispatch(removeProductCart(id))
@@ -111,8 +111,8 @@ const Cart = (): any => {
                 <Popconfirm placement="top"
                     title={text}
                     onConfirm={() => onHandleRemove(record.product._id)}
-                    okText="Yes"
-                    cancelText="No">
+                    okText="Có"
+                    cancelText="Không">
                     <DeleteOutlined className='text-danger' />
                 </Popconfirm>
             ),
