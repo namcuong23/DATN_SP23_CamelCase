@@ -1,7 +1,6 @@
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { useEffect } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useAppSelector } from '../../../app/hook'
-import React, { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import {
   useGetUserEprByEmailQuery,
@@ -9,6 +8,7 @@ import {
 } from '../../../service/auth_employer'
 import IUserNTD from '../../../interface/employer/user_epr'
 import { toast } from 'react-toastify'
+import { useUpload } from '../../../utils/hooks/Upload'
 
 const ProfileEpr = (): any => {
   const { email, isLoggedIn } = useAppSelector((res) => res.auth)
@@ -16,52 +16,35 @@ const ProfileEpr = (): any => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
   const [updateUser] = useUpdateUserEprMutation()
   const navigate = useNavigate()
-  const [imageBase64, setImageBase64] = useState<any>('');
-  const getEventResult = (event: any) => {
-    if (event && event.target && typeof event.target.result == 'string') {
-      return event.target.result;
-    }
-
-    return '';
-  };
-
-  
-  const handleChangeFile = (event: any) => {
-    const file = event.target.files[0];
-    if (!file) {
-      console.log('Không có file');
-      return;
-    } else if (file.size > 500000) {
-      console.log('File quá lớn');
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const image = new Image();
-      if (e && e.target) {
-        image.src = getEventResult(e);
-        console.log(image.width, image.height, file.size, file.type);
-        setImageBase64(e.target.result);
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
+  const inputFileRef: any = useRef(null)
 
   useEffect(() => {
     reset(userEpr)
   }, [userEpr])
   const handleUpdate: SubmitHandler<IUserNTD> = async (userEprForm: IUserNTD) => {
-    const update: any = await updateUser({
-      ...userEprForm,
-      _id: userEpr._id,
-      isEmailVerified: userEpr.isEmailVerified,
-      isPhoneVerified: userEpr.isPhoneVerified,
-    })
-    const { data: rs } = update
-    if (rs?.success) {
-      toast.success('Cập nhật thành công')
+    const formData = new FormData()
+    const fileUpload = inputFileRef?.current.files[0]
+    formData.append('file', fileUpload)
+    formData.append('upload_preset', 'dmjlzwse')
+    formData.append('cloud_name', 'dywccbjry')
+
+    let imgPath
+    if (fileUpload !== undefined) {
+        const image = await useUpload(formData)
+        imgPath = image.url
+    } else {
+        imgPath = userEpr?.image
     }
+
+    await updateUser({
+      ...userEprForm,
+      image: imgPath
+    }).then((res: any) => {{
+      const {data} = res
+      if (data?.success) {
+        toast.success('Cập nhật thành công')
+      }
+    }})
   }
 
   if (!isLoggedIn) {
@@ -80,7 +63,7 @@ const ProfileEpr = (): any => {
               </NavLink>
               {/*  hover:border-b-0 hover:border-l-[4px] hover:border-[#1C88E5] hover:rounded-t-[5px] */}
               <ul className='flex flex-col'>
-                <li className='py-2 px-[24px] hover:px-[20px] border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white hover:border-l-[4px] hover:border-l-[#1C88E5]'>Thông tin cá nhân</li>
+                <li className='py-2 px-[24px] hover:px-[20px] border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white hover:border-l-[4px] hover:border-l-[#1C88E5]'>Thông tin công ty</li>
                 <li className='py-1 px-4 bg-[#E5E5E5] font-[400]'>Thông tin chung</li>
                 <li className='py-1 px-4 hover:bg-[#E5E5E5] font-[400]'>Địa điểm làm việc</li>
               </ul>
@@ -159,12 +142,12 @@ const ProfileEpr = (): any => {
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Ảnh</label>
-                <input className="form-control" type="file" {...register( 'image', )} onChange={(event) => handleChangeFile(event)}/>
-                <div className="form-text" style={{ color: 'red' }}>
-                  {errors.image ? errors.image.message : ''}
-                </div>
-                <img src={imageBase64} width={100} alt="" />
+                <label className="form-label">Logo công ty</label>
+                <input className="form-control" type="file"
+                  ref={inputFileRef}
+                  // {...register( 'image')} 
+                />
+                <img className='h-25 w-25' src={userEpr?.image} />
               </div>
               
               <div className='flex justify-end pt-2'>

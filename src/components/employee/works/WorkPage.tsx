@@ -136,7 +136,7 @@ const WorkPage = () => {
     
     return (
         <>
-            <div style={{ background: 'white' }} className='min-h-[100vh] pb-4'>
+            <div style={{ background: 'white' }} className='min-h-[100vh] mb-[24px]'>
                 <HeaderSearchhJob className={'py-[16px]'} />
                 <div className="bg-[#f8f9fa] pt-[12px]">
                     {/* CONTENT */}
@@ -164,7 +164,7 @@ const WorkPage = () => {
                     </div>
                     {/* works */}
                     <div className="content-works" style={{ margin: 'auto', marginTop: '20px', display: 'flex', width: '80%', justifyContent: 'space-between' }}>
-                        <div className="list-works" >
+                        <div className="list-works" style={{ flex: '1' }}>
                             {
                                 searchParams ? 
                                 searchMessage

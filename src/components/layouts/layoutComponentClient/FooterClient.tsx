@@ -4,7 +4,7 @@ type Props = {}
 
 const FooterClient: any = (props: Props) => {
     return (
-        <div>
+        <div className='border-t-[4px]'>
             <footer className="vnw">
                 <div className="footer lunar-new-year animated fadeIn">
                     <div className="footer__container">

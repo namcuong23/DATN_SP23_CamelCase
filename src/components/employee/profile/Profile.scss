@@ -21,10 +21,13 @@
 }
 
 // My Job
-.job-name {
+h5.job-name {
+    --height: 20px;
     display: block;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 1;
     overflow: hidden;
+    line-height: var(--height);
+    height: var(--height);
 }

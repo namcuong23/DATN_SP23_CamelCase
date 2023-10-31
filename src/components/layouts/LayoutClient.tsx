@@ -11,7 +11,7 @@ const LayoutClient = () => {
             <div>
                 <HeaderClient />
             </div>
-            <div>
+            <div className=''>
                 <Outlet />
             </div>
             <FooterClient />
