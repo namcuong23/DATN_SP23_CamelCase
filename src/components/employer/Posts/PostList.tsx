@@ -22,8 +22,8 @@ const PostList = (): any | null | JSX.Element => {
     const navigate = useNavigate()
 
     const { email, isLoggedIn } = useAppSelector((res) => res.auth);
-    const data: any = useGetUserEprByEmailQuery(email)
-    const user: any = data.currentData
+    const {data: user}: any = useGetUserEprByEmailQuery(email);
+    
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
     const [provinces, setProvinces] = useState<any>([])
