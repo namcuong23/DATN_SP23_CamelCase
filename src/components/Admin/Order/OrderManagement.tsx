@@ -15,19 +15,6 @@ const OrderManagement = () => {
         setPackageHistory(HistoryPackage);
     }, [HistoryPackage]);
 
-    const convertToCSVData = (user: Order, index: number) => {
-        if (user) {
-            return [
-                index + 1, // Cột số thứ tự
-                user._id,
-                user.order_name,
-                user.createdAt ? (new Date(user.createdAt)).toLocaleDateString() : '',
-                typeof user.order_price === 'number' ? user.order_price.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : ''
-            ];
-        }
-        return [];
-    };
-
     const columns = [
         {
             title: 'STT',
@@ -58,25 +45,6 @@ const OrderManagement = () => {
                 <div>{(typeof record.order_price === 'number') ? record.order_price.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : ''}
                 </div>
             )
-        },
-        {
-            title: 'Trạng thái',
-            dataIndex: 'package_desc',
-        },
-        {
-            title: 'Hành động',
-            dataIndex: '_id',
-            key: '_id',
-            render: (text: any, record: any, index: number) => (
-                <Space size="middle">
-                    <CSVLink
-                        data={[['STT', 'Id người dùng', 'Tên gói', 'Ngày mua', 'Số tiền'], convertToCSVData(record, index)]}
-                        filename={'user-data.csv'}
-                    >
-                        Tải về CSV
-                    </CSVLink>
-                </Space>
-            ),
         },
     ];
 
@@ -115,20 +83,20 @@ const OrderManagement = () => {
                 <div>
                     <h2 className='mt-0 text-xl'>Quản lý đơn hàng</h2>
                 </div>
-                <div className=' px-3 py-2'>
-                    <CSVLink data={csvData} filename={'doanh-thu-don-hang.csv'}>
-                        Xuất hàng loạt
-                    </CSVLink>
-                </div>
                 <div className='mb-2'>
                     <MonthPicker
                         placeholder="Chọn tháng"
                         value={selectedMonth}
                         onChange={(date) => setSelectedMonth(date)}
                     />
-                    <Button type="primary" onClick={handleFilter}>
+                    <Button className='bg-danger rounded' type="primary" onClick={handleFilter}>
                         Lọc
                     </Button>
+                </div>
+                <div className='bg-success rounded px-3 py-2'>
+                    <CSVLink className='text-white text-decoration-none' data={csvData} filename={'doanh-thu-don-hang.csv'}>
+                        Xuất hàng loạt
+                    </CSVLink>
                 </div>
             </div>
 
