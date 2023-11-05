@@ -17,13 +17,37 @@ const ProfileEpr = (): any => {
   const [updateUser] = useUpdateUserEprMutation()
   const navigate = useNavigate()
   const inputFileRef: any = useRef(null)
+  const [imgUrl, setImgUrl] = useState<any>()
+  const [currentUrl, setCurrentUrl] = useState<any>()
+  const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
 
   useEffect(() => {
     reset(userEpr)
   }, [userEpr])
+
+  useEffect(() => {
+    return () => {
+      imgUrl && URL.revokeObjectURL(imgUrl.preview)
+    }
+  }, [imgUrl])
+
+  const handleChangeInputFile = (e: any) => {
+    const file = e.target.files[0]
+    file.preview = URL.createObjectURL(file)
+
+    setImgUrl(file)
+    setCurrentUrl(e)
+  }
+
   const handleUpdate: SubmitHandler<IUserNTD> = async (userEprForm: IUserNTD) => {
     const formData = new FormData()
-    const fileUpload = inputFileRef?.current.files[0]
+    const fileUpload = currentUrl?.target.files[0]
+
+    //Check image size
+    if (fileUpload.size > maxSizeInBytes) {
+      return toast.warn('Kích thước quá lớn.')
+    }
+
     formData.append('file', fileUpload)
     formData.append('upload_preset', 'dmjlzwse')
     formData.append('cloud_name', 'dywccbjry')
@@ -142,12 +166,39 @@ const ProfileEpr = (): any => {
               </div>
 
               <div className="mb-3">
-                <label className="form-label">Logo công ty</label>
-                <input className="form-control" type="file"
-                  ref={inputFileRef}
-                  // {...register( 'image')} 
-                />
-                <img className='h-25 w-25' src={userEpr?.image} />
+                <label className="company-label">Logo công ty</label>
+                <div className='company-wrapper'>
+                  {
+                    !imgUrl && userEpr?.image === undefined ? 
+                    <label htmlFor="company-logo" className='company-logo'>
+                      <span>
+                        <i className="company-logo__icon fa-solid fa-arrow-up-from-bracket"></i>
+                        Chọn file
+                      </span>
+                      <input style={{ display: 'none' }} type="file"
+                          id='company-logo'
+                          accept=".png,.jpeg,.jpg"
+                          ref={inputFileRef}
+                          onChange={handleChangeInputFile}
+                        />
+                    </label> :
+                    <div className='company-photo'
+                      style={{backgroundImage: `url(${imgUrl ? imgUrl.preview : userEpr?.image})`}}>
+                        <div className="company-photo__action">
+                          <label htmlFor="company-logo" className="company-photo__action-label">
+                            <i className="fa-solid fa-pen"></i>
+                          </label>
+                          <span className='company-photo__action-desc'>Sửa logo</span>
+                          <input style={{ display: 'none' }} type="file"
+                            id='company-logo'
+                            accept="image/*"
+                            ref={inputFileRef}
+                            onChange={handleChangeInputFile}
+                          />
+                        </div>
+                    </div>
+                  }
+                </div>
               </div>
               
               <div className='flex justify-end pt-2'>
