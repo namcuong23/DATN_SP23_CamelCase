@@ -58,6 +58,8 @@ import PostAdmin from "./components/Admin/Post/PostAdmin"
 import CareerList from "./components/Admin/Career/CareerList"
 import CareerAdd from "./components/Admin/Career/CareerAdd"
 import FeedbackList from "./components/Admin/Feedback/FeedbackList"
+import OrderManagement from "./components/Admin/Order/OrderManagement"
+import React from "react"
 function App() {
   return (
     <div className="App">
@@ -137,6 +139,7 @@ function App() {
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
           <Route path='feedbacks' element={<FeedbackList />} />
+          <Route path='order-management' element={<OrderManagement />} />
         </Route>
         <Route path='/employs' element={<LayoutEmployer />}>
           <Route index element={<HomeEmployer />} />

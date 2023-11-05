@@ -3,11 +3,14 @@ import { useGetChartLineQuery, useGetHistoryOrderQuery } from '../../../service/
 import { ChartData } from '../../../interface/admin/chartData';
 import { Order } from '../../../interface/admin/order';
 import ChartUsers from './ChartLine/ChartUsers';
+import { EyeOutlined } from '@ant-design/icons';
 import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import StatisticalPackage from './ChartLine/StatisticalPackage';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
+import { NavLink } from 'react-router-dom';
+import React from 'react';
 
 const HomeAdmin = () => {
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
@@ -302,7 +305,7 @@ const HomeAdmin = () => {
                       <div className="card-inner flex-grow-1">
                         <div className="">
                           <div className="">
-                            <h6 className="text-xl text-center">Thống kê gói đăng ký</h6>
+                            <h6 className="text-xl text-center">Thống kê lượng người dùng</h6>
                           </div>
                         </div>
                         <div className="align-center h-72"><StatisticalPackagePie PackageHistory={HistoryPackage} /></div>
@@ -357,7 +360,7 @@ const HomeAdmin = () => {
                   {/* .card */}
                 </div>
                 {/* .col */}
-                <div className="col-xxl-8">
+                <div className="col-xxl-12">
                   <div className="card card-full">
                     <div className="card-inner">
                       <div className="card-title-group">
@@ -383,6 +386,9 @@ const HomeAdmin = () => {
                         <div className="nk-tb-col">
                           <span className="d-none d-sm-inline">Trạng thái</span>
                         </div>
+                        <div className="nk-tb-col">
+                          <span className="d-none d-sm-inline">Chi tiết</span>
+                        </div>
                       </div>
                       {PackageHistory?.map((data, index: number) =>
                         <div className="nk-tb-item">
@@ -406,60 +412,33 @@ const HomeAdmin = () => {
                               {(data?.order_price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}
                             </span>
                           </div>
-                          {
-                            data ? data?.order_status === true ?
-                              <div className="nk-tb-col">
-                                <span className="badge badge-dot badge-dot-xs bg-success">
-                                  Đã thanh toán
-                                </span>
-                              </div> :
-                              <div className="nk-tb-col">
-                                <span className="badge badge-dot badge-dot-xs bg-warning">
-                                  Đang chờ duyệt
-                                </span>
-                              </div>
-                              : 'loading'
+                          <div>
+                            {
+                              data ? data?.order_status === true ?
+                                <div className="nk-tb-col">
+                                  <span className="badge badge-dot badge-dot-xs bg-success">
+                                    Đã thanh toán
+                                  </span>
+                                </div> :
+                                <div className="nk-tb-col">
+                                  <span className="badge badge-dot badge-dot-xs bg-warning">
+                                    Đang chờ duyệt
+                                  </span>
+                                </div>
+                                : 'loading'
 
-                          }
+                            }
+                          </div>
+                          <div className="nk-tb-col tb-col-md">
+                            <span className="tb-sub">      
+                            <NavLink to={`/home/posts/${data._id}`}>
+                              <EyeOutlined className='text-dark' />
+                            </NavLink>
+                            </span>
+                          </div>
                         </div>
                       )}
                     </div>
-                  </div>
-                  {/* .card */}
-                </div>
-                <div className="col-xxl-4 col-md-8 col-lg-6">
-                  <div className="card h-100">
-                    <div className="card-inner">
-                      <div className="card-title-group mb-2">
-                        <div className="card-title">
-                          <h6 className="text-xl">Tổng các gói</h6>
-                        </div>
-                        <div className="card-tools">
-                          <div className="dropdown">
-                          </div>
-                        </div>
-                      </div>
-                      <ul className="nk-top-products">
-
-                        {chartState?.packageData.map((data) => {
-                          return <li className="item w-full flex justify-evenly">
-                            <div className="thumb">
-                              <img className='w-10' src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684687461/l6imf0nh0m55inixceed.png" alt="" />
-                            </div>
-                            <div className="info">
-                              <div className="title">iPhone 7 Headphones</div>
-                              <div className="price">$99.00</div>
-                            </div>
-                            <div className="total">
-                              <div className="amount">$990.00</div>
-                              <div className="count">10 Sold</div>
-                            </div>
-                          </li>
-                        })}
-
-                      </ul>
-                    </div>
-                    {/* .card-inner */}
                   </div>
                   {/* .card */}
                 </div>

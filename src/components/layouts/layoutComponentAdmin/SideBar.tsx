@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 // import '../../../assets/img/admin/images/'\
 // import myImage from './src/assets/img/admin/images/logo.png';
 import myImage from '../../../assets/img/logo.jpg';
-import { AreaChartOutlined, DeploymentUnitOutlined, ReconciliationOutlined, TagsOutlined, UserOutlined, IdcardOutlined } from '@ant-design/icons';
+import { AreaChartOutlined,ShoppingCartOutlined, DeploymentUnitOutlined, ReconciliationOutlined, TagsOutlined, UserOutlined, IdcardOutlined } from '@ant-design/icons';
 
 type Props = {}
 
@@ -47,13 +47,19 @@ const SideBar = (props: Props) => {
               <Link to="/admin/careers">
                 <li className="nk-menu-item has-sub w-full nk-menu-link ">
                   <span className="nk-menu-icon m-1"><DeploymentUnitOutlined /></span>
-                  <span className="nk-menu-text">Quản lý bài Ngành nghề</span>
+                  <span className="nk-menu-text">Quản lý bài ngành nghề</span>
                 </li>
               </Link>
               <Link to="/admin/feedbacks">
                 <li className="nk-menu-item has-sub w-full nk-menu-link ">
                   <span className="nk-menu-icon m-1"><IdcardOutlined /></span>
                   <span className="nk-menu-text">Quản lý Feedback</span>
+                </li>
+              </Link>
+              <Link to="/admin/order-management">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">
+                  <span className="nk-menu-icon m-1"><ShoppingCartOutlined /></span>
+                  <span className="nk-menu-text">Quản lý đơn hàng</span>
                 </li>
               </Link>
             </ul>
