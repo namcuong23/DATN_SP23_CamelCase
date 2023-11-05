@@ -13,7 +13,6 @@ const UsersManage = () => {
   const text_X = 'Bạn xác nhận từ chối bài viết này?';
   const text_V = 'Bạn xác nhận duyệt bài viết này?';
 
-
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
   const users = userEpe?.concat(userEpr)
@@ -173,14 +172,12 @@ const UsersManage = () => {
       ),
   })
 
-  const handleBlock = (user: any) => {
-    console.log(user);
-    block(user)
+  const handleBlock = async (user: any) => {
+    await block(user)
   }
 
-  const handleUnlock = (user: any) => {
-    console.log(user);
-    unlock(user)
+  const handleUnlock = async (user: any) => {
+    await unlock(user)
   }
 
   const columns: ColumnsType<DataType> = [
@@ -261,33 +258,35 @@ const UsersManage = () => {
             </Form>
           </Modal>
 
-          {record.isBlock  ? <Popconfirm
-            title="Are you sure to block this guy?"
-            onConfirm={() => handleUnlock(record)}
-            okText="Yes"
-            okButtonProps={{
-              className: 'bg-red-500',
-            }}
-            cancelText="No"
-          >
-            <Button type="default" className="bg-blue-500">
-              Unlock
-            </Button>
-          </Popconfirm> : 
-          <Popconfirm
-            title="Unlock this guy?"
-            onConfirm={() => handleBlock(record)}
-            
-            okText="Yes"
-            okButtonProps={{
-              className: 'bg-blue-500',
-            }}
-            cancelText="No"
-          >
-            <Button type="default" className="bg-red-400">
-              BLock
-            </Button>
-          </Popconfirm>}
+          {
+            record.isBlock ? 
+              <Popconfirm
+                title="Are you sure to block this guy?"
+                onConfirm={() => handleUnlock(record)}
+                okText="Yes"
+                okButtonProps={{
+                  className: 'bg-red-500',
+                }}
+                cancelText="No"
+              >
+                <Button type="default" className="bg-blue-500">
+                  Unlock
+                </Button>
+              </Popconfirm> : 
+              <Popconfirm
+                title="Unlock this guy?"
+                onConfirm={() => handleBlock(record)}
+                okText="Yes"
+                okButtonProps={{
+                  className: 'bg-blue-500',
+                }}
+                cancelText="No"
+              >
+                <Button type="default" className="bg-red-400">
+                  BLock
+                </Button>
+              </Popconfirm>
+          }
 
         </Space>
       ),
