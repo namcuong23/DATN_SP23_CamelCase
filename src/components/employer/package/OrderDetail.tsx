@@ -1,13 +1,14 @@
 import { Popconfirm, Table, Tag, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { useGetOrderQuery, useRemoveOrderMutation } from '../../../service/employer/order';
+import { useGetOrderQuery, useRemoveOrderMutation,useVnPayCheckoutMutation } from '../../../service/employer/order';
 import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import QRCode from 'qrcode.react';
 import IProfileEpr from '../../../interface/employer/profileEpr';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import axios from 'axios';
 
 const OrderDetail = (): any => {
     const { id } = useParams()
@@ -60,7 +61,8 @@ const OrderDetail = (): any => {
     const total = order?.order_price * order?.order_count
     const totalVat = total * (10 / 100)
 
-    const [removeOrder] = useRemoveOrderMutation()
+    const [removeOrder] = useRemoveOrderMutation();
+    const [vnPayCheckout] = useVnPayCheckoutMutation()
     const text: string = 'Xác nhận hủy đơn hàng?'
 
     const handleRemoveOrder = (id: string) => {
@@ -70,7 +72,17 @@ const OrderDetail = (): any => {
             navigate('/home/orders')
         }
     }
-
+    
+    const VNPayCheckout = async (amount : number,orderId :string) => {
+            const body = {
+                amount,
+                orderId
+            }
+           const checkout = await vnPayCheckout(body);
+           if(checkout){
+            window.open(checkout.data.vnpUrl,'vnpay','popup')
+           }
+    } 
     const downloadQR = () => {
         const canvas: any = document.getElementById('qrcode');
         const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
@@ -173,6 +185,7 @@ const OrderDetail = (): any => {
                             cancelText="No">
                             <button>Hủy đơn hàng</button>
                         </Popconfirm>
+                        <button onClick={() => VNPayCheckout(total + totalVat,order._id)} className="border-1 border-[#004ad1] text-[#004ad1] ml-4 py-1 px-2 rounded mt-4">Thanh toán bằng VNPAY</button>
                     </main>
                     <aside className='w-[30%] p-3 bg-white border-1 rounded-md'>
                         <div className='flex justify-center'>

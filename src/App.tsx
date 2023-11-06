@@ -58,6 +58,7 @@ import PostAdmin from "./components/Admin/Post/PostAdmin"
 import CareerList from "./components/Admin/Career/CareerList"
 import CareerAdd from "./components/Admin/Career/CareerAdd"
 import FeedbackList from "./components/Admin/Feedback/FeedbackList"
+import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 function App() {
   return (
     <div className="App">
@@ -122,6 +123,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           <Route path='manage-cv' element={<ProfileList />} />
           <Route path='manage-profile/:id' element={<ManageProfileDetail />} />
+          <Route path='vnpay-checkout' element={<VNPayCheckout />} />
         </Route>
 
         {/* ADMIN */}
