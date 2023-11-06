@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { CSVLink } from 'react-csv';
-import { Space, Table, Button, DatePicker } from 'antd';
+import { Table, DatePicker } from 'antd';
 import { useGetHistoryOrderQuery } from '../../../service/admin/chartLine';
 import { Order } from '../../../interface/admin/order';
 
@@ -8,12 +8,7 @@ const { MonthPicker } = DatePicker;
 
 const OrderManagement = () => {
     const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
-    const [PackageHistory, setPackageHistory] = useState<Order[]>([]);
     const [selectedMonth, setSelectedMonth] = useState<any>(null);
-
-    useEffect(() => {
-        setPackageHistory(HistoryPackage);
-    }, [HistoryPackage]);
 
     const columns = [
         {
@@ -48,25 +43,15 @@ const OrderManagement = () => {
         },
     ];
 
-    const [filteredData, setFilteredData] = useState<Order[]>(PackageHistory); // Khởi tạo filteredData với toàn bộ dữ liệu ban đầu
-    const handleFilter = () => {
+    // Lọc dữ liệu khi selectedMonth thay đổi
+    const filteredData = HistoryPackage?.filter(user => {
         if (selectedMonth) {
-            const filteredData = PackageHistory.filter(user => {
-                if (user.createdAt) {
-                    const userDate = new Date(user.createdAt);
-                    if (!isNaN(userDate.getTime())) {
-                        const userMonth = userDate.getMonth();
-                        const selectedMonthIndex = selectedMonth.get('month');
-                        return userMonth === selectedMonthIndex;
-                    }
-                }
-                return false;
-            });
-            setFilteredData(filteredData);
-        } else {
-            setFilteredData(PackageHistory); // Khôi phục filteredData về toàn bộ dữ liệu ban đầu khi không có lọc
+            const selectedMonthIndex = selectedMonth.get('month');
+            const userDate = new Date(user.createdAt);
+            return userDate.getMonth() === selectedMonthIndex;
         }
-    };
+        return true;
+    });
 
     const csvData = ((filteredData && filteredData.length > 0 ? filteredData : [])).map((user, index) => ({
         'Số đơn hàng': index + 1,
@@ -76,22 +61,18 @@ const OrderManagement = () => {
         'Số tiền': (typeof user.order_price === 'number') ? user.order_price.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : ''
     }));
 
-
     return (
         <>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
                     <h2 className='mt-0 text-xl'>Quản lý đơn hàng</h2>
                 </div>
-                <div className='mb-2'>
+                <div style={{ marginLeft: 'auto', marginRight: '50px', marginTop: '12px' }} className='mb-2'>
                     <MonthPicker
                         placeholder="Chọn tháng"
                         value={selectedMonth}
                         onChange={(date) => setSelectedMonth(date)}
                     />
-                    <Button className='bg-danger rounded' type="primary" onClick={handleFilter}>
-                        Lọc
-                    </Button>
                 </div>
                 <div className='bg-success rounded px-3 py-2'>
                     <CSVLink className='text-white text-decoration-none' data={csvData} filename={'doanh-thu-don-hang.csv'}>
@@ -100,8 +81,11 @@ const OrderManagement = () => {
                 </div>
             </div>
 
-            <Table columns={columns} dataSource={filteredData.length > 0 ? filteredData : PackageHistory} className='mx-3' />
-
+            {filteredData && filteredData.length > 0 ? (
+                <Table columns={columns} dataSource={filteredData} className='mx-3' />
+            ) : (
+                <div className='mx-3 text-center text-danger'>Không có dữ liệu</div>
+            )}
         </>
     );
 };

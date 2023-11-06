@@ -248,7 +248,7 @@ const HomeAdmin = () => {
                         <div className="data">
                           <div className="data-group">
                             <div className="amount text-sm">
-                              {chartState?.totalPosts?.totalPosts ?? 'loading...'}
+                            {chartState?.totalPosts.totalPosts}
                             </div>
                             <div className="nk-ecwg6-ck">
                               <ChartTotal
@@ -262,45 +262,30 @@ const HomeAdmin = () => {
                           </div>
                           <div className="info">
                             <span className="change up text-danger">
-                              {chartState && chartState.totalPosts ? (
-                                chartState.totalPosts.postLastWeekTotalPosts !== undefined &&
-                                chartState.totalPosts.postWeekBeforeLastTotalPosts !== undefined
-                              ) ? (
-                                <div className="flex py-2">
-                                  <div className="pr-3">
-                                    <img
-                                      className="w-5"
-                                      src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684684027/juiewztaypyiczhygevl.png"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <span className='text-red-600'>
-                                    {calculatePercentageChange(
-                                      Number(chartState.totalPosts.postWeekBeforeLastTotalPosts),
-                                      Number(chartState.totalPosts.postLastWeekTotalPosts)
-                                    ).toFixed()}% vs. last week
-                                  </span>
-                                </div>
-                              ) : (
-                                <div className="flex py-2">
-                                  <div className="pr-3">
-                                    <img
-                                      className="w-5"
-                                      src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684683813/hjlqm92wwhp0lj93epso.png"
-                                      alt=""
-                                    />
-                                  </div>
-                                  <span className='text-green-500'>
-                                    {calculatePercentageChange(
-                                      Number(chartState.totalPosts.postWeekBeforeLastTotalPosts),
-                                      Number(chartState.totalPosts.postLastWeekTotalPosts)
-                                    ).toFixed()}% vs. last week
-                                  </span>
-                                </div>
-                              ) : 'loading'
+                              {
+                                chartState ? (chartState?.totalPosts.postLastWeekTotalPosts < chartState?.totalPosts.postWeekBeforeLastTotalPosts) ?
+                                  <div className="flex py-2">
+                                    <div className="pr-3 ">
+                                      <img
+                                        className="w-5"
+                                        src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684684027/juiewztaypyiczhygevl.png"
+                                        alt=""
+                                      />
+                                    </div>
+
+                                    <span className='text-red-600'>{calculatePercentageChange(Number(chartState?.totalPosts?.postWeekBeforeLastTotalPosts), Number(chartState?.totalPosts?.postLastWeekTotalPosts)).toFixed()}% vs. last week</span> </div>
+                                  :
+                                  <div className="flex py-2">
+                                    <div className="pr-3 ">
+                                      <img
+                                        className="w-5"
+                                        src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684683813/hjlqm92wwhp0lj93epso.png"
+                                        alt=""
+                                      />
+                                    </div>
+                                    <span className='text-green-500'>{calculatePercentageChange(Number(chartState?.totalPosts?.postWeekBeforeLastTotalPosts), Number(chartState?.totalPosts?.postLastWeekTotalPosts)).toFixed()}% vs. last week</span> </div> : 'loading  '
                               }
                             </span>
-
                           </div>
                         </div>
                       </div>
