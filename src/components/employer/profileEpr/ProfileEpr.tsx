@@ -11,12 +11,11 @@ import { toast } from 'react-toastify'
 import { useUpload } from '../../../utils/hooks/Upload'
 
 const ProfileEpr = (): any => {
-  const { email, isLoggedIn } = useAppSelector((res) => res.auth)
+  const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
   const { data: userEpr } = useGetUserEprByEmailQuery<any>(email)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
   const [updateUser] = useUpdateUserEprMutation()
   const navigate = useNavigate()
-  const inputFileRef: any = useRef(null)
   const [imgUrl, setImgUrl] = useState<any>()
   const [currentUrl, setCurrentUrl] = useState<any>()
   const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
@@ -177,8 +176,7 @@ const ProfileEpr = (): any => {
                       </span>
                       <input style={{ display: 'none' }} type="file"
                           id='company-logo'
-                          accept=".png,.jpeg,.jpg"
-                          ref={inputFileRef}
+                          accept="image/*"
                           onChange={handleChangeInputFile}
                         />
                     </label> :
@@ -192,7 +190,6 @@ const ProfileEpr = (): any => {
                           <input style={{ display: 'none' }} type="file"
                             id='company-logo'
                             accept="image/*"
-                            ref={inputFileRef}
                             onChange={handleChangeInputFile}
                           />
                         </div>

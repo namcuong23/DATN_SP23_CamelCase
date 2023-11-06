@@ -63,6 +63,14 @@ export const authApi: any = createApi({
             }),
             invalidatesTags: ['authEpe']
         }),
+        changeAvatar: builder.mutation({
+            query: (user: IUserNTV) => ({
+                url: '/epe-users/change-avatar',
+                method: 'PUT',
+                body: user
+            }),
+            invalidatesTags: ['authEpe']
+        }),
         sendEmailVerified: builder.mutation({
             query: (user: IUserNTV) => ({
                 url: '/epe-users/verifiedemail',
@@ -89,6 +97,7 @@ export const {
     useResetPasswordMutation,
     useGetUserByEmailQuery,
     useChangePasswordMutation,
+    useChangeAvatarMutation,
     useUpdateUserMutation,
     useSendEmailVerifiedMutation,
     useActiveEmailMutation,
