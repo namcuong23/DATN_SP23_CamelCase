@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
-import { useGetUserByEmailQuery } from '../../../service/auth'
+import { useChangeAvatarMutation, useGetUserByEmailQuery } from '../../../service/auth'
 
 import './Profile.scss'
 import Infotmation from './Infotmation'
@@ -9,14 +9,26 @@ import MyJob from './MyJob';
 import AccountMng from './AccountMng';
 import {
     AccountMngIcon,
+    AvatarIcon,
     InformationIcon, 
     MyJobIcon
 } from './icons'
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob';
+import { useUpload } from '../../../utils/hooks/Upload';
+import { toast } from 'react-toastify';
 
 const Profile: any = () => {
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+    const navigate = useNavigate()
+    const { data: user } = useGetUserByEmailQuery(email)
     const [param, setParam] = useSearchParams()
+    const [imgUrl, setImgUrl] = useState<any>()
+    const [loading, setLoading] = useState<boolean>(false)
+    const [currentUrl, setCurrentUrl] = useState<any>()
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
     const key = param.get('tab')
+    const [changeAvatar] = useChangeAvatarMutation()
+
     const profilePages = [
         {id: 1, icon: <InformationIcon />, title: 'Hồ sơ của tôi', page: Infotmation, tab: 'information'},
         {id: 2, icon: <MyJobIcon />, title: 'Việc làm của tôi', page: MyJob, tab: 'my-job'},
@@ -32,9 +44,56 @@ const Profile: any = () => {
         })
     }
 
-    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
-    const navigate = useNavigate()
-    const { data: user } = useGetUserByEmailQuery(email)
+    useEffect(() => {
+        return () => {
+          imgUrl && URL.revokeObjectURL(imgUrl.preview)
+        }
+      }, [imgUrl])
+    
+    const handleChangeInputFile = (e: any) => {
+        const file = e.target.files[0]
+        file.preview = URL.createObjectURL(file)
+
+        setImgUrl(file)
+        setCurrentUrl(e)
+    }
+
+    const handleChangeAvatar = async () => {
+        setLoading(true)
+        const formData = new FormData()
+        const fileUpload = currentUrl?.target.files[0]
+
+        //Check image size
+        if (fileUpload.size > maxSizeInBytes) {
+            return toast.warn('Kích thước quá lớn.')
+        }
+
+        formData.append('file', fileUpload)
+        formData.append('upload_preset', 'dmjlzwse')
+        formData.append('cloud_name', 'dywccbjry')
+
+        let newImage
+        if (fileUpload !== undefined) {
+            const image = await useUpload(formData)
+            newImage = image.url
+        } else {
+            newImage = user?.image
+        }
+
+        await changeAvatar({
+            email,
+            newImage
+        }).then((res: any) => {{
+            const {data} = res
+            if (data?.success) {
+                setLoading(false)
+                toast.success('Cập nhật thành công')
+            }
+        }}).catch((err: any) => {
+            setLoading(false)
+            console.log(err.message);
+        })
+    }
 
     if (isLoggedIn == false) {
         return navigate('/login')
@@ -54,18 +113,45 @@ const Profile: any = () => {
                             <section className='border-1 rounded bg-[#4A80F8] p-3'>
                                 <div className='flex items-center space-x-4'>
                                     <div>
-                                        <svg xmlns="http://www.w3.org/2000/svg"
-                                            width="80" height="80"
-                                            fill="currentColor"
-                                            className="bi bi-person-fill text-[#CCDEFF] bg-[#E6EFFF] border-4 border-[#005AFF] rounded-full p-2"
-                                            viewBox="0 0 16 16">
-                                            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
-                                        </svg>
-                                        <img src="" alt="" />
+                                        <div className="avatar-wrapper">
+                                            {
+                                                !imgUrl && user?.image === undefined ?
+                                                <AvatarIcon /> :
+                                                <div 
+                                                    style={{backgroundImage: `url(${imgUrl ? imgUrl.preview : user?.image})`}}
+                                                    className='avatar-img'
+                                                />
+                                            }
+                                            <div className='avatar-action'>
+                                                <label htmlFor="avatar" className='avatar-btn'>
+                                                    <i className="fa-solid fa-pen"></i>
+                                                    <input 
+                                                        type="file" 
+                                                        style={{display: 'none'}}
+                                                        id='avatar'
+                                                        accept="image/*"
+                                                        onChange={handleChangeInputFile}
+                                                    />
+                                                </label>
+                                            </div>
+                                        </div>
+                                        
                                     </div>
                                     <div>
                                         <h3 className='text-[20px] font-[600] text-white'>{user?.name}</h3>
                                     </div>
+                                    {
+                                        imgUrl !== undefined && 
+                                            <>
+                                                {
+                                                    loading ? 
+                                                    <i className="loading-icon fa-solid fa-circle-notch text-[#fff]"></i> :
+                                                    <button onClick={handleChangeAvatar}>
+                                                        <i className="fa-solid fa-arrow-up-from-bracket text-[#fff]"></i>
+                                                    </button>
+                                                }
+                                            </>
+                                    }
                                 </div>
                             </section>
                             <section className='border-1 bg-white'>
