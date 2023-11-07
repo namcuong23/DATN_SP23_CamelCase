@@ -7,16 +7,33 @@ import { EyeOutlined } from '@ant-design/icons';
 import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
+import ChartTotal from './ChartLine/ChartTotal';
 import StatisticalPackage from './ChartLine/StatisticalPackage';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 import { NavLink } from 'react-router-dom';
 import React from 'react';
 
 const HomeAdmin = () => {
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
   const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
   const [PackageHistory, setPackageHistory] = useState<Order[]>([]);
+
+  const currentMonthRevenue = PackageHistory?.reduce((totalRevenue, order) => {
+    const orderDate = new Date(order.createdAt);
+    const orderMonth = orderDate.getMonth() + 1;
+    const orderYear = orderDate.getFullYear();
+
+    if (orderMonth === currentMonth && orderYear === currentYear) {
+      totalRevenue += order.order_price;
+    }
+
+    return totalRevenue;
+  }, 0);
+
   useEffect(() => {
     setChartState(Chart)
   }, [Chart])
@@ -225,28 +242,49 @@ const HomeAdmin = () => {
                       <div className="card-inner">
                         <div className="">
                           <div className="">
-                            <h6 className="text-xl">Tổng bài đăng</h6>
+                            <h6 className="text-xl">Tin chờ duyệt</h6>
                           </div>
                         </div>
                         <div className="data">
                           <div className="data-group">
-                            <div className="amount text-sm">{chartState?.TotalPosts}</div>
+                            <div className="amount text-sm">
+                            {chartState?.totalPosts.totalPosts}
+                            </div>
                             <div className="nk-ecwg6-ck">
+                              <ChartTotal
+                                chartData={Chart}
+                                error={error}
+                                isLoading={isLoading}
+                                isSuccess={isSuccess}
+                              />
                             </div>
 
                           </div>
                           <div className="info">
                             <span className="change up text-danger">
-                              <div className="flex py-2">
-                                <div className="pr-3 ">
-                                  <img
-                                    className="w-5"
-                                    src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684683813/hjlqm92wwhp0lj93epso.png"
-                                    alt=""
-                                  />
-                                </div>
-                                {/* <span className=''> % vs. last week</span> */}
-                              </div>
+                              {
+                                chartState ? (chartState?.totalPosts.postLastWeekTotalPosts < chartState?.totalPosts.postWeekBeforeLastTotalPosts) ?
+                                  <div className="flex py-2">
+                                    <div className="pr-3 ">
+                                      <img
+                                        className="w-5"
+                                        src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684684027/juiewztaypyiczhygevl.png"
+                                        alt=""
+                                      />
+                                    </div>
+
+                                    <span className='text-red-600'>{calculatePercentageChange(Number(chartState?.totalPosts?.postWeekBeforeLastTotalPosts), Number(chartState?.totalPosts?.postLastWeekTotalPosts)).toFixed()}% vs. last week</span> </div>
+                                  :
+                                  <div className="flex py-2">
+                                    <div className="pr-3 ">
+                                      <img
+                                        className="w-5"
+                                        src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684683813/hjlqm92wwhp0lj93epso.png"
+                                        alt=""
+                                      />
+                                    </div>
+                                    <span className='text-green-500'>{calculatePercentageChange(Number(chartState?.totalPosts?.postWeekBeforeLastTotalPosts), Number(chartState?.totalPosts?.postLastWeekTotalPosts)).toFixed()}% vs. last week</span> </div> : 'loading  '
+                              }
                             </span>
                           </div>
                         </div>
@@ -267,7 +305,7 @@ const HomeAdmin = () => {
                       <div className="card-inner">
                         <div className="card-title-group mb-3">
                           <div className="card-title">
-                            <h6 className="text-xl font-bold">Thống kê gói đăng ký</h6>
+                            <h6 className="text-xl font-bold">Doanh thu tháng {currentMonth ? currentMonth : 'n/a'} </h6>
                           </div>
 
                         </div>
@@ -289,8 +327,9 @@ const HomeAdmin = () => {
                           <StatisticalPackage PackageHistory={HistoryPackage} />
                         </div>
                         <div className="chart-label-group ps-5">
-                          <div className="chart-label">Time 1</div>
-                          <div className="chart-label">Time 2</div>
+                          <div className="text-black text-decoration-none">
+                            Doanh thu tháng này: {currentMonthRevenue ? currentMonthRevenue.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : 'loading...'}
+                          </div>
                         </div>
                       </div>
                       {/* .card-inner */}
@@ -309,6 +348,7 @@ const HomeAdmin = () => {
                           </div>
                         </div>
                         <div className="align-center h-72"><StatisticalPackagePie PackageHistory={HistoryPackage} /></div>
+
                       </div>
                       {/* .card-inner */}
                     </div>
@@ -342,7 +382,7 @@ const HomeAdmin = () => {
                         <li className="item w-full flex justify-evenly">
                           <div className="info">
                             <div className="">Bài đăng</div>
-                            <div className="count py-1">{chartState?.TotalPosts}</div>
+                            <div className="count py-1">{chartState?.totalPosts.totalPosts}</div>
                           </div>
                           <img className='w-10' src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684687461/l6imf0nh0m55inixceed.png" alt="" />
                         </li>
@@ -430,10 +470,10 @@ const HomeAdmin = () => {
                             }
                           </div>
                           <div className="nk-tb-col tb-col-md">
-                            <span className="tb-sub">      
-                            <NavLink to={`/home/posts/${data._id}`}>
-                              <EyeOutlined className='text-dark' />
-                            </NavLink>
+                            <span className="tb-sub">
+                              <NavLink to={`/home/posts/${data._id}`}>
+                                <EyeOutlined className='text-dark' />
+                              </NavLink>
                             </span>
                           </div>
                         </div>

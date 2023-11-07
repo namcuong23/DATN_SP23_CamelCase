@@ -1,75 +1,58 @@
-// @ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Line } from '@ant-design/plots';
 import { Order } from '../../../../interface/admin/order';
 
 interface ChildComponentProps {
-  PackageHistory: Order[];
+  PackageHistory: Order[] | undefined; // Sửa kiểu dữ liệu thành Order[] | undefined
 }
-interface ChartData {
-  [x: string]: any;
-  Date: string;
-  scales: string,
-}
-const StatisticalPackage: React.FC<ChildComponentProps> = ({ PackageHistory }) => {
+
+const RevenueLineChart: React.FC<ChildComponentProps> = ({ PackageHistory }) => {
   const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1; // Lưu ý rằng tháng trong JavaScript được đánh số từ 0 đến 11
   const currentYear = currentDate.getFullYear();
-  const [data, setData] = useState<Order[]>([]);
-  useEffect(() => {
-    setData(PackageHistory)
-  },[])
 
-  const [dataLine, setDataLine] = useState<ChartData[]>([]);
-  const inMonthArray = data?.filter((item) => {
-    const createdAt = new Date(item.createdAt);
-    const itemMonth = createdAt.getMonth() + 1;
-    return itemMonth === currentMonth;
-  });
-  const theMoneyinMonthArray = inMonthArray?.map((item) => item.order_price);
-  const lastMonthArray = data?.filter((item) => {
-    const createdAt = new Date(item.createdAt);
-    const itemMonth = createdAt.getMonth();
-    return itemMonth === currentMonth;
-  });
-  const theMoneylastMonthArray = lastMonthArray?.map((item) => item.order_price);
+  const monthsInYear = Array.from({ length: 12 }, (_, index) => index + 1);
 
-  const twoMonthAgo = data?.filter((item) => {
-  const createdAt = new Date(item.createdAt);
-  const itemMonth = createdAt.getMonth();
-  return itemMonth === currentMonth - 2;
-});
-  const theMoneytwoMonthAgo = twoMonthAgo?.map((item) => item.order_price);
-  const dataArray = [
-    {
-      "Date": `${currentMonth - 2} - ${currentYear}`,
-      "scales": JSON.stringify(theMoneytwoMonthAgo),
-    }, {
-      "Date": `${currentMonth - 1} - ${currentYear}`,
-      "scales": JSON.stringify(theMoneylastMonthArray),
-    }, {
-      "Date": `${currentMonth} - ${currentYear}`,
-      "scales": JSON.stringify(theMoneyinMonthArray),
-    },
-  ]
-  useEffect(() => {
-    setDataLine(dataArray);
-  }, []);
+  const revenueData = monthsInYear.map((month) => {
+    if (PackageHistory) {
+      const ordersInMonth = PackageHistory.filter((order) => {
+        const orderDate = new Date(order.createdAt);
+        return orderDate.getFullYear() === currentYear && orderDate.getMonth() + 1 === month;
+      });
+
+      const totalRevenue = ordersInMonth.reduce((total, order) => total + order.order_price, 0);
+
+      return {
+        month: month,
+        revenue: totalRevenue,
+      };
+    }
+
+    return null;
+  }).filter(Boolean);
+
   const config = {
-    data: dataLine,
-    padding: 'auto',
-    xField: 'Date',
-    yField: 'scales',
+    data: revenueData,
+    xField: 'month',
+    yField: 'revenue',
     xAxis: {
-      tickCount: 5,
+      type: 'cat',
     },
-    slider: {
-      start: 0.1,
-      end: 0.5,
+    yAxis: {
+      type: 'linear',
+      min: 0,
+      nice: true,
+    },
+    smooth: true,
+    label: {
+      position: 'middle',
+      style: {
+        fill: '#FFFFFF',
+        opacity: 0.6,
+      },
     },
   };
 
   return <Line {...config} />;
 };
 
-export default StatisticalPackage
+export default RevenueLineChart;
