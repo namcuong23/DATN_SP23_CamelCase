@@ -1,5 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
 import ICandidate from "../../interface/employer/candidate";
+import IProfileEpr from "../../interface/employer/profileEpr";
 
 export const candidateApi = createApi({
     reducerPath: 'candidateApi',
@@ -19,7 +20,7 @@ export const candidateApi = createApi({
             providesTags: ['candidate']
         }),
         createCandidate: builder.mutation({
-            query: (candidate: ICandidate) => ({
+            query: (candidate: IProfileEpr) => ({
                 url: `/candidates`,
                 method: 'POST',
                 body: candidate

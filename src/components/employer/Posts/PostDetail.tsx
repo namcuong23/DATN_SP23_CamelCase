@@ -4,10 +4,11 @@ import { MessageType } from 'antd/es/message/interface'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 import { useGetPostQuery } from '../../../service/post'
-import { useApproveCvMutation, useGetCvsByPostIdQuery, useRefuseCvMutation, useRemoveCvMutation } from '../../../service/manage_cv'
+import { useApproveCvMutation, useGetCvsByPostIdQuery, useRefuseCvMutation } from '../../../service/manage_cv'
 import { Modal, Popconfirm, Space, Tag, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
-import { CloseOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons'
+import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
+import { useCreateCandidateMutation } from '../../../service/employer/candidate'
 
 const PostDetail = (): any => {
     const { id } = useParams()
@@ -20,14 +21,23 @@ const PostDetail = (): any => {
     const remove = 'Bạn có muốn xoá hồ sơ này?';
     const approve = 'Bạn có phê duyệt hồ sơ này?';
     const reject = "Bạn có muốn từ chối hồ sơ này?"
-    const [removeCv] = useRemoveCvMutation()
+    const [addCandidate] = useCreateCandidateMutation()
 
-    const onHandleRemove = (id: string) => {
-        const confirm: MessageType = message.info('Xoá thành công')
-        if (confirm !== null) {
-            removeCv(id)
+
+    const onHandleAdd = async (id: string) => {
+        try {
+            const response = await addCandidate({ id: id });
+            if ('data' in response && response.data) {
+                message.success('Thêm ứng viên phù hợp thành công');
+            } else if ('error' in response) {
+                message.error('Có lỗi xảy ra khi thêm ứng viên.');
+                console.log(data);
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
+
 
     const [approveCv] = useApproveCvMutation()
     const onHandleApprove = (id: string) => {
@@ -134,10 +144,10 @@ const PostDetail = (): any => {
 
                     <Popconfirm placement="top"
                         title={remove}
-                        onConfirm={() => onHandleRemove(record._id)}
+                        onConfirm={() => onHandleAdd(record._id)}
                         okText="Đồng ý"
                         cancelText="Không">
-                        <DeleteOutlined className='text-danger' />
+                        <UserAddOutlined className='text-primary'/>
                     </Popconfirm>
 
                 </Space>
