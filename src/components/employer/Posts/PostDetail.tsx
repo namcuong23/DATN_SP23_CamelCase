@@ -24,9 +24,9 @@ const PostDetail = (): any => {
     const [addCandidate] = useCreateCandidateMutation()
 
 
-    const onHandleAdd = async (id: string) => {
+    const onHandleAdd = async (user:any) => {
         try {
-            const response = await addCandidate({ id: id });
+            const response = await addCandidate(user);
             if ('data' in response && response.data) {
                 message.success('Thêm ứng viên phù hợp thành công');
             } else if ('error' in response) {
@@ -144,7 +144,7 @@ const PostDetail = (): any => {
 
                     <Popconfirm placement="top"
                         title={remove}
-                        onConfirm={() => onHandleAdd(record._id)}
+                        onConfirm={() => onHandleAdd(record)}
                         okText="Đồng ý"
                         cancelText="Không">
                         <UserAddOutlined className='text-primary'/>

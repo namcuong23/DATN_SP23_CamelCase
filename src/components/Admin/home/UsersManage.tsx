@@ -56,7 +56,7 @@ const UsersManage = () => {
     key: String(index),
     ...item
   }))
-  
+
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
   const [searchText, setSearchText] = useState('');
@@ -207,52 +207,8 @@ const UsersManage = () => {
       render: (_, record: any) => (
 
         <Space size="middle">
-
-          <Button type="default" className="bg-yellow-400" onClick={() => handleUpdateClick(record)}>
-            Update
-          </Button>
-          <Modal
-            open={modalVisible && selectedRecord && selectedRecord._id === record._id}
-            onCancel={() => setModalVisible(false)}
-            footer={null}
-            className=''
-          >
-            <Form className='px-10 py-4' initialValues={{
-              _id: record._id,
-              name: record.name,
-              phone: record.phone,
-              password: record.password,
-              level_auth: record.level_auth,
-              email: record.email
-            }} onFinish={handleUpdateSubmit}>
-              <Form.Item name="_id" hidden>
-                <Input />
-              </Form.Item>
-              <Form.Item name="name" label="Name">
-                <Input />
-              </Form.Item>
-              <Form.Item name="phone" label="Phone">
-                <Input />
-              </Form.Item>
-              <Form.Item name="level_auth" label="Level">
-                <InputNumber className='w-3/12' />
-              </Form.Item>
-              <Form.Item name="email" label="Email">
-                <Input />
-              </Form.Item>
-              <Form.Item hidden name="password" label="Password">
-                <Input.Password />
-              </Form.Item>
-              <Form.Item>
-                <Button type="primary" htmlType="submit" className='bg-yellow-400 text-black'>
-                  Update
-                </Button>
-              </Form.Item>
-            </Form>
-          </Modal>
-
           {
-            record.isBlock ? 
+            record.isBlock ?
               <Popconfirm
                 title="Are you sure to block this guy?"
                 onConfirm={() => handleUnlock(record)}
@@ -265,7 +221,7 @@ const UsersManage = () => {
                 <Button type="default" className="bg-blue-500">
                   Unlock
                 </Button>
-              </Popconfirm> : 
+              </Popconfirm> :
               <Popconfirm
                 title="Unlock this guy?"
                 onConfirm={() => handleBlock(record)}
