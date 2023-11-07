@@ -1,11 +1,11 @@
+import { useEffect, useRef, useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import { useGetCandidatesByUIdQuery } from '../../../service/employer/candidate';
-import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { PhoneOutlined, MailOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
@@ -21,10 +21,10 @@ const Candidate = (): any | null | JSX.Element => {
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
 
-    const { email, isLoggedIn } = useAppSelector((res) => res.auth);
+    const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
-    const { data: candidates, error, isLoading } = useGetCandidatesByUIdQuery(user?._id)
+    const { data: candidates, error, isLoading }: any = useGetCandidatesByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this candidate?';
     const [provinces, setProvinces] = useState<any>([])
 

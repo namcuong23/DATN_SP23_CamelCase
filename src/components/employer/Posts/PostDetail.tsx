@@ -11,7 +11,7 @@ import { CloseOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons'
 
 const PostDetail = (): any => {
     const { id } = useParams()
-    const { isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const navigate = useNavigate()
     const { data: post } = useGetPostQuery(id);
     const [open, setOpen] = useState(false);

@@ -28,7 +28,7 @@ const UsersManage = () => {
     level_auth: number;
     email: string;
     role: string;
-    isBlock: boolean | string;
+    isBlock: boolean;
   }
 
   const [selectedRecord, setSelectedRecord] = useState<RecordselectedRecord | undefined>();
@@ -47,23 +47,16 @@ const UsersManage = () => {
     email: string;
     password: string;
     role: string;
-    isBlock: boolean | string;
+    isBlock: boolean;
 
   }
   type DataIndex = keyof DataType;
 
   const data = users?.map((item: any, index: any) => ({
     key: String(index),
-    _id: String(item?._id),
-    name: String(item?.name),
-    phone: String(item?.phone),
-    level_auth: Number(item?.level_auth),
-    email: String(item?.email),
-    password: String(item?.password),
-    role: String(item?.role),
-    isBlock: Boolean(item?.isBlock),
-
+    ...item
   }))
+  
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
   const [searchText, setSearchText] = useState('');

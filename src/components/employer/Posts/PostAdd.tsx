@@ -14,7 +14,7 @@ const PostAdd = (): any => {
     const navigate = useNavigate()
     const { data: career, error, isLoading } = useGetCareersQuery()
     const [addPost] = useAddPostMutation()
-    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])

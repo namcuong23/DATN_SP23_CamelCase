@@ -22,6 +22,7 @@ interface IUserNTV {
     tokenExpires: string;
     role: number;
     status: boolean | string;
+    isBlock: boolean;
 }
 
 export default IUserNTV

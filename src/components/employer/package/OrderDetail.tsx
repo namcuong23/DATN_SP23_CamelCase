@@ -12,7 +12,7 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 const OrderDetail = (): any => {
     const { id } = useParams()
     const navigate = useNavigate()
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: order } = useGetOrderQuery<any>(id)
     const paymentTerm = new Date(order?.createdAt)

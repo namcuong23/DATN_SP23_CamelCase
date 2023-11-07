@@ -21,7 +21,7 @@ const PostList = (): any | null | JSX.Element => {
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
 
-    const { email, isLoggedIn } = useAppSelector((res) => res.auth);
+    const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const {data: user}: any = useGetUserEprByEmailQuery(email);
     
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)

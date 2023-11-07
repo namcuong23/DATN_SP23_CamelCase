@@ -31,7 +31,7 @@ const Cart = (): any => {
         dispatch(nusProductCart(id))
     }
 
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const { data: orders } = useGetOrdersByUIdQuery<any>(user?._id)

@@ -12,7 +12,7 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 type Props = {}
 const ServiceList = (): any => {
     const navigate = useNavigate()
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: services, error, isLoading } = useGetServicesQuery(user?._id)
     const remove = 'Bạn có muốn xoá gói service này?';

@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 const PackageList = (): any => {
     const dispatch: any = useAppDispatch()
     const navigate = useNavigate()
-    const { isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
     const onHandleAddToCart = (pack: IAdPackage) => {
         toast.success('Đã thêm vào giỏ hàng!')

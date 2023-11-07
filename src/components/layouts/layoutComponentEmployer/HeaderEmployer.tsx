@@ -21,7 +21,7 @@ import { IFeedback } from '../../../interfaces/feedback'
 import { MessageType } from 'antd/es/message/interface'
 import { Button, Modal } from 'antd';
 const HeaderEmployer = () => {
-    const { email, isLoggedIn } = useAppSelector((res) => res.auth)
+    const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr)
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
     const { data: user } = useGetUserEprByEmailQuery<any>(email)

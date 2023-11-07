@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'
 import { useUpload } from '../../../utils/hooks/Upload'
 
 const ProfileEpr = (): any => {
-  const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+  const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
   const { data: userEpr } = useGetUserEprByEmailQuery<any>(email)
   const { register, handleSubmit, formState: { errors }, reset } = useForm<IUserNTD>()
   const [updateUser] = useUpdateUserEprMutation()

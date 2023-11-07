@@ -1,17 +1,14 @@
 import { useState } from 'react'
-import { message } from 'antd'
 import {
     signInWithEmailAndPassword
 } from 'firebase/auth'
 import { useForm } from 'react-hook-form'
 import { useNavigate } from 'react-router-dom'
-import { auth } from '../../../firebase'
-import UseAuth from '../UseAuth'
 import { NavLink } from 'react-router-dom'
-import { useGetUserEprByEmailQuery, useLoginWithEmployerMutation } from '../../../service/auth_employer'
+import { useLoginWithEmployerMutation } from '../../../service/auth_employer'
 import { useAppDispatch } from '../../../app/hook'
-import { loginAuth } from '../../../app/actions/auth'
 import { toast } from 'react-toastify'
+import { loginAuthEpr } from '../../../app/actions/authEpr'
 
 const LoginEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -28,7 +25,7 @@ const LoginEmployer = () => {
         const login: any = await signin(user)
         const { data: res } = login
         if (res?.success) {
-            dispatch(loginAuth(res))
+            dispatch(loginAuthEpr(res))
             navigate('/home')
         } else {
             toast.warning(res.mes)
