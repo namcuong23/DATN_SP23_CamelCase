@@ -49,6 +49,10 @@ import Interview from "./components/pages/Interview"
 import ManageJob from "./components/pages/ManageJob"
 import RecruitmentDetails from "./components/pages/RecruitmentDetails"
 import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
+import CVChoose from "./components/CvChoose/CVChoose"
+import CVChoose1 from "./components/CvChoose/CVChoose1"
+import CVChoose2 from "./components/CvChoose/CVChoose2"
+import CVChoose3 from "./components/CvChoose/CVChoose3"
 function App() {
   return (
     <div className="App">
@@ -93,6 +97,10 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
+          <Route path="cvchoose" element={<CVChoose />} />
+          <Route path="cvchoose1" element={<CVChoose1 />} />
+          <Route path="cvchoose2" element={<CVChoose2 />} />
+          <Route path="cvchoose3" element={<CVChoose3 />} />
           <Route path="interview" element={<Interview />} />
           <Route path="managejob" element={<ManageJob />} />
           <Route path="jobempolyee" element={<Job />} />

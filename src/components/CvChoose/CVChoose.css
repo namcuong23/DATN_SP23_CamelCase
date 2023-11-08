@@ -1,0 +1,45 @@
+body {background-color: #f4f4f4; color: black;}
+.CV{
+    padding-top: 40px;
+}
+.maucv{
+    float: left;
+    margin: 0 0 0 20px;
+}
+.maucv button{
+    width: 100px;
+    height: 70px;
+    border-style: round;
+    background-color: white;
+}
+.huongdan{
+    float: left;
+    width: 300px;
+    margin: 0 20px;
+    background-color: white;
+    border-radius: 5px;
+}
+.contentcv1{
+    width: 65%;
+}
+.cv-sidebar{
+    display: flex;
+    align-items: start;
+    width: 30%;
+}
+.contentcv{
+    background-color: white;
+}
+.information div{
+    display: inline;
+    font-size: 13px;
+}
+.phone input{
+    width: 82px;
+}
+.email input{
+    width: 140px;
+}
+.Address input{
+    width: 160px;
+}
