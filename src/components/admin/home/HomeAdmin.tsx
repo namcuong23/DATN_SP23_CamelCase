@@ -9,6 +9,7 @@ import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import ChartTotal from './ChartLine/ChartTotal';
 import StatisticalPackage from './ChartLine/StatisticalPackage';
+import StatisticalPackageDay from './ChartLine/StatisticalPackageDay';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 import { NavLink } from 'react-router-dom';
 import React from 'react';
@@ -21,7 +22,9 @@ const HomeAdmin = () => {
   const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
   const [PackageHistory, setPackageHistory] = useState<Order[]>([]);
-
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1; // Lưu ý: Tháng bắt đầu từ 0 (0 là tháng 1)
+  const year = currentDate.getFullYear();
   const currentMonthRevenue = PackageHistory?.reduce((totalRevenue, order) => {
     const orderDate = new Date(order.createdAt);
     const orderMonth = orderDate.getMonth() + 1;
@@ -305,7 +308,7 @@ const HomeAdmin = () => {
                       <div className="card-inner">
                         <div className="card-title-group mb-3">
                           <div className="card-title">
-                            <h6 className="text-xl font-bold">Doanh thu tháng {currentMonth ? currentMonth : 'n/a'} </h6>
+                            <h6 className="text-xl font-bold">Doanh thu năm {year} </h6>
                           </div>
 
                         </div>
@@ -328,7 +331,7 @@ const HomeAdmin = () => {
                         </div>
                         <div className="chart-label-group ps-5">
                           <div className="text-black text-decoration-none">
-                            Doanh thu tháng này: {currentMonthRevenue ? currentMonthRevenue.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : 'loading...'}
+                            Doanh thu từ đầu năm: {currentMonthRevenue ? currentMonthRevenue.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : 'loading...'}
                           </div>
                         </div>
                       </div>
@@ -400,7 +403,45 @@ const HomeAdmin = () => {
                   {/* .card */}
                 </div>
                 {/* .col */}
-                <div className="col-xxl-12">
+                <div className="col-xxl-6">
+                  <div className="card">
+                    <div className="">
+                      <div className="card-inner">
+                        <div className="card-title-group mb-3">
+                          <div className="card-title">
+                            <h6 className="text-xl font-bold">Doanh thu tháng {month}/{year}</h6>
+                          </div>
+
+                        </div>
+                        <ul className="nk-ecwg8-legends">
+                          <li>
+                            <div className="">
+                              <span className="dot dot-lg sq text-sm" data-bg="#6576ff" />
+                              {/* <span className='text-[#6576ff] font-bold'>Tổng gói đăng ký</span> */}
+                            </div>
+                          </li>
+                          <li>
+                            <div className="">
+                              <span className="dot dot-lg sq " data-bg="" />
+                              {/* <span className='text-[#eb6459] font-bold'>Tổng gói đã hủy</span> */}
+                            </div>
+                          </li>
+                        </ul>
+                        <div className="nk-ecwg8-ck">
+                          <StatisticalPackageDay PackageHistory={HistoryPackage} />
+                        </div>
+                        <div className="chart-label-group ps-5">
+                          <div className="text-black text-decoration-none">
+                            Doanh thu tháng này: {currentMonthRevenue ? currentMonthRevenue.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : 'loading...'}
+                          </div>
+                        </div>
+                      </div>
+                      {/* .card-inner */}
+                    </div>
+                  </div>
+                  {/* .card */}
+                </div>
+                <div className="col-xxl-6">
                   <div className="card card-full">
                     <div className="card-inner">
                       <div className="card-title-group">
@@ -425,9 +466,6 @@ const HomeAdmin = () => {
                         </div>
                         <div className="nk-tb-col">
                           <span className="d-none d-sm-inline">Trạng thái</span>
-                        </div>
-                        <div className="nk-tb-col">
-                          <span className="d-none d-sm-inline">Chi tiết</span>
                         </div>
                       </div>
                       {PackageHistory?.map((data, index: number) =>
@@ -469,13 +507,7 @@ const HomeAdmin = () => {
 
                             }
                           </div>
-                          <div className="nk-tb-col tb-col-md">
-                            <span className="tb-sub">
-                              <NavLink to={`/home/posts/${data._id}`}>
-                                <EyeOutlined className='text-dark' />
-                              </NavLink>
-                            </span>
-                          </div>
+                       
                         </div>
                       )}
                     </div>

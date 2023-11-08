@@ -5,19 +5,14 @@ import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterRe
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Popconfirm } from 'antd';
-import { Modal } from "antd";
 import { useGetUsersQuery } from '../../../service/auth';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
 
 const UsersManage = () => {
-  const text_X = 'Bạn xác nhận từ chối bài viết này?';
-  const text_V = 'Bạn xác nhận duyệt bài viết này?';
 
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
   const users = userEpe?.concat(userEpr)
-  const [updateUser, { isLoading: isUpdating, isSuccess }] = useUpdateUserMutation();
-  const [modalVisible, setModalVisible] = useState(false);
   const [block] = useBlockUserMutation();
   const [unlock] = useUnlockUserMutation();
   interface RecordselectedRecord {
@@ -31,13 +26,9 @@ const UsersManage = () => {
     isBlock: boolean;
   }
 
-  const [selectedRecord, setSelectedRecord] = useState<RecordselectedRecord | undefined>();
 
   const searchInput = useRef<InputRef>(null);
-  const handleUpdateClick = (record: any) => {
-    setSelectedRecord(record); // Lưu thông tin của hàng được chọn
-    setModalVisible(true); // Hiển thị Modal
-  };
+
   interface DataType {
     key: string;
     _id: string;
@@ -242,16 +233,6 @@ const UsersManage = () => {
     },
   ];
 
-  const handleUpdateSubmit = (values: DataType) => {
-    updateUser(values);
-    if (isUpdating) {
-      message.loading('isUpdating')
-    }
-    if (isSuccess) {
-      message.success('Successs')
-    }
-    setModalVisible(false);
-  };
   return (
     <div className="nk-content ">
       <div className="container-fluid">
