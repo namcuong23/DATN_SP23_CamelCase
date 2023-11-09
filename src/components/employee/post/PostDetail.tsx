@@ -1,4 +1,5 @@
 import { message } from 'antd'
+import { useState, useEffect  } from 'react';
 import { Link, useParams } from 'react-router-dom'
 import { useAddCvMutation } from '../../../service/manage_cv'
 import { useGetPostQuery,useGetPostsByCareerQuery } from '../../../service/post'
@@ -17,12 +18,28 @@ const PostDetailEp = (): any => {
     id,
     career : post?.career
   })
+  const [lastSubmissionDate, setLastSubmissionDate] = useState<Date | null>(null);
+  useEffect(() => {
+    // Lấy thông tin về ngày nộp đơn gần đây nhất từ localStorage khi component được tải
+    const storedDate = localStorage.getItem('lastSubmissionDate');
+    if (storedDate) {
+      setLastSubmissionDate(new Date(storedDate));
+    }
+  }, []);
+
   const { email, isLoggedIn, token } = useAppSelector((rs) => rs.auth)
   const { data: user } = useGetUserByEmailQuery(email)
   const [addCv] = useAddCvMutation()
   const [addJobdone] = useAddJobdoneMutation()
   const [addJobsave] = useAddJobsaveMutation()
+
+  
   const applyJob = async () => {
+    const currentDate = new Date();
+    if (lastSubmissionDate && lastSubmissionDate.toDateString() === currentDate.toDateString()) {
+      message.warning('Bạn đã nộp đơn trong ngày hôm nay rồi. Hãy quay lại vào ngày mai!');
+      return;
+    }
     const address = `${user?.specific_address} ${user?.district} ${user?.province}`
     await addJobdone({
       ...post,
@@ -44,6 +61,8 @@ const PostDetailEp = (): any => {
     if (rs?.success) {
       message.success(rs?.mes)
     }
+    localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
+    setLastSubmissionDate(currentDate);
   }
   //savejob
   const saveJob = async () => {
