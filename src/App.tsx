@@ -59,7 +59,21 @@ import CareerList from "./components/Admin/Career/CareerList"
 import CareerAdd from "./components/Admin/Career/CareerAdd"
 import FeedbackList from "./components/Admin/Feedback/FeedbackList"
 import VNPayCheckout from "./components/employer/package/VNPayCheckout"
+import { message } from "antd"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 function App() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.addEventListener('storage', function(event) {
+      if (event.key === 'checkout') {
+        message.success(event.newValue);
+        navigate('/home/services');
+        this.localStorage.removeItem("checkout")
+      }
+    });
+  },[]);
+  
   return (
     <div className="App">
       <Routes>

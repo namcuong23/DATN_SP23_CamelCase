@@ -2,7 +2,7 @@ import { message } from "antd";
 import React, { useEffect } from "react";
 import { formatCurrency } from "../../../utils/hooks/FormatCurrrency";
 import {useUpdateOrderStatusMutation} from '../../../service/employer/order';
-
+import { useNavigate } from "react-router-dom";
 import { useAddAdmServiceMutation } from '../../../service/admin/service';
 const responseCodeList:any = {
   "00": "Giao dịch thành công",
@@ -21,10 +21,11 @@ const responseCodeList:any = {
 };
 
 const VNPayCheckout = (): any => {
+    const navigate = useNavigate();
     const [addAdmService] = useAddAdmServiceMutation()
     const [updateOrderStatus] = useUpdateOrderStatusMutation()
     const queryParams = new URLSearchParams(window.location.search);
-    let  vnp_OrderInfo = queryParams.get("vnp_OrderInfo")
+    let   vnp_OrderInfo = queryParams.get("vnp_OrderInfo")
     const responseCode = queryParams.get("vnp_ResponseCode") || "99" ; 
     const transactionNo = queryParams.get("vnp_TransactionNo")
     const vnp_Amount = Number(queryParams.get('vnp_Amount'));
@@ -32,19 +33,22 @@ const VNPayCheckout = (): any => {
 
   if(responseCode) {
     if(responseCode == "00"){
+        try {
         message.success(responseCodeList[responseCode]);
         const {data} = await updateOrderStatus(vnp_OrderInfo)
-        console.log(data);
         const service:any = {
             userId :data.user_id,
-            packageId : data.package_id._id,
-            expireDay : data.package_id.package_day,
+            packageDay : data.package_id.package_day,
             transactionNo,
+            currentService : data.order_name            
         }
         await addAdmService(service);
-    }
-    else if (responseCode == "07"){
-        message.warning(responseCodeList[responseCode]);
+        window.close();
+        localStorage.setItem('checkout',responseCodeList[responseCode])
+        } catch (error:any) {
+          message.error(error);
+        }
+        
     }
     else {
         message.error(responseCodeList[responseCode]);
