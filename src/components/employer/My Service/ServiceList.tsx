@@ -1,5 +1,5 @@
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { Alert, Button, message, Popconfirm, Spin, Tag } from 'antd';
 import { Space, Table } from 'antd';
 import { useRef, useState } from 'react';
@@ -15,7 +15,7 @@ const ServiceList = (): any => {
     const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: services, error, isLoading } = useGetServicesQuery(user?._id)
-  
+    
    
     let index = 0
     const onHandleRemove = (id: string) => {
@@ -47,7 +47,9 @@ const ServiceList = (): any => {
             render: (_, record) => (
                 <Space size="middle">
                    
+                       <Link to="/home/packages">
                        <Button>Gia hạn</Button>
+                       </Link>
                     
                    
                 </Space>

@@ -1,27 +1,41 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Alert, Space, Spin } from 'antd'
+import { Alert, Space, Spin, message } from 'antd'
 import IPackage from '../../../interface/package'
-import { useAppDispatch, useAppSelector } from '../../../app/hook'
-import { setCart } from '../../../app/actions/package'
+import { useAppSelector } from '../../../app/hook'
 import { useGetAdmPackagesQuery } from '../../../service/admin/package'
 import IAdPackage from '../../../interface/admin/package'
 import { toast } from 'react-toastify'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
-
+import { useCreateOrderMutation } from '../../../service/employer/order';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 const PackageList = (): any => {
-    const dispatch: any = useAppDispatch()
+    const [createOrder] = useCreateOrderMutation();
     const navigate = useNavigate()
-    const { isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { isLoggedIn,email } = useAppSelector((rs) => rs.auth)
+    
     const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
-    const onHandleAddToCart = (pack: IAdPackage) => {
-        toast.success('Đã thêm vào giỏ hàng!')
-        const addToCart = dispatch(setCart(pack))
-    }
-
-    const onHandleBuy = (pack: IPackage) => {
-        navigate('/home/cart')
-        dispatch(setCart(pack))
+    const {data :user }:any= useGetUserEprByEmailQuery(email)
+    const onHandleBuy = async (pack: IAdPackage) => {
+        const {package_price,package_name,_id} = pack;
+        const body = {
+            order_name: package_name,
+            order_status: false,
+            order_price: package_price,
+            user_id: user?._id,
+            package_id: _id,
+        }
+       try {
+        const {data}:any = await createOrder(body)
+        console.log(data);
+        
+        navigate(`/home/orders/${data.order._id}/detail`);
+       
+       } catch (error) {
+        message.error(error)
+       }
+        
+        
     }
 
     if (isLoading) {
@@ -61,12 +75,12 @@ const PackageList = (): any => {
                                         <span className='text-[17px] text-[#FD6333] font-[700]'>{formatCurrency(pack.package_price)} VND</span>
                                         <p>Quảng cáo tin đăng hiệu quả với vị trí nổi bật trong <span className='font-[550]'>Việc làm tốt nhất</span> kết hợp cùng các dịch cao cấp và được bảo hành vị trí ưu tiên.</p>
                                         <div className='flex items-center justify-between'>
-                                            <button onClick={() => onHandleAddToCart(pack)} className='flex items-center space-x-[5px] border-1 border-[#004AD1] rounded text-[#004AD1] font-[550] px-4 py-1'>
+                                            {/* <button onClick={() => onHandleAddToCart(pack)} className='flex items-center space-x-[5px] border-1 border-[#004AD1] rounded text-[#004AD1] font-[550] px-4 py-1'>
                                                 <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} fill="currentColor" className="bi bi-cart2" viewBox="0 0 16 16">
                                                     <path d="M0 2.5A.5.5 0 0 1 .5 2H2a.5.5 0 0 1 .485.379L2.89 4H14.5a.5.5 0 0 1 .485.621l-1.5 6A.5.5 0 0 1 13 11H4a.5.5 0 0 1-.485-.379L1.61 3H.5a.5.5 0 0 1-.5-.5zM3.14 5l1.25 5h8.22l1.25-5H3.14zM5 13a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0zm9-1a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm-2 1a2 2 0 1 1 4 0 2 2 0 0 1-4 0z" />
                                                 </svg>
                                                 <span>Thêm vào giỏ</span>
-                                            </button>
+                                            </button> */}
                                             <button onClick={() => onHandleBuy(pack)} className='border-none rounded bg-[#004AD1] text-white font-[550] px-11 py-1'>
                                                 Mua ngay
                                             </button>

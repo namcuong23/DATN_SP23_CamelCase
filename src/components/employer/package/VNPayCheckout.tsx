@@ -25,7 +25,7 @@ const VNPayCheckout = (): any => {
     const [addAdmService] = useAddAdmServiceMutation()
     const [updateOrderStatus] = useUpdateOrderStatusMutation()
     const queryParams = new URLSearchParams(window.location.search);
-    let   vnp_OrderInfo = queryParams.get("vnp_OrderInfo")
+    const vnp_OrderInfo:string = queryParams.get("vnp_OrderInfo")
     const responseCode = queryParams.get("vnp_ResponseCode") || "99" ; 
     const transactionNo = queryParams.get("vnp_TransactionNo")
     const vnp_Amount = Number(queryParams.get('vnp_Amount'));
@@ -34,7 +34,6 @@ const VNPayCheckout = (): any => {
   if(responseCode) {
     if(responseCode == "00"){
         try {
-        message.success(responseCodeList[responseCode]);
         const {data} = await updateOrderStatus(vnp_OrderInfo)
         const service:any = {
             userId :data.user_id,
@@ -43,15 +42,24 @@ const VNPayCheckout = (): any => {
             currentService : data.order_name            
         }
         await addAdmService(service);
-        window.close();
         localStorage.setItem('checkout',responseCodeList[responseCode])
+        setTimeout(() => {
+          localStorage.setItem('checkout',responseCodeList[responseCode])
+          window.close();
+        },1000)
         } catch (error:any) {
-          message.error(error);
+          window.close();
+          setTimeout(() =>{
+            window.close();
+          },1500)
         }
         
     }
     else {
         message.error(responseCodeList[responseCode]);
+        setTimeout(() =>{
+          window.close();
+        },1500)
     }
   }
   },[])
