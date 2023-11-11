@@ -20,6 +20,7 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
 import { MessageType } from 'antd/es/message/interface'
 import { Button, Modal } from 'antd';
+import {IoMdNotifications} from "react-icons/io"
 const HeaderEmployer = () => {
     const { email, isLoggedIn } = useAppSelector((res) => res.auth)
     const [open, setOpen] = useState(false);
@@ -130,6 +131,11 @@ const HeaderEmployer = () => {
                     </li>
                 </ul>
                 <ul className='flex items-center'>
+                <li className='p-3 pr-4 text-decoration-none text-white'>
+                        <button onClick={showDrawer}>
+                            <IoMdNotifications className='text-3xl' />
+                        </button>
+                    </li>
                     <li className='p-3 pr-4 text-decoration-none'>
                         <NavLink to={'/home/cart'}>
                             <ShoppingCartOutlined className='text-2xl text-white' />
@@ -140,6 +146,7 @@ const HeaderEmployer = () => {
                             <BsPersonCircle className='text-3xl' />
                         </button>
                     </li>
+                    
                 </ul>
                 <Drawer
                     placement={'right'}
@@ -153,14 +160,18 @@ const HeaderEmployer = () => {
                     {isLoggedIn ?
                         <div>
                             <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
-                                <BsPersonCircle className='text-5xl text-[#474747]' />
-                                {user?.image}
+                                <IoMdNotifications className='text-3xl text-[#474747]' />
+                                <div>
+                                <p className='text-[21px]'>Thông báo & Tin tức</p>
+                                <p>Nhận thông báo tin tức hoặc công việc</p>
+                                </div>
+                                {/* {user?.image}
                                 <div>
                                     <h2 className='text-[20px] text-[#474747] font-[700]'>{user?.name}</h2>
                                     <div className='text-[15px]'>{user?.email}</div>
-                                </div>
+                                </div> */}
                             </div>
-                            <div className='pt-[90px] px-[10px]'>
+                            {/* <div className='pt-[90px] px-[10px]'>
                                 <div className='flex items-start'>
                                     <SettingOutlined className='text-[25px] font-[700]' />
                                     <div className='flex flex-col'>
@@ -178,7 +189,7 @@ const HeaderEmployer = () => {
                                         <span className='text-[15px] text-[#474747] px-3 py-1'>Quản lý ứng viên</span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className='absolute bottom-0 left-0 bg-[#F5F5F5] w-full p-3'>
                                 <button className='flex items-center gap-2 text-[17px] text-[#474747] font-[700] px-[20px]' onClick={onSignOut}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
