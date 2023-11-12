@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { logoutAuth } from '../../../app/actions/auth';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import IUserNTD from '../../../interface/employer/user_epr';
-
+import {FaCartPlus} from "react-icons/fa"
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import IProfileEpr from '../../../interface/employer/profileEpr';
 import ImanageProfile from '../../../interface/manageProfile'
@@ -21,13 +21,15 @@ import { IFeedback } from '../../../interfaces/feedback'
 import { MessageType } from 'antd/es/message/interface'
 import { Button, Modal } from 'antd';
 import {IoMdNotifications} from "react-icons/io"
+import classNames from 'classnames/bind';
+import styles from './../layoutComponentClient/HeaderClient.module.scss';
 const HeaderEmployer = () => {
     const { email, isLoggedIn } = useAppSelector((res) => res.auth)
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const dispatch = useAppDispatch()
-
+    const cx = classNames.bind(styles);
     const showDrawer = () => {
         setOpen(true);
     };
@@ -130,7 +132,7 @@ const HeaderEmployer = () => {
                         </NavLink>
                     </li>
                 </ul>
-                <ul className='flex items-center'>
+                <ul className='flex items-center '>
                 <li className='p-3 pr-4 text-decoration-none text-white'>
                         <button onClick={showDrawer}>
                             <IoMdNotifications className='text-3xl' />
@@ -138,7 +140,7 @@ const HeaderEmployer = () => {
                     </li>
                     <li className='p-3 pr-4 text-decoration-none'>
                         <NavLink to={'/home/cart'}>
-                            <ShoppingCartOutlined className='text-2xl text-white' />
+                            <FaCartPlus className='text-[28px] text-white' />
                         </NavLink>
                     </li>
                     <li className='p-3 pr-4 text-decoration-none text-white'>
@@ -165,11 +167,50 @@ const HeaderEmployer = () => {
                                 <p className='text-[21px]'>Thông báo & Tin tức</p>
                                 <p>Nhận thông báo tin tức hoặc công việc</p>
                                 </div>
-                                {/* {user?.image}
-                                <div>
-                                    <h2 className='text-[20px] text-[#474747] font-[700]'>{user?.name}</h2>
-                                    <div className='text-[15px]'>{user?.email}</div>
-                                </div> */}
+                               
+                            </div>
+                            <div >
+            
+                                    <div className={cx('modal-body__msg1')} >
+                                        {/* Cập nhật hồ sơ để tìm thấy công việc phù hợp. 
+                                        <span>Cập nhật</span> */}
+                                    </div>
+                                    <div className={cx('modal-body__content')}>
+                                        <div className={cx('modal-body__content-notify')}>
+                                            <span className={cx('notify-img')}>
+                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
+                                                <span>
+                                                    <i className="fa-solid fa-heart"></i>
+                                                </span>
+                                            </span>
+                                            <div className={cx('notify-content')}>
+                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng'>
+                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng
+                                                </span>
+                                                <div className={cx('notify-desc')}>
+                                                    <span className={cx('notify-status')}>đã lưu</span>
+                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className={cx('modal-body__content-notify')}>
+                                            <span className={cx('notify-img')}>
+                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
+                                                <span>
+                                                    <i className="fa-solid fa-heart"></i>
+                                                </span>
+                                            </span>
+                                            <div className={cx('notify-content')}>
+                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng'>
+                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng
+                                                </span>
+                                                <div className={cx('notify-desc')}>
+                                                    <span className={cx('notify-status')}>đã lưu</span>
+                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                             </div>
                             {/* <div className='pt-[90px] px-[10px]'>
                                 <div className='flex items-start'>
