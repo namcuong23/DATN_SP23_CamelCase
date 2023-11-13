@@ -33,6 +33,8 @@ const Cart = (): any => {
 
     const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
+    console.log(data);
+    
     const user: any = data.currentData
     const { data: orders } = useGetOrdersByUIdQuery<any>(user?._id)
 

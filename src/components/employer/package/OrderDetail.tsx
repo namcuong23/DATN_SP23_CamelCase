@@ -1,29 +1,28 @@
 import { Popconfirm, Table, Tag, message } from 'antd'
 import type { ColumnsType } from 'antd/es/table';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { useGetOrderQuery, useRemoveOrderMutation } from '../../../service/employer/order';
+import { useGetOrderQuery, useRemoveOrderMutation,useVnPayCheckoutMutation } from '../../../service/employer/order';
 import { DownOutlined, ArrowLeftOutlined } from '@ant-design/icons'
 import QRCode from 'qrcode.react';
 import IProfileEpr from '../../../interface/employer/profileEpr';
 import { useGetEprProfileQuery } from '../../../service/employer/profileEpr';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import axios from 'axios';
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency';
 
 const OrderDetail = (): any => {
-    const { id } = useParams()
+    const { id } = useParams();
+   
     const navigate = useNavigate()
     const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: order } = useGetOrderQuery<any>(id)
-    const paymentTerm = new Date(order?.createdAt)
-    paymentTerm.setDate(paymentTerm.getDate() + 1)
 
     interface dataType {
         _id: string;
         order_name: string;
         order_price: number;
-        order_count: number;
-        total: number
     }
 
     let orders: dataType[] = []
@@ -38,29 +37,28 @@ const OrderDetail = (): any => {
             key: 'order_name',
         },
         {
-            title: 'SỐ LƯỢNG',
-            dataIndex: 'order_count',
-            key: 'order_count',
-        },
-        {
-            title: 'ĐƠN GIÁ',
-            dataIndex: 'order_price',
-            key: 'order_price',
+            title: 'THỜI HAN',
+            dataIndex: 'package_id',
+            key: 'package_id',
+            render: (_, record: any) => (
+                <span>{`${record.package_id.package_day}`} ngày</span>
+            ),
         },
         {
             title: 'SỐ TIỀN',
-            dataIndex: 'total',
-            key: 'total',
+            dataIndex: 'order_price',
+            key: 'order_price',
             render: (_, record: any) => (
-                <p>{(record.order_price * record.order_count)}</p>
+                <span>{formatCurrency(record.order_price)}</span>
             ),
-        }
+        },
     ];
 
     const total = order?.order_price * order?.order_count
     const totalVat = total * (10 / 100)
 
-    const [removeOrder] = useRemoveOrderMutation()
+    const [removeOrder] = useRemoveOrderMutation();
+    const [vnPayCheckout] = useVnPayCheckoutMutation()
     const text: string = 'Xác nhận hủy đơn hàng?'
 
     const handleRemoveOrder = (id: string) => {
@@ -70,7 +68,17 @@ const OrderDetail = (): any => {
             navigate('/home/orders')
         }
     }
-
+    
+    const VNPayCheckout = async (amount : number,orderId :string) => {
+            const body = {
+                amount,
+                orderId
+            }
+           const checkout = await vnPayCheckout(body);
+           if(checkout){
+            window.open(checkout.data.vnpUrl,'vnpay','popup')
+           }
+    } 
     const downloadQR = () => {
         const canvas: any = document.getElementById('qrcode');
         const pngUrl = canvas.toDataURL('image/png').replace('image/png', 'image/octet-stream');
@@ -101,7 +109,7 @@ const OrderDetail = (): any => {
                     <div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Mã đơn hàng: </label>
-                            <span className='font-[700] text-[#004AD1]'>{order?.order_code}</span>
+                            <span className='font-[700] text-[#004AD1]'>{order?._id}</span>
                         </div>
                         <div className='flex items-center space-x-2'>
                             <label className='m-0'>Người tạo đơn: </label>
@@ -117,20 +125,12 @@ const OrderDetail = (): any => {
                             <label className='m-0'>Trạng thái đơn hàng: </label>
                             <Tag
                                 color={order?.order_status ? "green" : "gold"}
-                                key={order?.order_status ? "Đã duyệt" : "Đang chờ duyệt"}>
-                                {order?.order_status ? "Đã duyệt" : "Đang chờ duyệt"}
+                                key={order?.order_status ? "Đã thanh toán" : "Chờ thanh toán"}>
+                                {order?.order_status ? "Đã thanh toán" : "Chờ thanh toán"}
                             </Tag>
                         </div>
                     </div>
                     <div>
-                        <div className='flex items-center space-x-2'>
-                            <label className='m-0'>Hạn thanh toán: </label>
-                            <span className='font-[700]'>{paymentTerm.toLocaleDateString()}</span>
-                        </div>
-                        <div className='flex items-center space-x-2'>
-                            <label className='m-0'>Trạng thái thanh toán: </label>
-                            <span className='font-[700]'>0/8.250.000</span>
-                        </div>
                     </div>
                 </div>
                 <div className='mx-20 max-w-100 flex items-start space-x-3 mt-3'>
@@ -146,22 +146,18 @@ const OrderDetail = (): any => {
                         <div className='border-1 rounded py-3'>
                             <div className='px-4 border-b-[1px]'>
                                 <div className='pb-[7px] flex items-center justify-between'>
-                                    <label>Tổng giá trị đơn hàng: </label>
-                                    <span className='font-[700]'>{total} VND</span>
-                                </div>
-                                <div className='py-[7px] flex items-center justify-between'>
-                                    <label>Tổng tiền chưa bào gồm VAT: </label>
-                                    <span className='font-[700]'>{total} VND</span>
+                                    <label>Giá trị đơn hàng: </label>
+                                    <span className='font-[700]'>{formatCurrency(order?.order_price)} VND</span>
                                 </div>
                             </div>
                             <div className='px-4 pt-2'>
                                 <div className='py-[7px] flex items-center justify-between'>
-                                    <label>VAT (10%): </label>
-                                    <span className='font-[700]'>{totalVat} VND</span>
+                                    <label>Giảm giá</label>
+                                    <span className='font-[700]'>{formatCurrency(0)} VND</span>
                                 </div>
                                 <div className='flex items-center justify-between'>
                                     <label className='font-[700]'>Tổng số tiền thành toán: </label>
-                                    <span className='font-[700] text-[#004AD1] text-[18px]'>{total + totalVat} VND</span>
+                                    <span className='font-[700] text-[#004AD1] text-[18px]'>{formatCurrency(order?.order_price)} VND</span>
                                 </div>
                             </div>
                         </div>
@@ -173,6 +169,7 @@ const OrderDetail = (): any => {
                             cancelText="No">
                             <button>Hủy đơn hàng</button>
                         </Popconfirm>
+                        <button onClick={() => VNPayCheckout(order?.order_price,order._id)} className="border-1 border-[#004ad1] text-[#004ad1] ml-4 py-1 px-2 rounded mt-4">Thanh toán bằng VNPAY</button>
                     </main>
                     <aside className='w-[30%] p-3 bg-white border-1 rounded-md'>
                         <div className='flex justify-center'>

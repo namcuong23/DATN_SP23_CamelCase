@@ -65,7 +65,20 @@ import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import OrderManagement from "./components/admin/Order/OrderManagement"
+import VNPayCheckout from "./components/employer/package/VNPayCheckout"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
 function App() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.addEventListener('storage', function(event) {
+      if (event.key === 'checkout') {
+        navigate('/home/services');
+        localStorage.removeItem("checkout");
+      }
+    });
+  },[]);
+  
   return (
     <div className="App">
       <Routes>
@@ -131,6 +144,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           <Route path='manage-cv' element={<ProfileList />} />
           <Route path='manage-profile/:id' element={<ManageProfileDetail />} />
+          <Route path='vnpay-checkout' element={<VNPayCheckout />} />
         </Route>
 
         {/* ADMIN */}

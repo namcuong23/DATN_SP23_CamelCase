@@ -1,6 +1,6 @@
 import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { Alert, Button, message, Popconfirm, Spin, Tag } from 'antd';
 import { Space, Table } from 'antd';
 import { useRef, useState } from 'react';
 import { CheckOutlined, DeleteOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons';
@@ -8,15 +8,15 @@ import { useGetServicesQuery, useRemoveServiceMutation } from '../../../service/
 import { MessageType } from 'antd/es/message/interface';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-
+import moment from 'moment';
 type Props = {}
 const ServiceList = (): any => {
     const navigate = useNavigate()
     const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: services, error, isLoading } = useGetServicesQuery(user?._id)
-    const remove = 'Bạn có muốn xoá gói service này?';
-    const [removeService] = useRemoveServiceMutation()
+    
+   
     let index = 0
     const onHandleRemove = (id: string) => {
         console.log(id);
@@ -28,24 +28,15 @@ const ServiceList = (): any => {
 
     const columns: ColumnsType<any> = [
         {
-            title: 'STT',
-            dataIndex: 'key',
-            render: () => { return index += 1 }
-        },
-        {
-            title: 'Tên gói',
-            dataIndex: 'name',
-        },
-        {
-            title: 'Giá',
-            dataIndex: 'price',
+            title: 'Tên gói hiện tại',
+            dataIndex: 'currentService',
         },
         {
             title: 'Thời gian hiệu lực',
             dataIndex: 'day',
             render: (_, record) => (
                 <>
-                    <div>{record.day} tháng</div>
+                    <div>{moment(record.expireDay).format('DD/MM/YYYY')}</div>
                 </>
             )
         },
@@ -55,16 +46,12 @@ const ServiceList = (): any => {
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    <NavLink to={`/admin/services/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
-                    </NavLink>
-                    <Popconfirm placement="top"
-                        title={remove}
-                        onConfirm={() => onHandleRemove(record._id)}
-                        okText="Đồng ý"
-                        cancelText="Không">
-                        <DeleteOutlined className='text-danger' />
-                    </Popconfirm>
+                   
+                       <Link to="/home/packages">
+                       <Button>Gia hạn</Button>
+                       </Link>
+                    
+                   
                 </Space>
             ),
         },
@@ -93,7 +80,7 @@ const ServiceList = (): any => {
             <div className='min-h-screen'>
                 <h2 className='px-3 text-2xl py-2'>Dịch vụ của tôi</h2>
 
-                <Table columns={columns} dataSource={services} onChange={onChange} className='mx-3' />
+                <Table columns={columns} dataSource={services} className='mx-3' />
             </div>
 
         </>
