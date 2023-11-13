@@ -11,7 +11,6 @@ import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
 import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
-import IPost from '../../../interface/post';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 

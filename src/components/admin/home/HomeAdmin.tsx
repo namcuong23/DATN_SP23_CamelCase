@@ -2,17 +2,14 @@ import { useEffect, useState } from 'react'
 import { useGetChartLineQuery, useGetHistoryOrderQuery } from '../../../service/admin/chartLine';
 import { ChartData } from '../../../interface/admin/chartData';
 import { Order } from '../../../interface/admin/order';
-import ChartUsers from './ChartLine/ChartUsers';
 import { EyeOutlined } from '@ant-design/icons';
+import { NavLink } from 'react-router-dom';
+import ChartUsers from './ChartLine/ChartUsers';
 import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import ChartTotal from './ChartLine/ChartTotal';
-import StatisticalPackage from './ChartLine/StatisticalPackage';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
-import { NavLink } from 'react-router-dom';
-import React from 'react';
-
 const HomeAdmin = () => {
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
@@ -40,6 +37,10 @@ const HomeAdmin = () => {
   useEffect(() => {
     setPackageHistory(HistoryPackage)
   }, [HistoryPackage])
+
+  console.log(chartState);
+  
+  
   return (
     <div className="nk-content text-sm">
       <div className="container-fluid">
@@ -248,7 +249,7 @@ const HomeAdmin = () => {
                         <div className="data">
                           <div className="data-group">
                             <div className="amount text-sm">
-                            {chartState?.totalPosts.totalPosts}
+                            {chartState?.totalPosts?.totalPosts}
                             </div>
                             <div className="nk-ecwg6-ck">
                               <ChartTotal
@@ -263,7 +264,7 @@ const HomeAdmin = () => {
                           <div className="info">
                             <span className="change up text-danger">
                               {
-                                chartState ? (chartState?.totalPosts.postLastWeekTotalPosts < chartState?.totalPosts.postWeekBeforeLastTotalPosts) ?
+                                chartState ? (chartState?.totalPosts?.postLastWeekTotalPosts < chartState?.totalPosts.postWeekBeforeLastTotalPosts) ?
                                   <div className="flex py-2">
                                     <div className="pr-3 ">
                                       <img
@@ -324,7 +325,7 @@ const HomeAdmin = () => {
                           </li>
                         </ul>
                         <div className="nk-ecwg8-ck">
-                          <StatisticalPackage PackageHistory={HistoryPackage} />
+                          <StatisticalPackagePie PackageHistory={HistoryPackage} />
                         </div>
                         <div className="chart-label-group ps-5">
                           <div className="text-black text-decoration-none">

@@ -17,7 +17,7 @@ const PostDetailEp = (): any => {
     id,
     career : post?.career
   })
-  const { email, isLoggedIn, token } = useAppSelector((rs) => rs.auth)
+  const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
   const { data: user } = useGetUserByEmailQuery(email)
   const [addCv] = useAddCvMutation()
   const [addJobdone] = useAddJobdoneMutation()
