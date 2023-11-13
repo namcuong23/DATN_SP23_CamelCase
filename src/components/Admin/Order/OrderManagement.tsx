@@ -65,7 +65,7 @@ const OrderManagement = () => {
         <>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
-                    <h2 className='mt-0 text-xl'>Quản lý đơn hàng</h2>
+                    <h2 className='mt-0 text-xl'>Thống kê đơn hàng</h2>
                 </div>
                 <div style={{ marginLeft: 'auto', marginRight: '50px', marginTop: '12px' }} className='mb-2'>
                     <MonthPicker
