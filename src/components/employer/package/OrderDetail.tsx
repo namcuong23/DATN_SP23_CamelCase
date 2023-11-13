@@ -161,17 +161,21 @@ const OrderDetail = (): any => {
                                 </div>
                             </div>
                         </div>
+                       {order && order?.order_status ?
+                        <></> :<>
                         <Popconfirm placement="top"
-                            title={text}
-                            className="border-1 border-[#FD6333] text-[#FD6333] py-1 px-2 rounded mt-4"
-                            onConfirm={() => handleRemoveOrder(order._id)}
-                            okText="Yes"
-                            cancelText="No">
-                            <button>Hủy đơn hàng</button>
-                        </Popconfirm>
-                        <button onClick={() => VNPayCheckout(order?.order_price,order._id)} className="border-1 border-[#004ad1] text-[#004ad1] ml-4 py-1 px-2 rounded mt-4">Thanh toán bằng VNPAY</button>
+                           title={text}
+                           className="border-1 border-[#FD6333] text-[#FD6333] py-1 px-2 rounded mt-4"
+                           onConfirm={() => handleRemoveOrder(order._id)}
+                           okText="Yes"
+                           cancelText="No">
+                           <button>Hủy đơn hàng</button>
+                       </Popconfirm>
+                       <button onClick={() => VNPayCheckout(order?.order_price,order._id)} className="border-1 border-[#004ad1] text-[#004ad1] ml-4 py-1 px-2 rounded mt-4">Thanh toán bằng VNPAY</button>
+                       </>
+                        }
                     </main>
-                    <aside className='w-[30%] p-3 bg-white border-1 rounded-md'>
+                    {order && order?.order_status ? <></> : <aside className='w-[30%] p-3 bg-white border-1 rounded-md'>
                         <div className='flex justify-center'>
                             <img width={80} height={80}
                                 src='https://res.cloudinary.com/dmp0fiboh/image/upload/v1681754635/logo_hy0scv.png' />
@@ -209,7 +213,7 @@ const OrderDetail = (): any => {
                             <span>Hiện mã QR</span>
                             <DownOutlined />
                         </div>
-                    </aside>
+                    </aside>}
                 </div>
             </div>
         </>

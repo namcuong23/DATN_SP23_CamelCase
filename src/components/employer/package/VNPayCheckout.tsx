@@ -1,10 +1,13 @@
 import { message } from "antd";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { formatCurrency } from "../../../utils/hooks/FormatCurrrency";
-import {useUpdateOrderStatusMutation} from '../../../service/employer/order';
+import {
+  useUpdateOrderStatusMutation,
+  useVnPayVerifyCheckoutMutation,
+} from "../../../service/employer/order";
 import { useNavigate } from "react-router-dom";
-import { useAddAdmServiceMutation } from '../../../service/admin/service';
-const responseCodeList:any = {
+import { useAddAdmServiceMutation } from "../../../service/admin/service";
+const responseCodeList: any = {
   "00": "Giao dịch thành công",
   "07": "Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường)",
   "09": "Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.",
@@ -21,53 +24,54 @@ const responseCodeList:any = {
 };
 
 const VNPayCheckout = (): any => {
-    const navigate = useNavigate();
-    const [addAdmService] = useAddAdmServiceMutation()
-    const [updateOrderStatus] = useUpdateOrderStatusMutation()
-    const queryParams = new URLSearchParams(window.location.search);
-    const vnp_OrderInfo:string = queryParams.get("vnp_OrderInfo")
-    const responseCode = queryParams.get("vnp_ResponseCode") || "99" ; 
-    const transactionNo = queryParams.get("vnp_TransactionNo")
-    const vnp_Amount = Number(queryParams.get('vnp_Amount'));
-  useEffect(async () =>{
-
-  if(responseCode) {
-    if(responseCode == "00"){
+  const navigate = useNavigate();
+  const [addAdmService] = useAddAdmServiceMutation();
+  const [updateOrderStatus] = useUpdateOrderStatusMutation();
+  const [vnPayVerifyCheckout] = useVnPayVerifyCheckoutMutation();
+  const queryParams = new URLSearchParams(window.location.search);
+  const txnRef: string|null = queryParams.get("vnp_TxnRef");
+  const [transaction,setTransaction] = useState([])
+  useEffect(async () => {
+    try {
+      const  {data} : any = await vnPayVerifyCheckout(txnRef);
+      setTransaction(data);
+      if (data.vnp_ResponseCode == "00") {
         try {
-        const {data} = await updateOrderStatus(vnp_OrderInfo)
-        const service:any = {
-            userId :data.user_id,
-            packageDay : data.package_id.package_day,
-            transactionNo,
-            currentService : data.order_name            
+          const { data: order }: any = await updateOrderStatus(
+            data.vnp_OrderInfo
+          );
+          const service: any = {
+            userId: order.user_id,
+            packageDay: order.package_id.package_day,
+            transactionNo : data.vnp_TransactionNo,
+            currentService: order.order_name,
+          };
+          await addAdmService(service);
+          message.success(responseCodeList[data.vnp_ResponseCode])
+          setTimeout(()=>{
+            window.close()
+            localStorage.setItem(
+              "checkout",
+              responseCodeList[data.vnp_ResponseCode]
+            );
+          },2000)
+        } catch (error: any) {
+          message.error(error);
         }
-        await addAdmService(service);
-        localStorage.setItem('checkout',responseCodeList[responseCode])
-        setTimeout(() => {
-          localStorage.setItem('checkout',responseCodeList[responseCode])
-          window.close();
-        },1000)
-        } catch (error:any) {
-          window.close();
-          setTimeout(() =>{
-            window.close();
-          },1500)
-        }
-        
+      } else {
+        message.error(responseCodeList[data.vnp_ResponseCode]);
+      }
+    } catch (error) {
+      console.log(error);
     }
-    else {
-        message.error(responseCodeList[responseCode]);
-        setTimeout(() =>{
-          window.close();
-        },1500)
-    }
-  }
-  },[])
-  return <>
-    <div>{vnp_OrderInfo}</div>
-    <div>Số tiền : {formatCurrency(vnp_Amount/100)}</div>
-    <div>Mã giao dịch : {transactionNo}</div>
-    <div>Trạng thái :{responseCodeList[responseCode]}</div>
-  </>;
+  }, []);
+  return (
+    <>
+      <div>Mã giao dịch : {transaction?.vnp_TxnRef}</div>
+      <div>Ngân hàng : { transaction?.vnp_BankCode }</div>
+      <div>Số tiền : {formatCurrency(Number(transaction?.vnp_Amount) /100)}</div>
+      <div>Trạng thái :{responseCodeList[transaction?.vnp_ResponseCode]}</div>
+    </>
+  );
 };
 export default VNPayCheckout;
