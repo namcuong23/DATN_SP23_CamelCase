@@ -1,0 +1,64 @@
+/* .CV {
+    display: flex;
+    align-items: start;
+} */
+
+/* .cv-sidebar {
+    display: flex;
+    align-items: start;
+    width: 30%;
+} */
+/* .topcv{
+    width: 65%;
+} */
+
+/* .topcv{
+    margin: 0 ;
+    padding: 30px ;
+} */
+
+/* .topcv__border{
+    border: 1px solid #d9d9d9;
+    padding: 5px 0px;
+} */
+/* .header{
+    border-bottom: 1px solid #d9d9d9 ;
+    padding: 8px 8px;
+} */
+/* .header__body{
+    background-color: rgb(47 90 155 / 15%);
+    padding: 8px 5px;
+    border: 1px solid #d9d9d9;
+} */
+
+/* .topcv input{
+    outline: none;
+    border: none;
+    background-color: rgb(224,230,240);
+} */
+/* .name{
+    font-size: 40px;
+    color:rgb(47,90,155);
+} */
+/* .name::placeholder{
+    font-size: 40px;
+    color:rgb(47,90,155);
+} */
+
+/* .kinhnghiem{
+    font-size: 25px;
+    color:rgb(47,90,155);
+} */
+/* .kinhnghiem::placeholder{
+    font-size: 25px;
+    color:rgb(47,90,155);
+} */
+
+/* .bordertemplate{
+    border-bottom: 3px solid rgb(255,135,95);
+    margin-bottom: 18px;
+} */
+
+/* .bordercol4{
+    border: 1px solid #000;
+} */
