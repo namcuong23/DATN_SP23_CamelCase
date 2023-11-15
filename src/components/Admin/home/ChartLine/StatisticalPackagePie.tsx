@@ -1,70 +1,64 @@
-// @ts-nocheck
 import React from 'react';
-import { Pie } from '@ant-design/plots';
+import { Line } from '@ant-design/plots';
 import { Order } from '../../../../interface/admin/order';
-import { useGetUsersQuery } from '../../../../service/auth';
-import { useGetUsersEprQuery } from '../../../../service/auth_employer';
+
 interface ChildComponentProps {
-  PackageHistory: Order[];
+  PackageHistory: Order[] | undefined;
 }
-interface ChartData {
-  [x: string]: any;
-  Date: string;
-  scales: string,
-}
-const StatisticalPackagePie : React.FC<ChildComponentProps> = ({ PackageHistory }) =>{
 
-  const { data: userEpe } = useGetUsersQuery();
-  const { data: userEpr } = useGetUsersEprQuery('');
-  
-  const data = [
-    {
-      type: 'Company',
-      value: userEpe?.length,
-    },
-    {
-      type: 'User',
-      value: userEpr?.length,
+const RevenueLineChartDay: React.FC<ChildComponentProps> = ({ PackageHistory }) => {
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const currentMonth = currentDate.getMonth() + 1; // Lấy tháng hiện tại
+  const daysInMonth = new Date(currentYear, currentMonth, 0).getDate(); // Lấy số ngày trong tháng hiện tại
 
-    },
-  ];
+  const daysInMonthArray = Array.from({ length: daysInMonth }, (_, index) => index + 1);
+
+  const revenueData = daysInMonthArray.map((day) => {
+    if (PackageHistory) {
+      const ordersInDay = PackageHistory.filter((order) => {
+        const orderDate = new Date(order.createdAt);
+        return (
+          orderDate.getFullYear() === currentYear &&
+          orderDate.getMonth() + 1 === currentMonth &&
+          orderDate.getDate() === day
+        );
+      });
+
+      const totalRevenue = ordersInDay.reduce((total, order) => total + order.order_price, 0);
+
+      return {
+        day: day,
+        revenue: totalRevenue,
+      };
+    }
+
+    return null;
+  }).filter(Boolean);
+
   const config = {
-    appendPadding: 10,
-    data,
-    angleField: 'value',
-    colorField: 'type',
-    radius: 1,
-    innerRadius: 0.6,
-    label: {
-      type: 'inner',
-      offset: '-50%',
-      content: '{value}',
-      style: {
-        textAlign: 'center',
-        fontSize: 14,
-      },
+    data: revenueData,
+    xField: 'day',
+    yField: 'revenue',
+    xAxis: {
+      type: 'cat',
     },
-    interactions: [
-      {
-        type: 'element-selected',
-      },
-      {
-        type: 'element-active',
-      },
-    ],
-    statistic: {
-      title: false,
-      content: {
-        style: {
-          whiteSpace: 'pre-wrap',
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-        },
-        content: '',
+    yAxis: {
+      type: 'linear',
+      min: 0,
+      nice: true,
+    },
+    smooth: true,
+    label: {
+      position: 'middle',
+      style: {
+        fill: '#FFFFFF',
+        opacity: 0.6,
       },
     },
   };
-  return <Pie {...config} />;
+
+  return <Line {...config} />;
 };
 
-export default StatisticalPackagePie
+export default RevenueLineChartDay;
