@@ -59,7 +59,7 @@ import PostAdd from "./components/employer/Posts/PostAdd"
 import PostEdit from "./components/employer/Posts/PostEdit"
 import PostDetail from "./components/employer/Posts/PostDetail"
 import HomeAdmin from "./components/Admin/home/HomeAdmin"
-import UsersManage from "./components/Admin/home/UsersManage"
+import UsersManage from "./components/Admin/home/EmployeeManage"
 import VoucherList from "./components/Admin/Voucher/VoucherList"
 import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
 import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
@@ -68,6 +68,9 @@ import CareerList from "./components/Admin/Career/CareerList"
 import CareerAdd from "./components/Admin/Career/CareerAdd"
 import FeedbackList from "./components/Admin/Feedback/FeedbackList"
 import OrderManagement from "./components/Admin/Order/OrderManagement"
+import React from "react"
+import EmployeeManage from "./components/Admin/home/EmployeeManage"
+import EmployerManage from "./components/Admin/home/EmployerManage"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -152,7 +155,8 @@ function App() {
           <LayoutAdmin />
         }>
           <Route index element={<HomeAdmin />} />
-          <Route path="users-management" element={<UsersManage />} />
+          <Route path="users-management/employee" element={<EmployeeManage />} />
+          <Route path="users-management/employer" element={<EmployerManage />} />
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />

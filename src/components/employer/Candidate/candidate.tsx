@@ -14,6 +14,7 @@ import { apiGetProvinces } from '../../../service/api';
 import ICandidate from '../../../interface/employer/candidate';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import React from 'react';
 
 const Candidate = (): any | null | JSX.Element => {
     const [searchText, setSearchText] = useState('');

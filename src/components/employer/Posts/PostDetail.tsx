@@ -9,6 +9,7 @@ import { Modal, Popconfirm, Space, Tag, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
 import { useCreateCandidateMutation } from '../../../service/employer/candidate'
+import React from 'react'
 
 const PostDetail = (): any => {
     const { id } = useParams()

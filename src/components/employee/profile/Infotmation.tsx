@@ -8,6 +8,7 @@ import {
 import { apiGetDistricts, apiGetProvinces } from '../../../service/api'
 import { toast } from 'react-toastify'
 import IUserNTV from '../../../interface/user'
+import React from 'react'
 
 const Infotmation = () => {
     const { email } = useAppSelector((res: any) => res.auth)

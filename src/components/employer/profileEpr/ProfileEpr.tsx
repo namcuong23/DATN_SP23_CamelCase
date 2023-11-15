@@ -9,6 +9,7 @@ import {
 import IUserNTD from '../../../interface/employer/user_epr'
 import { toast } from 'react-toastify'
 import { useUpload } from '../../../utils/hooks/Upload'
+import React from 'react'
 
 const ProfileEpr = (): any => {
   const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)

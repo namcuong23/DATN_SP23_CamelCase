@@ -7,12 +7,13 @@ import Highlighter from 'react-highlight-words';
 import { Popconfirm } from 'antd';
 import { useGetUsersQuery } from '../../../service/auth';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
+import React from 'react';
 
-const UsersManage = () => {
+const EmployerManage = () => {
 
   const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
-  const users = userEpe?.concat(userEpr)
+  const users = userEpe?.concat(userEpr);
   const [block] = useBlockUserMutation();
   const [unlock] = useUnlockUserMutation();
   interface RecordselectedRecord {
@@ -25,8 +26,13 @@ const UsersManage = () => {
     role: string;
     isBlock: boolean;
   }
-
-
+  const data = users
+  ?.filter((item: any) => item && item.role === 'Company')
+  ?.map((item: any, index: any) => ({
+    key: String(index),
+    ...item,
+  }));
+  
   const searchInput = useRef<InputRef>(null);
 
   interface DataType {
@@ -43,10 +49,7 @@ const UsersManage = () => {
   }
   type DataIndex = keyof DataType;
 
-  const data = users?.map((item: any, index: any) => ({
-    key: String(index),
-    ...item
-  }))
+
 
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});
@@ -241,7 +244,7 @@ const UsersManage = () => {
             <div className="nk-block-head nk-block-head-sm">
               <div className="nk-block-between">
                 <div className="nk-block-head-content">
-                  <h4 className="nk-block-title page-title">Quản lý người dùng</h4>
+                  <h4 className="nk-block-title page-title">Quản lý nhà tuyển dụng</h4>
                 </div>{/* .nk-block-head-content */}
               </div>{/* .nk-block-between */}
             </div>{/* .nk-block-head */}
@@ -261,4 +264,4 @@ const UsersManage = () => {
   )
 }
 
-export default UsersManage
+export default EmployerManage

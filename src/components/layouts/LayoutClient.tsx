@@ -4,6 +4,7 @@ import HeaderClient from './layoutComponentClient/HeaderClient'
 import NotifyModalEpe from '../NotifyModalEpe'
 import "../../assets/vendor/fontawesome-free/css/all.min.css"
 import "../../assets/css/index.css"
+import React from 'react'
 
 const LayoutClient = () => {
     return (

@@ -13,6 +13,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import myImage from '../../../assets/img/logo.jpg';
 
 import './AuthEpe.css'
+import React from 'react';
 
 const Register = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()

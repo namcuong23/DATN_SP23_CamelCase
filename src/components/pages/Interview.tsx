@@ -1,3 +1,4 @@
+import React from 'react'
 import HeaderSearchhJob from '../layouts/HeaderSearchhJob'
 import "./pages.css"
 

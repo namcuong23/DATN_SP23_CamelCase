@@ -11,6 +11,7 @@ import { useAddJobsaveMutation } from '../../../service/savejob'
 import useDateFormat from '../../../utils/hooks/FormatDate'
 import './postDetail.scss';
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
+import React from 'react';
 const PostDetailEp = (): any => {
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)

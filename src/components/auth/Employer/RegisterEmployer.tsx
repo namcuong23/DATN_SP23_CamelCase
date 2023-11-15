@@ -6,6 +6,7 @@ import { useRegisterWithEmployerMutation } from '../../../service/auth_employer'
 import { toast } from 'react-toastify'
 import Swal from 'sweetalert2';
 import myImage from '../../../assets/img/logo.jpg';
+import React from 'react';
 
 const RegisterEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()

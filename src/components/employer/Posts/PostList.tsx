@@ -13,6 +13,7 @@ import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import React from 'react';
 
 const PostList = (): any | null | JSX.Element => {
     const [searchText, setSearchText] = useState('');
