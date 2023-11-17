@@ -30,7 +30,7 @@ const RevenueLineChart: React.FC<ChildComponentProps> = ({ PackageHistory }) => 
     return null;
   }).filter(Boolean);
 
-  const config = {
+  const config: any = {
     data: revenueData,
     xField: 'month',
     yField: 'revenue',

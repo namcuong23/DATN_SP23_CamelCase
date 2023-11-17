@@ -3,7 +3,6 @@ import { useGetChartLineQuery, useGetHistoryOrderQuery } from '../../../service/
 import { ChartData } from '../../../interface/admin/chartData';
 import { Order } from '../../../interface/admin/order';
 import ChartUsers from './ChartLine/ChartUsers';
-import { EyeOutlined } from '@ant-design/icons';
 import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
@@ -11,8 +10,6 @@ import ChartTotal from './ChartLine/ChartTotal';
 import StatisticalPackageDay from './ChartLine/StatisticalPackageDay';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 import StatisticalPackage from "./ChartLine/StatisticalPackage"
-import { NavLink } from 'react-router-dom';
-import React from 'react';
 
 const HomeAdmin = () => {
   const currentDate = new Date();
