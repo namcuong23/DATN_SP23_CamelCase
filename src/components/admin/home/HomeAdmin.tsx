@@ -9,11 +9,7 @@ import { calculatePercentageChange } from './ChartLine/helpers/calculatePercenta
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import ChartTotal from './ChartLine/ChartTotal';
-<<<<<<< HEAD
-=======
-import StatisticalPackage from './ChartLine/StatisticalPackage';
-import StatisticalPackageDay from './ChartLine/StatisticalPackageDay';
->>>>>>> 2a54f770d70423e3435b41e42dfee2d96716fe2b
+import StatisticalPackageDay from './ChartLine/statisticalPackageDay';
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 const HomeAdmin = () => {
   const currentDate = new Date();

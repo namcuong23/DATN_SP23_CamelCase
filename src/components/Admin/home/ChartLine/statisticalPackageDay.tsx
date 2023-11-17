@@ -1,6 +1,6 @@
 import React from 'react';
-import { Line } from '@ant-design/plots';
 import { Order } from '../../../../interface/admin/order';
+import { Line } from '@ant-design/plots';
 
 interface ChildComponentProps {
   PackageHistory: Order[] | undefined;
@@ -36,7 +36,7 @@ const RevenueLineChartDay: React.FC<ChildComponentProps> = ({ PackageHistory }) 
     return null;
   }).filter(Boolean);
 
-  const config = {
+  const config: any = {
     data: revenueData,
     xField: 'day',
     yField: 'revenue',

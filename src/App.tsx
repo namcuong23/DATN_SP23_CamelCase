@@ -48,9 +48,6 @@ import Interview from "./components/pages/Interview"
 import ManageJob from "./components/pages/ManageJob"
 import RecruitmentDetails from "./components/pages/RecruitmentDetails"
 import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
-import CVChoose from "./components/CvChoose/CVChoose"
-import CVChoose1 from "./components/CvChoose/CVChoose1"
-import CVChoose2 from "./components/CvChoose/CVChoose2"
 import PostList from "./components/employer/posts/PostList"
 import PostAdd from "./components/employer/posts/PostAdd"
 import PostEdit from "./components/employer/posts/PostEdit"
@@ -68,6 +65,7 @@ import OrderManagement from "./components/admin/Order/OrderManagement"
 import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
+import ChangeCV from "./components/CvPage/ChangeCV"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -114,9 +112,7 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
-          <Route path="cvchoose" element={<CVChoose />} />
-          <Route path="cvchoose1" element={<CVChoose1 />} />
-          <Route path="cvchoose2" element={<CVChoose2 />} />
+          <Route path="change-cv" element={<ChangeCV />} />
           <Route path="interview" element={<Interview />} />
           <Route path="managejob" element={<ManageJob />} />
           <Route path="jobempolyee" element={<Job />} />
