@@ -41,7 +41,6 @@ import LayoutEmployer from "./components/layouts/LayoutEmployer"
 import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
 import { ToastContainer } from "react-toastify"
 import 'react-toastify/dist/ReactToastify.css';
-import AccountMng from "./components/employee/profile/AccountMng"
 
 import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 import Interview from "./components/pages/Interview"
@@ -53,7 +52,6 @@ import PostAdd from "./components/employer/posts/PostAdd"
 import PostEdit from "./components/employer/posts/PostEdit"
 import PostDetail from "./components/employer/posts/PostDetail"
 import HomeAdmin from "./components/admin/home/HomeAdmin"
-import UsersManage from "./components/admin/home/UsersManage"
 import VoucherList from "./components/admin/Voucher/VoucherList"
 import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
 import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
@@ -66,6 +64,8 @@ import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import ChangeCV from "./components/CvPage/ChangeCV"
+import EmployeeManage from "./components/admin/home/EmployeeManage"
+import EmployerManage from "./components/admin/home/EmployerManage"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -148,7 +148,8 @@ function App() {
           <LayoutAdmin />
         }>
           <Route index element={<HomeAdmin />} />
-          <Route path="users-management" element={<UsersManage />} />
+          <Route path="users-management/employee" element={<EmployeeManage />} />
+          <Route path="users-management/employer" element={<EmployerManage />} />
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />

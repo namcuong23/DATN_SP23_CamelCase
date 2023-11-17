@@ -5,6 +5,7 @@ import '../../assets/css/adminCss/theme.css'
 import Header from './LayoutComponentAdmin/Header';
 import SideBar from './LayoutComponentAdmin/SideBar';
 import Region from './LayoutComponentAdmin/Region';
+import React from 'react';
 
 type Props = {}
 

@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom'
 
 import "../../assets/vendor/fontawesome-free/css/all.min.css"
 import "../../assets/css/index.css"
+import React from 'react'
 // import "../../assets/css/footer.css"
 // import "../../assets/css/sb-admin-2.min.css"
 

@@ -5,6 +5,7 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetPostsByUIdQuery } from '../../../service/post';
 import IPost from '../../../interface/post';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const Home = (): any => {
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);

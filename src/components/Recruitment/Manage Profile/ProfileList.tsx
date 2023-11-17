@@ -8,6 +8,7 @@ import { useGetProfilesQuery, useRemoveProfileMutation } from '../../../service/
 import { MessageType } from 'antd/es/message/interface';
 import { useRefuseProfileMutation, useApproveProfileMutation } from '../../../service/manage_profile';
 import { useGetCvsQuery } from '../../../service/manage_cv';
+import React from 'react';
 
 type Props = {}
 const ProfileList = () => {

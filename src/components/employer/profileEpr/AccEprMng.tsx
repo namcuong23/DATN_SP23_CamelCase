@@ -12,6 +12,7 @@ import { useAppSelector } from '../../../app/hook'
 import Swal from 'sweetalert2'
 import { Modal } from 'antd'
 import "./ProfileEpr.css";
+import React from 'react'
 
 const AccEprMng = (): any => {
     const [loading, setLoading] = useState<boolean>(false)

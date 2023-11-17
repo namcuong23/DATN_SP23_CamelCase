@@ -7,6 +7,7 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
+import React from 'react';
 
 
 const HeaderClient = () => {

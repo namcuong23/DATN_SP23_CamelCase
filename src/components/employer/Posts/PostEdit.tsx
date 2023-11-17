@@ -7,6 +7,7 @@ import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
 import { apiGetProvinces } from '../../../service/api'
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
 import { useAppSelector } from '../../../app/hook';
+import React from 'react'
 
 const PostEdit = (): any => {
     const navigate = useNavigate()

@@ -10,6 +10,7 @@ import { auth } from "../../firebase";
 import UseAuth from "./UseAuth";
 import firebase from 'firebase/app';
 import { useNavigate } from "react-router-dom";
+import React from "react";
 
 const OTPAuth = () => {
     const [otp, setOtp] = useState("")
