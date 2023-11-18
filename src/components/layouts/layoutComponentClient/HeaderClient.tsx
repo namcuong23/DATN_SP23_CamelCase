@@ -9,7 +9,7 @@ import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
 import { useGetNotificationByEmailQuery } from '../../../service/notification';
 import moment from 'moment';
-import { truncateStringFunction } from '../../../utils/hooks/truncateString';
+import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
 import { Modal } from 'antd';
 
 const cx = classNames.bind(styles);
