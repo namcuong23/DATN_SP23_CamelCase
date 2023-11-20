@@ -11,9 +11,9 @@ import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
 import { MessageType } from 'antd/es/message/interface';
 import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
-import IPost from '../../../interface/post';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import React from 'react';
 
 const PostList = (): any | null | JSX.Element => {
     const [searchText, setSearchText] = useState('');
@@ -21,7 +21,7 @@ const PostList = (): any | null | JSX.Element => {
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
 
-    const { email, isLoggedIn } = useAppSelector((res) => res.auth);
+    const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const {data: user}: any = useGetUserEprByEmailQuery(email);
     
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)

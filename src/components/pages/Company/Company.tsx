@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 
 import './Company.css'
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob';
+import React from 'react';
 
 type Props = {}
 

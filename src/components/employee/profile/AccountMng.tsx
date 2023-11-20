@@ -10,6 +10,7 @@ import {
 } from '../../../service/auth'
 import Swal from 'sweetalert2'
 import { toast } from 'react-toastify'
+import React from 'react'
 
 const AccountMng = () => {
     const { email } = useAppSelector((rs: any) => rs.auth)

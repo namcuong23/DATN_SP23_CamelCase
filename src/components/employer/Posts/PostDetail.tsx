@@ -7,44 +7,57 @@ import { useGetPostQuery } from '../../../service/post'
 import { useApproveCvMutation, useGetCvsByPostIdQuery, useRefuseCvMutation, useRemoveCvMutation } from '../../../service/manage_cv'
 import { Modal, Popconfirm, Space, Tag, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
-import { CloseOutlined, CheckOutlined, DeleteOutlined } from '@ant-design/icons'
+import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
+import { useCreateCandidateMutation } from '../../../service/employer/candidate'
+import React from 'react'
 
 const PostDetail = (): any => {
     const { id } = useParams()
-    const { isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const navigate = useNavigate()
     const { data: post } = useGetPostQuery(id);
     const [open, setOpen] = useState(false);
     const { data } = useGetCvsByPostIdQuery(post?._id)
     const cvs = data?.cvs
-    const remove = 'Bạn có muốn xoá hồ sơ này?';
-    const approve = 'Bạn có phê duyệt hồ sơ này?';
-    const reject = "Bạn có muốn từ chối hồ sơ này?"
-    const [removeCv] = useRemoveCvMutation()
+    const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
+    const remove = 'Bạn có muốn xoá không?';
+    const [addCandidate] = useCreateCandidateMutation()
 
-    const onHandleRemove = (id: string) => {
-        const confirm: MessageType = message.info('Xoá thành công')
-        if (confirm !== null) {
-            removeCv(id)
+
+    const onHandleAdd = async (user: any) => {
+        try {
+            const response = await addCandidate(user);
+
+            if ('data' in response && response.data) {
+                message.success('Đã thêm vào ứng viên phù hợp');
+            } else if ('error' in response) {
+                message.error('Đây là ứng viên phù hợp');
+                console.log(data);
+            }
+
+        } catch (error) {
+            console.error(error);
         }
     }
+
 
     const [approveCv] = useApproveCvMutation()
     const onHandleApprove = (id: string) => {
         console.log(id);
-        const confirm: MessageType = message.info('Phê duyệt thành công')
+
         if (confirm !== null) {
             approveCv(id)
         }
     }
-    const [refuseCv] = useRefuseCvMutation()
-    const onHandleReject = (id: string) => {
+    const [deleteCv] = useRemoveCvMutation()
+    const onHandleDelete = (id: string) => {
         console.log(id);
-        const confirm: MessageType = message.info('Từ chối thành công')
+
         if (confirm !== null) {
-            refuseCv(id)
+            deleteCv(id)
         }
     }
+
 
     const showModal = () => {
         setOpen(true);
@@ -86,26 +99,26 @@ const PostDetail = (): any => {
                     {
                         record.status == null ? <Tag
                             color={'gold'}
-                            key={'Đang chờ duyệt'}>
-                            Đang chờ duyệt
+                            key={'Đang chờ'}>
+                            Đang chờ
                         </Tag>
                             :
                             <Tag
                                 color={record.status ? "green" : "red"}
-                                key={record.status ? "Đã duyệt" : "Từ chối"}>
-                                {record.status ? "Đã duyệt" : "Từ chối"}
+                                key={record.status ? "Phù hợp" : "Từ chối"}>
+                                {record.status ? "Phù hợp" : "Từ chối"}
                             </Tag>
                     }
                 </>
             ),
             filters: [
                 {
-                    text: 'Đã duyệt',
-                    value: 'Đã duyệt',
+                    text: 'Phù hợp',
+                    value: 'Phù hợp',
                 },
                 {
-                    text: 'Đang chờ duyệt',
-                    value: 'Đang chờ duyệt',
+                    text: 'Đang chờ',
+                    value: 'Đang chờ',
                 },
             ],
             onFilter: (value: any, record) => record.status.indexOf(value) === 0,
@@ -115,31 +128,42 @@ const PostDetail = (): any => {
             dataIndex: 'action',
             render: (_, record) => (
                 <Space size="middle">
+                    {/* 
+                        <Popconfirm placement="top"
+                            title={reject}
+                            onConfirm={() => onHandleReject(record._id)}
+                            okText="Đồng ý"
+                            cancelText="Không">
+                            <CloseOutlined className='text-dark' />
+                        </Popconfirm>
 
-                    <Popconfirm placement="top"
-                        title={reject}
-                        onConfirm={() => onHandleReject(record._id)}
+                        // <Popconfirm placement="top"
+                        //     title={approve}
+                        //     onConfirm={() => onHandleApprove(record._id)}
+                        //     okText="Đồng ý"
+                        //     cancelText="Không">
+                        //     <CheckOutlined className='text-success' />
+                        // </Popconfirm> */}
+            
+                    <Popconfirm
+                        placement="top"
+                        title={add}
+                        onConfirm={() => {
+                            onHandleAdd(record); // Thực hiện hành động onHandleAdd
+                            onHandleApprove(record._id); // Thực hiện hành động onHandleApprove
+                        }}
                         okText="Đồng ý"
-                        cancelText="Không">
-                        <CloseOutlined className='text-dark' />
+                        cancelText="Không"
+                    >
+                        <UserAddOutlined className='text-primary' />
                     </Popconfirm>
-
-                    <Popconfirm placement="top"
-                        title={approve}
-                        onConfirm={() => onHandleApprove(record._id)}
-                        okText="Đồng ý"
-                        cancelText="Không">
-                        <CheckOutlined className='text-success' />
-                    </Popconfirm>
-
                     <Popconfirm placement="top"
                         title={remove}
-                        onConfirm={() => onHandleRemove(record._id)}
+                        onConfirm={() => onHandleDelete(record._id)}
                         okText="Đồng ý"
                         cancelText="Không">
-                        <DeleteOutlined className='text-danger' />
+                        <CloseOutlined className='text-danger' />
                     </Popconfirm>
-
                 </Space>
             ),
         },

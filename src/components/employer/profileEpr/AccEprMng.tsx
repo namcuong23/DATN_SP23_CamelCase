@@ -12,12 +12,13 @@ import { useAppSelector } from '../../../app/hook'
 import Swal from 'sweetalert2'
 import { Modal } from 'antd'
 import "./ProfileEpr.css";
+import React from 'react'
 
 const AccEprMng = (): any => {
     const [loading, setLoading] = useState<boolean>(false)
     const [open, setOpen] = useState(false)
     const [openC, setOpenC] = useState(false)
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { register, handleSubmit, formState: { errors } } = useForm()
     const [changePassEpr] = useChangePassEprMutation()

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { useAppSelector } from '../../../app/hook'
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetPostsByUIdQuery } from '../../../service/post';
 import IPost from '../../../interface/post';
 import { useNavigate } from 'react-router-dom';
-type Props = {}
+import React from 'react';
 
-const Home = (props: Props): any => {
-    const { email, isLoggedIn } = useAppSelector((res) => res.auth);
+const Home = (): any => {
+    const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const { data: user }: any = useGetUserEprByEmailQuery(email)
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const [postData, setPostData] = useState<IPost[]>([]);

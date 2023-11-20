@@ -15,6 +15,7 @@ import {
 } from '../../../service/employer/order';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import React from 'react';
 
 const OrderList: any = () => {
     const [searchText, setSearchText] = useState('');
@@ -23,7 +24,7 @@ const OrderList: any = () => {
     const text: string = 'Are you sure to delete this order?'
     const navigate = useNavigate()
 
-    const { email, isLoggedIn } = useAppSelector((rs: any) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs: any) => rs.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const { data: orders, error, isLoading } = useGetOrdersByUIdQuery<any>(user?._id)

@@ -7,10 +7,11 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
+import React from 'react';
 
-const cx = classNames.bind(styles);
 
 const HeaderClient = () => {
+    const cx = classNames.bind(styles);
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
     const {data: user} = useGetUserByEmailQuery(email)

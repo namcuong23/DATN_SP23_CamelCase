@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { useSendEmailResetPassMutation } from '../../../service/auth'
 import { useNavigate } from 'react-router-dom'
+import React from 'react'
 
 const ForgotPassEpe = () => {
     const { register, handleSubmit, formState: { errors } } = useForm()

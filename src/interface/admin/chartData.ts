@@ -14,8 +14,12 @@ export interface ChartData {
       userLastWeekTotalNTD: number;
       userWeekBeforeLastTotalNTD: number;
     };
+    totalPosts: {
+      totalPosts: number;
+      postLastWeekTotalPosts: number;
+      postWeekBeforeLastTotalPosts: number;
+    };
     totalCareers: number;
-    TotalPosts: number;
     TotalPackage: number;
     packageData: []
   }

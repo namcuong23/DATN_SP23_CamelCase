@@ -13,6 +13,7 @@ import { useGetOrdersByUIdQuery } from '../../../service/employer/order';
 import { useCreateOrderMutation } from '../../../service/employer/order';
 import IOrder from '../../../interface/employer/order';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import React from 'react';
 
 const Cart = (): any => {
     const dispatch: any = useAppDispatch()
@@ -31,8 +32,10 @@ const Cart = (): any => {
         dispatch(nusProductCart(id))
     }
 
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
+    console.log(data);
+    
     const user: any = data.currentData
     const { data: orders } = useGetOrdersByUIdQuery<any>(user?._id)
 

@@ -33,15 +33,17 @@ import { jobdoneApi } from "../service/jobdone";
 import { chartLine } from "../service/admin/chartLine";
 import { serviceAdmApi } from "../service/admin/service";
 import authAdmReducer from "../reducer/authAdm";
+import authEmprReducer from "../reducer/authEpr";
 
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['auth', 'authAdm', 'cart']
+    whitelist: ['auth', 'authEmpr', 'authAdm', 'cart']
 }
 
 const rootReducer = combineReducers({
     auth: authReducer,
+    authEmpr: authEmprReducer,
     authAdm: authAdmReducer,
     cart: cartReducer,
     [postApi.reducerPath]: postApi.reducer,
