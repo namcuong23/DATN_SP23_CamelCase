@@ -64,7 +64,7 @@ const Home = (): any => {
                                         <div className="p-4">
                                             <p className="fz--20 fw--bold" style={{marginBottom: "0px"}}>Xin chào,</p>
                                             <p className="fz--20 colour--orange fw--bold white-space--pre-line" style={{ color: "rgb(255, 125, 85)", fontWeight: '700', fontSize: "20px" }}>
-                                            {user?.name}
+                                            {user?.name} {user?.isActivePackage ? "(Premium)" : ""}
                                             </p>
                                             <p className="pt-5">
                                                 Đây là một số thông tin để bạn có thể bắt đầu sử dụng:
