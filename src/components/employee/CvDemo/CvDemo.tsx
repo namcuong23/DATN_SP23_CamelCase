@@ -26,6 +26,16 @@ const CvDemo = ({file}: any) => {
     const {data: cvPdf} = useGetCvQuery(cvId)
     const pdfFile = cvPdf && `http://localhost:4000/files/${cvPdf.cv}`
 
+    const downloadPDF = () => {
+        const pdfUrl = 'http://example.com/sample.pdf'; // Thay thế bằng URL thực tế của file PDF
+        const link = document.createElement('a');
+        link.href = pdfUrl;
+        link.setAttribute('download', 'sample.pdf'); // Tên file khi tải về
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
     return (
         <>
             {/* {file && ( */}
@@ -37,10 +47,10 @@ const CvDemo = ({file}: any) => {
                         <h1 className="cv-preview__title">
                             Xem CV Online của {user?.name}
                         </h1>
-                        <a href={pdfFile} download={pdfFile} className='cv-preview__btn'>
+                        <button className='cv-preview__btn'>
                             <i className="fa-solid fa-download"></i>
                             <span>Tải CV PDF</span>
-                        </a>
+                        </button>
                     </section>
                     <Document 
                         file={pdfFile}
