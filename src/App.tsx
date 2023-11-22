@@ -47,11 +47,18 @@ import Interview from "./components/pages/Interview"
 import ManageJob from "./components/pages/ManageJob"
 import RecruitmentDetails from "./components/pages/RecruitmentDetails"
 import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
+import VNPayCheckout from "./components/employer/package/VNPayCheckout"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import ChangeCV from "./components/CvPage/ChangeCV"
+import CvDemo from "./components/employee/CvDemo/CvDemo"
 import PostList from "./components/employer/posts/PostList"
 import PostAdd from "./components/employer/posts/PostAdd"
-import PostEdit from "./components/employer/posts/PostEdit"
 import PostDetail from "./components/employer/posts/PostDetail"
+import PostEdit from "./components/employer/posts/PostEdit"
 import HomeAdmin from "./components/admin/home/HomeAdmin"
+import EmployeeManage from "./components/admin/home/EmployeeManage"
+import EmployerManage from "./components/admin/home/EmployerManage"
 import VoucherList from "./components/admin/Voucher/VoucherList"
 import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
 import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
@@ -60,13 +67,6 @@ import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import OrderManagement from "./components/admin/Order/OrderManagement"
-import VNPayCheckout from "./components/employer/package/VNPayCheckout"
-import { useNavigate } from "react-router-dom"
-import { useEffect } from "react"
-import ChangeCV from "./components/CvPage/ChangeCV"
-import EmployeeManage from "./components/admin/home/EmployeeManage"
-import EmployerManage from "./components/admin/home/EmployerManage"
-import CvDemo from "./components/employee/CvDemo/CvDemo"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -148,6 +148,9 @@ function App() {
         </Route>
 
         {/* ADMIN */}
+
+
+        
         <Route path='/admin' element={
           <LayoutAdmin />
         }>
@@ -163,6 +166,9 @@ function App() {
           <Route path='feedbacks' element={<FeedbackList />} />
           <Route path='order-management' element={<OrderManagement />} />
         </Route>
+
+
+
         <Route path='/employs' element={<LayoutEmployer />}>
           <Route index element={<HomeEmployer />} />
         </Route>

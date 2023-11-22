@@ -27,14 +27,11 @@ const VoucherEdit = () => {
 
     return (
         <>
-            <div style={{ maxWidth: '700px' }} className='mx-auto'>
+            <div style={{ maxWidth: '700px', marginLeft:"30px" }}>
                 <h1 className='text-center fw-normal text-[40px] mt-[67px]'>Chỉnh sửa thông tin</h1>
                 <Form layout="vertical" onFinish={onHandleEdit} form={form} initialValues={voucher}>
+
                     <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Tên gói</div>
                             <Form.Item name="package_name" label="Tên gói dịch vụ dành cho khách hàng"
@@ -47,10 +44,6 @@ const VoucherEdit = () => {
                     </div>
 
                     <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Mô tả</div>
                             <Form.Item name="package_desc" label="Thông tin chi tiết về gói dịch vụ này"
@@ -63,10 +56,6 @@ const VoucherEdit = () => {
                     </div>
 
                     <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Giá</div>
                             <Form.Item name="package_price" label="Thông tin về giá tiền"
@@ -79,10 +68,6 @@ const VoucherEdit = () => {
                     </div>
 
                     <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thời gian hiệu lực</div>
                             <Form.Item name="package_day" label="Thời gian hiệu lực"
