@@ -7,11 +7,14 @@ import { calculatePercentageChange } from './ChartLine/helpers/calculatePercenta
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import ChartTotal from './ChartLine/ChartTotal';
-import StatisticalPackageDay from './ChartLine/StatisticalPackageDay';
+import { useAppSelector } from '../../../app/hook'
+import StatisticalPackageDay from "./ChartLine/statisticalPackageDay"
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 import StatisticalPackage from "./ChartLine/StatisticalPackage"
+import { useNavigate } from 'react-router-dom';
 
 const HomeAdmin = () => {
+  const { isLoggedIn } = useAppSelector((res) => res.authAdm);
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
@@ -22,6 +25,7 @@ const HomeAdmin = () => {
   const day = currentDate.getDate();
   const month = currentDate.getMonth() + 1; // Lưu ý: Tháng bắt đầu từ 0 (0 là tháng 1)
   const year = currentDate.getFullYear();
+  const navigate = useNavigate()
   const currentMonthRevenue = PackageHistory?.reduce((totalRevenue, order) => {
     const orderDate = new Date(order.createdAt);
     const orderMonth = orderDate.getMonth() + 1;
@@ -40,6 +44,11 @@ const HomeAdmin = () => {
   useEffect(() => {
     setPackageHistory(HistoryPackage)
   }, [HistoryPackage])
+  
+  if (!isLoggedIn) {
+    return navigate('/login-admin')
+}
+
   return (
     <div className="nk-content text-sm">
       <div className="container-fluid">

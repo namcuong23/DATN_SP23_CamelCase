@@ -155,19 +155,19 @@ const HeaderEmployer = () => {
                 >
                     {isLoggedIn ?
                         <div>
-                            <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
-                                {/* {
+                            <div className='absolute left-0 flex items-center px-[30px] gap-[20px] w-100'>
+                                {
                                     user?.image ? 
                                     <img src={user?.image} alt="" 
                                         style={{
-                                            width: '50px',
-                                            height: '50px',
+                                            width: '80px',
+                                            height: '80px',
                                             borderRadius: '50%'
                                         }}
                                     />
                                     : <BsPersonCircle className='text-5xl text-[#474747]' />
-                                } */}
-                                <BsPersonCircle className='text-5xl text-[#474747]' />
+                                }
+                              
                                 
                                 <div>
                                 <p className='text-[21px]'>Thông báo & Tin tức</p>

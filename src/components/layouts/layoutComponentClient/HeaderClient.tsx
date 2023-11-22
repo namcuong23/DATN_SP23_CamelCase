@@ -8,19 +8,20 @@ import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
 import React from 'react';
+import { AvatarIcon } from '../../employee/profile/icons';
 
 
 const HeaderClient = () => {
     const cx = classNames.bind(styles);
-    const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
-    const {data: user} = useGetUserByEmailQuery(email)
-    
+    const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
+    const { data: user } = useGetUserByEmailQuery(email)
+
     const dispatch = useAppDispatch()
     const [showModal, setShowModal] = useState(true)
     const [isActive, setIsActive] = useState(false)
     const modalRef: any = useRef()
-
+    const [imgUrl, setImgUrl] = useState<any>()
     const handleOpenModalNotify = () => {
         setShowModal(false);
     }
@@ -87,10 +88,20 @@ const HeaderClient = () => {
                                     id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
-                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                        <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                    </svg>
+                                    <div className="avatar-wrapper">
+                                        {
+                                            !imgUrl && user?.image === undefined ?
+                                                <AvatarIcon /> :
+                                                <div
+                                                    style={{
+                                                        backgroundImage: `url(${imgUrl ? imgUrl.preview : user?.image})`,
+                                                        width: '50px',
+                                                        height: '50px',
+                                                    }}
+                                                    className='avatar-img'
+                                                />
+                                        }
+                                    </div>
                                     <span>{user?.name}</span>
                                 </button>
                                 <div className="text-[#555555] dropdown-menu dropdown-not-login animated fadeIn userProfileMenu-homepage mt-4"
@@ -135,8 +146,8 @@ const HeaderClient = () => {
                                         <NavLink to={'/profile?tab=account-manage'} className='flex items-center mb-1 w-100 px-[8px] py-[12px] hover:rounded hover:bg-[#EBF2FF]'>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <g clipPath="url(#clip0_3011_6580)">
-                                                <path d="M22.6368 10.186L19.8 9.72236C19.6339 9.15308 19.4069 8.60588 19.1227 8.08796L20.7787 5.7278C20.9126 5.53724 20.8896 5.27756 20.7249 5.11244L18.8582 3.24668C18.6917 3.0806 18.4296 3.059 18.2385 3.19676L15.9139 4.86764C15.3912 4.57868 14.8392 4.34924 14.2665 4.18268L13.7717 1.3574C13.7313 1.12796 13.5321 0.959961 13.2989 0.959961H10.6589C10.4237 0.959961 10.223 1.13036 10.1851 1.36268L9.72622 4.1726C9.15022 4.3382 8.59726 4.56524 8.07646 4.85036L5.75806 3.19436C5.56654 3.05756 5.3059 3.07964 5.13934 3.24524L3.27358 5.111C3.10894 5.27564 3.0859 5.53484 3.21982 5.7254L4.85134 8.05964C4.56094 8.58524 4.32958 9.14156 4.1611 9.72044L1.36222 10.1865C1.13086 10.2249 0.960938 10.4256 0.960938 10.6598V13.2998C0.960938 13.5326 1.12798 13.7318 1.35694 13.7726L4.15582 14.2689C4.32334 14.8464 4.5547 15.4027 4.84606 15.9297L3.19438 18.24C3.05806 18.4305 3.07966 18.6921 3.24526 18.8587L5.1115 20.7264C5.27614 20.891 5.53582 20.914 5.72638 20.7801L8.06398 19.1428C8.58862 19.4313 9.14302 19.6603 9.71758 19.8264L10.1861 22.6396C10.224 22.8705 10.4241 23.04 10.6589 23.04H13.2989C13.5317 23.04 13.7309 22.8729 13.7712 22.644L14.2728 19.8168C14.8483 19.6473 15.3998 19.4169 15.9192 19.128L18.2736 20.7796C18.4646 20.9145 18.7238 20.891 18.8889 20.7264L20.7552 18.8587C20.9213 18.6921 20.9429 18.4296 20.8051 18.2385L19.1261 15.9072C19.4107 15.3888 19.6368 14.8406 19.8014 14.2713L22.6421 13.7726C22.872 13.7323 23.039 13.5326 23.039 13.2998V10.6598C23.0395 10.4246 22.8691 10.224 22.6368 10.186ZM12 15.36C10.1443 15.36 8.63998 13.8556 8.63998 12C8.63998 10.1443 10.1443 8.63996 12 8.63996C13.8557 8.63996 15.36 10.1443 15.36 12C15.36 13.8556 13.8557 15.36 12 15.36Z" fill="#888888"></path></g><defs><clipPath id="clip0_3011_6580"><rect width="24" height="24" fill="white">
-                                                </rect></clipPath></defs>
+                                                    <path d="M22.6368 10.186L19.8 9.72236C19.6339 9.15308 19.4069 8.60588 19.1227 8.08796L20.7787 5.7278C20.9126 5.53724 20.8896 5.27756 20.7249 5.11244L18.8582 3.24668C18.6917 3.0806 18.4296 3.059 18.2385 3.19676L15.9139 4.86764C15.3912 4.57868 14.8392 4.34924 14.2665 4.18268L13.7717 1.3574C13.7313 1.12796 13.5321 0.959961 13.2989 0.959961H10.6589C10.4237 0.959961 10.223 1.13036 10.1851 1.36268L9.72622 4.1726C9.15022 4.3382 8.59726 4.56524 8.07646 4.85036L5.75806 3.19436C5.56654 3.05756 5.3059 3.07964 5.13934 3.24524L3.27358 5.111C3.10894 5.27564 3.0859 5.53484 3.21982 5.7254L4.85134 8.05964C4.56094 8.58524 4.32958 9.14156 4.1611 9.72044L1.36222 10.1865C1.13086 10.2249 0.960938 10.4256 0.960938 10.6598V13.2998C0.960938 13.5326 1.12798 13.7318 1.35694 13.7726L4.15582 14.2689C4.32334 14.8464 4.5547 15.4027 4.84606 15.9297L3.19438 18.24C3.05806 18.4305 3.07966 18.6921 3.24526 18.8587L5.1115 20.7264C5.27614 20.891 5.53582 20.914 5.72638 20.7801L8.06398 19.1428C8.58862 19.4313 9.14302 19.6603 9.71758 19.8264L10.1861 22.6396C10.224 22.8705 10.4241 23.04 10.6589 23.04H13.2989C13.5317 23.04 13.7309 22.8729 13.7712 22.644L14.2728 19.8168C14.8483 19.6473 15.3998 19.4169 15.9192 19.128L18.2736 20.7796C18.4646 20.9145 18.7238 20.891 18.8889 20.7264L20.7552 18.8587C20.9213 18.6921 20.9429 18.4296 20.8051 18.2385L19.1261 15.9072C19.4107 15.3888 19.6368 14.8406 19.8014 14.2713L22.6421 13.7726C22.872 13.7323 23.039 13.5326 23.039 13.2998V10.6598C23.0395 10.4246 22.8691 10.224 22.6368 10.186ZM12 15.36C10.1443 15.36 8.63998 13.8556 8.63998 12C8.63998 10.1443 10.1443 8.63996 12 8.63996C13.8557 8.63996 15.36 10.1443 15.36 12C15.36 13.8556 13.8557 15.36 12 15.36Z" fill="#888888"></path></g><defs><clipPath id="clip0_3011_6580"><rect width="24" height="24" fill="white">
+                                                    </rect></clipPath></defs>
                                             </svg>
                                             <span className='text-[14px] pl-[10px] text-[#677793]'>
                                                 Quản lý tài khoản
@@ -246,34 +257,34 @@ const HeaderClient = () => {
             <div ref={modalRef} onClick={handleCloseModalNotify} className={cx('container', {
                 'd-none': showModal,
             })}>
-                    <div className={cx('modal')} onClick={(e: any) => {
-                        e.stopPropagation();
-                    }}>
-                        <div className={cx('modal-header')}>
-                            <div className={cx('modal-header__icon')}>
-                                <i className="fa-regular fa-bell"></i>
-                            </div>
-                            <div className={cx('modal-header__title')}>
-                                <h2>Thông báo & Tin tức</h2>
-                                <p>Nhận thông báo tin tức hoặc công việc</p>
-                            </div>
-                            <button onClick={handleCloseModalNotify} className={cx('modal-header__btn')}>
-                                <i className="fa-solid fa-xmark"></i>
-                            </button>
+                <div className={cx('modal')} onClick={(e: any) => {
+                    e.stopPropagation();
+                }}>
+                    <div className={cx('modal-header')}>
+                        <div className={cx('modal-header__icon')}>
+                            <i className="fa-regular fa-bell"></i>
+                        </div>
+                        <div className={cx('modal-header__title')}>
+                            <h2>Thông báo & Tin tức</h2>
+                            <p>Nhận thông báo tin tức hoặc công việc</p>
+                        </div>
+                        <button onClick={handleCloseModalNotify} className={cx('modal-header__btn')}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div className={cx('modal-body')}>
+                        <div className={cx('modal-body__tabs')}>
+                            <span onClick={() => setIsActive(false)} className={cx('modal-body__tabs-notify', {
+                                active: isActive === false
+                            })}>Thông báo</span>
+                            <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
+                                active: isActive
+                            })}>Tin tức</span>
                         </div>
 
-                        <div className={cx('modal-body')}>
-                            <div className={cx('modal-body__tabs')}>
-                                <span onClick={() => setIsActive(false)} className={cx('modal-body__tabs-notify', {
-                                    active: isActive === false
-                                })}>Thông báo</span>
-                                <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
-                                    active: isActive
-                                })}>Tin tức</span>
-                            </div>
-
-                            {
-                                isActive ? 
+                        {
+                            isActive ?
                                 <>
                                     <div className={cx('modal-body__news')}>
                                         <h6 className={cx('modal-body__news-title')}>
@@ -300,10 +311,10 @@ const HeaderClient = () => {
                                         </div>
                                     </div>
                                 </>
-                                : 
+                                :
                                 <>
                                     <div className={cx('modal-body__msg')}>
-                                        Cập nhật hồ sơ để tìm thấy công việc phù hợp. 
+                                        Cập nhật hồ sơ để tìm thấy công việc phù hợp.
                                         <span>Cập nhật</span>
                                     </div>
                                     <div className={cx('modal-body__content')}>
@@ -343,22 +354,22 @@ const HeaderClient = () => {
                                         </div>
                                     </div>
                                 </>
-                            }
+                        }
 
-                            
+
+                    </div>
+
+                    <div className={cx('modal-footer')}>
+                        <div className={cx('modal-footer__icon')}>
+                            <i className="fa-regular fa-bell"></i>
                         </div>
 
-                        <div className={cx('modal-footer')}>
-                            <div className={cx('modal-footer__icon')}>
-                                <i className="fa-regular fa-bell"></i>
-                            </div>
-
-                            <div className={cx('modal-footer__content')}>
-                                <span className={cx('modal-footer__content-link')}>Công việc mới</span> hấp dẫn dành riêng cho bạn!
-                            </div>
+                        <div className={cx('modal-footer__content')}>
+                            <span className={cx('modal-footer__content-link')}>Công việc mới</span> hấp dẫn dành riêng cho bạn!
                         </div>
                     </div>
                 </div>
+            </div>
             {/* {
                 showModal && 
                 
