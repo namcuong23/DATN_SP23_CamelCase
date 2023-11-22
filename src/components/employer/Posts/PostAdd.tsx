@@ -27,13 +27,19 @@ const PostAdd = (): any => {
         fetchProvinces()
     }, [])
 
-    const onHandleAdd: any = (post: IPost) => {
+    const onHandleAdd: any = async (post: IPost) => {
         try {
-            addPost({ ...post, post_status: null, user_id: user?._id })
-            message.success('Dang tin thanh cong.')
-            navigate('/home/posts')
-        } catch (error) {
-            console.log(error);
+            const data:any = await addPost({ ...post, post_status: null, user_id: user?._id })
+            console.log(data);
+            if(data?.error?.status == 400){
+                message.error(data.error.data.message)
+            }
+            else if(data.data){
+                message.success('Đăng tin thành công.')
+                 navigate('/home/posts')
+            }
+        } catch (error:any) {
+           console.log(error);
         }
     }
 

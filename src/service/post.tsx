@@ -18,6 +18,10 @@ export const postApi: any = createApi({
             query: (id: string) => `/posts/${id}/detail`,
             providesTags: ['Post']
         }),
+        getGoodPosts: builder.query<IPost, string>({
+            query: (id: string) => `/posts?goodjob=true`,
+            providesTags: ['Post']
+        }),
         getPostsByUId: builder.query<IPost[], string>({
             query: (uid: string) => `/posts/${uid}`,
             providesTags: ['Post']
@@ -91,4 +95,5 @@ export const {
     useRemovePostMutation,
     useApprovePostMutation,
     useRefusePostMutation,
+    useGetGoodPostsQuery,
 } = postApi
