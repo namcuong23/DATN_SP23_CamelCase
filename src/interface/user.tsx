@@ -23,9 +23,9 @@ interface IUserNTV {
     role: number;
     isBlock: boolean;
     career_goal: string;
-    work_experience: object;
-    education: object;
-    skills: string[];
+    work_experience: object[];
+    education: object[];
+    skills: object[];
     more_info: string;
 }
 

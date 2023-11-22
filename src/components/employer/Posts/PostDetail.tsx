@@ -1,11 +1,16 @@
 import { useState } from 'react'
 import { ColumnsType } from 'antd/es/table'
 import { MessageType } from 'antd/es/message/interface'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 import { useGetPostQuery } from '../../../service/post'
-import { useApproveCvMutation, useGetCvsByPostIdQuery, useRefuseCvMutation, useRemoveCvMutation } from '../../../service/manage_cv'
-import { Modal, Popconfirm, Space, Tag, message, Table } from 'antd'
+import { 
+    useApproveCvMutation, 
+    useGetCvsByPostIdQuery, 
+    useRefuseCvMutation, 
+    useRemoveCvMutation 
+} from '../../../service/manage_cv'
+import { Modal, Popconfirm, Space, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
 import { useCreateCandidateMutation } from '../../../service/employer/candidate'
@@ -72,19 +77,14 @@ const PostDetail = (): any => {
         {
             title: 'Tên ứng viên',
             dataIndex: 'name',
-            render: (_, record) => (<Link to={`/home/manage-profile/${record._id}`} >{record.name}</Link>),
         },
         {
-            title: 'Tuổi',
-            dataIndex: 'age',
+            title: 'Vị trí',
+            dataIndex: 'job_title',
         },
         {
             title: 'Email',
             dataIndex: 'email',
-        },
-        {
-            title: 'Số điện thoại',
-            dataIndex: 'phone',
         },
         {
             title: 'Ngày nộp',
@@ -92,78 +92,49 @@ const PostDetail = (): any => {
             render: (_, record) => <div>{new Date((record?.createdAt)).toLocaleDateString()}</div>,
         },
         {
-            title: 'Trạng thái',
-            dataIndex: 'status',
-            render: (_, record) => (
-                <>
-                    {
-                        record.status == null ? <Tag
-                            color={'gold'}
-                            key={'Đang chờ'}>
-                            Đang chờ
-                        </Tag>
-                            :
-                            <Tag
-                                color={record.status ? "green" : "red"}
-                                key={record.status ? "Phù hợp" : "Từ chối"}>
-                                {record.status ? "Phù hợp" : "Từ chối"}
-                            </Tag>
-                    }
-                </>
-            ),
-            filters: [
-                {
-                    text: 'Phù hợp',
-                    value: 'Phù hợp',
-                },
-                {
-                    text: 'Đang chờ',
-                    value: 'Đang chờ',
-                },
-            ],
-            onFilter: (value: any, record) => record.status.indexOf(value) === 0,
-        },
-        {
             title: 'Hành động',
             dataIndex: 'action',
             render: (_, record) => (
-                <Space size="middle">
-                    {/* 
-                        <Popconfirm placement="top"
-                            title={reject}
-                            onConfirm={() => onHandleReject(record._id)}
-                            okText="Đồng ý"
-                            cancelText="Không">
-                            <CloseOutlined className='text-dark' />
-                        </Popconfirm>
-
-                        // <Popconfirm placement="top"
-                        //     title={approve}
-                        //     onConfirm={() => onHandleApprove(record._id)}
-                        //     okText="Đồng ý"
-                        //     cancelText="Không">
-                        //     <CheckOutlined className='text-success' />
-                        // </Popconfirm> */}
-            
-                    <Popconfirm
-                        placement="top"
-                        title={add}
-                        onConfirm={() => {
-                            onHandleAdd(record); // Thực hiện hành động onHandleAdd
-                            onHandleApprove(record._id); // Thực hiện hành động onHandleApprove
-                        }}
+                <Space size="middle" className='flex items-center'>
+                    <Popconfirm placement="top"
+                        title={"Chấp nhận"}
+                        onConfirm={() => onHandleApprove(record._id)}
                         okText="Đồng ý"
                         cancelText="Không"
-                    >
-                        <UserAddOutlined className='text-primary' />
+                        className='leading-[22px] flex items-center'
+                        >
+                        <CheckOutlined className='text-success' />
                     </Popconfirm>
+
                     <Popconfirm placement="top"
                         title={remove}
                         onConfirm={() => onHandleDelete(record._id)}
                         okText="Đồng ý"
-                        cancelText="Không">
+                        cancelText="Không"
+                        className='leading-[22px] flex items-center'
+                        >
                         <CloseOutlined className='text-danger' />
                     </Popconfirm>
+
+                    <Popconfirm
+                        placement="top"
+                        title={add}
+                        onConfirm={() => {
+                            onHandleAdd(record);
+                            onHandleApprove(record._id);
+                        }}
+                        okText="Đồng ý"
+                        cancelText="Không"
+                        className='leading-[22px] flex items-center'
+                    >
+                        <UserAddOutlined className='text-[#333]' />
+                    </Popconfirm>
+                    <NavLink to={`/cv-preview?id=${record._id}`}
+                        className='leading-[22px]'
+                        target='_blank'
+                        >
+                        <i className="fa-regular fa-eye text-[#333]"></i>
+                    </NavLink>
                 </Space>
             ),
         },

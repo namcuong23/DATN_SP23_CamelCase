@@ -8,7 +8,7 @@ import {
 } from '../../../service/auth_employer'
 import IUserNTD from '../../../interface/employer/user_epr'
 import { toast } from 'react-toastify'
-import { useUpload } from '../../../utils/hooks/Upload'
+import { useUploadImage } from '../../../utils/hooks/Upload'
 import React from 'react'
 
 const ProfileEpr = (): any => {
@@ -54,7 +54,7 @@ const ProfileEpr = (): any => {
 
     let imgPath
     if (fileUpload !== undefined) {
-        const image = await useUpload(formData)
+        const image = await useUploadImage(formData)
         imgPath = image.url
     } else {
         imgPath = userEpr?.image

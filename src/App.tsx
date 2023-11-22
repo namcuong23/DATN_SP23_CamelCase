@@ -66,6 +66,7 @@ import { useEffect } from "react"
 import ChangeCV from "./components/CvPage/ChangeCV"
 import EmployeeManage from "./components/admin/home/EmployeeManage"
 import EmployerManage from "./components/admin/home/EmployerManage"
+import CvDemo from "./components/employee/CvDemo/CvDemo"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -81,6 +82,9 @@ function App() {
     <div className="App">
       <Routes>
         <Route path='otp' element={<OTPAuth />} />
+
+        {/* CV DEMO */}
+        <Route path="cv-preview" element={<CvDemo />} />
 
         {/* AUTH EMPLOYEE */}
         <Route path='signup' element={

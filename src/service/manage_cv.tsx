@@ -18,14 +18,13 @@ export const cvApi: any = createApi({
             query: (id: string) => `/cvs/${id}/detail`,
             providesTags: ['Cv']
         }),
-        addCv: builder.mutation({
-            query: (profile: ICv) => ({
-                url: `/cvs`,
+        applyCv: builder.mutation({
+            query: (profile: any) => ({
+                url: `/cvs/apply`,
                 method: "POST",
                 body: profile
             }),
             invalidatesTags: ['Cv']
-
         }),
         removeCv: builder.mutation({
             query: (id: string) => ({
@@ -58,7 +57,7 @@ export const {
     useGetCvsQuery,
     useGetCvsByPostIdQuery,
     useGetCvQuery,
-    useAddCvMutation,
+    useApplyCvMutation,
     useRemoveCvMutation,
     useApproveCvMutation,
     useRefuseCvMutation,

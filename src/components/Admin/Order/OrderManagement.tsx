@@ -44,7 +44,7 @@ const OrderManagement = () => {
     ];
 
     // Lọc dữ liệu khi selectedMonth thay đổi
-    const filteredData = HistoryPackage?.filter(user => {
+    const filteredData = HistoryPackage?.filter((user: any) => {
         if (selectedMonth) {
             const selectedMonthIndex = selectedMonth.get('month');
             const userDate = new Date(user.createdAt);
@@ -53,7 +53,7 @@ const OrderManagement = () => {
         return true;
     });
 
-    const csvData = ((filteredData && filteredData.length > 0 ? filteredData : [])).map((user, index) => ({
+    const csvData = ((filteredData && filteredData.length > 0 ? filteredData : [])).map((user: any, index: number) => ({
         'Số đơn hàng': index + 1,
         'Id người dùng': user._id,
         'Tên gói': user.order_name,
