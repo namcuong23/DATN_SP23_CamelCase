@@ -26,9 +26,7 @@ const EmployeeManage = () => {
     role: string;
     isBlock: boolean;
   }
-  const data = users
-  ?.filter((item: any) => item && item.role === 'User')
-  ?.map((item: any, index: any) => ({
+  const data = userEpe?.map((item: any, index: any) => ({
     key: String(index),
     ...item,
   }));
@@ -43,13 +41,11 @@ const EmployeeManage = () => {
     level_auth: number;
     email: string;
     password: string;
-    role: string;
+    role: number;
     isBlock: boolean;
 
   }
   type DataIndex = keyof DataType;
-
-
 
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});

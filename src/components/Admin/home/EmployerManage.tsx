@@ -10,25 +10,11 @@ import { useGetUsersEprQuery } from '../../../service/auth_employer';
 import React from 'react';
 
 const EmployerManage = () => {
-
-  const { data: userEpe } = useGetUsersQuery();
   const { data: userEpr } = useGetUsersEprQuery('');
-  const users = userEpe?.concat(userEpr);
   const [block] = useBlockUserMutation();
   const [unlock] = useUnlockUserMutation();
-  interface RecordselectedRecord {
-    _id: string;
-    name: string;
-    phone: string;
-    password: string;
-    level_auth: number;
-    email: string;
-    role: string;
-    isBlock: boolean;
-  }
-  const data = users
-  ?.filter((item: any) => item && item.role === 'Company')
-  ?.map((item: any, index: any) => ({
+  
+  const data = userEpr?.map((item: any, index: any) => ({
     key: String(index),
     ...item,
   }));
@@ -48,8 +34,6 @@ const EmployerManage = () => {
 
   }
   type DataIndex = keyof DataType;
-
-
 
   const [filteredInfo, setFilteredInfo] = useState<Record<string, FilterValue | null>>({});
   const [sortedInfo, setSortedInfo] = useState<SorterResult<DataType>>({});

@@ -8,12 +8,12 @@ import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
 import ChartTotal from './ChartLine/ChartTotal';
 import { useAppSelector } from '../../../app/hook'
-import StatisticalPackageDay from "./ChartLine/statisticalPackageDay"
+import StatisticalPackageDay from "./ChartLine/StatisticalPackageDay"
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
 import StatisticalPackage from "./ChartLine/StatisticalPackage"
 import { useNavigate } from 'react-router-dom';
 
-const HomeAdmin = () => {
+const HomeAdmin: any = () => {
   const { isLoggedIn } = useAppSelector((res) => res.authAdm);
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;

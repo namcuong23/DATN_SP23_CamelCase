@@ -5,10 +5,10 @@ import { Drawer, message } from 'antd';
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
 import { logoutAuth } from '../../../app/actions/auth';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-import {FaCartPlus} from "react-icons/fa"
+import { FaCartPlus } from "react-icons/fa"
 import { useGetProfileQuery } from '../../../service/manage_profile'
-import { useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
+import { SettingOutlined } from "@ant-design/icons"
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
@@ -155,7 +155,14 @@ const HeaderEmployer = () => {
                 >
                     {isLoggedIn ?
                         <div>
-                            <div className='absolute left-0 flex items-center px-[30px] gap-[20px] w-100'>
+                            <div className='absolute left-0 flex items-center px-[30px] pb-[25px] gap-[20px] border-b-[1px] w-100'>
+                                <BsPersonCircle className='text-5xl text-[#474747]' />
+                                <div>
+                                    <h2 className='text-[20px] text-[#474747] font-[700]'>{user?.name}</h2>
+                                    <div className='text-[15px]'>{user?.email}</div>
+                                </div>
+                            </div>
+                            {/* <div className='absolute left-0 flex items-center px-[30px] gap-[20px] w-100'>
                                 {
                                     user?.image ? 
                                     <img src={user?.image} alt="" 
@@ -168,57 +175,55 @@ const HeaderEmployer = () => {
                                     : <BsPersonCircle className='text-5xl text-[#474747]' />
                                 }
                               
-                                
                                 <div>
-                                <p className='text-[21px]'>Thông báo & Tin tức</p>
-                                <p>Nhận thông báo tin tức hoặc công việc</p>
+                                    <p className='text-[21px]'>Thông báo & Tin tức</p>
+                                    <p>Nhận thông báo tin tức hoặc công việc</p>
                                 </div>
                                
                             </div>
                             <div >
-            
-                                    <div className={cx('modal-body__msg1')} >
-                                        {/* Cập nhật hồ sơ để tìm thấy công việc phù hợp. 
-                                        <span>Cập nhật</span> */}
-                                    </div>
-                                    <div className={cx('modal-body__content')}>
-                                        <div className={cx('modal-body__content-notify')}>
-                                            <span className={cx('notify-img')}>
-                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
-                                                <span>
-                                                    <i className="fa-solid fa-heart"></i>
-                                                </span>
+                                <div className={cx('modal-body__msg1')} >
+                                    Cập nhật hồ sơ để tìm thấy công việc phù hợp. 
+                                    <span>Cập nhật</span>
+                                </div>
+                                <div className={cx('modal-body__content')}>
+                                    <div className={cx('modal-body__content-notify')}>
+                                        <span className={cx('notify-img')}>
+                                            <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
+                                            <span>
+                                                <i className="fa-solid fa-heart"></i>
                                             </span>
-                                            <div className={cx('notify-content')}>
-                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng'>
-                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng
-                                                </span>
-                                                <div className={cx('notify-desc')}>
-                                                    <span className={cx('notify-status')}>đã lưu</span>
-                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className={cx('modal-body__content-notify')}>
-                                            <span className={cx('notify-img')}>
-                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
-                                                <span>
-                                                    <i className="fa-solid fa-heart"></i>
-                                                </span>
+                                        </span>
+                                        <div className={cx('notify-content')}>
+                                            <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng'>
+                                                Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng
                                             </span>
-                                            <div className={cx('notify-content')}>
-                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng'>
-                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng
-                                                </span>
-                                                <div className={cx('notify-desc')}>
-                                                    <span className={cx('notify-status')}>đã lưu</span>
-                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
-                                                </div>
+                                            <div className={cx('notify-desc')}>
+                                                <span className={cx('notify-status')}>đã lưu</span>
+                                                <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
                                             </div>
                                         </div>
                                     </div>
-                            </div>
-                            {/* <div className='pt-[90px] px-[10px]'>
+                                    <div className={cx('modal-body__content-notify')}>
+                                        <span className={cx('notify-img')}>
+                                            <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
+                                            <span>
+                                                <i className="fa-solid fa-heart"></i>
+                                            </span>
+                                        </span>
+                                        <div className={cx('notify-content')}>
+                                            <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng'>
+                                                Giám Đốc Cao Cấp Quan Hệ Khách Hàng
+                                            </span>
+                                            <div className={cx('notify-desc')}>
+                                                <span className={cx('notify-status')}>đã lưu</span>
+                                                <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> */}
+                            <div className='pt-[100px] px-[10px]'>
                                 <div className='flex items-start'>
                                     <SettingOutlined className='text-[25px] font-[700]' />
                                     <div className='flex flex-col'>
@@ -236,7 +241,7 @@ const HeaderEmployer = () => {
                                         <span className='text-[15px] text-[#474747] px-3 py-1'>Quản lý ứng viên</span>
                                     </div>
                                 </div>
-                            </div> */}
+                            </div>
                             <div className='absolute bottom-0 left-0 bg-[#F5F5F5] w-full p-3'>
                                 <button className='flex items-center gap-2 text-[17px] text-[#474747] font-[700] px-[20px]' onClick={onSignOut}>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-box-arrow-right" viewBox="0 0 16 16">
@@ -282,8 +287,8 @@ const HeaderEmployer = () => {
                                         {errors.feedback_question?.type === "required" && <p className='text-danger font-bold w-200'>Vui lòng nhập câu hỏi của bạn !</p>}
                                     </div>
                                     {/* <div className='hidden'>
-                    {currentUser?.email}
-                  </div> */}
+                                        {currentUser?.email}
+                                    </div> */}
                                 </div>
                                 <div className='h-100'>
                                     <div className='h-100'>

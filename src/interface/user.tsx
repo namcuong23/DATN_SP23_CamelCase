@@ -20,7 +20,7 @@ interface IUserNTV {
     accessToken: string;
     verifiedToken: string;
     tokenExpires: string;
-    role: number;
+    role: string;
     isBlock: boolean;
     career_goal: string;
     work_experience: object[];

@@ -51,7 +51,7 @@ import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import ChangeCV from "./components/CvPage/ChangeCV"
-import CvDemo from "./components/employee/CvDemo/CvDemo"
+import CvDemo from "./components/CvDemo/CvDemo"
 import PostList from "./components/employer/posts/PostList"
 import PostAdd from "./components/employer/posts/PostAdd"
 import PostDetail from "./components/employer/posts/PostDetail"
@@ -148,9 +148,6 @@ function App() {
         </Route>
 
         {/* ADMIN */}
-
-
-        
         <Route path='/admin' element={
           <LayoutAdmin />
         }>
