@@ -41,18 +41,27 @@ const OrderManagement = () => {
                 </div>
             )
         },
+        {
+            title: 'Trạng thái',
+            render: () => (
+                <span style={{ color: 'green', fontWeight: 'bold' }}>
+                  Đã thanh toán
+                </span>
+              ),
+            
+        },
     ];
 
     // Lọc dữ liệu khi selectedMonth thay đổi
-    const filteredData = HistoryPackage?.filter((user: any) => {
+    const filteredData = HistoryPackage?.filter((order: Order) => {
         if (selectedMonth) {
             const selectedMonthIndex = selectedMonth.get('month');
-            const userDate = new Date(user.createdAt);
-            return userDate.getMonth() === selectedMonthIndex;
+            const orderDate = new Date(order.createdAt);
+            return orderDate.getMonth() === selectedMonthIndex && order.order_status === true;
         }
-        return true;
+        return order.order_status === true;
     });
-
+    
     const csvData = ((filteredData && filteredData.length > 0 ? filteredData : [])).map((user: any, index: number) => ({
         'Số đơn hàng': index + 1,
         'Id người dùng': user._id,
@@ -65,7 +74,7 @@ const OrderManagement = () => {
         <>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
-                    <h2 className='mt-0 text-xl'>Thống kê đơn hàng</h2>
+                    <h2 className='mt-0 text-xl'>Thống kê đơn hàng (Đã hoàn thành)</h2>
                 </div>
                 <div style={{ marginLeft: 'auto', marginRight: '50px', marginTop: '12px' }} className='mb-2'>
                     <MonthPicker

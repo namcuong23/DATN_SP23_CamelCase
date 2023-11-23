@@ -506,7 +506,7 @@ const HomeAdmin: any = () => {
                                 </div> :
                                 <div className="nk-tb-col">
                                   <span className="badge badge-dot badge-dot-xs bg-warning">
-                                    Đang chờ duyệt
+                                    Đang chờ thanh toán
                                   </span>
                                 </div>
                                 : 'loading'
