@@ -17,21 +17,32 @@ const LoginEmployer = () => {
     const [signin] = useLoginWithEmployerMutation()
     const [type, setType] = useState(false)
     const dispatch: any = useAppDispatch()
-
+    const [loading, setLoading] = useState(false)
     const showPassword = () => {
         setType(!type)
     }
 
     const signIn = async (user: any) => {
-        const login: any = await signin(user)
-        const { data: res } = login
+        setLoading(true);
+        const login: any = await signin(user);
+        const { data: res } = login;
+    
         if (res?.success) {
-            dispatch(loginAuthEpr(res))
-            navigate('/home')
+            // Kiểm tra trạng thái isBlock
+            if (res.user.isBlock) {
+                setLoading(false);
+                toast.warning("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+            } else {
+                setLoading(false);
+                dispatch(loginAuthEpr(res));
+                navigate('/home');
+            }
         } else {
-            toast.warning(res.mes)
+            setLoading(false);
+            toast.warning(res.mes);
         }
     }
+    
     return (
         <>
             <section>

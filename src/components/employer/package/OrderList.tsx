@@ -197,8 +197,8 @@ const OrderList: any = () => {
                     {
                         <Tag
                             color={record.order_status ? "green" : "gold"}
-                            key={record.order_status ? "Đã duyệt" : "Đang chờ duyệt"}>
-                            {record.order_status ? "Đã duyệt" : "Đang chờ duyệt"}
+                            key={record.order_status ? "Đã thanh toán" : "Đang chờ thanh toán"}>
+                            {record.order_status ? "Đã thanh toán" : "Đang chờ thanh toán"}
                         </Tag>
                     }
                 </>
