@@ -2,7 +2,7 @@
 :root {
     --text-white: #fff;
     --primary-color: #7f7f7f;
-    --default-cv-width: 740px;
+    --default-cv-width: 800px;
 }
 
 .fz-13 {
@@ -11,6 +11,10 @@
 
 .text-italic {
     font-style: italic !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
 }
 
 // 1

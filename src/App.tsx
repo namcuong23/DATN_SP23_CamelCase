@@ -51,21 +51,22 @@ import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import ChangeCV from "./components/CvPage/ChangeCV"
-import PostList from "./components/employer/Posts/PostList"
-import PostAdd from "./components/employer/Posts/PostAdd"
-import PostEdit from "./components/employer/Posts/PostEdit"
-import PostDetail from "./components/employer/Posts/PostDetail"
-import HomeAdmin from "./components/Admin/home/HomeAdmin"
-import EmployeeManage from "./components/Admin/home/EmployeeManage"
-import EmployerManage from "./components/Admin/home/EmployerManage"
-import VoucherList from "./components/Admin/Voucher/VoucherList"
-import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/Admin/Post/PostAdmin"
-import CareerList from "./components/Admin/Career/CareerList"
-import CareerAdd from "./components/Admin/Career/CareerAdd"
-import FeedbackList from "./components/Admin/Feedback/FeedbackList"
-import OrderManagement from "./components/Admin/Order/OrderManagement"
+import CvDemo from "./components/employee/CvDemo/CvDemo"
+import PostList from "./components/employer/posts/PostList"
+import PostAdd from "./components/employer/posts/PostAdd"
+import PostDetail from "./components/employer/posts/PostDetail"
+import PostEdit from "./components/employer/posts/PostEdit"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import EmployeeManage from "./components/admin/home/EmployeeManage"
+import EmployerManage from "./components/admin/home/EmployerManage"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import CareerList from "./components/admin/Career/CareerList"
+import CareerAdd from "./components/admin/Career/CareerAdd"
+import FeedbackList from "./components/admin/Feedback/FeedbackList"
+import OrderManagement from "./components/admin/Order/OrderManagement"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -81,6 +82,9 @@ function App() {
     <div className="App">
       <Routes>
         <Route path='otp' element={<OTPAuth />} />
+
+        {/* CV DEMO */}
+        <Route path="cv-preview" element={<CvDemo />} />
 
         {/* AUTH EMPLOYEE */}
         <Route path='signup' element={

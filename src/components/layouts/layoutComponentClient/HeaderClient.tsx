@@ -7,15 +7,27 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
-import React from 'react';
+import { useGetNotificationByEmailQuery } from '../../../service/notification';
+import moment from 'moment';
+import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
+import { Modal } from 'antd';
 import { AvatarIcon } from '../../employee/profile/icons';
 
+const cx = classNames.bind(styles);
+interface Inotification {
+    _id: string;
+    notification_title: string;
+    notification_content: string;
+    created_at: Date;
+    notificationImage?: string; 
+}
 
 const HeaderClient = () => {
-    const cx = classNames.bind(styles);
-    const navigate = useNavigate()
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
-    const { data: user } = useGetUserByEmailQuery(email)
+    const navigate = useNavigate()
+    const {data: user} = useGetUserByEmailQuery(email)
+    const [selectedNotification, setSelectedNotification] = useState<Inotification | null>(null)
+    const [isModalNoti, setIsModalNoti] = useState(false);
 
     const dispatch = useAppDispatch()
     const [showModal, setShowModal] = useState(true)
@@ -38,6 +50,26 @@ const HeaderClient = () => {
             message.error(error.message)
         }
     }
+
+    const { data: notification } = useGetNotificationByEmailQuery(email);
+
+    const showModalNoti = (notificationId: string) => {
+        if (notification) {
+          const selectedNoti = notification.find((noti) => noti._id === notificationId);
+          if (selectedNoti) {
+            setSelectedNotification(selectedNoti as Inotification | null ); // Explicitly cast to null
+            setIsModalNoti(true);
+          }
+        }
+      };
+      
+    const handleOkNoti = () => {
+        setIsModalNoti(false);
+    };
+    const handleCancelNoti = () => {
+        setIsModalNoti(false);
+    };
+      
     return (
         <>
             <div className="sticky top-0 z-[997] sc-lkcIho hIprbQ menu-homepage ">
@@ -70,7 +102,7 @@ const HeaderClient = () => {
                     <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li>
                 </ul >
                 <div className="sc-gCLdxd eAZlAg rightNavigation-homepage" >
-                    <NavLink to={'/home'} tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
+                    <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
                     <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
                         <div className="notify-btn notification-icon">
@@ -318,41 +350,43 @@ const HeaderClient = () => {
                                         <span>Cập nhật</span>
                                     </div>
                                     <div className={cx('modal-body__content')}>
-                                        <div className={cx('modal-body__content-notify')}>
-                                            <span className={cx('notify-img')}>
-                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
-                                                <span>
-                                                    <i className="fa-solid fa-heart"></i>
-                                                </span>
-                                            </span>
-                                            <div className={cx('notify-content')}>
-                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng'>
-                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng
-                                                </span>
-                                                <div className={cx('notify-desc')}>
-                                                    <span className={cx('notify-status')}>đã lưu</span>
-                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className={cx('modal-body__content-notify')}>
-                                            <span className={cx('notify-img')}>
-                                                <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
-                                                <span>
-                                                    <i className="fa-solid fa-heart"></i>
-                                                </span>
-                                            </span>
-                                            <div className={cx('notify-content')}>
-                                                <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng'>
-                                                    Giám Đốc Cao Cấp Quan Hệ Khách Hàng
-                                                </span>
-                                                <div className={cx('notify-desc')}>
-                                                    <span className={cx('notify-status')}>đã lưu</span>
-                                                    <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
-                                                </div>
+                                        <div className={cx('modal-body__content')}>
+                                            <div>
+                                                {notification ? (
+                                                    notification.map((noti) => (
+                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                            <span className={cx('notify-img')}>
+                                                                <img src={noti.notificationImage} alt="" />
+                                                                <span>
+                                                                    <i className="fa-solid fa-heart"></i>
+                                                                </span>
+                                                            </span>
+                                                            <div className={cx('notify-content')}>
+                                                                <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                                <span>{truncateStringFunction(noti.notification_content, 30)}</span>
+                                                                <div className={cx('notify-desc')}>
+                                                                    <span className={cx('notify-expirate')}>
+                                                                        {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <p>Loading notifications...</p>
+                                                )}
+                                                <Modal title="Basic Modal" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
+                                                    {selectedNotification && (
+                                                        <>
+                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
+                                                            <span>{selectedNotification.notification_content}</span>
+                                                        </>
+                                                    )}
+                                                </Modal>
                                             </div>
                                         </div>
                                     </div>
+
                                 </>
                         }
 

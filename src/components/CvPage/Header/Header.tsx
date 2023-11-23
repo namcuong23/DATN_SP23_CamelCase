@@ -3,21 +3,21 @@ import styles from "./Header.module.scss"
 
 const cx = classNames.bind(styles)
 
-const Header = () => {
+const Header = ({onClick, onBack} : any) => {
   return (
     <>
         <section className={cx("btn-wrapper")}>
             <section className={cx("btn-wrapper__container")}>
-                <a href='' className={cx("btn-back")}>
+                <button className={cx("btn-back")} onClick={onBack}>
                     <i className="fa-solid fa-arrow-left"></i>
                     <span>Trở lại</span>
-                </a>
+                </button>
                 <section className={cx("btn-group")}>
                     <button className={cx("btn-preview", "btn")}>
                         <i className="fa-regular fa-eye"></i>
                         <span>Xem trước</span>
                     </button>
-                    <button className={cx("btn-download", "btn")}>
+                    <button className={cx("btn-download", "btn")} onClick={onClick}>
                         <i className="fa-solid fa-download"></i>
                         <span>Tải xuống CV</span>
                     </button>

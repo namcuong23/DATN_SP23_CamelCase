@@ -1,29 +1,43 @@
 import classNames from 'classnames/bind';
 
+import { useAppSelector } from '../../../app/hook';
+import { useGetUserByEmailQuery } from '../../../service/auth';
 import styles from './CVChoose.module.scss';
 
 const cx = classNames.bind(styles);
 
-function CVChooseComponent({ title, name, time, desc1, desc2 }: any) {
+function CVChooseComponent({ 
+        title, 
+        name, 
+        time, 
+        desc1, 
+        desc2, 
+        isValue = false, 
+        isshow
+    }: any) {
     return (
         <>
             <p className={cx('content__title')}>{title}</p>
             <div className={cx('content__education')}>
-                <div className={cx('content-top')}>
+                <div className={cx('content-top', {
+                    'mb-0': isshow
+                })}>
                     <div
                         className={cx(
                             'content__education-text',
                             'fz-13',
-                            'text-italic',
                         )}
                     >
-                        <i>{name}</i>
+                        {
+                            !isValue && <i className={cx('text-italic')}>{name}</i>
+                        }
                     </div>
                     <div
                         className={cx(
                             'content__education-text',
-                            'fz-13',
-                            'text-italic',
+                            'fz-13', {
+                                'text-italic': !isValue
+                            }
                         )}
                     >
                         <i>{time}</i>
@@ -33,20 +47,22 @@ function CVChooseComponent({ title, name, time, desc1, desc2 }: any) {
                     <div
                         className={cx(
                             'content__education-text',
-                            'fz-13',
-                            'text-italic',
+                            'fz-13', {
+                                'text-italic': !isValue
+                            }
                         )}
                     >
-                        <i>{desc1}</i>
+                        <p className={isValue && 'text-[#000]'}>{desc1}</p>
                     </div>
                     <div
                         className={cx(
                             'content__education-text',
-                            'fz-13',
-                            'text-italic',
+                            'fz-13', {
+                                'text-italic': !isValue
+                            }
                         )}
                     >
-                        <i>{desc2}</i>
+                        <p className={isValue && 'text-[#000]'}>{desc2}</p>
                     </div>
                 </div>
             </div>

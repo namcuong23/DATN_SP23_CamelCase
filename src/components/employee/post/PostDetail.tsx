@@ -1,17 +1,21 @@
 import { message } from 'antd'
-import { useState, useEffect  } from 'react';
+import { useState, useEffect, useRef  } from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom'
-import { useAddCvMutation } from '../../../service/manage_cv'
-import { useGetPostQuery,useGetPostsByCareerQuery } from '../../../service/post'
+import { useApplyCvMutation } from '../../../service/manage_cv'
+import { 
+  useGetPostQuery,
+  useGetPostsByCareerQuery 
+} from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
 import { useAddJobdoneMutation } from '../../../service/jobdone'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useAddJobsaveMutation } from '../../../service/savejob'
 import useDateFormat from '../../../utils/hooks/FormatDate'
-import './postDetail.scss';
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import { useForm } from 'react-hook-form';
+import { useAddNotificationMutation } from '../../../service/notification';
+import './postDetail.scss';
 const PostDetailEp = (): any => {
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
@@ -27,14 +31,19 @@ const PostDetailEp = (): any => {
     if (storedDate) {
       setLastSubmissionDate(new Date(storedDate));
     }
+
+    return () => localStorage.removeItem('lastSubmissionDate')
   }, []);
 
   const { data: user } = useGetUserByEmailQuery(email)
-  const [addCv] = useAddCvMutation()
+  const [applyCv] = useApplyCvMutation()
   const [addJobdone] = useAddJobdoneMutation()
   const [addJobsave] = useAddJobsaveMutation()
+  const [addNotification] = useAddNotificationMutation()
   const {register, handleSubmit, formState: {errors}} = useForm()
   const [fileName, setFileName] = useState<any>()
+  const [file, setFile] = useState<any>()
+  const inputCheckRef: any = useRef()
 
   const onChangeFileInput = (e: any) => {
     const {name} = e.target.files[0]
@@ -42,9 +51,10 @@ const PostDetailEp = (): any => {
     const currentDate = useDateFormat(date)
 
     setFileName({name, currentDate})
+    setFile(e.target.files[0])
   }
   
-  const applyJob = async (cv: any) => {
+  const applyJob = async (candidate: any) => {
     const currentDate = new Date();
     if (lastSubmissionDate && lastSubmissionDate.toDateString() === currentDate.toDateString()) {
       message.warning('Bạn đã nộp đơn trong ngày hôm nay rồi. Hãy quay lại vào ngày mai!');
@@ -55,22 +65,34 @@ const PostDetailEp = (): any => {
       ...post,
       user_id: user?._id
     })
+
+    const {current} = inputCheckRef
+    const formData: any = new FormData();
+    formData.append("name", user?.name)
+    formData.append("job_title", candidate.job_title)
+    formData.append("email", candidate.email)
+    formData.append("post_id", id)
+    formData.append("file", file)
     
-    // const apply = await addCv({
-    //   name: user?.name,
-    //   job_title: "",
-    //   phone: user?.phone,
-    //   post_id: post._id
-    // })
-    // const { data: rs } = apply
-    // if (rs?.success) {
-    //   message.success(rs?.mes)
-    // }
-    // localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
-    // setLastSubmissionDate(currentDate);
+    const apply = await applyCv(formData)
+    const { data: rs } = apply
+    console.log(rs);
+    
+    if (rs?.success) {
+      current.checked = false
+      message.success(rs?.mes)
+    }
+    localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
+    setLastSubmissionDate(currentDate);
   }
   //Save job
   const saveJob = async () => {
+    await addNotification({
+      email,
+      role: 1,
+      notification_title: post.job_name,
+      notification_content: post.job_content
+    })
     const save = await addJobsave({
       ...post,
       user_id: user?._id
@@ -345,7 +367,7 @@ const PostDetailEp = (): any => {
         </div>
       </div>
 
-      <input type="checkbox" hidden id="modal-cv-check" className='modal-open-check' />
+      <input type="checkbox" hidden id="modal-cv-check" className='modal-open-check' ref={inputCheckRef} />
       <label htmlFor='modal-cv-check' className="overlay"></label>
       {/* Modal CV */}
       <section className="modal-cv">
@@ -373,19 +395,20 @@ const PostDetailEp = (): any => {
               <section className="modal-cv__form-input">
                 <h5>{user?.name}</h5>
                 <input type="text" 
+                      {...register('job_title', {
+                        required: true,
+                      })} 
+                      placeholder='Nhập Chức danh'
+                      name='job_title' />
+                {errors.job_title && errors.job_title.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Chức danh.</span>}
+                <input type="text" 
                       {...register('email', {
                         required: true,
                       })} 
                       placeholder='Nhập email'
+                      value={user?.email ? user?.email : ""}
                       name='email'  />
-                {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Chức danh.</span>}
-                <input type="text" 
-                      {...register('phone', {
-                        required: true,
-                      })} 
-                      placeholder='Nhập số điện thoại'
-                      name='phone' />
-                {errors.phone && errors.phone.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Số điện thoại.</span>}
+                {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
               </section>
             </section>
             
@@ -412,9 +435,9 @@ const PostDetailEp = (): any => {
                 </label>
                 <input hidden type="file"
                       id="file-upload" 
-                      accept='.doc, .docx, .pdf'
-                      {...register('cv_id')}
+                      accept='application/pdf'
                       onChange={onChangeFileInput}
+                      required
                      />
                 <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5120KB</p>
               </section>
