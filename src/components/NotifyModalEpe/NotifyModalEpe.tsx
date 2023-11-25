@@ -80,4 +80,6 @@ const NotifyModalEpe = (
                 </div>
             </div>  
           )
-        }
+}
+
+export default NotifyModalEpe

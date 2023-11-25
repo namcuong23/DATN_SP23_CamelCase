@@ -13,6 +13,16 @@ export const notificationApi = createApi({
         getNotificationById: builder.query<Inotification, string>({
             query: (id: string) => `/notifications/${id}`,
             providesTags: ['notification']
+        }),
+        addNotification: builder.mutation<Inotification, Partial<Inotification>>({
+            query: (notify: Inotification) => (
+                {
+                    url: `/notifications`,
+                    method: "POST",
+                    body: notify
+                }
+            ),
+            invalidatesTags: ['notification']
         })
     })
 })
@@ -20,4 +30,5 @@ export const notificationApi = createApi({
 export const {
     useGetNotificationByIdQuery,
     useGetNotificationByEmailQuery,
+    useAddNotificationMutation,
 } = notificationApi

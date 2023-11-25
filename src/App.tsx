@@ -18,14 +18,6 @@ import PackageList from "./components/employer/package/PackageList"
 import OrderList from "./components/employer/package/OrderList"
 import OrderDetail from "./components/employer/package/OrderDetail"
 import OrderNotice from "./components/employer/package/OrderNotice"
-import HomeEmployer from './components/home/HomeEmployer'
-import Jobdone from './components/pages/Jobdone'
-import Job from './components/pages/Job'
-import PersonalInfor from './components/pages/PersonalInfor'
-import LayoutEmployer from "./components/layouts/LayoutEmployer"
-import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
-import { ToastContainer } from "react-toastify"
-import LoginAdmin from "./components/auth/Admin/LoginAdmin"
 import Cart from "./components/employer/package/Cart"
 import ResetPassEpe from "./components/auth/Employee/ResetPassEpe"
 import ForgotPasswordNotice from "./components/auth/Employee/ForgotPasswordNotice"
@@ -35,34 +27,64 @@ import ForgotPassNotice from "./components/auth/Employer/ForgotPassNotice"
 import AccEprMng from "./components/employer/profileEpr/AccEprMng"
 import 'react-toastify/dist/ReactToastify.css';
 import ServiceList from "./components/employer/My Service/ServiceList"
-// import ServiceAdd from "./components/employer/My Service/ServiceAdd"
-import Interview from "./components/pages/Interview"
-import ManageJob from "./components/pages/ManageJob"
-import RecruitmentDetails from "./components/pages/RecruitmentDetails"
 import ProfileEpr from "./components/employer/profileEpr/ProfileEpr"
-
-import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
 import Company from "./components/pages/Company"
 import Report from "./components/employer/report/Report"
 import Candidate from "./components/employer/Candidate/candidate"
-import PostList from "./components/employer/Posts/PostList"
-import PostAdd from "./components/employer/Posts/PostAdd"
-import PostEdit from "./components/employer/Posts/PostEdit"
-import PostDetail from "./components/employer/Posts/PostDetail"
-import HomeAdmin from "./components/Admin/home/HomeAdmin"
-import UsersManage from "./components/Admin/home/UsersManage"
-import VoucherList from "./components/Admin/Voucher/VoucherList"
-import VoucherAdd from "./components/Admin/Voucher/VoucherAdd"
-import VoucherEdit from "./components/Admin/Voucher/VoucherEdit"
-import PostAdmin from "./components/Admin/Post/PostAdmin"
-import CareerList from "./components/Admin/Career/CareerList"
-import CareerAdd from "./components/Admin/Career/CareerAdd"
-import FeedbackList from "./components/Admin/Feedback/FeedbackList"
+import HomeEmployer from './components/home/HomeEmployer'
+import Jobdone from './components/pages/Jobdone'
+import Job from './components/pages/Job'
+
+import "./App.css"
+import PersonalInfor from './components/pages/PersonalInfor'
+import LayoutEmployer from "./components/layouts/LayoutEmployer"
+import ForgotPassEpe from "./components/auth/Employee/ForgotPassEpe"
+import { ToastContainer } from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
+
+import LoginAdmin from "./components/auth/Admin/LoginAdmin"
+import Interview from "./components/pages/Interview"
+import ManageJob from "./components/pages/ManageJob"
+import RecruitmentDetails from "./components/pages/RecruitmentDetails"
+import ManageProfileDetail from "./components/Recruitment/Manage Profile/ManageProfileDetail"
+import VNPayCheckout from "./components/employer/package/VNPayCheckout"
+import { useNavigate } from "react-router-dom"
+import { useEffect } from "react"
+import ChangeCV from "./components/CvPage/ChangeCV"
+import CvDemo from "./components/CvDemo/CvDemo"
+import PostList from "./components/employer/posts/PostList"
+import PostAdd from "./components/employer/posts/PostAdd"
+import PostDetail from "./components/employer/posts/PostDetail"
+import PostEdit from "./components/employer/posts/PostEdit"
+import HomeAdmin from "./components/admin/home/HomeAdmin"
+import EmployeeManage from "./components/admin/home/EmployeeManage"
+import EmployerManage from "./components/admin/home/EmployerManage"
+import VoucherList from "./components/admin/Voucher/VoucherList"
+import VoucherAdd from "./components/admin/Voucher/VoucherAdd"
+import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
+import PostAdmin from "./components/admin/Post/PostAdmin"
+import CareerList from "./components/admin/Career/CareerList"
+import CareerAdd from "./components/admin/Career/CareerAdd"
+import FeedbackList from "./components/admin/Feedback/FeedbackList"
+import OrderManagement from "./components/admin/Order/OrderManagement"
 function App() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    window.addEventListener('storage', function(event) {
+      if (event.key === 'checkout') {
+        navigate('/home/services');
+        localStorage.removeItem("checkout");
+      }
+    });
+  },[]);
+  
   return (
     <div className="App">
       <Routes>
         <Route path='otp' element={<OTPAuth />} />
+
+        {/* CV DEMO */}
+        <Route path="cv-preview" element={<CvDemo />} />
 
         {/* AUTH EMPLOYEE */}
         <Route path='signup' element={
@@ -94,6 +116,7 @@ function App() {
         <Route path="/" element={<LayoutClient />}>
           <Route index element={<HomeClient />} />
           <Route path="works" element={<WorkPage />} />
+          <Route path="change-cv" element={<ChangeCV />} />
           <Route path="interview" element={<Interview />} />
           <Route path="managejob" element={<ManageJob />} />
           <Route path="jobempolyee" element={<Job />} />
@@ -110,7 +133,6 @@ function App() {
           <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
           <Route path='services' element={<ServiceList />} />
-          {/* <Route path='services/add' element={<ServiceAdd />} /> */}
           <Route path='posts/add' element={<PostAdd />} />
           <Route path='posts/:id/edit' element={<PostEdit />} />
           <Route path='posts/:id' element={<PostDetail />} />
@@ -122,6 +144,7 @@ function App() {
           <Route path='cart' element={<Cart />} />
           <Route path='manage-cv' element={<ProfileList />} />
           <Route path='manage-profile/:id' element={<ManageProfileDetail />} />
+          <Route path='vnpay-checkout' element={<VNPayCheckout />} />
         </Route>
 
         {/* ADMIN */}
@@ -129,7 +152,8 @@ function App() {
           <LayoutAdmin />
         }>
           <Route index element={<HomeAdmin />} />
-          <Route path="users-management" element={<UsersManage />} />
+          <Route path="users-management/employee" element={<EmployeeManage />} />
+          <Route path="users-management/employer" element={<EmployerManage />} />
           <Route path='vouchers' element={<VoucherList />} />
           <Route path='vouchers/add' element={<VoucherAdd />} />
           <Route path='vouchers/:id/edit' element={<VoucherEdit />} />
@@ -137,7 +161,11 @@ function App() {
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
           <Route path='feedbacks' element={<FeedbackList />} />
+          <Route path='order-management' element={<OrderManagement />} />
         </Route>
+
+
+
         <Route path='/employs' element={<LayoutEmployer />}>
           <Route index element={<HomeEmployer />} />
         </Route>

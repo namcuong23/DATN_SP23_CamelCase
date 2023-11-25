@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -11,47 +11,19 @@ import {
 import { useAppSelector } from '../../../app/hook'
 import Swal from 'sweetalert2'
 import { Modal } from 'antd'
+import "./ProfileEpr.css";
+import React from 'react'
 
 const AccEprMng = (): any => {
-    const [imageBase64, setImageBase64] = useState<any>('');
-    const getEventResult = (event: any) => {
-        if (event && event.target && typeof event.target.result == 'string') {
-            return event.target.result;
-        }
-
-        return '';
-    };
-
-    const handleChangeFile = (event: any) => {
-        const file = event.target.files[0];
-        if (!file) {
-            console.log('Không có file');
-            return;
-        } else if (file.size > 500000) {
-            console.log('File quá lớn');
-            return;
-        } 
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const image = new Image();
-            if (e && e.target) {
-                image.src = getEventResult(e);
-                console.log(image.width, image.height, file.size, file.type);
-                setImageBase64(e.target.result);
-            }
-        };
-        reader.readAsDataURL(file);
-    };
-
+    const [loading, setLoading] = useState<boolean>(false)
     const [open, setOpen] = useState(false)
     const [openC, setOpenC] = useState(false)
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { register, handleSubmit, formState: { errors } } = useForm()
     const [changePassEpr] = useChangePassEprMutation()
-    const changePass = async ({ oldpass, newpass, confirmpass }: any) => {
-        console.log('1');
-        
+
+    const handleChangePass = async ({ oldpass, newpass, confirmpass }: any) => {
         if (newpass != confirmpass) {
             return toast.warning('Mật khẩu không khớp')
         }
@@ -69,16 +41,29 @@ const AccEprMng = (): any => {
 
     const navigate = useNavigate()
     const [verifiedEmail] = useSendEmailVerifiedMutation()
-    const sendEmail = async () => {
-        const send: any = await verifiedEmail({ email })
-        const { data: rs } = send
-        if (rs?.success) {
-            toast.success(rs.mes)
-        }
+    const sendEmail = async (email: string) => {
+        setLoading(true);
+        await verifiedEmail({ email })
+            .then((result: any) => {
+                setLoading(false);
+                const { data: rs } = result;
+                toast.success(rs?.mes);
+            }).catch((err: any) => {
+                setLoading(false);
+                console.log(err.message);
+            });
         setOpen(true)
     }
+
     const [activeEmail] = useActiveEmailMutation()
-    const activeE = async ({ token }: any) => {
+    const tokenRef: any = useRef()
+    const handleActiveE = async ({current}: any) => {
+        const {value: token} = current
+
+        if (!token) {
+            return toast.warning('Vui lòng nhập mã xác thực!')
+        }
+
         const active: any = await activeEmail({ email, token })
         const { data: rs } = active
         if (rs?.success) {
@@ -97,7 +82,6 @@ const AccEprMng = (): any => {
                     <div className='w-full border-1 rounded-[5px]'>
                         <ul className='flex flex-col text-[15px]'>
                             <li className='py-2 px-[20px] border-b-[1px] border-l-[4px] border-l-[#1C88E5] rounded-tl-[5px] font-[550] bg-[#F7FAFF]'>Quản lý tài khoản</li>
-                            {/*  hover:border-b-0 hover:border-l-[4px] hover:border-[#1C88E5] hover:rounded-t-[5px] */}
                             <ul className='flex flex-col'>
                                 <li className='py-2 px-[24px] hover:px-[20px] border-b-[1px] font-[550] bg-[#F7FAFF] hover:bg-white hover:border-l-[4px] hover:border-l-[#1C88E5]'>
                                     Thông tin cá nhân
@@ -126,7 +110,13 @@ const AccEprMng = (): any => {
                                                 <span><i className='fas fa-check-circle text-green-500'></i></span>
                                                 :
                                                 <div>
-                                                    <button onClick={sendEmail} className='font-[100] text-[#005AFF] hover:text-[#fd7e14]' >Xác thực</button>
+                                                    {
+                                                        loading ? <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                                            :
+                                                            <button onClick={() => sendEmail(email)} className='font-[100] text-[#005AFF] hover:text-[#FD6333] flex items-center justify-content-center' >
+                                                                Xác thực
+                                                            </button>
+                                                    }
                                                     <Modal
                                                         style={{ top: 147 }}
                                                         open={open}
@@ -136,16 +126,13 @@ const AccEprMng = (): any => {
                                                         width={700}
                                                     >
                                                         <h3 className='text-xl text-[#333333] border-b-[1px] pb-2 mb-2'>Xác thực Email</h3>
-                                                        <form onSubmit={handleSubmit(activeE)}>
+                                                        <div>
                                                             <div className="form-group">
                                                                 <label className="text-dark">Mã xác nhận</label>
                                                                 <input type="text"
-                                                                    {...register('token', {
-                                                                        required: true
-                                                                    })}
+                                                                    ref={tokenRef}
                                                                     className="form-control border-1 border-[#c7c7c7] focus:shadow-none focus:border-[#005AFF]"
                                                                     name='token' />
-                                                                {errors.token && errors.token.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Mã xác nhận</span>}
                                                             </div>
                                                             <div className='flex justify-end gap-x-3'>
                                                                 <button className='bg-[#F4F4F7] hover:bg-[#E9E9F2] py-1 px-2 rounded'
@@ -154,13 +141,14 @@ const AccEprMng = (): any => {
                                                                     Hủy
                                                                 </button>
                                                                 <button 
+                                                                    onClick={() => handleActiveE(tokenRef)}
+                                                                    type='button'
                                                                     className='bg-[#FE7D55] hover:bg-[#FD6333] py-1 px-2 text-white rounded'
-                                                                    type='submit'
                                                                 >
                                                                     Xác nhận
                                                                 </button>
                                                             </div>
-                                                        </form>
+                                                        </div>
                                                     </Modal>
                                                 </div>
 
@@ -179,9 +167,8 @@ const AccEprMng = (): any => {
                             <div className='pt-2'>
                                 <button onClick={() => setOpenC(!openC)} className='text-[#1C88E5] hover:text-[#FD6333]'>Thay đổi mật khẩu</button>
                                 <form 
-                                    onSubmit={handleSubmit(changePass)} 
+                                    onSubmit={handleSubmit(handleChangePass)} 
                                     className='w-[500px] mt-2'
-                                    // style={{ display: openC ? '' : 'none' }}
                                     >
                                         <div className='flex flex-col gap-x-10 mb-2'>
                                             <label className='text-[15px] font-[550]'>Mật khẩu hiện tại</label>
@@ -231,7 +218,9 @@ const AccEprMng = (): any => {
                                         
                                         <div className='flex justify-end gap-x-3'>
                                             {/* <button onClick={() => setOpenC(false)} className='hover:border-[#FD6333] hover:text-[#FD6333] border-1 border-[#979797] text-[#979797] py-1 px-8 text-[16px] rounded'>Hủy</button> */}
-                                            <button type='submit' className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-8 text-[16px] rounded'>Lưu</button>
+                                            <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-6 text-[16px] rounded'>
+                                                Thay đổi
+                                            </button>
                                         </div>
                                     </form>
                             </div>

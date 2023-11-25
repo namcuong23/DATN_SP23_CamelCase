@@ -7,7 +7,7 @@ export const serviceApi = createApi({
     tagTypes: ['service'],
     endpoints: (builder) => ({
         getServices: builder.query<IService[], string>({
-            query: (uid: string) => `/services/${uid}`,
+            query: (uid: string) => `/my-ad-service/${uid}`,
             providesTags: ['service']
         }),
         createService: builder.mutation({

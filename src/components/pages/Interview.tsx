@@ -1,5 +1,6 @@
 import React from 'react'
 import HeaderSearchhJob from '../layouts/HeaderSearchhJob'
+import "./pages.css"
 
 const Interview = () => {
     return (
@@ -11,8 +12,8 @@ const Interview = () => {
                 </div>
                 {/* ****conntent */}
                 <div style={{ background: '#f7f7f7', paddingBottom: '2em' }}>
-                    <div className=" pt-3" >
-                        <div className="container flex" >
+                    <div className=" pt-3">
+                        <div className="w-[80%] mx-auto flex items-start" >
                             <div className='interview-content w-[70%] mx-[8px]'>
                                 <div className=" px-4 pt-5" style={{ background: 'white', color: 'black' }}>
                                     <p className="fw-bold fs-3" >
@@ -55,98 +56,28 @@ const Interview = () => {
                                 </div>
                             </div>
                             <div className='w-[27%] mx-[8px]'>
-                                <div className='border border-0 rounded-[8px] overflow-hidden w-100 bg-[#fff] mt-[12px]'>
+                                <div className='border border-0 rounded-[8px] overflow-hidden w-100 bg-[#fff]'>
                                     <p className='py-4 pl-[16px] fs-6' style={{ background: '#e5eeff', color: 'black' }}>Việc làm liên quan</p>
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
-                                        </div>
-                                    </div>
-                                    
-
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
+                                    <div className='flex items-center p-[16px]'>
+                                        <span className='flex items-center justify-center border rounded py-[16px] px-[8px] h-100'>
+                                            <img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={50} height={50} />
+                                        </span>
+                                        <div className='ml-[12px]' style={{flex: '1'}}>
+                                            <a className='text-break job-title text-[16px]' style={{ lineHeight: '18px' }} href='#'>
+                                                Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi 
+                                            </a>
+                                            <span className='text-[#005aff] text-[12px] short-desc' style={{ lineHeight: '18px' }}>
+                                                Hà Nội
+                                            </span>
+                                            <span className='text-[#005aff] text-[12px]' style={{ lineHeight: '18px' }}>Thương lượng</span>
                                         </div>
                                     </div>
 
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
-                                        </div>
+                                    <div className='flex items-center mt-[16px]'>
+                                        <img src="https://glints.com/vn/blog/wp-content/uploads/2022/02/Feb-18-10-00-AM-_-Blog-Article-49-07-1024x845.jpg" alt="" className='h-[493px]' />
                                     </div>
-
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex items-center pb-[16px]'>
-                                        <a className='job-logo' href='#' style={{ height: "3.5em", width: "3.5em" }}><img src='https://images.vietnamworks.com/pictureofcompany/6e/10922087.png' width={"56px"} height={'40px'} /></a>
-                                        <div className='job-info text-[16px]'>
-                                            <div className='text-break'><a className='job-title' href='#'>Giám đốc công ty doanh nhaanh 10 người làm trong cuộc thi</a></div>
-                                            <p style={{ width: '100%' }}>
-                                                <a className='text-[#005aff]' href='#' style={{ width: '70%' }}>Công ty doanh nhanh 10 người làm trong cuộc thidassssssssss</a>
-                                                <div style={{ position: 'absolute' }}>Công ty doanh nhaanh 10 người làm trong cuộc thi</div>
-                                            </p>
-                                            <div style={{ color: '#005aff' }}>Thương lượng</div>
-                                        </div>
-                                    </div>
-
-                                    <div className='flex items-center pb-[16px]'>
-                                 <img src="https://glints.com/vn/blog/wp-content/uploads/2022/02/Feb-18-10-00-AM-_-Blog-Article-49-07-1024x845.jpg" alt="" className='h-[493px]' />
-                                    </div>
-                                    <div className='flex items-center pb-[16px]'>
-                                 <img src="https://glints.com/vn/blog/wp-content/uploads/2022/02/Feb-18-10-00-AM-_-Blog-Article-49-07-1024x845.jpg" alt="" className='h-[493px]' />
+                                    <div className='flex items-center mt-[16px]'>
+                                        <img src="https://glints.com/vn/blog/wp-content/uploads/2022/02/Feb-18-10-00-AM-_-Blog-Article-49-07-1024x845.jpg" alt="" className='h-[493px]' />
                                     </div>
                                 </div>
                             </div>

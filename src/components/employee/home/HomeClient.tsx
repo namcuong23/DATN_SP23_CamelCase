@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { useGetPostsQuery } from '../../../service/post'
+import { useGetGoodPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -15,7 +15,7 @@ import './HomeClient.css'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 
 const HomeClient = (): any => {
-  const { data: posts } = useGetPostsQuery()
+  const { data: posts } = useGetGoodPostsQuery()
   const { email } = useAppSelector((rs) => rs.auth)
   const [addFeedback] = useAddFeedbackMutation(); 
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
@@ -178,6 +178,9 @@ const HomeClient = (): any => {
                                     <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
                                       className="job-img" />
                                     <div className="job-info">
+                                      <div className='flex justify-end'>
+                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                      </div>
                                       <h4 className="job-namee">{post.job_name}</h4>
                                       <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
                                       <p className='job-location'>{post.work_location}</p>

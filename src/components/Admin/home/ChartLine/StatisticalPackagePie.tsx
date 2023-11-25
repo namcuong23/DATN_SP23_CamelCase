@@ -1,8 +1,9 @@
 // @ts-nocheck
-import React, { useState, useEffect } from 'react';
-import ReactDOM from 'react-dom';
+import React from 'react';
 import { Pie } from '@ant-design/plots';
 import { Order } from '../../../../interface/admin/order';
+import { useGetUsersQuery } from '../../../../service/auth';
+import { useGetUsersEprQuery } from '../../../../service/auth_employer';
 interface ChildComponentProps {
   PackageHistory: Order[];
 }
@@ -13,20 +14,17 @@ interface ChartData {
 }
 const StatisticalPackagePie : React.FC<ChildComponentProps> = ({ PackageHistory }) =>{
 
-  const Dangky = PackageHistory?.filter((data)=>{
-    return data.order_status == true;
-  })
-  const DangCho =PackageHistory?.filter((data)=>{
-    return data.order_status == false;
-  })
+  const { data: userEpe } = useGetUsersQuery();
+  const { data: userEpr } = useGetUsersEprQuery('');
+  
   const data = [
     {
-      type: 'Đăng ký',
-      value: Dangky?.length,
+      type: 'Company',
+      value: userEpe?.length,
     },
     {
-      type: 'Đang chờ',
-      value: DangCho?.length,
+      type: 'User',
+      value: userEpr?.length,
 
     },
   ];

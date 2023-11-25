@@ -15,6 +15,7 @@ interface IUserNTD {
     passwordChangeAt: string;
     passwordResetExpires: string;
     role: string;
+    isBlock: boolean;
 }
 
 export default IUserNTD

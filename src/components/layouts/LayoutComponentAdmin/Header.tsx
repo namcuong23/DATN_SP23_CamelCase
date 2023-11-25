@@ -1,6 +1,6 @@
 import React from 'react'
 type Props = {}
-import { DownOutlined, SmileOutlined } from '@ant-design/icons';
+import { DownOutlined, SearchOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Dropdown, Space, message } from 'antd';
 import { useAppDispatch } from '../../../app/hook';
@@ -39,7 +39,7 @@ const Header = (props: Props) => {
             </a>
           </div>{/* .nk-header-brand */}
           <div className="nk-header-search ms-3 ms-xl-0">
-            <em className="icon ni ni-search" />
+          <SearchOutlined />
             <input type="text" className="form-control border-transparent form-focus-none" placeholder="Search anything" />
           </div>{/* .nk-header-news */}
           <div className="nk-header-tools">

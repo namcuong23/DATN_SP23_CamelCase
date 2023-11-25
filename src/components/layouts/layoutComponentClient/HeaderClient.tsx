@@ -1,4 +1,4 @@
-import { useState, useRef, JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal } from 'react';
+import { useState, useRef, JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, useEffect } from 'react';
 import { message } from '@pankod/refine-antd'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
@@ -11,6 +11,7 @@ import { useGetNotificationByEmailQuery } from '../../../service/notification';
 import moment from 'moment';
 import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
 import { Modal, notification } from 'antd';
+import { AvatarIcon } from '../../employee/profile/icons';
 
 const cx = classNames.bind(styles);
 interface Inotification {
@@ -20,18 +21,19 @@ interface Inotification {
     created_at: Date;
     notificationImage?: string;
 }
+
 const HeaderClient = () => {
-
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
-    const [selectedNotification, setSelectedNotification] = useState<Inotification | null>(null);
-
     const navigate = useNavigate()
     const { data: user } = useGetUserByEmailQuery(email)
+    const [selectedNotification, setSelectedNotification] = useState<Inotification | null>(null)
     const [isModalNoti, setIsModalNoti] = useState(false);
+
     const dispatch = useAppDispatch()
     const [showModal, setShowModal] = useState(true)
     const [isActive, setIsActive] = useState(false)
     const modalRef: any = useRef()
+    const [imgUrl, setImgUrl] = useState<any>()
     const handleOpenModalNotify = () => {
         setShowModal(false);
     }
@@ -48,8 +50,31 @@ const HeaderClient = () => {
             message.error(error.message)
         }
     }
+    //notification
+    const [shownNotificationIds, setShownNotificationIds] = useState<string[]>([]);
+    const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
+        pollingInterval: 5000,
+    });
+    
+    const showNotification = (notifications: Inotification) => {
+        const { _id, notification_title, notification_content } = notifications;
+    
+        if (!shownNotificationIds.includes(_id)) {
+            notification.info({
+                message: 'Bạn có thông báo mới',
+                description: notification_title,
+            });
+            setShownNotificationIds((prevIds) => [...prevIds, _id]);
+        }
+    };
+    
+    useEffect(() => {
 
-    const { data: notificationEmail } = useGetNotificationByEmailQuery(email);
+        if (notificationEmail && notificationEmail.length > 0) {
+            const latestNotification = notificationEmail[notificationEmail.length - 1]; //-1 cuoi danh sách
+            showNotification(latestNotification);
+        }
+    }, [notificationEmail]); 
 
     const showModalNoti = (notificationId: string) => {
         if (notificationEmail) {
@@ -100,7 +125,7 @@ const HeaderClient = () => {
                     <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li>
                 </ul >
                 <div className="sc-gCLdxd eAZlAg rightNavigation-homepage" >
-                    <NavLink to={'/home'} tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
+                    <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
                     <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
                         <div className="notify-btn notificationEmail-icon">
@@ -118,10 +143,20 @@ const HeaderClient = () => {
                                     id="dropdownMenuButton1"
                                     data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" className="bi bi-person-circle" viewBox="0 0 16 16">
-                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
-                                        <path fillRule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z" />
-                                    </svg>
+                                    <div className="avatar-wrapper">
+                                        {
+                                            !imgUrl && user?.image === undefined ?
+                                                <AvatarIcon /> :
+                                                <div
+                                                    style={{
+                                                        backgroundImage: `url(${imgUrl ? imgUrl.preview : user?.image})`,
+                                                        width: '50px',
+                                                        height: '50px',
+                                                    }}
+                                                    className='avatar-img'
+                                                />
+                                        }
+                                    </div>
                                     <span>{user?.name}</span>
                                 </button>
                                 <div className="text-[#555555] dropdown-menu dropdown-not-login animated fadeIn userProfileMenu-homepage mt-4"
@@ -144,7 +179,7 @@ const HeaderClient = () => {
                                         </button>
                                     </div>
                                     <div className='mx-3'>
-                                        <NavLink to={'/profile'} className='flex items-center mb-1 w-100 px-[8px] py-[12px] text-[#677793] hover:rounded hover:bg-[#EBF2FF] hover:no-underline hover:text-[#6F6F6F]'>
+                                        <NavLink to={'/profile?tab=information'} className='flex items-center mb-1 w-100 px-[8px] py-[12px] text-[#677793] hover:rounded hover:bg-[#EBF2FF] hover:no-underline hover:text-[#6F6F6F]'>
                                             <svg width="20" height="20"
                                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M5.6 1.6001C4.716 1.6001 4 2.3161 4 3.2001V20.8001C4 21.6841 4.716 22.4001 5.6 22.4001H13.05C13.6612 20.6225 15.2518 20.0363 16.1078 19.7235C16.1574 19.7051 16.2135 19.6842 16.2703 19.6626C16.0815 19.4146 15.9031 19.1368 15.7688 18.8392C15.3703 18.4136 15.0797 17.7903 15.0797 17.0079C15.0797 16.8727 15.0894 16.7443 15.1078 16.6235C14.9766 16.2699 14.8687 15.8289 14.8688 15.3329C14.8703 12.9385 16.6912 11.2001 19.2 11.2001C19.4856 11.2001 19.7496 11.2523 20 11.3251V7.6001C20 7.3881 19.916 7.18407 19.7656 7.03447L14.5656 1.83447C14.4152 1.68407 14.212 1.6001 14 1.6001H5.6ZM13.6 3.12354L18.4766 8.0001H14.4C13.9584 8.0001 13.6 7.6417 13.6 7.2001V3.12354ZM19.2 12.7985C17.6928 12.7985 16.4703 13.7073 16.4703 15.3329C16.4703 16.0201 16.8547 16.5548 16.8547 16.5548C16.8547 16.5548 16.6797 16.6407 16.6797 17.0079C16.6797 17.7207 17.1391 17.8923 17.1391 17.8923C17.2031 18.4571 18.0797 19.2845 18.0797 19.2845V20.2267C17.6085 21.6419 14.4 20.8313 14.4 24.0001H24C24 20.8313 20.7915 21.6419 20.3203 20.2267V19.2845C20.3203 19.2845 21.1977 18.4571 21.2609 17.8923C21.2609 17.8923 21.7203 17.5751 21.7203 17.0079C21.7203 16.6143 21.5453 16.5548 21.5453 16.5548C21.5453 16.5548 21.8594 15.9572 21.8594 15.386C21.8594 14.2412 21.2859 13.3595 20.3203 13.3595C20.3203 13.3595 19.9096 12.7985 19.2 12.7985Z" fill="#888888"></path>
@@ -165,7 +200,7 @@ const HeaderClient = () => {
                                     <div className='mx-3'>
                                         <NavLink to={'/profile?tab=account-manage'} className='flex items-center mb-1 w-100 px-[8px] py-[12px] hover:rounded hover:bg-[#EBF2FF]'>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <g clip-path="url(#clip0_3011_6580)">
+                                                <g clipPath="url(#clip0_3011_6580)">
                                                     <path d="M22.6368 10.186L19.8 9.72236C19.6339 9.15308 19.4069 8.60588 19.1227 8.08796L20.7787 5.7278C20.9126 5.53724 20.8896 5.27756 20.7249 5.11244L18.8582 3.24668C18.6917 3.0806 18.4296 3.059 18.2385 3.19676L15.9139 4.86764C15.3912 4.57868 14.8392 4.34924 14.2665 4.18268L13.7717 1.3574C13.7313 1.12796 13.5321 0.959961 13.2989 0.959961H10.6589C10.4237 0.959961 10.223 1.13036 10.1851 1.36268L9.72622 4.1726C9.15022 4.3382 8.59726 4.56524 8.07646 4.85036L5.75806 3.19436C5.56654 3.05756 5.3059 3.07964 5.13934 3.24524L3.27358 5.111C3.10894 5.27564 3.0859 5.53484 3.21982 5.7254L4.85134 8.05964C4.56094 8.58524 4.32958 9.14156 4.1611 9.72044L1.36222 10.1865C1.13086 10.2249 0.960938 10.4256 0.960938 10.6598V13.2998C0.960938 13.5326 1.12798 13.7318 1.35694 13.7726L4.15582 14.2689C4.32334 14.8464 4.5547 15.4027 4.84606 15.9297L3.19438 18.24C3.05806 18.4305 3.07966 18.6921 3.24526 18.8587L5.1115 20.7264C5.27614 20.891 5.53582 20.914 5.72638 20.7801L8.06398 19.1428C8.58862 19.4313 9.14302 19.6603 9.71758 19.8264L10.1861 22.6396C10.224 22.8705 10.4241 23.04 10.6589 23.04H13.2989C13.5317 23.04 13.7309 22.8729 13.7712 22.644L14.2728 19.8168C14.8483 19.6473 15.3998 19.4169 15.9192 19.128L18.2736 20.7796C18.4646 20.9145 18.7238 20.891 18.8889 20.7264L20.7552 18.8587C20.9213 18.6921 20.9429 18.4296 20.8051 18.2385L19.1261 15.9072C19.4107 15.3888 19.6368 14.8406 19.8014 14.2713L22.6421 13.7726C22.872 13.7323 23.039 13.5326 23.039 13.2998V10.6598C23.0395 10.4246 22.8691 10.224 22.6368 10.186ZM12 15.36C10.1443 15.36 8.63998 13.8556 8.63998 12C8.63998 10.1443 10.1443 8.63996 12 8.63996C13.8557 8.63996 15.36 10.1443 15.36 12C15.36 13.8556 13.8557 15.36 12 15.36Z" fill="#888888"></path></g><defs><clipPath id="clip0_3011_6580"><rect width="24" height="24" fill="white">
                                                     </rect></clipPath></defs>
                                             </svg>
@@ -342,9 +377,9 @@ const HeaderClient = () => {
                                             <div>
                                                 {notificationEmail ? (
                                                     notificationEmail
-                                                        .slice() 
+                                                        .slice()
                                                         .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-                                                        .map((noti:any ) => (
+                                                        .map((noti: any) => (
                                                             <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
                                                                 <span className={cx('notify-img')}>
                                                                     <img src={noti.notificationImage} alt="" />
@@ -366,10 +401,9 @@ const HeaderClient = () => {
                                                 ) : (
                                                     <p>Loading notifications...</p>
                                                 )}
-                                                <Modal title="Basic Modal" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
+                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
                                                     {selectedNotification && (
                                                         <>
-                                                            <span className={cx('notify-title')}>{selectedNotification.notification_title}</span>
                                                             <span>{selectedNotification.notification_content}</span>
                                                         </>
                                                     )}
@@ -401,6 +435,7 @@ const HeaderClient = () => {
             } */}
         </ >
     )
+
 }
 
-export default HeaderClient
+export default HeaderClient;

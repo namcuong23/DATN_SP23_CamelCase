@@ -34,6 +34,22 @@ export const orderApi = createApi({
             }),
             invalidatesTags: ['order']
         }),
+        vnPayCheckout : builder.mutation({
+            query: (order: IOrder) => ({
+                url: `/order-checkout`,
+                method: 'POST',
+                body: order
+            }),
+            invalidatesTags: ['order']
+        }),
+        updateOrderStatus : builder.mutation({
+            query: (id: string) => ({
+                url: `/order/${id}`,
+                method: 'PUT',
+                credentials: 'omit'
+            }),
+            invalidatesTags: ['order']
+        }),
     })
 })
 
@@ -42,5 +58,7 @@ export const {
     useGetOrdersByUIdQuery,
     useGetOrderQuery,
     useCreateOrderMutation,
-    useRemoveOrderMutation
+    useRemoveOrderMutation,
+    useVnPayCheckoutMutation,
+    useUpdateOrderStatusMutation,
 } = orderApi

@@ -1,15 +1,10 @@
 interface ICv {
     _id: string;
-    image: string;
     name: string;
+    job_title: string;
     email: string;
-    phone: string;
-    age: string;
-    gender: string;
-    address: string;
-    description: string;
-    status: string;
     post_id: string;
+    cv: string;
 }
 
 export default ICv;

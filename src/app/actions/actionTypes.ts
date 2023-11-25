@@ -1,6 +1,8 @@
 const actionTypes = {
     LOGIN: 'LOGIN',
     LOGOUT: 'LOGOUT',
+    LOGIN_EPR: 'LOGIN_EPR',
+    LOGOUT_EPR: 'LOGOUT_EPR',
     LOGIN_ADM: 'LOGIN_ADM',
     LOGOUT_ADM: 'LOGOUT_ADM',
     SET_CART: 'SET_CART',

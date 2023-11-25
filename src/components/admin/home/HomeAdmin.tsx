@@ -6,20 +6,49 @@ import ChartUsers from './ChartLine/ChartUsers';
 import { calculatePercentageChange } from './ChartLine/helpers/calculatePercentageChange';
 import ChartNTD from './ChartLine/ChartNTD';
 import ChartNTV from './ChartLine/ChartNTV';
-import StatisticalPackage from './ChartLine/StatisticalPackage';
+import ChartTotal from './ChartLine/ChartTotal';
+import { useAppSelector } from '../../../app/hook'
+import StatisticalPackageDay from "./ChartLine/StatisticalPackageDay"
 import StatisticalPackagePie from './ChartLine/StatisticalPackagePie';
+import StatisticalPackage from "./ChartLine/StatisticalPackage"
+import { useNavigate } from 'react-router-dom';
 
-const HomeAdmin = () => {
+const HomeAdmin: any = () => {
+  const { isLoggedIn } = useAppSelector((res) => res.authAdm);
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
   const { data: Chart, error, isLoading, isSuccess } = useGetChartLineQuery([]);
   const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
   const [chartState, setChartState] = useState<ChartData>();
   const [PackageHistory, setPackageHistory] = useState<Order[]>([]);
+  const day = currentDate.getDate();
+  const month = currentDate.getMonth() + 1; // Lưu ý: Tháng bắt đầu từ 0 (0 là tháng 1)
+  const year = currentDate.getFullYear();
+  const navigate = useNavigate()
+  const currentMonthRevenue = PackageHistory?.reduce((totalRevenue, order) => {
+    const orderDate = new Date(order.createdAt);
+    const orderMonth = orderDate.getMonth() + 1;
+    const orderYear = orderDate.getFullYear();
+
+    if (orderMonth === currentMonth && orderYear === currentYear) {
+      totalRevenue += order.order_price;
+    }
+
+    return totalRevenue;
+  }, 0);
+
   useEffect(() => {
     setChartState(Chart)
   }, [Chart])
   useEffect(() => {
     setPackageHistory(HistoryPackage)
   }, [HistoryPackage])
+  
+  if (!isLoggedIn) {
+    return navigate('/login-admin')
+}
+
   return (
     <div className="nk-content text-sm">
       <div className="container-fluid">
@@ -222,28 +251,49 @@ const HomeAdmin = () => {
                       <div className="card-inner">
                         <div className="">
                           <div className="">
-                            <h6 className="text-xl">Tổng bài đăng</h6>
+                            <h6 className="text-xl">Tin chờ duyệt</h6>
                           </div>
                         </div>
                         <div className="data">
                           <div className="data-group">
-                            <div className="amount text-sm">{chartState?.TotalPosts}</div>
+                            <div className="amount text-sm">
+                            {chartState?.totalPosts.totalPosts}
+                            </div>
                             <div className="nk-ecwg6-ck">
+                              <ChartTotal
+                                chartData={Chart}
+                                error={error}
+                                isLoading={isLoading}
+                                isSuccess={isSuccess}
+                              />
                             </div>
 
                           </div>
                           <div className="info">
                             <span className="change up text-danger">
-                              <div className="flex py-2">
-                                <div className="pr-3 ">
-                                  <img
-                                    className="w-5"
-                                    src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684683813/hjlqm92wwhp0lj93epso.png"
-                                    alt=""
-                                  />
-                                </div>
-                                {/* <span className=''> % vs. last week</span> */}
-                              </div>
+                              {
+                                chartState ? (chartState?.totalPosts.postLastWeekTotalPosts < chartState?.totalPosts.postWeekBeforeLastTotalPosts) ?
+                                  <div className="flex py-2">
+                                    <div className="pr-3 ">
+                                      <img
+                                        className="w-5"
+                                        src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684684027/juiewztaypyiczhygevl.png"
+                                        alt=""
+                                      />
+                                    </div>
+
+                                    <span className='text-red-600'>{calculatePercentageChange(Number(chartState?.totalPosts?.postWeekBeforeLastTotalPosts), Number(chartState?.totalPosts?.postLastWeekTotalPosts)).toFixed()}% vs. last week</span> </div>
+                                  :
+                                  <div className="flex py-2">
+                                    <div className="pr-3 ">
+                                      <img
+                                        className="w-5"
+                                        src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684683813/hjlqm92wwhp0lj93epso.png"
+                                        alt=""
+                                      />
+                                    </div>
+                                    <span className='text-green-500'>{calculatePercentageChange(Number(chartState?.totalPosts?.postWeekBeforeLastTotalPosts), Number(chartState?.totalPosts?.postLastWeekTotalPosts)).toFixed()}% vs. last week</span> </div> : 'loading  '
+                              }
                             </span>
                           </div>
                         </div>
@@ -264,7 +314,7 @@ const HomeAdmin = () => {
                       <div className="card-inner">
                         <div className="card-title-group mb-3">
                           <div className="card-title">
-                            <h6 className="text-xl font-bold">Thống kê gói đăng ký</h6>
+                            <h6 className="text-xl font-bold">Doanh thu năm {year} </h6>
                           </div>
 
                         </div>
@@ -286,8 +336,9 @@ const HomeAdmin = () => {
                           <StatisticalPackage PackageHistory={HistoryPackage} />
                         </div>
                         <div className="chart-label-group ps-5">
-                          <div className="chart-label">Time 1</div>
-                          <div className="chart-label">Time 2</div>
+                          <div className="text-black text-decoration-none">
+                            Doanh thu từ đầu năm: {currentMonthRevenue ? currentMonthRevenue.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : 'loading...'}
+                          </div>
                         </div>
                       </div>
                       {/* .card-inner */}
@@ -302,10 +353,11 @@ const HomeAdmin = () => {
                       <div className="card-inner flex-grow-1">
                         <div className="">
                           <div className="">
-                            <h6 className="text-xl text-center">Thống kê gói đăng ký</h6>
+                            <h6 className="text-xl text-center">Thống kê lượng người dùng</h6>
                           </div>
                         </div>
                         <div className="align-center h-72"><StatisticalPackagePie PackageHistory={HistoryPackage} /></div>
+
                       </div>
                       {/* .card-inner */}
                     </div>
@@ -339,7 +391,7 @@ const HomeAdmin = () => {
                         <li className="item w-full flex justify-evenly">
                           <div className="info">
                             <div className="">Bài đăng</div>
-                            <div className="count py-1">{chartState?.TotalPosts}</div>
+                            <div className="count py-1">{chartState?.totalPosts.totalPosts}</div>
                           </div>
                           <img className='w-10' src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684687461/l6imf0nh0m55inixceed.png" alt="" />
                         </li>
@@ -357,7 +409,45 @@ const HomeAdmin = () => {
                   {/* .card */}
                 </div>
                 {/* .col */}
-                <div className="col-xxl-8">
+                <div className="col-xxl-6">
+                  <div className="card">
+                    <div className="">
+                      <div className="card-inner">
+                        <div className="card-title-group mb-3">
+                          <div className="card-title">
+                            <h6 className="text-xl font-bold">Doanh thu tháng {month}/{year}</h6>
+                          </div>
+
+                        </div>
+                        <ul className="nk-ecwg8-legends">
+                          <li>
+                            <div className="">
+                              <span className="dot dot-lg sq text-sm" data-bg="#6576ff" />
+                              {/* <span className='text-[#6576ff] font-bold'>Tổng gói đăng ký</span> */}
+                            </div>
+                          </li>
+                          <li>
+                            <div className="">
+                              <span className="dot dot-lg sq " data-bg="" />
+                              {/* <span className='text-[#eb6459] font-bold'>Tổng gói đã hủy</span> */}
+                            </div>
+                          </li>
+                        </ul>
+                        <div className="nk-ecwg8-ck">
+                          <StatisticalPackageDay PackageHistory={HistoryPackage} />
+                        </div>
+                        <div className="chart-label-group ps-5">
+                          <div className="text-black text-decoration-none">
+                            Doanh thu tháng này: {currentMonthRevenue ? currentMonthRevenue.toLocaleString('vi', { style: 'currency', currency: 'VND' }) : 'loading...'}
+                          </div>
+                        </div>
+                      </div>
+                      {/* .card-inner */}
+                    </div>
+                  </div>
+                  {/* .card */}
+                </div>
+                <div className="col-xxl-6">
                   <div className="card card-full">
                     <div className="card-inner">
                       <div className="card-title-group">
@@ -406,60 +496,27 @@ const HomeAdmin = () => {
                               {(data?.order_price).toLocaleString('vi', { style: 'currency', currency: 'VND' })}
                             </span>
                           </div>
-                          {
-                            data ? data?.order_status === true ?
-                              <div className="nk-tb-col">
-                                <span className="badge badge-dot badge-dot-xs bg-success">
-                                  Đã thanh toán
-                                </span>
-                              </div> :
-                              <div className="nk-tb-col">
-                                <span className="badge badge-dot badge-dot-xs bg-warning">
-                                  Đang chờ duyệt
-                                </span>
-                              </div>
-                              : 'loading'
+                          <div>
+                            {
+                              data ? data?.order_status === true ?
+                                <div className="nk-tb-col">
+                                  <span className="badge badge-dot badge-dot-xs bg-success">
+                                    Đã thanh toán
+                                  </span>
+                                </div> :
+                                <div className="nk-tb-col">
+                                  <span className="badge badge-dot badge-dot-xs bg-warning">
+                                    Đang chờ thanh toán
+                                  </span>
+                                </div>
+                                : 'loading'
 
-                          }
+                            }
+                          </div>
+                       
                         </div>
                       )}
                     </div>
-                  </div>
-                  {/* .card */}
-                </div>
-                <div className="col-xxl-4 col-md-8 col-lg-6">
-                  <div className="card h-100">
-                    <div className="card-inner">
-                      <div className="card-title-group mb-2">
-                        <div className="card-title">
-                          <h6 className="text-xl">Tổng các gói</h6>
-                        </div>
-                        <div className="card-tools">
-                          <div className="dropdown">
-                          </div>
-                        </div>
-                      </div>
-                      <ul className="nk-top-products">
-
-                        {chartState?.packageData.map((data) => {
-                          return <li className="item w-full flex justify-evenly">
-                            <div className="thumb">
-                              <img className='w-10' src="https://res.cloudinary.com/dtd8tra0o/image/upload/v1684687461/l6imf0nh0m55inixceed.png" alt="" />
-                            </div>
-                            <div className="info">
-                              <div className="title">iPhone 7 Headphones</div>
-                              <div className="price">$99.00</div>
-                            </div>
-                            <div className="total">
-                              <div className="amount">$990.00</div>
-                              <div className="count">10 Sold</div>
-                            </div>
-                          </li>
-                        })}
-
-                      </ul>
-                    </div>
-                    {/* .card-inner */}
                   </div>
                   {/* .card */}
                 </div>

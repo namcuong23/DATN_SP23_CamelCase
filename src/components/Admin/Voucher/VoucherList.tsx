@@ -1,11 +1,11 @@
-import type { ColumnsType, TableProps, ColumnType } from 'antd/es/table';
+import type { ColumnsType, TableProps} from 'antd/es/table';
 import { NavLink } from 'react-router-dom';
-import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
+import { Alert, message, Popconfirm, Spin} from 'antd';
 import { Space, Table } from 'antd';
-import { useRef, useState } from 'react';
-import { CheckOutlined, DeleteOutlined, EditOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import { useRemoveVoucherMutation, useGetVouchersQuery } from '../../../service/admin_voucher';
 import { MessageType } from 'antd/es/message/interface';
+import React from 'react';
 
 type Props = {}
 const VoucherList = () => {
@@ -48,30 +48,6 @@ const VoucherList = () => {
                     <div>{record.package_day} tháng</div>
                 </>
             )
-        },
-        {
-            title: 'Trạng thái',
-            dataIndex: 'status',
-            render: (_, record) => (
-                <>
-                    <Tag
-                        color={record.status ? "green" : "gold"}
-                        key={record.status ? "Khả dụng" : "Đang chờ duyệt"}>
-                        {record.status ? "Khả dụng" : "Đang chờ duyệt"}
-                    </Tag>
-                </>
-            ),
-            filters: [
-                {
-                    text: 'Khả dụng',
-                    value: 'Khả dụng',
-                },
-                {
-                    text: 'Đang chờ duyệt',
-                    value: 'Đang chờ duyệt',
-                },
-            ],
-            onFilter: (value: any, record) => record.status.indexOf(value) === 0,
         },
         {
             title: 'Hành động',

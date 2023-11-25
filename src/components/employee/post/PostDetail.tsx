@@ -1,15 +1,21 @@
 import { message } from 'antd'
-import { Link, useParams } from 'react-router-dom'
-import { useAddCvMutation } from '../../../service/manage_cv'
-import { useGetPostQuery,useGetPostsByCareerQuery } from '../../../service/post'
+import { useState, useEffect, useRef  } from 'react';
+import { Link, NavLink, useParams } from 'react-router-dom'
+import { useApplyCvMutation } from '../../../service/manage_cv'
+import { 
+  useGetPostQuery,
+  useGetPostsByCareerQuery 
+} from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
 import { useAddJobdoneMutation } from '../../../service/jobdone'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useAddJobsaveMutation } from '../../../service/savejob'
 import useDateFormat from '../../../utils/hooks/FormatDate'
-import './postDetail.scss';
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
+import { useForm } from 'react-hook-form';
+import { useAddNotificationMutation } from '../../../service/notification';
+import './postDetail.scss';
 const PostDetailEp = (): any => {
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
@@ -17,52 +23,79 @@ const PostDetailEp = (): any => {
     id,
     career : post?.career
   })
-  const { email, isLoggedIn, token } = useAppSelector((rs) => rs.auth)
+  const { email, isLoggedIn } = useAppSelector((rs: any) => rs.auth)
+  const [lastSubmissionDate, setLastSubmissionDate] = useState<Date | null>(null);
+  useEffect(() => {
+    // Lấy thông tin về ngày nộp đơn gần đây nhất từ localStorage khi component được tải
+    const storedDate = localStorage.getItem('lastSubmissionDate');
+    if (storedDate) {
+      setLastSubmissionDate(new Date(storedDate));
+    }
+
+    return () => localStorage.removeItem('lastSubmissionDate')
+  }, []);
+
   const { data: user } = useGetUserByEmailQuery(email)
-  const [addCv] = useAddCvMutation()
+  const [applyCv] = useApplyCvMutation()
   const [addJobdone] = useAddJobdoneMutation()
   const [addJobsave] = useAddJobsaveMutation()
-  const applyJob = async () => {
-    const address = `${user?.specific_address} ${user?.district} ${user?.province}`
+  const [addNotification] = useAddNotificationMutation()
+  const {register, handleSubmit, formState: {errors}} = useForm()
+  const [fileName, setFileName] = useState<any>()
+  const [file, setFile] = useState<any>()
+  const inputCheckRef: any = useRef()
+
+  const onChangeFileInput = (e: any) => {
+    const {name} = e.target.files[0]
+    const date = new Date()
+    const currentDate = useDateFormat(date)
+
+    setFileName({name, currentDate})
+    setFile(e.target.files[0])
+  }
+  
+  const applyJob = async (candidate: any) => {
+    const currentDate = new Date();
+    if (lastSubmissionDate && lastSubmissionDate.toDateString() === currentDate.toDateString()) {
+      message.warning('Bạn đã nộp đơn trong ngày hôm nay rồi. Hãy quay lại vào ngày mai!');
+      return;
+    }
+
     await addJobdone({
       ...post,
       user_id: user?._id
     })
-    const apply = await addCv({
-      name: user?.name,
-      email: user?.email,
-      phone: user?.phone,
-      image: user?.image,
-      address: address,
-      description: user?.description,
-      age: user?.age,
-      gender: user?.gender,
-      status: null,
-      post_id: post._id
-    })
+
+    const {current} = inputCheckRef
+    const formData: any = new FormData();
+    formData.append("name", user?.name)
+    formData.append("job_title", candidate.job_title)
+    formData.append("email", candidate.email)
+    formData.append("post_id", id)
+    formData.append("file", file)
+    
+    const apply = await applyCv(formData)
     const { data: rs } = apply
+    console.log(rs);
+    
     if (rs?.success) {
+      current.checked = false
       message.success(rs?.mes)
     }
+    localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
+    setLastSubmissionDate(currentDate);
   }
-  //savejob
+  //Save job
   const saveJob = async () => {
-    const address = `${user?.specific_address} ${user?.district} ${user?.province}`
-    await addJobsave({
+    await addNotification({
+      email,
+      role: 1,
+      notification_title: post.job_name,
+      notification_content: post.job_content
+    })
+    const save = await addJobsave({
       ...post,
       user_id: user?._id
-    })
-    const save = await addCv({
-      name: user?.name,
-      email: user?.email,
-      phone: user?.phone,
-      image: user?.image,
-      address: address,
-      description: user?.description,
-      age: user?.age,
-      gender: user?.gender,
-      status: null,
-      post_id: post._id
     })
     const { data: rs } = save
     if (rs?.success) {
@@ -150,20 +183,24 @@ const PostDetailEp = (): any => {
                   )}
                 </div>
                 <div className="w-[170px] h-[50px]">
-                  {isLoggedIn ? (
-                    <button
-                      style={{ fontSize: "18px" }}
-                      className="bg-[#ff7d55] w-full h-full  hover:bg-[#FD6333] text-white rounded font-medium"
-                      onClick={applyJob}
-                    >
-                      Nộp đơn
-                    </button>
-                  ) : (
-                    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
-                      Đăng nhập để ứng tuyển
-                    </div>
-                  )}
+                  { 
+                    isLoggedIn ? (
+                      <label
+                        htmlFor='modal-cv-check'
+                        style={{ fontSize: "18px" }}
+                        className="bg-[#ff7d55] w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center"
+                        // onClick={applyJob}
+                      >
+                        Nộp đơn
+                      </label>
+                    ) : (
+                      <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
+                        Đăng nhập để ứng tuyển
+                      </div>
+                    )
+                  }
                 </div>
+                
               </div>
             </div>
           </div>
@@ -329,6 +366,90 @@ const PostDetailEp = (): any => {
           </div>
         </div>
       </div>
+
+      <input type="checkbox" hidden id="modal-cv-check" className='modal-open-check' ref={inputCheckRef} />
+      <label htmlFor='modal-cv-check' className="overlay"></label>
+      {/* Modal CV */}
+      <section className="modal-cv">
+        <section className="modal-cv__job">
+          <section 
+            className="modal-cv__job-img"
+            style={{ backgroundImage: "url('https://images.vietnamworks.com/pictureofcompany/bb/11125895.png')" }}
+          ></section>
+          <section className="modal-cv__job-info">
+            <h4 className="modal-cv__job-name">{post?.job_name}</h4>
+            <p className="modal-cv__job-salary">{formatCurrency(post?.job_salary)}</p>
+            <p className="modal-cv__job-location">{post?.work_location}</p>
+          </section>
+          <label htmlFor="modal-cv-check">
+            <i className="modal-cv__job-icon fa-solid fa-xmark"></i>
+          </label>
+        </section>
+        <form onSubmit={handleSubmit(applyJob)}>
+          <section className="modal-cv__form">
+            <section className="modal-cv__form-info">
+              <svg width="88" height="88" viewBox="0 0 110 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="10" y="10" width="90" height="90" rx="45" fill="#E6EFFF"></rect>
+                <path d="M55.9759 54.1993C62.3237 54.1993 67.8409 48.5041 67.8409 41.0884C67.8409 33.7618 62.3237 28.3335 55.9759 28.3335C49.6281 28.3335 44.1109 33.8804 44.1109 41.1477C44.1109 48.5041 49.5984 54.1993 55.9759 54.1993ZM37.3181 81.6668H74.5743C79.261 81.6668 80.9221 80.332 80.9221 77.7217C80.9221 70.0688 71.3411 59.5089 55.9462 59.5089C40.581 59.5089 31 70.0688 31 77.7217C31 80.332 32.6611 81.6668 37.3181 81.6668Z" fill="#CCDEFF"></path>
+              </svg>
+              <section className="modal-cv__form-input">
+                <h5>{user?.name}</h5>
+                <input type="text" 
+                      {...register('job_title', {
+                        required: true,
+                      })} 
+                      placeholder='Nhập Chức danh'
+                      name='job_title' />
+                {errors.job_title && errors.job_title.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Chức danh.</span>}
+                <input type="text" 
+                      {...register('email', {
+                        required: true,
+                      })} 
+                      placeholder='Nhập email'
+                      value={user?.email ? user?.email : ""}
+                      name='email'  />
+                {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
+              </section>
+            </section>
+            
+            <section className="modal-cv__form-file">
+              <p className="modal-cv__form-para">
+                <b>Chọn hồ sơ ứng tuyển:</b> Nhà tuyển dụng ưu tiên hồ sơ ứng tuyển viết bằng <b>Tiếng Anh</b>
+              </p>
+              {
+                fileName &&
+                <section className="modal-cv__file-uploaded">
+                  <input type="radio" checked />
+                  <section className="modal-cv__file-info">
+                    <label className='modal-cv__file-title'>Hồ sơ vừa tải lên</label>
+                    <p className="modal-cv__file-name">
+                      <span>{fileName.name} - Đã tải lên: {fileName.currentDate}</span>
+                    </p>
+                  </section>
+                </section>
+              }
+              <section className="modal-cv__form-upload">
+                <label htmlFor="file-upload">
+                  <i className="fa-solid fa-upload"></i>
+                  Chọn hồ sơ từ máy của bạn
+                </label>
+                <input hidden type="file"
+                      id="file-upload" 
+                      accept='application/pdf'
+                      onChange={onChangeFileInput}
+                      required
+                     />
+                <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5120KB</p>
+              </section>
+            </section>
+            <section style={{padding: '16px 0'}}>
+              <NavLink to="/change-cv" className="modal-cv__form-link">Tạo hồ sơ ngay</NavLink>
+            </section>
+          </section>
+
+          <button type='submit' className="modal-cv__btn">Nộp đơn</button>
+        </form>
+      </section>
     </>
   )
 }
