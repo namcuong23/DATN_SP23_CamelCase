@@ -30,13 +30,12 @@ const PostAdd = (): any => {
     const onHandleAdd: any = async (post: IPost) => {
         try {
             const data:any = await addPost({ ...post, post_status: null, user_id: user?._id })
-            console.log(data);
             if(data?.error?.status == 400){
-                message.error(data.error.data.message)
+                message.warning(data.error.data.message)
             }
             else if(data.data){
                 message.success('Đăng tin thành công.')
-                 navigate('/home/posts')
+                navigate('/home/posts')
             }
         } catch (error:any) {
            console.log(error);

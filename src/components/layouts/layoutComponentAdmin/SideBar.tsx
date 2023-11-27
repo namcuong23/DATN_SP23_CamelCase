@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons';
 import myImage from '../../../assets/img/logo.jpg';
 
-const SideBar = (props: Props) => {
+const SideBar = () => {
   const [userSubMenuOpen, setUserSubMenuOpen] = useState(false);
 
   const handleUserMenuClick = () => {
@@ -47,16 +47,12 @@ const SideBar = (props: Props) => {
                 <span className="nk-menu-text">Quản lý người dùng</span>
               </li>
               {userSubMenuOpen && (
-                <div className="submenu" style={{ paddingLeft: '20px', listStyle: 'none', display: 'block' }}>
-                  <Link to="/admin/users-management/employer">
-                    <div key="sub-menu-1" className="nk-menu-item">
-                      <span  style={{ color: "black" }} className="nk-menu-item has-sub w-full nk-menu-link ">Nhà tuyển dụng</span>
-                    </div>
+                <div className="submenu bg-[#fff] block " style={{ listStyle: 'none', }}>
+                  <Link className='pl-[48px]' to="/admin/users-management/employer">
+                      <button className="nk-menu-item w-full font-[500] text-[#526484] hover:text-[#9769ff] text-left">Nhà tuyển dụng</button>
                   </Link>
-                  <Link to="/admin/users-management/employee">
-                    <div key="sub-menu-2" className="nk-menu-item">
-                      <span style={{ color: "black" }}  className="nk-menu-item has-sub w-full nk-menu-link ">Người tìm việc</span>
-                    </div>
+                  <Link className='pl-[48px]' to="/admin/users-management/employee">
+                      <button className="nk-menu-item w-full font-[500] text-[#526484] hover:text-[#9769ff] text-left">Người tìm việc</button>
                   </Link>
                 </div>
               )}
@@ -81,7 +77,7 @@ const SideBar = (props: Props) => {
               <Link to="/admin/order-management">
                 <li className="nk-menu-item has-sub w-full nk-menu-link ">
                   <span className="nk-menu-icon m-1"><ShoppingCartOutlined /></span>
-                  <span className="nk-menu-text">Quản lý đơn hàng</span>
+                  <span className="nk-menu-text">Thông kê đơn hàng</span>
                 </li>
               </Link>
               <Link to="/admin/feedbacks">

@@ -8,9 +8,12 @@ interface IPost {
     requirements: string;
     gender: string;
     work_location: string;
-    post_status: boolean | string;
+    post_status: boolean;
     user_id: string;
-    length:number
+    priority: boolean;
+    isSave: boolean;
+    isDone: boolean;
+    
 }
 
 export default IPost

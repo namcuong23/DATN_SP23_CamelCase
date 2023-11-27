@@ -127,8 +127,8 @@ const HeaderClient = () => {
                                                 <div
                                                     style={{
                                                         backgroundImage: `url(${imgUrl ? imgUrl.preview : user?.image})`,
-                                                        width: '50px',
-                                                        height: '50px',
+                                                        width: '45px',
+                                                        height: '45px',
                                                     }}
                                                     className='avatar-img'
                                                 />
@@ -350,40 +350,38 @@ const HeaderClient = () => {
                                         <span>Cập nhật</span>
                                     </div>
                                     <div className={cx('modal-body__content')}>
-                                        <div className={cx('modal-body__content')}>
-                                            <div>
-                                                {notification ? (
-                                                    notification.map((noti) => (
-                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
-                                                            <span className={cx('notify-img')}>
-                                                                <img src={noti.notificationImage} alt="" />
-                                                                <span>
-                                                                    <i className="fa-solid fa-heart"></i>
-                                                                </span>
+                                        <div>
+                                            {notification ? (
+                                                notification.map((noti) => (
+                                                    <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                        <span className={cx('notify-img')}>
+                                                            <img src={noti.notificationImage} alt="" />
+                                                            <span>
+                                                                <i className="fa-solid fa-heart"></i>
                                                             </span>
-                                                            <div className={cx('notify-content')}>
-                                                                <span className={cx('notify-title')}>{noti.notification_title}</span>
-                                                                <span>{truncateStringFunction(noti.notification_content, 30)}</span>
-                                                                <div className={cx('notify-desc')}>
-                                                                    <span className={cx('notify-expirate')}>
-                                                                        {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
-                                                                    </span>
-                                                                </div>
+                                                        </span>
+                                                        <div className={cx('notify-content')}>
+                                                            <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                            <span>{truncateStringFunction(noti.notification_content, 30)}</span>
+                                                            <div className={cx('notify-desc')}>
+                                                                <span className={cx('notify-expirate')}>
+                                                                    {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
+                                                                </span>
                                                             </div>
                                                         </div>
-                                                    ))
-                                                ) : (
-                                                    <p>Loading notifications...</p>
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p>Loading notifications...</p>
+                                            )}
+                                            <Modal title="Basic Modal" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
+                                                {selectedNotification && (
+                                                    <>
+                                                        <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
+                                                        <span>{selectedNotification.notification_content}</span>
+                                                    </>
                                                 )}
-                                                <Modal title="Basic Modal" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
-                                                    {selectedNotification && (
-                                                        <>
-                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
-                                                            <span>{selectedNotification.notification_content}</span>
-                                                        </>
-                                                    )}
-                                                </Modal>
-                                            </div>
+                                            </Modal>
                                         </div>
                                     </div>
 

@@ -27,6 +27,7 @@ interface IUserNTV {
     education: object[];
     skills: object[];
     more_info: string;
+    cv_id: number;
 }
 
 export default IUserNTV

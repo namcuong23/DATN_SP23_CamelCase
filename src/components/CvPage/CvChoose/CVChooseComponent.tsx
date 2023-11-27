@@ -1,7 +1,4 @@
 import classNames from 'classnames/bind';
-
-import { useAppSelector } from '../../../app/hook';
-import { useGetUserByEmailQuery } from '../../../service/auth';
 import styles from './CVChoose.module.scss';
 
 const cx = classNames.bind(styles);
@@ -12,7 +9,7 @@ function CVChooseComponent({
         time, 
         desc1, 
         desc2, 
-        isValue = false, 
+        isValue, 
         isshow
     }: any) {
     return (
@@ -36,7 +33,7 @@ function CVChooseComponent({
                         className={cx(
                             'content__education-text',
                             'fz-13', {
-                                'text-italic': !isValue
+                                ['text-italic']: !isValue
                             }
                         )}
                     >
@@ -48,7 +45,7 @@ function CVChooseComponent({
                         className={cx(
                             'content__education-text',
                             'fz-13', {
-                                'text-italic': !isValue
+                                ['text-italic']: !isValue
                             }
                         )}
                     >
@@ -58,7 +55,7 @@ function CVChooseComponent({
                         className={cx(
                             'content__education-text',
                             'fz-13', {
-                                'text-italic': !isValue
+                                ['text-italic']: !isValue
                             }
                         )}
                     >

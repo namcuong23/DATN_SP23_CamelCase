@@ -3,14 +3,14 @@ import { useState, useEffect, useRef  } from 'react';
 import { Link, NavLink, useParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
 import { 
+  useAddMyPostMutation,
   useGetPostQuery,
-  useGetPostsByCareerQuery 
+  useGetPostsByCareerQuery, 
+  useRemoveMyPostMutation
 } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
-import { useAddJobdoneMutation } from '../../../service/jobdone'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
-import { useAddJobsaveMutation } from '../../../service/savejob'
 import useDateFormat from '../../../utils/hooks/FormatDate'
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import { useForm } from 'react-hook-form';
@@ -37,8 +37,7 @@ const PostDetailEp = (): any => {
 
   const { data: user } = useGetUserByEmailQuery(email)
   const [applyCv] = useApplyCvMutation()
-  const [addJobdone] = useAddJobdoneMutation()
-  const [addJobsave] = useAddJobsaveMutation()
+  const [addMyPost] = useAddMyPostMutation()
   const [addNotification] = useAddNotificationMutation()
   const {register, handleSubmit, formState: {errors}} = useForm()
   const [fileName, setFileName] = useState<any>()
@@ -61,9 +60,16 @@ const PostDetailEp = (): any => {
       return;
     }
 
-    await addJobdone({
-      ...post,
-      user_id: user?._id
+    await addNotification({
+      email,
+      role: 2,
+      notification_title: "Ứng tuyển thành công",
+      notification_content: post.job_content
+    })
+
+    await addMyPost({
+      _id: id,
+      isDone: true
     })
 
     const {current} = inputCheckRef
@@ -73,10 +79,8 @@ const PostDetailEp = (): any => {
     formData.append("email", candidate.email)
     formData.append("post_id", id)
     formData.append("file", file)
-    
     const apply = await applyCv(formData)
     const { data: rs } = apply
-    console.log(rs);
     
     if (rs?.success) {
       current.checked = false
@@ -85,22 +89,39 @@ const PostDetailEp = (): any => {
     localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
     setLastSubmissionDate(currentDate);
   }
+
   //Save job
   const saveJob = async () => {
     await addNotification({
       email,
-      role: 1,
-      notification_title: post.job_name,
+      role: 2,
+      notification_title: "Đã lưu vào Việc làm đã lưu",
       notification_content: post.job_content
     })
-    const save = await addJobsave({
-      ...post,
-      user_id: user?._id
+
+    await addMyPost({
+      _id: id,
+      isSave: true
     })
-    const { data: rs } = save
-    if (rs?.success) {
-      message.success("Lưu thành công")
-    }
+    .then((res: any) => {
+      message.success("Đã thêm vào Việc làm đã lưu")
+    })
+    .catch((err: any) => {
+      message.error(err.message)
+    })
+  }
+
+  const [removeMyPost] = useRemoveMyPostMutation()
+  const handleRemove = async (post: any) => {
+    await removeMyPost({
+      _id: id,
+      isSave: true
+    })
+    .then(() => {
+        message.success("Đã xoá khỏi Việc làm đã lưu")
+    }).catch((err: any) => {
+        message.error(err.message)
+    })
   }
   return (
     <>
@@ -171,18 +192,41 @@ const PostDetailEp = (): any => {
                 </div>
                 <div className=''>
                   {isLoggedIn ? (
-                    <button onClick={saveJob} className="btn  p-2 heart m-2" data-evt-type="save-job">
-                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="20px" height="20px">
-                        <path d="M 15 7 C 7.832031 7 2 12.832031 2 20 C 2 34.761719 18.695313 42.046875 24.375 46.78125 L 25 47.3125 L 25.625 46.78125 C 31.304688 42.046875 48 34.761719 48 20 C 48 12.832031 42.167969 7 35 7 C 30.945313 7 27.382813 8.925781 25 11.84375 C 22.617188 8.925781 19.054688 7 15 7 Z M 15 9 C 18.835938 9 22.1875 10.96875 24.15625 13.9375 L 25 15.1875 L 25.84375 13.9375 C 27.8125 10.96875 31.164063 9 35 9 C 41.085938 9 46 13.914063 46 20 C 46 32.898438 31.59375 39.574219 25 44.78125 C 18.40625 39.574219 4 32.898438 4 20 C 4 13.914063 8.914063 9 15 9 Z"></path>
-                      </svg>
-                    </button>
+                    <>
+                      {
+                        post && post.isSave ? 
+                        <button 
+                          onClick={handleRemove}
+                          className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]" 
+                          data-evt-type="save-job"
+                          style={{
+                            borderColor: "#669cff",
+                            color: "#669cff"
+                          }}
+                        >
+                          <i className="fa-solid fa-heart"></i> 
+                        </button>
+                        : 
+                        <button 
+                          onClick={saveJob} 
+                          className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]" 
+                          data-evt-type="save-job"
+                          style={{
+                            borderColor: "#666",
+                            color: "#666"
+                          }}
+                        >
+                          <i className="fa-regular fa-heart"></i>
+                        </button>
+                      }
+                    </>
                   ) : (
                     <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
                       Đăng nhập để lưu 
                     </div>
                   )}
                 </div>
-                <div className="w-[170px] h-[50px]">
+                <div className="w-[170px] h-[50px] ml-[16px]">
                   { 
                     isLoggedIn ? (
                       <label

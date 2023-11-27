@@ -30,8 +30,8 @@
     --text-color: #002c55;
     
     min-height: 100vh;
-    width: 1080px;
-    margin: auto;
+    width: 90%;
+    margin: 0 auto 48px;
 }
 
 .company-body {
@@ -242,7 +242,7 @@
 
 .company-content__item-image-cover {
     display: block;
-    height: 75%;
+    height: 60%;
     border-radius: 6px;
     overflow: hidden;
 }

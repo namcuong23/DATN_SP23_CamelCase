@@ -208,9 +208,9 @@ const EmployeeManage = () => {
                 }}
                 cancelText="No"
               >
-                <Button type="default" className="bg-blue-500">
+                <button className='btn btn-danger'>
                   Unlock
-                </Button>
+                </button>
               </Popconfirm> :
               <Popconfirm
                 title="Unlock this guy?"
@@ -221,9 +221,9 @@ const EmployeeManage = () => {
                 }}
                 cancelText="No"
               >
-                <Button type="default" className="bg-red-400">
+                <button className='btn btn-success'>
                   BLock
-                </Button>
+                </button>
               </Popconfirm>
           }
 

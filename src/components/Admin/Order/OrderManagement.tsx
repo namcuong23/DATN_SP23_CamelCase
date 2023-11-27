@@ -74,19 +74,23 @@ const OrderManagement = () => {
         <>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
-                    <h2 className='mt-0 text-xl'>Thống kê đơn hàng (Đã hoàn thành)</h2>
+                    <h2 className='mt-0 text-xl'>Thống kê đơn hàng</h2>
                 </div>
-                <div style={{ marginLeft: 'auto', marginRight: '50px', marginTop: '12px' }} className='mb-2'>
-                    <MonthPicker
-                        placeholder="Chọn tháng"
-                        value={selectedMonth}
-                        onChange={(date) => setSelectedMonth(date)}
-                    />
-                </div>
-                <div className='bg-success rounded px-3 py-2'>
-                    <CSVLink className='text-white text-decoration-none' data={csvData} filename={'doanh-thu-don-hang.csv'}>
-                        Xuất hàng loạt
-                    </CSVLink>
+                <div className='flex items-center'>
+                    <div className='h-[40px]'>
+                        <MonthPicker
+                            className='h-100'
+                            placeholder="Chọn tháng"
+                            value={selectedMonth}
+                            onChange={(date) => setSelectedMonth(date)}
+                        />
+                    </div>
+                    <div className='bg-success rounded px-[16px] h-[40px] leading-[40px] ml-[10px]'>
+                        <CSVLink className='text-white text-decoration-none' data={csvData} filename={'doanh-thu-don-hang.csv'}>
+                            <i className="fa-solid fa-file-export"></i>
+                            <span className='ml-[8px]'>Export</span>
+                        </CSVLink>
+                    </div>
                 </div>
             </div>
 

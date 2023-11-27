@@ -1,16 +1,14 @@
 import { useRef, useState } from 'react'
-import { useBlockUserMutation, useUnlockUserMutation, useUpdateUserMutation } from '../../../service/admin'
-import { Button, Form, Input, InputNumber, InputRef, Space, Table, TableProps, message } from 'antd';
+import { useBlockUserMutation, useUnlockUserMutation } from '../../../service/admin'
+import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import { SearchOutlined } from '@ant-design/icons';
 import Highlighter from 'react-highlight-words';
 import { Popconfirm } from 'antd';
-import { useGetUsersQuery } from '../../../service/auth';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
-import React from 'react';
 
 const EmployerManage = () => {
-  const { data: userEpr } = useGetUsersEprQuery('');
+  const { data: userEpr } = useGetUsersEprQuery<any>('');
   const [block] = useBlockUserMutation();
   const [unlock] = useUnlockUserMutation();
   
@@ -196,9 +194,9 @@ const EmployerManage = () => {
                 }}
                 cancelText="No"
               >
-                <Button type="default" className="bg-blue-500">
+                <button className='btn btn-danger'>
                   Unlock
-                </Button>
+                </button>
               </Popconfirm> :
               <Popconfirm
                 title="Unlock this guy?"
@@ -209,9 +207,9 @@ const EmployerManage = () => {
                 }}
                 cancelText="No"
               >
-                <Button type="default" className="bg-red-400">
+                <button className='btn btn-success'>
                   BLock
-                </Button>
+                </button>
               </Popconfirm>
           }
 

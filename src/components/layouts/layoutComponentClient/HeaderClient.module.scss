@@ -151,6 +151,15 @@
     }
 }
 
+.modal-body__content {
+    max-height: 410px;
+    overflow-y: auto;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+}
+
 .modal-body__content-notify {
     display: flex;
     align-items: center;
@@ -160,6 +169,10 @@
 
     &:hover {
         background-color: #fbfbfb;
+    }
+
+    &:last-child {
+        border-bottom: none;
     }
 
     .notify-img {
@@ -261,6 +274,7 @@
     padding: 12px 24px;
     border-top: 1px solid rgba(0,185,242,.5);
     width: 100%;
+    background-color: #fff;
 
     &:hover {
         cursor: pointer;

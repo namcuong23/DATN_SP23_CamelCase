@@ -18,6 +18,7 @@ import {
 import { useAppSelector } from '../../../../app/hook'
 import { AvatarIcon } from '../icons'
 import InformationComponent from './InformationComponent'
+import { NavLink } from "react-router-dom"
 
 const forms = [
     {id: 1, component: FormInfor},
@@ -97,11 +98,8 @@ const Infotmation = ({imgUrl}: any) => {
     return (
         <>
             <div className="">
-                <section className='border-1 rounded bg-white'>
-                    <h4 className='text-[#333333] text-[16px] py-3 px-4 font-[700]'>Hồ sơ của tôi</h4>
-                </section>
                 <label htmlFor="modal-form-check" 
-                    className='flex flex-start w-100 border-1 rounded bg-white py-[20px] mt-[8px] px-[24px]'
+                    className='flex flex-start w-100 border-1 rounded bg-white py-[20px] px-[24px]'
                     onClick={() => setFormProps({
                         title: "Thông tin cá nhân", 
                         id: 1
@@ -143,6 +141,34 @@ const Infotmation = ({imgUrl}: any) => {
                         </section>
                     </section>
                 </label>
+
+                <section 
+                    className='w-100 border-1 rounded bg-white py-[20px] mt-[8px] px-[24px]'
+                >
+                    <h4 className="text-[22px]">Hồ sơ của tôi</h4>
+
+                    <section className="flex items-start mt-[18px]">
+                        <img 
+                            src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fwww.vietnamworks.com%2Fassets-wowcv%2Fimages%2Flist_templates%2Fcv_template_35.png&w=96&q=75" 
+                            alt="" 
+                        />
+                        <section className="flex flex-column items-start ml-[16px] mt-[16px]">
+                            <NavLink to={`/change-cv${user?.cv_id && `?templateId=`+user?.cv_id || ''}`} className='flex items-center text-[#005aff] hover:text-[#fe7d55] mb-[16px]'>
+                                <i className="text-[22px] fa-solid fa-file-pdf"></i>
+                                <span className="ml-[6px]">{user?.cv_id ? 'Thay đổi mẫu hồ sơ' : 'Tạo hồ sơ'}</span>
+                            </NavLink>
+
+                            {
+                                user?.cv_id &&
+                                <button className='flex items-center text-[#005aff] hover:text-[#fe7d55]'>
+                                    <i className="text-[22px] fa-solid fa-file-arrow-down"></i>
+                                    <span className="ml-[6px]">Tải CV</span>
+                                </button>
+                            }
+                        </section>
+                    
+                    </section>
+                </section>
 
                 {/* Career Goal */}
                 <InformationComponent

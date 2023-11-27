@@ -14,7 +14,7 @@ interface IUserNTD {
     passwordResetToken: string;
     passwordChangeAt: string;
     passwordResetExpires: string;
-    role: string;
+    role: number;
     isBlock: boolean;
 }
 
