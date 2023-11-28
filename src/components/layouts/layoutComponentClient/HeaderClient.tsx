@@ -12,7 +12,8 @@ import moment from 'moment';
 import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
 import { Modal } from 'antd';
 import { AvatarIcon } from '../../employee/profile/icons';
-
+import logoImage from './logo-noti.jpg';
+import 'moment/locale/vi';
 const cx = classNames.bind(styles);
 interface Inotification {
     _id: string;
@@ -21,7 +22,6 @@ interface Inotification {
     created_at: Date;
     notificationImage?: string; 
 }
-
 const HeaderClient = () => {
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
@@ -62,14 +62,14 @@ const HeaderClient = () => {
           }
         }
       };
-      
+      moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
     const handleCancelNoti = () => {
         setIsModalNoti(false);
     };
-      
+
     return (
         <>
             <div className="sticky top-0 z-[997] sc-lkcIho hIprbQ menu-homepage ">
@@ -353,9 +353,10 @@ const HeaderClient = () => {
                                         <div>
                                             {notification ? (
                                                 notification.map((noti) => (
+                                                    
                                                     <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
                                                         <span className={cx('notify-img')}>
-                                                            <img src={noti.notificationImage} alt="" />
+                                                            <img src={logoImage} alt="" />
                                                             <span>
                                                                 <i className="fa-solid fa-heart"></i>
                                                             </span>
@@ -364,8 +365,10 @@ const HeaderClient = () => {
                                                             <span className={cx('notify-title')}>{noti.notification_title}</span>
                                                             <span>{truncateStringFunction(noti.notification_content, 30)}</span>
                                                             <div className={cx('notify-desc')}>
+                                                                
                                                                 <span className={cx('notify-expirate')}>
-                                                                    {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
+                                                                {moment(noti.created_at).fromNow()}
+                                                                    
                                                                 </span>
                                                             </div>
                                                         </div>
