@@ -47,7 +47,7 @@ const MyJob = () => {
         <h3 className='text-[18px]'>Việc làm của tôi</h3>
       </div>
       <div className='border bg-white p-[16px] mt-[8px]'>
-        <div className="flex items-center py-[10px] px-[16px] ml-[-8px] border-b-[1px] mx-auto">
+        <div className="flex items-center py-[10px] ml-[-8px] border-b-[1px] mx-auto">
 
           {
             jobBtns && jobBtns.map(jobBtn => (
@@ -83,7 +83,7 @@ const MyJob = () => {
                           <img src="https://picsum.photos/200" style={{ width: '100px', height: 'auto' }} className='rounded-[6px]' />
                         </div>
                         <div className='ml-[16px] flex-1'>
-                          <NavLink to={`/posts/${item._id}`}> 
+                          <NavLink to={`/posts/${item._id}`} target='_blank'> 
                               <h5 className='text-[#333] text-[18px] font-medium job-name'>
                                 {item.job_name}
                               </h5>
@@ -97,7 +97,13 @@ const MyJob = () => {
                       {
                         isJob ?
                         <div>
-                          <button className='px-[16px] py-[6px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'>Ứng tuyển lại</button>
+                          <NavLink 
+                            to={`/posts/${item._id}?apply=1`} 
+                            target='_blank'
+                            className='px-[16px] py-[10px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
+                          >
+                            Ứng tuyển lại
+                          </NavLink>
                         </div>
                         : <div className='flex items-center justify-center'>
                           <button onClick={() => onHandleRemove({
@@ -106,7 +112,13 @@ const MyJob = () => {
                           })}>
                             <AiFillHeart className='fill-[#669cff] hover:cursor-pointer' style={{ width: '20px', height: '20px' }} />
                           </button>
-                          <button className='px-[16px] py-[6px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'>Ứng tuyển</button>
+                          <NavLink 
+                            to={`/posts/${item._id}?apply=1`} 
+                            target='_blank'
+                            className='px-[16px] py-[6px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
+                          >
+                            Ứng tuyển
+                          </NavLink>
                         </div>
                       }
 

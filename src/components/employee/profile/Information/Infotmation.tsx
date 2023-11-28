@@ -160,10 +160,14 @@ const Infotmation = ({imgUrl}: any) => {
 
                             {
                                 user?.cv_id &&
-                                <button className='flex items-center text-[#005aff] hover:text-[#fe7d55]'>
+                                <NavLink 
+                                    to={'http://localhost:4000/files/1701073309689Do-Quoc-Vuong.pdf'} 
+                                    target="_blank"
+                                    className='flex items-center text-[#005aff] hover:text-[#fe7d55]'
+                                >
                                     <i className="text-[22px] fa-solid fa-file-arrow-down"></i>
                                     <span className="ml-[6px]">Tải CV</span>
-                                </button>
+                                </NavLink>
                             }
                         </section>
                     

@@ -15,8 +15,7 @@ const PostAdd = (): any => {
     const { data: career, error, isLoading } = useGetCareersQuery()
     const [addPost] = useAddPostMutation()
     const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
-    const data: any = useGetUserEprByEmailQuery(email)
-    const user: any = data.currentData
+    const { data: user }: any = useGetUserEprByEmailQuery(email)
     const [provinces, setProvinces] = useState<any>([])
 
     useEffect(() => {
@@ -33,7 +32,7 @@ const PostAdd = (): any => {
             if(data?.error?.status == 400){
                 message.warning(data.error.data.message)
             }
-            else if(data.data){
+            if(data.data){
                 message.success('Đăng tin thành công.')
                 navigate('/home/posts')
             }
@@ -122,8 +121,13 @@ const PostAdd = (): any => {
                                     <Select defaultValue={'0'}>
                                         <Select.Option value="0">- Chọn khu vực -</Select.Option>
                                         {
-                                            provinces ? provinces?.map((province: any) =>
-                                                <Select.Option value={province.province_name}>{province.province_name}</Select.Option>
+                                            provinces ? provinces?.map((province: any, index: number) =>
+                                                <Select.Option 
+                                                    key={index} 
+                                                    value={province.province_name}
+                                                >
+                                                    {province.province_name}
+                                                </Select.Option>
                                             ) : ''
                                         }
 

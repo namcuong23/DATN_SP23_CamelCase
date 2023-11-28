@@ -1,6 +1,6 @@
 import { message } from 'antd'
 import { useState, useEffect, useRef  } from 'react';
-import { Link, NavLink, useParams } from 'react-router-dom'
+import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
 import { 
   useAddMyPostMutation,
@@ -17,6 +17,9 @@ import { useForm } from 'react-hook-form';
 import { useAddNotificationMutation } from '../../../service/notification';
 import './postDetail.scss';
 const PostDetailEp = (): any => {
+  const [params] = useSearchParams()
+  const apply = params.get('apply')
+  const [isAplly, setIsAplly] = useState(apply !== null)
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
   const { data: posts } = useGetPostsByCareerQuery({
@@ -42,7 +45,6 @@ const PostDetailEp = (): any => {
   const {register, handleSubmit, formState: {errors}} = useForm()
   const [fileName, setFileName] = useState<any>()
   const [file, setFile] = useState<any>()
-  const inputCheckRef: any = useRef()
 
   const onChangeFileInput = (e: any) => {
     const {name} = e.target.files[0]
@@ -72,7 +74,6 @@ const PostDetailEp = (): any => {
       isDone: true
     })
 
-    const {current} = inputCheckRef
     const formData: any = new FormData();
     formData.append("name", user?.name)
     formData.append("job_title", candidate.job_title)
@@ -83,7 +84,7 @@ const PostDetailEp = (): any => {
     const { data: rs } = apply
     
     if (rs?.success) {
-      current.checked = false
+      setIsAplly(false)
       message.success(rs?.mes)
     }
     localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
@@ -233,7 +234,7 @@ const PostDetailEp = (): any => {
                         htmlFor='modal-cv-check'
                         style={{ fontSize: "18px" }}
                         className="bg-[#ff7d55] w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center"
-                        // onClick={applyJob}
+                        onClick={() => setIsAplly(!isAplly)}
                       >
                         Nộp đơn
                       </label>
@@ -411,8 +412,14 @@ const PostDetailEp = (): any => {
         </div>
       </div>
 
-      <input type="checkbox" hidden id="modal-cv-check" className='modal-open-check' ref={inputCheckRef} />
-      <label htmlFor='modal-cv-check' className="overlay"></label>
+      <input 
+        type="checkbox" 
+        hidden 
+        id="modal-cv-check" 
+        className='modal-open-check' 
+        checked={isAplly}
+      />
+      <label htmlFor='modal-cv-check' onClick={() => setIsAplly(!isAplly)} className="overlay"></label>
       {/* Modal CV */}
       <section className="modal-cv">
         <section className="modal-cv__job">
@@ -425,7 +432,7 @@ const PostDetailEp = (): any => {
             <p className="modal-cv__job-salary">{formatCurrency(post?.job_salary)}</p>
             <p className="modal-cv__job-location">{post?.work_location}</p>
           </section>
-          <label htmlFor="modal-cv-check">
+          <label htmlFor="modal-cv-check" onClick={() => setIsAplly(!isAplly)}>
             <i className="modal-cv__job-icon fa-solid fa-xmark"></i>
           </label>
         </section>
@@ -482,6 +489,7 @@ const PostDetailEp = (): any => {
                       accept='application/pdf'
                       onChange={onChangeFileInput}
                       required
+                      name='cv'
                      />
                 <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5120KB</p>
               </section>

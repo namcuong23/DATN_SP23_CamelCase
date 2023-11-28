@@ -1,9 +1,9 @@
 import { useState, useRef } from 'react'
 import html2canvas from 'html2canvas';
-import jsPDF from "jspdf"
-import { pdfjs } from 'react-pdf'
-import { toast } from 'react-toastify';
+import jsPDF from "jspdf";
+import { pdfjs } from 'react-pdf';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { message } from 'antd';
 
 import { useSaveCVMutation } from '../../service/auth';
 import { useAppSelector } from '../../app/hook';
@@ -53,10 +53,10 @@ const ChangeCV = () => {
       email,
       cvId
     }).then(({data: res}: any) => {
-      toast.success(res?.mes)
+      message.success(res?.mes)
       navigate('/profile?tab=information')
     }).catch((err: any) => {
-      toast.error(err.message)
+      message.error(err.message)
     })
   }
 

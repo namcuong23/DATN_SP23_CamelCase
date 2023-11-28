@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useGetGoodPostsQuery } from '../../../service/post'
+import { useGetGoodPostsQuery, useGetPostsByUIdQuery, useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -10,11 +10,14 @@ import { useAppSelector } from '../../../app/hook'
 
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
+import { useGetUserByEmailQuery } from '../../../service/auth'
+
 import './HomeClient.css'
 
 const HomeClient = (): any => {
-  const { data: posts } = useGetGoodPostsQuery()
   const { email } = useAppSelector((rs) => rs.auth)
+  const { data: user }: any = useGetUserByEmailQuery(email)
+  const { data: posts } = useGetPostsQuery(user?._id)
   const [addFeedback] = useAddFeedbackMutation(); 
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
@@ -170,7 +173,7 @@ const HomeClient = (): any => {
                         {
                           posts ?
                             posts.map((post: any, index: number) =>
-                              post.post_status &&
+                              post.post_status && post.priority &&
                                 <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
                                   <div key={post._id} className='job'>
                                     <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
@@ -350,15 +353,14 @@ const HomeClient = (): any => {
                     <div className="sc-jtcaXd dhnMFx">
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
-                          posts ?
-                            posts.map((post: any, index: number) =>
+                          posts && posts.map((post: any, index: number) =>
                               <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                                 <div key={post._id} className='job'>
                                   <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
                                     className="job-img" />
                                   <div className="job-info">
                                     {
-                                      post?.post_status && 
+                                      post?.priority && 
                                       <div className='flex justify-end mt-[-8px] mb-[8px]'>
                                         <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
                                       </div>
@@ -370,7 +372,6 @@ const HomeClient = (): any => {
                                 </div>
                               </NavLink>
                             )
-                            : ''
                         }
                       </div>
                     </div>
