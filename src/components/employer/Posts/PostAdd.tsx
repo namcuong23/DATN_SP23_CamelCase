@@ -108,10 +108,10 @@ const PostAdd = (): any => {
                                     ]}>
                                     <Input />
                                 </Form.Item>
-                                {/* <Form.Item name="career" label="Ngành Nghề"
-                                    rules={[{ required: true, message: 'Please input career.' }]}> */}
+                              <Form.Item name="career" label="Ngành Nghề"
+                                    rules={[{ required: true, message: 'Please input career.' }]}>
                                     {/* <Input /> */}
-                                    {/* <Select defaultValue={'0'}>
+                                   <Select defaultValue={'0'}>
                                         <Select.Option value='0'>- Chọn Ngành Nghề -</Select.Option>
                                         {
                                             career ? career?.map((item: any) =>
@@ -119,7 +119,7 @@ const PostAdd = (): any => {
                                             ) : ''
                                         }
                                     </Select>
-                                </Form.Item> */}
+                                </Form.Item>
                                 <Form.Item name="work_location" label="Khu vực"
                                     rules={[{ required: true, message: 'Please input work location.' }]}>
                                     {/* <Input /> */}

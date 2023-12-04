@@ -14,11 +14,6 @@ const HeaderSearchhJob = ({ className }: { className: string }) => {
     }
     const handelSubmitData = () => {
         navigate(`/works?q=${searchItem}`)
-        if (keyword) {
-            setSearchItem(keyword)
-        } else {
-            setSearchItem('')
-        }
     }
     useEffect(() => {
         const fetchProvinces = async () => {
