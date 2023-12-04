@@ -63,21 +63,42 @@ const WorkPage = () => {
         fetchProvinces()
     }, [])
     useEffect(() => {
-        if(!careerParams){
-            loadData();
-        }
+        loadData(filterParams);
         loadCareers()
     }, [])
 
+    useEffect(() =>{
+        setFilterParams({ ...filterParams, key:searchParams });
+    },[searchParams])
+    
     useEffect(() => {
-        getSearch(filterParams)
-    }, [filterParams.work_location, filterParams.job_salary, filterParams.career, searchParams,careerParams]
+        loadData(filterParams); 
+    }, [filterParams.work_location, filterParams.job_salary, filterParams.career,filterParams.key,careerParams]
     )
-    const loadData = async () => {
-        return await axios
+    const loadData = async (params : any = null) => {
+        const {key,job_salary,career} = params
+        if(key || job_salary ||career) {
+            setData([]);
+            try {
+                const { data } = await axios({
+                    url: `http://localhost:4000/api/search`,
+                    params
+                })
+                
+                setData(data.data);
+                setSearchMessage(data.message)
+            }
+    
+            catch (error) {
+                console.log(error)
+            }
+        }
+        else {
+            return await axios
             .get("http://localhost:4000/api/posts")
             .then((responsive) => setData(responsive.data))
             .catch((error) => console.log(error))
+        }
     }
     const loadCareers = async () => {
         return await axios
@@ -85,34 +106,13 @@ const WorkPage = () => {
             .then((responsive) => setCareer(responsive.data))
             .catch((error) => console.log(error))
     }
-    const resetSearch = (e: any) => {
-        e.preventDefault()
-        setSearchMessage("")
-        setFilterParams({ ...filterParams, key: "" })
-        navigate('/works')
-            loadData()
-    }
-    const getSearch = async (params: any) => {
-        setData([]);
-        try {
-            const { data } = await axios({
-                url: `http://localhost:4000/api/search`,
-                params
-            })
-            
-            setData(data.data);
-            setSearchMessage(data.message)
-        }
-
-        catch (error) {
-            console.log(error)
-        }
-    }
-    const handleSearch = async (e: any) => {
-        e.preventDefault();
-        getSearch(filterParams)
-        navigate(`/works?q=${filterParams.key}`)
-    }
+    // const resetSearch = (e: any) => {
+    //     e.preventDefault()
+    //     setSearchMessage("")
+    //     setFilterParams({ ...filterParams, key: "" })
+    //     navigate('/works')
+    //         loadData()
+    // }
     //savejob
     const { email } = useAppSelector((res: any) => res.auth)
     const [addMyPost] = useAddMyPostMutation()
@@ -212,6 +212,12 @@ const WorkPage = () => {
                                                 <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary)}</span> | {item.work_location}</p>
                                             </div>
                                         </div>
+                                        {item && item.priority ?
+                                        <div className='flex justify-end p-2 mt-[-8px] mb-[8px]'>
+                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                        </div> 
+                                        : <></>
+                                    }
                                         <button className="text-[#5591ff] hover:bg-[#f0f7ff] p-[6px] rounded-full">
                                             {
                                                 item && item.isSave ? 
