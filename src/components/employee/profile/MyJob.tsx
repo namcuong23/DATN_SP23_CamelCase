@@ -80,7 +80,11 @@ const MyJob = () => {
                     <div key={index} className='flex items-center justify-between border rounded my-[10px] p-[16px] hover:bg-[#f9fcff]'>
                       <div className='flex items-center w-[75%]'>
                         <div className=''>
-                          <img src="https://picsum.photos/200" style={{ width: '100px', height: 'auto' }} className='rounded-[6px]' />
+                          <img 
+                            src={item.logo} 
+                            style={{ width: '100px', height: 'auto' }} 
+                            className='rounded-[6px]' 
+                          />
                         </div>
                         <div className='ml-[16px] flex-1'>
                           <NavLink to={`/posts/${item._id}`} target='_blank'> 

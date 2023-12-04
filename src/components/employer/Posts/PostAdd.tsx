@@ -28,7 +28,12 @@ const PostAdd = (): any => {
 
     const onHandleAdd: any = async (post: IPost) => {
         try {
-            const data:any = await addPost({ ...post, post_status: null, user_id: user?._id })
+            const data:any = await addPost({ 
+                ...post, 
+                logo: user?.image,
+                post_status: null, 
+                user_id: user?._id 
+            })
             if(data?.error?.status == 400){
                 message.warning(data.error.data.message)
             }

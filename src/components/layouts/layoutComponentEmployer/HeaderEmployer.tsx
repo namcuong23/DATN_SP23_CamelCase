@@ -2,51 +2,56 @@ import { useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { BsPersonCircle } from 'react-icons/bs'
 import { Drawer, message } from 'antd';
-import { useAppDispatch, useAppSelector } from '../../../app/hook';
-import { logoutAuth } from '../../../app/actions/auth';
-import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { FaCartPlus } from "react-icons/fa"
-import { useGetProfileQuery } from '../../../service/manage_profile'
-import { WhatsAppOutlined } from '@ant-design/icons'
-import { SettingOutlined } from "@ant-design/icons"
-import { useAddFeedbackMutation } from '../../../services/feedback'
+import { WhatsAppOutlined, SettingOutlined } from '@ant-design/icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
-import { IFeedback } from '../../../interfaces/feedback'
 import { MessageType } from 'antd/es/message/interface'
 import { Button, Modal } from 'antd';
 import {IoMdNotifications} from "react-icons/io"
-import classNames from 'classnames/bind';
-import styles from './../layoutComponentClient/HeaderClient.module.scss';
-const HeaderEmployer = () => {
-    const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr)
-    const [open, setOpen] = useState(false);
-    const navigate = useNavigate()
-    const { data: user } = useGetUserEprByEmailQuery<any>(email)
-    const dispatch = useAppDispatch()
-    const cx = classNames.bind(styles);
-    const showDrawer = () => {
-        setOpen(true);
-    };
+import moment from 'moment';
 
-    const onClose = () => {
-        setOpen(false);
-    };
+import { useAppDispatch, useAppSelector } from '../../../app/hook';
+import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import { useAddFeedbackMutation } from '../../../services/feedback'
+import { IFeedback } from '../../../interfaces/feedback'
+import { logoutAuthEpr } from '../../../app/actions/authEpr';
+import { useGetNotificationByEmailQuery } from '../../../service/notification';
+import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
+import { Inotification } from '../../../interface/notification';
+
+import classNames from 'classnames/bind';
+import styles from "./HeaderEpr.module.scss";
+
+const cx = classNames.bind(styles);
+
+const HeaderEmployer = () => {
+    const navigate = useNavigate()
+    const dispatch = useAppDispatch()
+    const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
+    const [isModalNoti, setIsModalNoti] = useState(false);
+    const [selectedNotification, setSelectedNotification] = useState<Inotification | null>(null)
+    const [open, setOpen] = useState(false);
+    const [openNotify, setOpenNotify] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
+        pollingInterval: 5000,
+    });
+    const { data: user } = useGetUserEprByEmailQuery<any>(email)
 
     const onSignOut = async () => {
         try {
-            dispatch(logoutAuth())
+            dispatch(logoutAuthEpr())
             navigate('/login-epr')
         } catch (error: any) {
             message.info(error.message)
         }
     }
-    const profiles: any = useGetProfileQuery(email)
-    const [addFeedback, { isLoading }] = useAddFeedbackMutation();
 
+    const [addFeedback] = useAddFeedbackMutation();
     const {
         register,
         handleSubmit,
-        reset,
         formState: { errors },
     } = useForm<IFeedback>()
     const onSubmit: SubmitHandler<IFeedback> = (data) => {
@@ -55,22 +60,7 @@ const HeaderEmployer = () => {
             feedback_email: email
         })
         const confirm: MessageType = message.info('Gửi yêu cầu thành công')
-        try {
-        } catch (error) {
-
-        }
     }
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const showModal = () => {
-        setIsModalOpen(true);
-    };
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
     return (
         <>
             {/* Header */}
@@ -128,7 +118,7 @@ const HeaderEmployer = () => {
                 </ul>
                 <ul className='flex items-center '>
                 <li className='p-3 pr-4 text-decoration-none text-white'>
-                        <button onClick={showDrawer}>
+                        <button onClick={() => setOpenNotify(true)}>
                             <IoMdNotifications className='text-3xl' />
                         </button>
                     </li>
@@ -138,7 +128,7 @@ const HeaderEmployer = () => {
                         </NavLink>
                     </li>
                     <li className='p-3 pr-4 text-decoration-none text-white'>
-                        <button onClick={showDrawer}>
+                        <button onClick={() => setOpen(true)}>
                             <BsPersonCircle className='text-3xl' />
                         </button>
                     </li>
@@ -147,7 +137,7 @@ const HeaderEmployer = () => {
                 <Drawer
                     placement={'right'}
                     closable={false}
-                    onClose={onClose}
+                    onClose={() => setOpen(false)}
                     open={open}
                     height={500}
                     key={'right'}
@@ -162,67 +152,6 @@ const HeaderEmployer = () => {
                                     <div className='text-[15px]'>{user?.email}</div>
                                 </div>
                             </div>
-                            {/* <div className='absolute left-0 flex items-center px-[30px] gap-[20px] w-100'>
-                                {
-                                    user?.image ? 
-                                    <img src={user?.image} alt="" 
-                                        style={{
-                                            width: '80px',
-                                            height: '80px',
-                                            borderRadius: '50%'
-                                        }}
-                                    />
-                                    : <BsPersonCircle className='text-5xl text-[#474747]' />
-                                }
-                              
-                                <div>
-                                    <p className='text-[21px]'>Thông báo & Tin tức</p>
-                                    <p>Nhận thông báo tin tức hoặc công việc</p>
-                                </div>
-                               
-                            </div>
-                            <div >
-                                <div className={cx('modal-body__msg1')} >
-                                    Cập nhật hồ sơ để tìm thấy công việc phù hợp. 
-                                    <span>Cập nhật</span>
-                                </div>
-                                <div className={cx('modal-body__content')}>
-                                    <div className={cx('modal-body__content-notify')}>
-                                        <span className={cx('notify-img')}>
-                                            <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
-                                            <span>
-                                                <i className="fa-solid fa-heart"></i>
-                                            </span>
-                                        </span>
-                                        <div className={cx('notify-content')}>
-                                            <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng'>
-                                                Giám Đốc Cao Cấp Quan Hệ Khách Hàng - Quan Hệ Khách Hàng
-                                            </span>
-                                            <div className={cx('notify-desc')}>
-                                                <span className={cx('notify-status')}>đã lưu</span>
-                                                <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className={cx('modal-body__content-notify')}>
-                                        <span className={cx('notify-img')}>
-                                            <img src="https://images.vietnamworks.com/pictureofcompany/89/11125541.png" alt="" />
-                                            <span>
-                                                <i className="fa-solid fa-heart"></i>
-                                            </span>
-                                        </span>
-                                        <div className={cx('notify-content')}>
-                                            <span className={cx('notify-title')} title='Giám Đốc Cao Cấp Quan Hệ Khách Hàng'>
-                                                Giám Đốc Cao Cấp Quan Hệ Khách Hàng
-                                            </span>
-                                            <div className={cx('notify-desc')}>
-                                                <span className={cx('notify-status')}>đã lưu</span>
-                                                <span className={cx('notify-expirate')}>hết hạn trong 98 ngày trước</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> */}
                             <div className='pt-[100px] px-[10px]'>
                                 <div className='flex items-start'>
                                     <SettingOutlined className='text-[25px] font-[700]' />
@@ -274,10 +203,10 @@ const HeaderEmployer = () => {
                 </Drawer>
             </div>
             <div className="float-contact ">
-                <Button className='bg-[#f52b72] text-white m-2' onClick={showModal}>
+                <Button className='bg-[#f52b72] text-white m-2' onClick={() => setIsModalOpen(true)}>
                     <WhatsAppOutlined /> Hỗ trợ
                 </Button>
-                <Modal title="Đóng góp ý kiến" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+                <Modal title="Đóng góp ý kiến" open={isModalOpen} onOk={() => setIsModalOpen(false)} onCancel={() => setIsModalOpen(false)}>
                     <form onSubmit={handleSubmit(onSubmit)}>
                         <div className='h-[80px] w-100 py-3 bg-white'>
                             <div className='container flex items-center justify-center h-100 w-100'>
@@ -301,6 +230,96 @@ const HeaderEmployer = () => {
                     </form>
                 </Modal>
             </div>
+            
+            <Drawer
+                placement={'right'}
+                closable={false}
+                onClose={() => setOpenNotify(false)}
+                open={openNotify}
+                height={500}
+                key={'right'}
+                className='relative w-full stick bottom-0'
+            >
+                <div className={cx('modal')} onClick={(e: any) => {
+                        e.stopPropagation();
+                    }}
+                >
+                    <div className={cx('modal-header')}>
+                        <div className={cx('modal-header__icon')}>
+                            <i className="fa-regular fa-bell"></i>
+                        </div>
+                        <div className={cx('modal-header__title')}>
+                            <h2>Thông báo & Tin tức</h2>
+                            <p>Nhận thông báo tin tức hoặc công việc</p>
+                        </div>
+                        <button onClick={() => setOpenNotify(false)} className={cx('modal-header__btn')}>
+                            <i className="fa-solid fa-xmark"></i>
+                        </button>
+                    </div>
+
+                    <div className={cx('modal-body')}>
+                        <div className={cx('modal-body__tabs')}>
+                            <span className={cx('modal-body__tabs-notify', {
+                                active: true
+                            })}>Thông báo</span>
+                        </div>
+
+                        <div className={cx('modal-body__msg')}>
+                            Cập nhật hồ sơ để tìm thấy công việc phù hợp.
+                            <span>Cập nhật</span>
+                        </div>
+                        <div className={cx('modal-body__content')}>
+                            <div className={cx('modal-body__content')}>
+                                <div>
+                                    {notificationEmail ? (
+                                        notificationEmail
+                                            .slice()
+                                            .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                            .map((noti: any) => (
+                                                <div key={noti._id} className={cx('modal-body__content-notify')}>
+                                                    <span className={cx('notify-img')}>
+                                                        <img src={noti.notificationImage} alt="" />
+                                                        <span>
+                                                            <i className="fa-solid fa-heart"></i>
+                                                        </span>
+                                                    </span>
+                                                    <div className={cx('notify-content')}>
+                                                        <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                        <span>{truncateStringFunction(noti.notification_content, 30)}</span>
+                                                        <div className={cx('notify-desc')}>
+                                                            <span className={cx('notify-expirate')}>
+                                                                {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))
+                                    ) : (
+                                        <p>Loading notifications...</p>
+                                    )}
+                                    <Modal 
+                                        title={selectedNotification?.notification_title || "Thông báo"} 
+                                        open={isModalNoti} 
+                                        onOk={() => setIsModalNoti(false)} 
+                                        onCancel={() => setIsModalNoti(false)}
+                                    >
+                                        {
+                                            selectedNotification && (
+                                                <>
+                                                    <span>{selectedNotification.notification_content}</span>
+                                                </>
+                                            )
+                                        }
+                                    </Modal>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </Drawer>
+            
         </>
     )
 }

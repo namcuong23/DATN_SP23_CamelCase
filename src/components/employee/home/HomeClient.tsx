@@ -176,8 +176,10 @@ const HomeClient = (): any => {
                               post.post_status && post.priority &&
                                 <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
                                   <div key={post._id} className='job'>
-                                    <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
-                                      className="job-img" />
+                                    <div className="img-wrapper">
+                                      <img src={post.logo}
+                                        className="job-img" />
+                                    </div>
                                     <div className="job-info">
                                       <div className='flex justify-end mt-[-8px] mb-[8px]'>
                                         <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
@@ -356,8 +358,10 @@ const HomeClient = (): any => {
                           posts && posts.map((post: any, index: number) =>
                               <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                                 <div key={post._id} className='job'>
-                                  <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
-                                    className="job-img" />
+                                  <div className="img-wrapper">
+                                      <img src={post.logo}
+                                        className="job-img" />
+                                  </div>
                                   <div className="job-info">
                                     {
                                       post?.priority && 

@@ -10,6 +10,7 @@ interface IPost {
     work_location: string;
     post_status: boolean;
     user_id: string;
+    logo: string;
     priority: boolean;
     isSave: boolean;
     isDone: boolean;
