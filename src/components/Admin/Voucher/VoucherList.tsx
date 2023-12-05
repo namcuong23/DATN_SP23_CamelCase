@@ -89,8 +89,8 @@ const VoucherList = () => {
                 <div>
                     <h2 className='mt-0 text-xl'>Quản lý các gói dịch vụ</h2>
                 </div>
-                <div className='bg-success rounded px-3 py-2'>
-                    <NavLink to={'/admin/vouchers/add'} className='text-white text-decoration-none'>
+                <div className='bg-success rounded px-2 py-1'>
+                    <NavLink to={'/admin/vouchers/add'} className='text-white text-decoration-none font-bold '>
                         Tạo gói mới
                     </NavLink>
                 </div>

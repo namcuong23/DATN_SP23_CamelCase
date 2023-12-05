@@ -1,8 +1,7 @@
 import { useState, useRef } from 'react'
 import html2canvas from 'html2canvas';
-import jsPDF from "jspdf"
 import { pdfjs } from 'react-pdf'
-
+import jsPDF from 'jspdf';
 import SideBar from './SideBar/SideBar'
 import CVChoose from './CvChoose/CVChoose'
 import Header from './Header/Header'

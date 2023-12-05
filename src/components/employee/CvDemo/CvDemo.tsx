@@ -25,6 +25,7 @@ const CvDemo = ({file}: any) => {
 
     const {data: cvPdf} = useGetCvQuery(cvId)
     const pdfFile = cvPdf && `http://localhost:4000/files/${cvPdf.cv}`
+    console.log(pdfFile)
 
     const downloadPDF = () => {
         const pdfUrl = 'http://example.com/sample.pdf'; // Thay thế bằng URL thực tế của file PDF

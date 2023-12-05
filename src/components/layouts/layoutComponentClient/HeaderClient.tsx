@@ -19,13 +19,13 @@ interface Inotification {
     notification_title: string;
     notification_content: string;
     created_at: Date;
-    notificationImage?: string; 
+    notificationImage?: string;
 }
 
 const HeaderClient = () => {
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
-    const {data: user} = useGetUserByEmailQuery(email)
+    const { data: user } = useGetUserByEmailQuery(email)
     const [selectedNotification, setSelectedNotification] = useState<Inotification | null>(null)
     const [isModalNoti, setIsModalNoti] = useState(false);
 
@@ -55,21 +55,21 @@ const HeaderClient = () => {
 
     const showModalNoti = (notificationId: string) => {
         if (notification) {
-          const selectedNoti = notification.find((noti) => noti._id === notificationId);
-          if (selectedNoti) {
-            setSelectedNotification(selectedNoti as Inotification | null ); // Explicitly cast to null
-            setIsModalNoti(true);
-          }
+            const selectedNoti = notification.find((noti) => noti._id === notificationId);
+            if (selectedNoti) {
+                setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
+                setIsModalNoti(true);
+            }
         }
-      };
-      
+    };
+
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
     const handleCancelNoti = () => {
         setIsModalNoti(false);
     };
-      
+
     return (
         <>
             <div className="sticky top-0 z-[997] sc-lkcIho hIprbQ menu-homepage ">
@@ -375,14 +375,22 @@ const HeaderClient = () => {
                                                 ) : (
                                                     <p>Loading notifications...</p>
                                                 )}
-                                                <Modal title="Basic Modal" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
+                                                {/* <Modal title="Thư mời phỏng vấn" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
                                                     {selectedNotification && (
                                                         <>
-                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
-                                                            <span>{selectedNotification.notification_content}</span>
+                                                            <span className={cx('notify-title')}>Chào bạn </span><span className='font-bold'>{user?.name},</span>
+                                                            <p>Lời đầu tiên, chúng tôi xin cảm ơn bạn vì đã quan tâm đến vị trí ứng tuyển của công ty <span>[Tên công ty]</span>. Thông qua hồ sơ mà bạn đã gửi về, chúng tôi nhận thấy bạn có kiến thức chuyên môn phù hợp với vị trí mà chúng tôi đang tuyển.</p>
+                                                            <p>Chúng tôi trân trọng kính mời bạn đến tham gia buổi phỏng vấn của công ty chúng tôi tại:</p>
+                                                            <p>Địa điểm:</p>
+                                                            <p>Thời gian:</p>
+                                                            <p>Để buổi phỏng vấn được diễn ra thuận lợi, bạn vui lòng phản hồi lại email này trong 24h kể từ khi nhận được. Mọi thắc mắc khác, bạn vui lòng liên hệ với chúng tôi qua:</p>
+                                                            <p><span>Số điện thoại:</span></p>
+                                                            <span>[Tên công ty] </span><span>chúc bạn sẽ có một buổi phỏng vấn thành công.</span>
+                                                            <p>Trân trọng!</p>
+
                                                         </>
                                                     )}
-                                                </Modal>
+                                                </Modal> */}
                                             </div>
                                         </div>
                                     </div>
