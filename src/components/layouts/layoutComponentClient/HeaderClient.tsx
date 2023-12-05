@@ -7,21 +7,16 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
-import { useGetNotificationByEmailQuery } from '../../../service/notification';
+import { useGetNotificationByEmailQuery, useMarkAsReadMutation } from '../../../service/notification';
 import moment from 'moment';
 import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
-import { Modal, notification } from 'antd';
+import { Button, Modal, notification } from 'antd';
 import { AvatarIcon } from '../../employee/profile/icons';
 import logoImage from './logo-noti.jpg';
 import 'moment/locale/vi';
+import { Inotification } from '../../../interface/notification';
 const cx = classNames.bind(styles);
-interface Inotification {
-    _id: string;
-    notification_title: string;
-    notification_content: string;
-    created_at: Date;
-    notificationImage?: string;
-}
+
 const HeaderClient = () => {
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
@@ -52,14 +47,15 @@ const HeaderClient = () => {
     }
     //notification
     const [shownNotificationIds, setShownNotificationIds] = useState<string[]>([]);
+    const [markAsRead] = useMarkAsReadMutation();
     const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
-        pollingInterval: 5000,
+        pollingInterval: 10000,
     });
-    
+
     const showNotification = (notifications: Inotification) => {
-        const { _id, notification_title, notification_content } = notifications;
-    
-        if (!shownNotificationIds.includes(_id)) {
+        const { _id, notification_title, notification_content, isRead } = notifications;
+
+        if (!isRead) {
             notification.info({
                 message: 'Bạn có thông báo mới',
                 description: notification_title,
@@ -67,25 +63,27 @@ const HeaderClient = () => {
             setShownNotificationIds((prevIds) => [...prevIds, _id]);
         }
     };
-    
+
     useEffect(() => {
 
         if (notificationEmail && notificationEmail.length > 0) {
             const latestNotification = notificationEmail[notificationEmail.length - 1]; //-1 cuoi danh sách
             showNotification(latestNotification);
         }
-    }, [notificationEmail]); 
+    }, [notificationEmail]);
 
     const showModalNoti = (notificationId: string) => {
         if (notificationEmail) {
             const selectedNoti = notificationEmail.find((noti: { _id: string; }) => noti._id === notificationId) as Inotification;
-            if (selectedNoti) {
-                setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
-                setIsModalNoti(true);
+            if (selectedNoti && !selectedNoti.isRead) {
+                markAsRead(notificationId)
             }
+            // Open the modal regardless of the isRead status
+            setIsModalNoti(true);
+            setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
         }
-      };
-      moment.locale('vi');
+    };
+    moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -380,9 +378,9 @@ const HeaderClient = () => {
                                                         .slice()
                                                         .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
                                                         .map((noti: any) => (
-                                                            <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                            <div key={noti._id} className={cx('modal-body__content-notify', { 'bg-gray-200': noti.isRead })} onClick={() => showModalNoti(noti._id)}>
                                                                 <span className={cx('notify-img')}>
-                                                                    <img src={noti.notificationImage} alt="" />
+                                                                    <img src={noti.notificationImage} alt="" /> 
                                                                     <span>
                                                                         <i className="fa-solid fa-heart"></i>
                                                                     </span>
@@ -401,7 +399,22 @@ const HeaderClient = () => {
                                                 ) : (
                                                     <p>Loading notifications...</p>
                                                 )}
-                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
+                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
+                                                  footer={[
+                                 
+                                                    <Button key="cancel" onClick={handleCancelNoti}>
+                                                        Đóng
+                                                    </Button>,
+                                                 <Button
+                                                 key="goToURL"
+                                                 type="primary"
+                                                 onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
+                                               >
+                                                 Đến URL
+                                               </Button>
+                                                ]}
+
+                                                >
                                                     {selectedNotification && (
                                                         <>
                                                             <span>{selectedNotification.notification_content}</span>

@@ -1,5 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react";
-import {Inotification} from "../interface/notification";
+import { Inotification, isRead } from "../interface/notification";
 
 export const notificationApi = createApi({
     reducerPath: 'notification',
@@ -14,6 +14,13 @@ export const notificationApi = createApi({
             query: (id: string) => `/notifications/${id}`,
             providesTags: ['notification']
         }),
+        markAsRead: builder.mutation<isRead[],string>({
+            query: (id) => ({
+                url: `/notifications/${id}`,
+                method: 'PUT',
+                body: { isRead: true }
+            })
+        }),
         addNotification: builder.mutation<Inotification, Partial<Inotification>>({
             query: (notify: Inotification) => (
                 {
@@ -23,7 +30,7 @@ export const notificationApi = createApi({
                 }
             ),
             invalidatesTags: ['notification']
-        })
+        }),
     })
 })
 
@@ -31,4 +38,5 @@ export const {
     useGetNotificationByIdQuery,
     useGetNotificationByEmailQuery,
     useAddNotificationMutation,
+    useMarkAsReadMutation,
 } = notificationApi
