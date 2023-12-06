@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { formatCurrency } from "../../../utils/hooks/FormatCurrrency";
 import {useUpdateOrderStatusMutation} from '../../../service/employer/order';
 import { useNavigate } from "react-router-dom";
-import { useAddAdmServiceMutation } from '../../../service/admin/service';
+import { useCreateServiceMutation} from '../../../service/employer/service';
 const responseCodeList:any = {
   "00": "Giao dịch thành công",
   "07": "Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường)",
@@ -22,7 +22,7 @@ const responseCodeList:any = {
 
 const VNPayCheckout = (): any => {
     const navigate = useNavigate();
-    const [addAdmService] = useAddAdmServiceMutation()
+    const [createService] = useCreateServiceMutation()
     const [updateOrderStatus] = useUpdateOrderStatusMutation()
     const queryParams = new URLSearchParams(window.location.search);
     const vnp_OrderInfo:string = queryParams.get("vnp_OrderInfo")
@@ -41,7 +41,7 @@ const VNPayCheckout = (): any => {
             transactionNo,
             currentService : data.order_name            
         }
-        await addAdmService(service);
+        await createService(service);
         localStorage.setItem('checkout',responseCodeList[responseCode])
         setTimeout(() => {
           localStorage.setItem('checkout',responseCodeList[responseCode])
