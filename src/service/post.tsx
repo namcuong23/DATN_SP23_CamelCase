@@ -7,7 +7,11 @@ export const postApi: any = createApi({
     tagTypes: ['Post'],
     endpoints: (builder) => ({
         getPosts: builder.query<IPost[], void>({
-            query: () => '/posts',
+            query: (id: any) => `/posts?id=${id}`,
+            providesTags: ['Post']
+        }),
+        getMyPosts: builder.query<IPost[], void>({
+            query: () => '/posts/my-posts',
             providesTags: ['Post']
         }),
         getPostsByCareer: builder.query<IPost,string>({
@@ -34,6 +38,22 @@ export const postApi: any = createApi({
             query: (post: IPost) => ({
                 url: '/posts',
                 method: 'POST',
+                body: post
+            }),
+            invalidatesTags: ['Post']
+        }),
+        addMyPost: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
+            query: (post: IPost) => ({
+                url: `/posts/${post._id}/my-post`,
+                method: 'PUT',
+                body: post
+            }),
+            invalidatesTags: ['Post']
+        }),
+        removeMyPost: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
+            query: (post: IPost) => ({
+                url: `/posts/${post._id}/my-post`,
+                method: 'DELETE',
                 body: post
             }),
             invalidatesTags: ['Post']
@@ -86,11 +106,14 @@ export const formatDate = (inputDate: string): any => {
 
 export const {
     useGetPostsQuery,
+    useGetMyPostsQuery,
     useGetPostsByCareerQuery,
     useGetPostsByUIdQuery,
     useGetPostsDefUIdQuery,
     useGetPostQuery,
     useAddPostMutation,
+    useAddMyPostMutation,
+    useRemoveMyPostMutation,
     useEditPostMutation,
     useRemovePostMutation,
     useApprovePostMutation,

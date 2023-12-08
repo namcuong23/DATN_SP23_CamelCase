@@ -29,18 +29,26 @@ const Login = () => {
     }
 
     const signIn = async (user: any) => {
-        setLoading(true)
-        const login = await signin(user)
-        const { data: res }: any = login
+        setLoading(true);
+        const login = await signin(user);
+        const { data: res }: any = login;
+    
         if (res?.success) {
-            setLoading(false)
-            dispatch(loginAuth(res))
-            navigate('/')
+            // Kiểm tra trạng thái isBlock
+            if (res.user.isBlock) {
+                setLoading(false);
+                toast.warning("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+            } else {
+                setLoading(false);
+                dispatch(loginAuth(res));
+                navigate('/');
+            }
         } else {
-            setLoading(false)
-            toast.warning(res.mes)
+            setLoading(false);
+            toast.warning(res.mes);
         }
     }
+    
 
     const signInWithFacebook = async () => {
         const provider = new FacebookAuthProvider()

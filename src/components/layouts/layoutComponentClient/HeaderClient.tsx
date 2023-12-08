@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, JSXElementConstructor, Key, ReactElement, ReactFragment, ReactPortal, useEffect } from 'react';
 import { message } from '@pankod/refine-antd'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '../../../app/hook'
@@ -10,9 +10,10 @@ import styles from './HeaderClient.module.scss';
 import { useGetNotificationByEmailQuery } from '../../../service/notification';
 import moment from 'moment';
 import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
-import { Modal } from 'antd';
+import { Modal, notification } from 'antd';
 import { AvatarIcon } from '../../employee/profile/icons';
-
+import logoImage from './logo-noti.jpg';
+import 'moment/locale/vi';
 const cx = classNames.bind(styles);
 interface Inotification {
     _id: string;
@@ -21,7 +22,6 @@ interface Inotification {
     created_at: Date;
     notificationImage?: string;
 }
-
 const HeaderClient = () => {
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
@@ -50,19 +50,42 @@ const HeaderClient = () => {
             message.error(error.message)
         }
     }
+    //notification
+    const [shownNotificationIds, setShownNotificationIds] = useState<string[]>([]);
+    const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
+        pollingInterval: 5000,
+    });
+    
+    const showNotification = (notifications: Inotification) => {
+        const { _id, notification_title, notification_content } = notifications;
+    
+        if (!shownNotificationIds.includes(_id)) {
+            notification.info({
+                message: 'Bạn có thông báo mới',
+                description: notification_title,
+            });
+            setShownNotificationIds((prevIds) => [...prevIds, _id]);
+        }
+    };
+    
+    useEffect(() => {
 
-    const { data: notification } = useGetNotificationByEmailQuery(email);
+        if (notificationEmail && notificationEmail.length > 0) {
+            const latestNotification = notificationEmail[notificationEmail.length - 1]; //-1 cuoi danh sách
+            showNotification(latestNotification);
+        }
+    }, [notificationEmail]); 
 
     const showModalNoti = (notificationId: string) => {
         if (notification) {
-            const selectedNoti = notification.find((noti) => noti._id === notificationId);
-            if (selectedNoti) {
-                setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
-                setIsModalNoti(true);
-            }
+          const selectedNoti = notification.find((noti) => noti._id === notificationId);
+          if (selectedNoti) {
+            setSelectedNotification(selectedNoti as Inotification | null ); // Explicitly cast to null
+            setIsModalNoti(true);
+          }
         }
-    };
-
+      };
+      
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -105,7 +128,7 @@ const HeaderClient = () => {
                     <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
                     <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
-                        <div className="notify-btn notification-icon">
+                        <div className="notify-btn notificationEmail-icon">
                             <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
                                 <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 16 L 4.4648438 17.15625 L 4.4628906 17.15625 A 1 1 0 0 0 4 18 A 1 1 0 0 0 5 19 L 12 19 L 19 19 A 1 1 0 0 0 20 18 A 1 1 0 0 0 19.537109 17.15625 L 18 16 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 10 20 C 10 21.1 10.9 22 12 22 C 13.1 22 14 21.1 14 20 L 10 20 z">
                                 </path>
@@ -127,8 +150,8 @@ const HeaderClient = () => {
                                                 <div
                                                     style={{
                                                         backgroundImage: `url(${imgUrl ? imgUrl.preview : user?.image})`,
-                                                        width: '50px',
-                                                        height: '50px',
+                                                        width: '45px',
+                                                        height: '45px',
                                                     }}
                                                     className='avatar-img'
                                                 />
@@ -352,42 +375,37 @@ const HeaderClient = () => {
                                     <div className={cx('modal-body__content')}>
                                         <div className={cx('modal-body__content')}>
                                             <div>
-                                                {notification ? (
-                                                    notification.map((noti) => (
-                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
-                                                            <span className={cx('notify-img')}>
-                                                                <img src={noti.notificationImage} alt="" />
-                                                                <span>
-                                                                    <i className="fa-solid fa-heart"></i>
-                                                                </span>
-                                                            </span>
-                                                            <div className={cx('notify-content')}>
-                                                                <span className={cx('notify-title')}>{noti.notification_title}</span>
-                                                                <span>{truncateStringFunction(noti.notification_content, 30)}</span>
-                                                                <div className={cx('notify-desc')}>
-                                                                    <span className={cx('notify-expirate')}>
-                                                                        {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
+                                                {notificationEmail ? (
+                                                    notificationEmail
+                                                        .slice()
+                                                        .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                                        .map((noti: any) => (
+                                                            <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                                <span className={cx('notify-img')}>
+                                                                    <img src={noti.notificationImage} alt="" />
+                                                                    <span>
+                                                                        <i className="fa-solid fa-heart"></i>
                                                                     </span>
+                                                                </span>
+                                                                <div className={cx('notify-content')}>
+                                                                    <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                                    <span>{truncateStringFunction(noti.notification_content, 30)}</span>
+                                                                    <div className={cx('notify-desc')}>
+                                                                        <span className={cx('notify-expirate')}>
+                                                                            {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
+                                                                        </span>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                    ))
+                                                        ))
                                                 ) : (
                                                     <p>Loading notifications...</p>
                                                 )}
-                                                {/* <Modal title="Thư mời phỏng vấn" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
+                                                <Modal title="Basic Modal" open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
                                                     {selectedNotification && (
                                                         <>
-                                                            <span className={cx('notify-title')}>Chào bạn </span><span className='font-bold'>{user?.name},</span>
-                                                            <p>Lời đầu tiên, chúng tôi xin cảm ơn bạn vì đã quan tâm đến vị trí ứng tuyển của công ty <span>[Tên công ty]</span>. Thông qua hồ sơ mà bạn đã gửi về, chúng tôi nhận thấy bạn có kiến thức chuyên môn phù hợp với vị trí mà chúng tôi đang tuyển.</p>
-                                                            <p>Chúng tôi trân trọng kính mời bạn đến tham gia buổi phỏng vấn của công ty chúng tôi tại:</p>
-                                                            <p>Địa điểm:</p>
-                                                            <p>Thời gian:</p>
-                                                            <p>Để buổi phỏng vấn được diễn ra thuận lợi, bạn vui lòng phản hồi lại email này trong 24h kể từ khi nhận được. Mọi thắc mắc khác, bạn vui lòng liên hệ với chúng tôi qua:</p>
-                                                            <p><span>Số điện thoại:</span></p>
-                                                            <span>[Tên công ty] </span><span>chúc bạn sẽ có một buổi phỏng vấn thành công.</span>
-                                                            <p>Trân trọng!</p>
-
+                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
+                                                            <span>{selectedNotification.notification_content}</span>
                                                         </>
                                                     )}
                                                 </Modal> */}
@@ -418,6 +436,7 @@ const HeaderClient = () => {
             } */}
         </ >
     )
+
 }
 
-export default HeaderClient
+export default HeaderClient;

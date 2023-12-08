@@ -1,15 +1,16 @@
-import { AiOutlineHeart } from "react-icons/ai"
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai"
 import { useEffect, useState } from 'react'
 import { apiGetProvinces } from '../../../service/api';
 import axios from "axios"
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
-import { useAddJobsaveMutation } from "../../../service/savejob";
 import { toast } from "react-toastify";
-import { useSearchParams, useNavigate } from "react-router-dom";
+import { useSearchParams, useNavigate, NavLink } from "react-router-dom";
 import { useAppSelector } from "../../../app/hook";
-import { useGetUserByEmailQuery } from "../../../service/auth";
 import './work.css'
 import HeaderSearchhJob from "../../layouts/HeaderSearchhJob";
+import { useAddMyPostMutation, useRemoveMyPostMutation } from "../../../service/post";
+import { useAddNotificationMutation } from "../../../service/notification";
+import { message } from "antd";
 
 const WorkPage = () => {
     const salaryOptions = [
@@ -62,21 +63,42 @@ const WorkPage = () => {
         fetchProvinces()
     }, [])
     useEffect(() => {
-        if(!careerParams){
-            loadData();
-        }
+        loadData(filterParams);
         loadCareers()
     }, [])
 
+    useEffect(() =>{
+        setFilterParams({ ...filterParams, key:searchParams });
+    },[searchParams])
+    
     useEffect(() => {
-        getSearch(filterParams)
-    }, [filterParams.work_location, filterParams.job_salary, filterParams.career, searchParams,careerParams]
+        loadData(filterParams); 
+    }, [filterParams.work_location, filterParams.job_salary, filterParams.career,filterParams.key,careerParams]
     )
-    const loadData = async () => {
-        return await axios
+    const loadData = async (params : any = null) => {
+        const {key,job_salary,career} = params
+        if(key || job_salary ||career) {
+            setData([]);
+            try {
+                const { data } = await axios({
+                    url: `http://localhost:4000/api/search`,
+                    params
+                })
+                
+                setData(data.data);
+                setSearchMessage(data.message)
+            }
+    
+            catch (error) {
+                console.log(error)
+            }
+        }
+        else {
+            return await axios
             .get("http://localhost:4000/api/posts")
             .then((responsive) => setData(responsive.data))
             .catch((error) => console.log(error))
+        }
     }
     const loadCareers = async () => {
         return await axios
@@ -84,47 +106,43 @@ const WorkPage = () => {
             .then((responsive) => setCareer(responsive.data))
             .catch((error) => console.log(error))
     }
-    const resetSearch = (e: any) => {
-        e.preventDefault()
-        setSearchMessage("")
-        setFilterParams({ ...filterParams, key: "" })
-        navigate('/works')
-            loadData()
-    }
-    const getSearch = async (params: any) => {
-        setData([]);
-        try {
-            const { data } = await axios({
-                url: `http://localhost:4000/api/search`,
-                params
-            })
-            
-            setData(data.data);
-            setSearchMessage(data.message)
-        }
-
-        catch (error) {
-            console.log(error)
-        }
-    }
-    const handleSearch = async (e: any) => {
-        e.preventDefault();
-        getSearch(filterParams)
-        navigate(`/works?q=${filterParams.key}`)
-    }
+    // const resetSearch = (e: any) => {
+    //     e.preventDefault()
+    //     setSearchMessage("")
+    //     setFilterParams({ ...filterParams, key: "" })
+    //     navigate('/works')
+    //         loadData()
+    // }
     //savejob
-    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
-    const { data: user } = useGetUserByEmailQuery(email)
-    const [addJobsave] = useAddJobsaveMutation()
-    const onHandleAdd: any = (item: any) => {
-        try {
-            addJobsave({
-                working_form: item.working_form, job_name: item.job_name, job_description: item.job_description, work_location: item.work_location, job_salary: item.job_salary, user_id: user?._id
-            });
-            toast.success("Đã thêm vào mục yêu thích");
-        } catch (error) {
-            console.log(error);
-        }
+    const { email } = useAppSelector((res: any) => res.auth)
+    const [addMyPost] = useAddMyPostMutation()
+    const [addNotification] = useAddNotificationMutation()
+    const onHandleAdd: any = async (post: any) => {
+        await addNotification({
+            email,
+            role: 2,
+            notification_title: "Đã lưu vào Việc làm đã lưu",
+            notification_content: post.job_content
+        })
+
+        await addMyPost({
+            _id: post._id,
+            isSave: true,
+        }).then((res: any) => {
+            message.success('Đã thêm vào Việc làm đã lưu')
+        }).catch((err: any) => {
+            console.log(err.message)
+        })
+    }
+
+    const [removeMyPost] = useRemoveMyPostMutation()
+    const handleRemove = async (post: any) => {
+        await removeMyPost(post)
+        .then(() => {
+            message.success("Đã xoá khỏi Việc làm đã lưu")
+        }).catch((err: any) => {
+            message.error(err.message)
+        })
     }
     
     const searchCareer = (e: any) => {
@@ -172,7 +190,10 @@ const WorkPage = () => {
                             }
                             {
                                 data?.map((item: any, index: any) => (
-                                    <div key={index} className="flex items-start justify-between bg-[#f0f7ff] hover:bg-[#fff] w-100 p-[16px] mt-[12px] border-[1px] border-[#a0c1ff] rounded-[6px]">
+                                    <section
+                                        key={index} 
+                                        className="flex items-start justify-between bg-[#f0f7ff] hover:bg-[#fff] w-100 p-[16px] mt-[12px] border-[1px] border-[#a0c1ff] rounded-[6px]"
+                                    >
                                         <div className="flex items-center m-0 w-[84%]">
                                             <div className='mr-[16px]'>
                                                 <a className="rounded-[6px]" style={{ background: 'white', justifyContent: 'center', display: 'flex' }}>
@@ -180,16 +201,41 @@ const WorkPage = () => {
                                                 </a>
                                             </div>
                                             <div className="w-100">
-                                                <a href="" className="work-text__name m-0 font-medium text-[#333] text-[16px] hover:text-[#ff7d55]">{item?.job_name}</a>
+                                                <NavLink
+                                                    to={`/posts/${item._id}`}
+                                                    className="work-text__name m-0 font-medium text-[#333] text-[16px] hover:text-[#ff7d55]"
+                                                >
+                                                    {item?.job_name}
+                                                </NavLink>
                                                 <p className="m-0">Hình Thức Làm Việc : {item.working_form}</p>
                                                 <p className="m-0"> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
                                                 <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary)}</span> | {item.work_location}</p>
                                             </div>
                                         </div>
+                                        {item && item.priority ?
+                                        <div className='flex justify-end p-2 mt-[-8px] mb-[8px]'>
+                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                        </div> 
+                                        : <></>
+                                    }
                                         <button className="text-[#5591ff] hover:bg-[#f0f7ff] p-[6px] rounded-full">
-                                            <AiOutlineHeart onClick={() => onHandleAdd(item)} style={{ width: '20px', height: '20px' }} />
+                                            {
+                                                item && item.isSave ? 
+                                                <AiFillHeart 
+                                                    onClick={() => handleRemove({
+                                                        _id: item._id,
+                                                        isSave: true
+                                                    })}
+                                                    style={{ width: '20px', height: '20px' }} 
+                                                />
+                                                : 
+                                                <AiOutlineHeart 
+                                                    onClick={() => onHandleAdd(item)} 
+                                                    style={{ width: '20px', height: '20px' }} 
+                                                />
+                                            }
                                         </button>
-                                    </div>
+                                    </section>
                                 ))
                             }
                         </div>

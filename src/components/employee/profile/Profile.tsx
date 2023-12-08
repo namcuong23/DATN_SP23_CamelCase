@@ -106,7 +106,7 @@ const Profile: any = () => {
             </div>
             {
                 isLoggedIn ? 
-                <section className='bg-gray-100 min-h-[1600vh]'>
+                <section className='bg-[#f7f8fa] min-h-[1600vh]'>
                     {/* CONTENT */}
                     <section className='flex items-start w-[90%] mx-auto gap-3 py-3'>
                         <aside className='rounded w-25'>

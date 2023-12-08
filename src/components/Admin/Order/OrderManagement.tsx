@@ -41,18 +41,27 @@ const OrderManagement = () => {
                 </div>
             )
         },
+        {
+            title: 'Trạng thái',
+            render: () => (
+                <span style={{ color: 'green', fontWeight: 'bold' }}>
+                  Đã thanh toán
+                </span>
+              ),
+            
+        },
     ];
 
     // Lọc dữ liệu khi selectedMonth thay đổi
-    const filteredData = HistoryPackage?.filter((user: any) => {
+    const filteredData = HistoryPackage?.filter((order: Order) => {
         if (selectedMonth) {
             const selectedMonthIndex = selectedMonth.get('month');
-            const userDate = new Date(user.createdAt);
-            return userDate.getMonth() === selectedMonthIndex;
+            const orderDate = new Date(order.createdAt);
+            return orderDate.getMonth() === selectedMonthIndex && order.order_status === true;
         }
-        return true;
+        return order.order_status === true;
     });
-
+    
     const csvData = ((filteredData && filteredData.length > 0 ? filteredData : [])).map((user: any, index: number) => ({
         'Số đơn hàng': index + 1,
         'Id người dùng': user._id,
@@ -67,17 +76,21 @@ const OrderManagement = () => {
                 <div>
                     <h2 className='mt-0 text-xl'>Thống kê đơn hàng</h2>
                 </div>
-                <div style={{ marginLeft: 'auto', marginRight: '50px', marginTop: '12px' }} className='mb-2'>
-                    <MonthPicker
-                        placeholder="Chọn tháng"
-                        value={selectedMonth}
-                        onChange={(date) => setSelectedMonth(date)}
-                    />
-                </div>
-                <div className='bg-success rounded px-3 py-2'>
-                    <CSVLink className='text-white text-decoration-none' data={csvData} filename={'doanh-thu-don-hang.csv'}>
-                        Xuất hàng loạt
-                    </CSVLink>
+                <div className='flex items-center'>
+                    <div className='h-[40px]'>
+                        <MonthPicker
+                            className='h-100'
+                            placeholder="Chọn tháng"
+                            value={selectedMonth}
+                            onChange={(date) => setSelectedMonth(date)}
+                        />
+                    </div>
+                    <div className='bg-success rounded px-[16px] h-[40px] leading-[40px] ml-[10px]'>
+                        <CSVLink className='text-white text-decoration-none' data={csvData} filename={'doanh-thu-don-hang.csv'}>
+                            <i className="fa-solid fa-file-export"></i>
+                            <span className='ml-[8px]'>Export</span>
+                        </CSVLink>
+                    </div>
                 </div>
             </div>
 

@@ -15,8 +15,7 @@ const PostAdd = (): any => {
     const { data: career, error, isLoading } = useGetCareersQuery()
     const [addPost] = useAddPostMutation()
     const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
-    const data: any = useGetUserEprByEmailQuery(email)
-    const user: any = data.currentData
+    const { data: user }: any = useGetUserEprByEmailQuery(email)
     const [provinces, setProvinces] = useState<any>([])
 
     useEffect(() => {
@@ -29,14 +28,18 @@ const PostAdd = (): any => {
 
     const onHandleAdd: any = async (post: IPost) => {
         try {
-            const data:any = await addPost({ ...post, post_status: null, user_id: user?._id })
-            console.log(data);
+            const data:any = await addPost({ 
+                ...post, 
+                logo: user?.image,
+                post_status: null, 
+                user_id: user?._id 
+            })
             if(data?.error?.status == 400){
-                message.error(data.error.data.message)
+                message.warning(data.error.data.message)
             }
-            else if(data.data){
+            if(data.data){
                 message.success('Đăng tin thành công.')
-                 navigate('/home/posts')
+                navigate('/home/posts')
             }
         } catch (error:any) {
            console.log(error);
@@ -105,10 +108,10 @@ const PostAdd = (): any => {
                                     ]}>
                                     <Input />
                                 </Form.Item>
-                                {/* <Form.Item name="career" label="Ngành Nghề"
-                                    rules={[{ required: true, message: 'Please input career.' }]}> */}
+                              <Form.Item name="career" label="Ngành Nghề"
+                                    rules={[{ required: true, message: 'Please input career.' }]}>
                                     {/* <Input /> */}
-                                    {/* <Select defaultValue={'0'}>
+                                   <Select defaultValue={'0'}>
                                         <Select.Option value='0'>- Chọn Ngành Nghề -</Select.Option>
                                         {
                                             career ? career?.map((item: any) =>
@@ -116,15 +119,20 @@ const PostAdd = (): any => {
                                             ) : ''
                                         }
                                     </Select>
-                                </Form.Item> */}
+                                </Form.Item>
                                 <Form.Item name="work_location" label="Khu vực"
                                     rules={[{ required: true, message: 'Please input work location.' }]}>
                                     {/* <Input /> */}
                                     <Select defaultValue={'0'}>
                                         <Select.Option value="0">- Chọn khu vực -</Select.Option>
                                         {
-                                            provinces ? provinces?.map((province: any) =>
-                                                <Select.Option value={province.province_name}>{province.province_name}</Select.Option>
+                                            provinces ? provinces?.map((province: any, index: number) =>
+                                                <Select.Option 
+                                                    key={index} 
+                                                    value={province.province_name}
+                                                >
+                                                    {province.province_name}
+                                                </Select.Option>
                                             ) : ''
                                         }
 

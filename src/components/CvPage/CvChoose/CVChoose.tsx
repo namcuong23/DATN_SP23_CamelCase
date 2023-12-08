@@ -9,7 +9,7 @@ import styles from './CVChoose.module.scss';
 const cx = classNames.bind(styles);
 
 const CVChoose = forwardRef(
-    ({container}: any, ref: any) => {
+    ({ container }: any, ref: any) => {
         const { email } = useAppSelector((res: any) => res.auth)
         const {data: user}: any = useGetUserByEmailQuery(email)
         const address = user?.specific_address + ', ' + user?.district + ', ' + user?.province

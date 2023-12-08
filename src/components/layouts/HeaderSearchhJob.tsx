@@ -14,11 +14,6 @@ const HeaderSearchhJob = ({ className }: { className: string }) => {
     }
     const handelSubmitData = () => {
         navigate(`/works?q=${searchItem}`)
-        if (keyword) {
-            setSearchItem(keyword)
-        } else {
-            setSearchItem('')
-        }
     }
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -33,7 +28,7 @@ const HeaderSearchhJob = ({ className }: { className: string }) => {
             <div className={'h-[80px] w-100'}>
                 <div className={'search-job flex items-center justify-center h-100 ' + className}>
                     <div className='flex items-center h-100 bg-[#F4F4F7] w-75 mr-2 rounded-[6px] overflow-hidden flex-1'>
-                        <div className='h-100 flex items-center bg-[#F4F4F7] w-[65%]'>
+                        <div className='h-100 flex items-center bg-[#F4F4F7] w-[100%]'>
                             <button className='w-[10%] flex justify-center'>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-search text-black" viewBox="0 0 16 16">
                                     <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
@@ -41,7 +36,7 @@ const HeaderSearchhJob = ({ className }: { className: string }) => {
                             </button>
                             <input type="text" className='bg-[#F4F4F7] h-100 w-[90%] text-gray-600 focus:outline-none' placeholder='Tìm kiếm việc làm, công ty, kỹ năng' onChange={handelSearchInput} />
                         </div>
-                        <div className='flex items-center bg-[#F4F4F7] border-l-[1px] border-[#979797] h-[24px] mr-1'></div>
+                        {/* <div className='flex items-center bg-[#F4F4F7] border-l-[1px] border-[#979797] h-[24px] mr-1'></div>
                         <div className='relative h-10 flex items-center bg-[#F4F4F7] w-[35%] px-3'>
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +61,7 @@ const HeaderSearchhJob = ({ className }: { className: string }) => {
                                     </option>
                                 ))}
                             </select>
-                        </div>
+                        </div> */}
 
                     </div>
                     <div className='h-100'>

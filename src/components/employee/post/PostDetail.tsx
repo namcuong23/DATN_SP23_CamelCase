@@ -1,22 +1,25 @@
 import { message } from 'antd'
-import { useState, useEffect, useRef  } from 'react';
-import { Link, NavLink, useParams } from 'react-router-dom'
+import { useState, useEffect  } from 'react';
+import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
 import { 
+  useAddMyPostMutation,
   useGetPostQuery,
-  useGetPostsByCareerQuery 
+  useGetPostsByCareerQuery, 
+  useRemoveMyPostMutation
 } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 import { useAppSelector } from '../../../app/hook'
-import { useAddJobdoneMutation } from '../../../service/jobdone'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
-import { useAddJobsaveMutation } from '../../../service/savejob'
 import useDateFormat from '../../../utils/hooks/FormatDate'
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import { useForm } from 'react-hook-form';
 import { useAddNotificationMutation } from '../../../service/notification';
 import './postDetail.scss';
 const PostDetailEp = (): any => {
+  const [params] = useSearchParams()
+  const apply = params.get('apply')
+  const [isAplly, setIsAplly] = useState(apply !== null)
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
   const { data: posts } = useGetPostsByCareerQuery({
@@ -37,22 +40,14 @@ const PostDetailEp = (): any => {
 
   const { data: user } = useGetUserByEmailQuery(email)
   const [applyCv] = useApplyCvMutation()
-  const [addJobdone] = useAddJobdoneMutation()
-  const [addJobsave] = useAddJobsaveMutation()
+  const [addMyPost] = useAddMyPostMutation()
   const [addNotification] = useAddNotificationMutation()
   const {register, handleSubmit, formState: {errors}} = useForm()
+
   const [fileName, setFileName] = useState<any>()
   const [file, setFile] = useState<any>()
-  const inputCheckRef: any = useRef()
-
-  const onChangeFileInput = (e: any) => {
-    const {name} = e.target.files[0]
-    const date = new Date()
-    const currentDate = useDateFormat(date)
-
-    setFileName({name, currentDate})
-    setFile(e.target.files[0])
-  }
+  const date = new Date()
+  const currentDate = useDateFormat(date)
   
   const applyJob = async (candidate: any) => {
     const currentDate = new Date();
@@ -61,46 +56,67 @@ const PostDetailEp = (): any => {
       return;
     }
 
-    await addJobdone({
-      ...post,
-      user_id: user?._id
+    await addNotification({
+      email,
+      role: 2,
+      notification_title: "Ứng tuyển thành công",
+      notification_content: post.job_content
     })
 
-    const {current} = inputCheckRef
+    await addMyPost({
+      _id: id,
+      isDone: true
+    })
+
     const formData: any = new FormData();
     formData.append("name", user?.name)
     formData.append("job_title", candidate.job_title)
     formData.append("email", candidate.email)
     formData.append("post_id", id)
     formData.append("file", file)
-    
     const apply = await applyCv(formData)
     const { data: rs } = apply
-    console.log(rs);
     
     if (rs?.success) {
-      current.checked = false
+      setIsAplly(false)
       message.success(rs?.mes)
     }
     localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
     setLastSubmissionDate(currentDate);
   }
+
   //Save job
   const saveJob = async () => {
     await addNotification({
       email,
-      role: 1,
-      notification_title: post.job_name,
+      role: 2,
+      notification_title: "Đã lưu vào Việc làm đã lưu",
       notification_content: post.job_content
     })
-    const save = await addJobsave({
-      ...post,
-      user_id: user?._id
+
+    await addMyPost({
+      _id: id,
+      isSave: true
     })
-    const { data: rs } = save
-    if (rs?.success) {
-      message.success("Lưu thành công")
-    }
+    .then((res: any) => {
+      message.success("Đã thêm vào Việc làm đã lưu")
+    })
+    .catch((err: any) => {
+      message.error(err.message)
+    })
+  }
+
+  const [removeMyPost] = useRemoveMyPostMutation()
+  const handleRemove = async (post: any) => {
+    await removeMyPost({
+      _id: id,
+      isSave: true
+    })
+    .then(() => {
+        message.success("Đã xoá khỏi Việc làm đã lưu")
+    }).catch((err: any) => {
+        message.error(err.message)
+    })
   }
   return (
     <>
@@ -125,71 +141,87 @@ const PostDetailEp = (): any => {
                     className="d-flex justify-content-center align-items-center logo-area-wrapper logo-border w-[20%]"
                     id="logo-area-wrapper"
                   >
-                    <a
+                    <section
                       style={{
                         background: "white",
-                        justifyContent: "center",
                         display: "flex",
+                        alignItems: 'center',
+                        justifyContent: "center",
                         padding: "5px",
-                        border: "1px solid #fff",
+                        overflow: 'hidden',
                       }}
+                      className='rounded-full w-[100px] h-[100px]'
                     >
-                      <img
-                        src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75"
-                        style={{
-                          width: "100px",
-                          height: "60px",
-                          margin: "20px 0px",
-                        }}
-                      />
-                    </a>
+                      <img src={post?.logo}/>
+                    </section>
                   </div>
                   <div className="cuong1 w-[80%]">
-                    <p>
-                      <a
-                        href="#"
-                        className="job-name"
-                        style={{ fontSize: "26px" }}
-                      >
-                        {post?.job_name}
-                      </a>
-                      <div style={{ color: "#005aff" }}>
-                        {post?.work_location}
-                      </div>
-                      <span style={{ color: "#999", fontSize: "13px" }}>
-                        Ngày đăng tin:{" "}
-                        {useDateFormat(post?.createdAt)}
-                      </span>
-                      <div style={{ color: "#ff7d55", fontWeight: 500 }}>
-                        {post?.job_salary?.toLocaleString("vi", {
-                          style: "currency",
-                          currency: "VND",
-                        })}
-                      </div>
-                    </p>
+                    <a
+                      href="#"
+                      className="job-name"
+                      style={{ fontSize: "26px" }}
+                    >
+                      {post?.job_name}
+                    </a>
+                    <div style={{ color: "#005aff" }}>
+                      {post?.work_location}
+                    </div>
+                    <span style={{ color: "#999", fontSize: "13px" }}>
+                      Ngày đăng tin:{" "}
+                      {useDateFormat(post?.createdAt)}
+                    </span>
+                    <div style={{ color: "#ff7d55", fontWeight: 500 }}>
+                      {post?.job_salary?.toLocaleString("vi", {
+                        style: "currency",
+                        currency: "VND",
+                      })}
+                    </div>
                   </div>
                 </div>
                 <div className=''>
                   {isLoggedIn ? (
-                    <button onClick={saveJob} className="btn  p-2 heart m-2" data-evt-type="save-job">
-                      <svg fill="#000000" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="20px" height="20px">
-                        <path d="M 15 7 C 7.832031 7 2 12.832031 2 20 C 2 34.761719 18.695313 42.046875 24.375 46.78125 L 25 47.3125 L 25.625 46.78125 C 31.304688 42.046875 48 34.761719 48 20 C 48 12.832031 42.167969 7 35 7 C 30.945313 7 27.382813 8.925781 25 11.84375 C 22.617188 8.925781 19.054688 7 15 7 Z M 15 9 C 18.835938 9 22.1875 10.96875 24.15625 13.9375 L 25 15.1875 L 25.84375 13.9375 C 27.8125 10.96875 31.164063 9 35 9 C 41.085938 9 46 13.914063 46 20 C 46 32.898438 31.59375 39.574219 25 44.78125 C 18.40625 39.574219 4 32.898438 4 20 C 4 13.914063 8.914063 9 15 9 Z"></path>
-                      </svg>
-                    </button>
+                    <>
+                      {
+                        post && post.isSave ? 
+                        <button 
+                          onClick={handleRemove}
+                          className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]" 
+                          data-evt-type="save-job"
+                          style={{
+                            borderColor: "#669cff",
+                            color: "#669cff"
+                          }}
+                        >
+                          <i className="fa-solid fa-heart"></i> 
+                        </button>
+                        : 
+                        <button 
+                          onClick={saveJob} 
+                          className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]" 
+                          data-evt-type="save-job"
+                          style={{
+                            borderColor: "#666",
+                            color: "#666"
+                          }}
+                        >
+                          <i className="fa-regular fa-heart"></i>
+                        </button>
+                      }
+                    </>
                   ) : (
                     <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
                       Đăng nhập để lưu 
                     </div>
                   )}
                 </div>
-                <div className="w-[170px] h-[50px]">
+                <div className="w-[170px] h-[50px] ml-[16px]">
                   { 
                     isLoggedIn ? (
                       <label
                         htmlFor='modal-cv-check'
                         style={{ fontSize: "18px" }}
                         className="bg-[#ff7d55] w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center"
-                        // onClick={applyJob}
+                        onClick={() => setIsAplly(!isAplly)}
                       >
                         Nộp đơn
                       </label>
@@ -266,8 +298,8 @@ const PostDetailEp = (): any => {
                       >
                         <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
                       </svg>
-                      <img
-                        src="src/image/logo-zalo.jpg"
+                      {/* <img
+                        src="./src/image/logo-zalo.jpg"
                         className="mx-2"
                         width="16"
                         height="16"
@@ -277,7 +309,7 @@ const PostDetailEp = (): any => {
                         className="mx-2"
                         width="16"
                         height="16"
-                      />
+                      /> */}
                     </div>
                   </div>
                 </div>
@@ -367,8 +399,15 @@ const PostDetailEp = (): any => {
         </div>
       </div>
 
-      <input type="checkbox" hidden id="modal-cv-check" className='modal-open-check' ref={inputCheckRef} />
-      <label htmlFor='modal-cv-check' className="overlay"></label>
+      <input 
+        type="checkbox" 
+        hidden 
+        id="modal-cv-check" 
+        className='modal-open-check' 
+        checked={isAplly}
+        readOnly
+      />
+      <label htmlFor='modal-cv-check' onClick={() => setIsAplly(!isAplly)} className="overlay"></label>
       {/* Modal CV */}
       <section className="modal-cv">
         <section className="modal-cv__job">
@@ -381,7 +420,7 @@ const PostDetailEp = (): any => {
             <p className="modal-cv__job-salary">{formatCurrency(post?.job_salary)}</p>
             <p className="modal-cv__job-location">{post?.work_location}</p>
           </section>
-          <label htmlFor="modal-cv-check">
+          <label htmlFor="modal-cv-check" onClick={() => setIsAplly(!isAplly)}>
             <i className="modal-cv__job-icon fa-solid fa-xmark"></i>
           </label>
         </section>
@@ -400,15 +439,15 @@ const PostDetailEp = (): any => {
                       })} 
                       placeholder='Nhập Chức danh'
                       name='job_title' />
-                {errors.job_title && errors.job_title.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Chức danh.</span>}
+                {errors.job_title && errors.job_title.type === 'required' && <span className='text-red-500 text-[12px] mt-1'>Vui lòng nhập Chức danh</span>}
                 <input type="text" 
                       {...register('email', {
                         required: true,
                       })} 
                       placeholder='Nhập email'
-                      value={user?.email ? user?.email : ""}
+                      defaultValue={user?.email ? user?.email : ""}
                       name='email'  />
-                {errors.email && errors.email.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Email.</span>}
+                {errors.email && errors.email.type === 'required' && <span className='text-red-500 text-[12px] mt-1'>Vui lòng nhập Email</span>}
               </section>
             </section>
             
@@ -419,7 +458,7 @@ const PostDetailEp = (): any => {
               {
                 fileName &&
                 <section className="modal-cv__file-uploaded">
-                  <input type="radio" checked />
+                  <input type="radio" checked readOnly />
                   <section className="modal-cv__file-info">
                     <label className='modal-cv__file-title'>Hồ sơ vừa tải lên</label>
                     <p className="modal-cv__file-name">
@@ -436,11 +475,19 @@ const PostDetailEp = (): any => {
                 <input hidden type="file"
                       id="file-upload" 
                       accept='application/pdf'
-                      onChange={onChangeFileInput}
-                      required
+                      {...register('cv', {
+                        required: true,
+                        onChange: (e: any) => {
+                          const {name} = e.target.files[0]
+
+                          setFileName({name, currentDate})
+                          setFile(e.target.files[0])
+                        }
+                      })}
                      />
                 <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5120KB</p>
               </section>
+              {errors.cv && errors.cv.type === 'required' && <span className='text-red-500 text-[12px] mt-1'>Vui lòng đính kèm file CV để ứng tuyển</span>}
             </section>
             <section style={{padding: '16px 0'}}>
               <NavLink to="/change-cv" className="modal-cv__form-link">Tạo hồ sơ ngay</NavLink>
@@ -449,6 +496,7 @@ const PostDetailEp = (): any => {
 
           <button type='submit' className="modal-cv__btn">Nộp đơn</button>
         </form>
+        
       </section>
     </>
   )

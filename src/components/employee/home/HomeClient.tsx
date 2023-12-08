@@ -1,22 +1,23 @@
 import { useState } from 'react'
-import { Link, NavLink, useNavigate } from 'react-router-dom'
-import { useGetGoodPostsQuery } from '../../../service/post'
+import { NavLink } from 'react-router-dom'
+import { useGetGoodPostsQuery, useGetPostsByUIdQuery, useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
-import { MessageType } from 'antd/es/message/interface'
 import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
-import { useGetCareersQuery } from '../../../service/admin';
 
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
-import './HomeClient.css'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
+import { useGetUserByEmailQuery } from '../../../service/auth'
+
+import './HomeClient.css'
 
 const HomeClient = (): any => {
-  const { data: posts } = useGetGoodPostsQuery()
   const { email } = useAppSelector((rs) => rs.auth)
+  const { data: user }: any = useGetUserByEmailQuery(email)
+  const { data: posts } = useGetPostsQuery(user?._id)
   const [addFeedback] = useAddFeedbackMutation(); 
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
@@ -172,22 +173,23 @@ const HomeClient = (): any => {
                         {
                           posts ?
                             posts.map((post: any, index: number) =>
-                              post.post_status == true ?
-                                <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                              post.post_status && post.priority &&
+                                <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
                                   <div key={post._id} className='job'>
-                                    <img src="https://images.vietnamworks.com/pictureofcompany/95/11125340.png"
-                                      className="job-img" />
+                                    <div className="img-wrapper">
+                                      <img src={post.logo}
+                                        className="job-img" />
+                                    </div>
                                     <div className="job-info">
-                                      <div className='flex justify-end'>
-                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                      <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
                                       </div>
                                       <h4 className="job-namee">{post.job_name}</h4>
                                       <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
                                       <p className='job-location'>{post.work_location}</p>
                                     </div>
-                                    <span className="tag tag_hot">Hot</span>
                                   </div>
-                                </NavLink> : ""
+                                </NavLink> 
                             )
                             : ''
                         }
@@ -341,41 +343,46 @@ const HomeClient = (): any => {
         <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
           <div className="home-content__sug-job">
             <div className="flex justify-between align-center section-title bg-[#f2f7ff] py-[20px] pl-[40px] pr-[25px]">
-              <h2 className="sectionBlock__title m-0">Việc Làm Gợi Ý</h2>
+              <h2 className="sectionBlock__title m-0">Việc Làm Cho Bạn</h2>
               <div className="sectionBlock__link">
                 <a href="/viec-lam-goi-y">Xem Tất Cả</a>
               </div>
             </div>
-            <div className="sectionBlock__content p-[24px]" style={{ height: '100%' }}>
-              <div className="swiper-container">
-                <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
-                  <div className="sc-jtcaXd dhnMFx">
-                    <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
-                      <div className="sc-gJwTLC doaJYu col-4">
-                        <div className="swiper-slide">
-                          <div>
-                            <div>
-                              <div className="jobBlock recoJobs__job animated fadeIn take-1-second ">
-                                <div className="columns is-mobile">
-                                  <div className="column jobBlock__leftCol has-text-centered">
-                                    <a href="https://www.vietnamworks.com/sales-representative-dai-dien-kinh-doanh-6-1606627-jv/?utm_source_navi=vnw_homepage&utm_medium_navi=HotJob&utm_campaign_navi=HotJob&utm_term_navi=homepage2&source=homePage" className="jobBlock__link" title="Việc làm - Sales Representative – Đại Diện Kinh Doanh - Công Ty TNHH Cibes Lift Việt Nam - Hà Nội, Hồ Chí Minh, Quảng Ninh"><img src="https://images.vietnamworks.com/pictureofcompany/d3/11126481.png" className="jobBlock__logo" alt="Công Ty TNHH Cibes Lift Việt Nam tuyển dụng - Tìm việc mới nhất, lương thưởng hấp dẫn." /></a></div><div className="column jobBlock__rightCol"><div className="columns is-mobile is-multiline justify-between"><div className="column jobBlock__info"><a href="https://www.vietnamworks.com/sales-representative-dai-dien-kinh-doanh-6-1606627-jv/?utm_source_navi=vnw_homepage&utm_medium_navi=HotJob&utm_campaign_navi=HotJob&utm_term_navi=homepage2&source=homePage" className="jobBlock__link" title="Việc làm - Sales Representative – Đại Diện Kinh Doanh - Công Ty TNHH Cibes Lift Việt Nam - Hà Nội, Hồ Chí Minh, Quảng Ninh">
-                                      <div className="jobBlock__title truncate-text-2-line">Sales Representative – Đại Diện Kinh Doanh</div>
-                                      <p className="jobBlock__company truncate-text">Công Ty TNHH Cibes Lift Việt Nam - Hà Nội, Hồ Chí Minh, Quảng Ninh</p>
-                                    </a>
-                                    </div>
-                                      <span className="tag tag_hot">Hot</span>
-                                    </div>
+            <div className=''>
+              <div className="" style={{ height: '100%', padding: '9px 25px 25px' }}>
+                <div className="swiper-container">
+                  <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
+                    <div className="sc-jtcaXd dhnMFx">
+                      <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
+                        {
+                          posts && posts.map((post: any, index: number) =>
+                              <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                                <div key={post._id} className='job'>
+                                  <div className="img-wrapper">
+                                      <img src={post.logo}
+                                        className="job-img" />
+                                  </div>
+                                  <div className="job-info">
+                                    {
+                                      post?.priority && 
+                                      <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                      </div>
+                                    }
+                                    <h4 className="job-namee">{post.job_name}</h4>
+                                    <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
+                                    <p className='job-location'>{post.work_location}</p>
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
+                              </NavLink>
+                            )
+                        }
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 

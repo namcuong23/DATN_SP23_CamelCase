@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { ColumnsType } from 'antd/es/table'
-import { MessageType } from 'antd/es/message/interface'
-import { Link, NavLink, useNavigate, useParams } from 'react-router-dom'
+import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 import { useGetPostQuery } from '../../../service/post'
 import {
@@ -25,8 +24,10 @@ const PostDetail = (): any => {
     const navigate = useNavigate()
     const { data: post } = useGetPostQuery(id);
     const [open, setOpen] = useState(false);
-    const { data } = useGetCvsByPostIdQuery(post?._id)
+    
+    const { data } = useGetCvsByPostIdQuery(post && post?._id)
     const cvs = data?.cvs
+
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
     const [addCandidate] = useCreateCandidateMutation()
@@ -63,7 +64,6 @@ const PostDetail = (): any => {
         }
     }
 
-
     const [approveCv] = useApproveCvMutation()
     const onHandleApprove = (id: string) => {
         console.log(id);
@@ -74,7 +74,6 @@ const PostDetail = (): any => {
     }
     const [deleteCv] = useRemoveCvMutation()
     const onHandleDelete = (id: string) => {
-        console.log(id);
 
         if (confirm !== null) {
             deleteCv(id)
@@ -135,20 +134,6 @@ const PostDetail = (): any => {
                         className='leading-[22px] flex items-center'
                     >
                         <CloseOutlined className='text-danger' />
-                    </Popconfirm>
-
-                    <Popconfirm
-                        placement="top"
-                        title={add}
-                        onConfirm={() => {
-                            onHandleAdd(record);
-                            onHandleApprove(record._id);
-                        }}
-                        okText="Đồng ý"
-                        cancelText="Không"
-                        className='leading-[22px] flex items-center'
-                    >
-                        <UserAddOutlined className='text-[#333]' />
                     </Popconfirm>
                     <NavLink to={`/cv-preview?id=${record._id}`}
                         className='leading-[22px]'

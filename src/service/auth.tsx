@@ -86,7 +86,15 @@ export const authApi: any = createApi({
                 body: user
             }),
             invalidatesTags: ['authEpe']
-        })
+        }),
+        saveCV: builder.mutation({
+            query: (user: IUserNTV) => ({
+                url: '/epe-users/save-cv',
+                method: 'PUT',
+                body: user
+            }),
+            invalidatesTags: ['authEpe']
+        }),
     })
 })
 
@@ -102,4 +110,5 @@ export const {
     useSendEmailVerifiedMutation,
     useActiveEmailMutation,
     useGetUsersQuery,
+    useSaveCVMutation,
 } = authApi

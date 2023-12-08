@@ -20,13 +20,14 @@ interface IUserNTV {
     accessToken: string;
     verifiedToken: string;
     tokenExpires: string;
-    role: number;
+    role: string;
     isBlock: boolean;
     career_goal: string;
     work_experience: object[];
     education: object[];
     skills: object[];
     more_info: string;
+    cv_id: number;
 }
 
 export default IUserNTV
