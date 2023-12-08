@@ -109,6 +109,7 @@ const CVChoose = forwardRef(
                         desc2={user?.career_goal}
                         isValue={user?.career_goal}
                         isshow={user?.career_goal}
+                        data={user?.career_goal}
                     />
                     <CVChooseComponent
                         title={'HỌC VẤN'}
@@ -117,6 +118,7 @@ const CVChoose = forwardRef(
                         desc1={'Ngành học / Môn học'}
                         desc2={'Mô tả quá trình học tập hoặc thành tích của bạn'}
                         isValue={!user?.education}
+                        data={user?.education}
                     />
                     <CVChooseComponent
                         title={'KINH NGHIỆM LÀM VIỆC'}
@@ -124,11 +126,13 @@ const CVChoose = forwardRef(
                         time={'Thời gian'}
                         desc1={'Vị trí công việc'}
                         desc2={'Mô tả kinh nghiệm làm việc của bạn'}
+                        data={user?.work_experience}
                     />
                     <CVChooseComponent
                         title={'KỸ NĂNG'}
                         name={'Tên kỹ năng'}
                         desc1={'Mô tả kỹ năng'}
+                        data={user?.skills}
                     />
                     <CVChooseComponent
                         title={'THÔNG TIN THÊM'}

@@ -90,7 +90,9 @@ const Login = () => {
                 <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
                     <img width={150} height={150} src={myImage} alt="" />
                 </div>
-                <div className="absolute top-[40%] left-[27%] bg-white">
+                <div className="absolute top-[40%] left-[50%] bg-white" style={{
+                    transform: 'translate(-50%)'
+                }}>
                     {/* Nested Row within Card Body */}
                     {/* <div className="row p-0"> */}
                     <div className="w-[600px] min-h-[70vh] shadow">

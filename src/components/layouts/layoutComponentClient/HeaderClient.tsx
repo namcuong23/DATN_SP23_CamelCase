@@ -120,7 +120,7 @@ const HeaderClient = () => {
                 <ul className="cMKKZy listMenu-homepage">
                     <li><NavLink to={'/interview'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Phỏng vấn" tabIndex={0}>Phỏng vấn</NavLink></li>
                     <li><NavLink to={'/company'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Công ty" tabIndex={0}>Công ty</NavLink></li>
-                    <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li>
+                    {/* <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li> */}
                 </ul >
                 <div className="sc-gCLdxd eAZlAg rightNavigation-homepage" >
                     <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>

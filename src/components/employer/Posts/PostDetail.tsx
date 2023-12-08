@@ -142,7 +142,7 @@ const PostDetail = (): any => {
                                     </div>
                                     <div className='cuong1 w-[80%]'>
                                         <p>
-                                            <a href='#' className='job-title fs-5' style={{ color: '#ff4a53', width: '80%' }}>{post?.job_name}</a>
+                                            <a href='#' className='text-[26px] text-[#333] hover:text-[#333]' style={{ width: '80%' }}>{post?.job_name}</a>
                                             <div style={{ color: '#999', fontSize: '13px' }}>{post?.work_location}</div>
                                             <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: {(new Date(post?.createdAt)).toLocaleDateString()}</span>
                                             <div style={{ color: '#ff7d55', fontWeight: 500 }}>{(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
