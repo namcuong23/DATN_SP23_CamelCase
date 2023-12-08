@@ -78,7 +78,7 @@ const HeaderEmployer = () => {
                         <NavLink to={'/home/posts'}
                             className='d-flex align-items-center text-decoration-none text-white'>
                             <span className='hover:text-orange-400'>
-                                Bài viết
+                                Tin tuyển dụng
                             </span>
 
                         </NavLink>

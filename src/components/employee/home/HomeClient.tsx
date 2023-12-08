@@ -155,7 +155,7 @@ const HomeClient = (): any => {
           </div>
         </section>
       </div>
-      <div id="pageContentWrapper" className='pb-[4px]'>
+      <div id="pageContentWrapper" className='pb-[4px] mb-[32px]'>
         <section className="home-content__jobs sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
           <div style={{maxWidth : '100%'}} className="container p-0">
             <div className="is-flex justify-between align-center section-title">
@@ -387,7 +387,7 @@ const HomeClient = (): any => {
           </div>
 
         </section>
-        <section className="sectionBlock hr-insider">
+        {/* <section className="sectionBlock hr-insider">
           <div className="home-content__advises">
             <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
               <h2 className="sectionBlock__title">Tư vấn nghề nghiệp từ HR Insider</h2>
@@ -429,7 +429,7 @@ const HomeClient = (): any => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
 
       <div className="float-contact ">

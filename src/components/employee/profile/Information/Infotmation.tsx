@@ -32,7 +32,6 @@ const forms = [
 const Infotmation = ({imgUrl}: any) => {
     let Component = forms[0].component
     const [formProps, setFormProps] = useState<any>()
-    const [propId, setPropId] = useState<number>()
     const { email } = useAppSelector((res: any) => res.auth)
     const { data: user } = useGetUserByEmailQuery(email)
 
@@ -50,16 +49,15 @@ const Infotmation = ({imgUrl}: any) => {
         const currentData = user[key];
         const formData = userForm[key];
 
-        if (userForm.type) {
+        const start_date = formData.timeId ? new Date(formData.timeId[0].$d).toLocaleDateString() : null
+        const end_date = formData.timeId ? new Date(formData.timeId[1].$d).toLocaleDateString() : null
+        // const monthCount: number = formData.timeId ? Math.floor(((formData.timeId[1])?.getMonth() - (formData.timeId[0].$d)?.getMonth()) / (24 * 3600 * 1000)) : 0
+        // console.log(monthCount)
+
+        if (!userForm.type) {
             return await updateUser({
                 ...user,
-                [key]: [
-                    ...currentData,
-                    {
-                        id: currentData ? currentData.length + 1 : 1,
-                        ...formData
-                    }
-                ]
+                ...userForm,
             }).then((res: any) => {
                 const { data } = res
                 if (data?.success) {
@@ -70,13 +68,24 @@ const Infotmation = ({imgUrl}: any) => {
 
         return await updateUser({
             ...user,
-            ...userForm,
+            [key]: [
+                ...currentData,
+                {
+                    id: currentData ? currentData.length + 1 : 1,
+                    time: {
+                        start_date,
+                        end_date,
+                    },
+                    ...formData
+                }
+            ]
         }).then((res: any) => {
             const { data } = res
             if (data?.success) {
                 toast.success('Cập nhật thành công')
             }
         })
+
     }
 
     const handleRemove = async ({ id, key }: any) => {
@@ -203,7 +212,13 @@ const Infotmation = ({imgUrl}: any) => {
                                     <section className="ml-[16px]">
                                         <h4 className="text-[16px] mb-0">{item.position}</h4>
                                         <p className="text-[14px] mb-0">{item.company}</p>
-                                        <p className="text-[14px]">Ví dụ: 09/2008 - 12/2014</p>
+                                        <p className="text-[14px]">
+                                            {
+                                                item?.timeId ? 
+                                                <span>{item?.time?.start_date} - {item?.time?.end_date}</span>
+                                                : <span>Ví dụ: 09/2008 - 12/2014</span>
+                                            }
+                                        </p>
                                     </section>
                                 </section>
                                 <button className="info-children__btn" onClick={() => handleRemove({
@@ -237,7 +252,13 @@ const Infotmation = ({imgUrl}: any) => {
                                     <section className="ml-[16px]">
                                         <h4 className="text-[16px] mb-0">{item.major}</h4>
                                         <p className="text-[14px] mb-0">{item.school} - {item.edu_level}</p>
-                                        <p className="text-[14px]">Ví dụ: 09/2008 - 12/2014</p>
+                                        <p className="text-[14px]">
+                                            {
+                                                item?.timeId ? 
+                                                <span>{item?.time?.start_date} - {item?.time?.end_date}</span>
+                                                : <span>Ví dụ: 09/2008 - 12/2014</span>
+                                            }
+                                        </p>
                                     </section>
                                 </section>
                                 <button className="info-children__btn" onClick={() => handleRemove({
