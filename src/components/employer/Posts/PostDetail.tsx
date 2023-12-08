@@ -10,7 +10,7 @@ import {
 } from '../../../service/manage_cv'
 import { Modal, Popconfirm, Space, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
-import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
+import { CloseOutlined, CheckOutlined, FilePdfOutlined } from '@ant-design/icons'
 import { useCreateCandidateMutation } from '../../../service/employer/candidate'
 import React from 'react'
 
@@ -103,7 +103,7 @@ const PostDetail = (): any => {
                         <CheckOutlined className='text-success' />
                     </Popconfirm>
 
-                    <Popconfirm placement="top"
+                    <Popconfirm 
                         title={remove}
                         onConfirm={() => onHandleDelete(record._id)}
                         okText="Đồng ý"
@@ -111,12 +111,12 @@ const PostDetail = (): any => {
                         className='leading-[22px] flex items-center'
                         >
                         <CloseOutlined className='text-danger' />
-                    </Popconfirm>
+                    </Popconfirm >
                     <NavLink to={`/cv-preview?id=${record._id}`}
-                        className='leading-[22px]'
                         target='_blank'
+                        className='leading-[22px] flex items-center'
                         >
-                        <i className="fa-regular fa-eye text-[#333]"></i>
+                        <FilePdfOutlined  />
                     </NavLink>
                 </Space>
             ),

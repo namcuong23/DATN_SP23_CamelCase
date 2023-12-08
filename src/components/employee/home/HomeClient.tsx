@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { NavLink } from 'react-router-dom'
 import { useGetGoodPostsQuery, useGetPostsByUIdQuery, useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
@@ -7,19 +6,29 @@ import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
 import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
-
+import React, { useState, useEffect } from 'react';
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
+import axios from 'axios'
 
 const HomeClient = (): any => {
   const { email } = useAppSelector((rs) => rs.auth)
   const { data: user }: any = useGetUserByEmailQuery(email)
   const { data: posts } = useGetPostsQuery(user?._id)
-  const [addFeedback] = useAddFeedbackMutation(); 
+  const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
+  const [banners, setBanners] = useState([]);
+
+  useEffect(() => {
+    // Gọi API để lấy danh sách banner
+    axios.get('http://localhost:4000/api/banners')
+      .then(response => setBanners(response.data))
+      .catch(error => console.error('Error fetching banners:', error));
+  }, []);
+
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -66,7 +75,7 @@ const HomeClient = (): any => {
             />
           </div>
           <div className="carousel-inner">
-            <div className="carousel-item active">
+            {/* <div className="carousel-item active">
               <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Favery_hrbn2_122980.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
             <div className="carousel-item">
@@ -80,7 +89,14 @@ const HomeClient = (): any => {
             </div>
             <div className="carousel-item">
               <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fnab_hrbnOct2_124666.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
+            </div> */}
+            <ul>
+              {banners.map(banner => (
+                <li key={banner._id}>
+                  {banner.title} - {banner.imageUrl} - {banner.link}
+                </li>
+              ))}
+            </ul>
           </div>
           <button
             className="carousel-control-prev"
@@ -157,7 +173,7 @@ const HomeClient = (): any => {
       </div>
       <div id="pageContentWrapper" className='pb-[4px]'>
         <section className="home-content__jobs sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
-          <div style={{maxWidth : '100%'}} className="container p-0">
+          <div style={{ maxWidth: '100%' }} className="container p-0">
             <div className="is-flex justify-between align-center section-title">
               <h2 className="sectionBlock__title">Việc Làm Tốt Nhất</h2>
               <div className="sectionBlock__link">
@@ -174,22 +190,22 @@ const HomeClient = (): any => {
                           posts ?
                             posts.map((post: any, index: number) =>
                               post.post_status && post.priority &&
-                                <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
-                                  <div key={post._id} className='job'>
-                                    <div className="img-wrapper">
-                                      <img src={post.logo}
-                                        className="job-img" />
-                                    </div>
-                                    <div className="job-info">
-                                      <div className='flex justify-end mt-[-8px] mb-[8px]'>
-                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
-                                      </div>
-                                      <h4 className="job-namee">{post.job_name}</h4>
-                                      <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
-                                      <p className='job-location'>{post.work_location}</p>
-                                    </div>
+                              <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
+                                <div key={post._id} className='job'>
+                                  <div className="img-wrapper">
+                                    <img src={post.logo}
+                                      className="job-img" />
                                   </div>
-                                </NavLink> 
+                                  <div className="job-info">
+                                    <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                    </div>
+                                    <h4 className="job-namee">{post.job_name}</h4>
+                                    <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
+                                    <p className='job-location'>{post.work_location}</p>
+                                  </div>
+                                </div>
+                              </NavLink>
                             )
                             : ''
                         }
@@ -319,7 +335,7 @@ const HomeClient = (): any => {
                     </div>
                   </div>
                 </div>
-                
+
               </div>
               </div>
             </div>
@@ -356,26 +372,26 @@ const HomeClient = (): any => {
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
                           posts && posts.map((post: any, index: number) =>
-                              <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-                                <div key={post._id} className='job'>
-                                  <div className="img-wrapper">
-                                      <img src={post.logo}
-                                        className="job-img" />
-                                  </div>
-                                  <div className="job-info">
-                                    {
-                                      post?.priority && 
-                                      <div className='flex justify-end mt-[-8px] mb-[8px]'>
-                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
-                                      </div>
-                                    }
-                                    <h4 className="job-namee">{post.job_name}</h4>
-                                    <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
-                                    <p className='job-location'>{post.work_location}</p>
-                                  </div>
+                            <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                              <div key={post._id} className='job'>
+                                <div className="img-wrapper">
+                                  <img src={post.logo}
+                                    className="job-img" />
                                 </div>
-                              </NavLink>
-                            )
+                                <div className="job-info">
+                                  {
+                                    post?.priority &&
+                                    <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                    </div>
+                                  }
+                                  <h4 className="job-namee">{post.job_name}</h4>
+                                  <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
+                                  <p className='job-location'>{post.work_location}</p>
+                                </div>
+                              </div>
+                            </NavLink>
+                          )
                         }
                       </div>
                     </div>
@@ -436,9 +452,9 @@ const HomeClient = (): any => {
         <Button className='bg-[#f52b72] text-white m-2' onClick={showModal}>
           <WhatsAppOutlined /> Hỗ trợ
         </Button>
-        <Modal 
-          title="Đóng góp ý kiến" 
-          open={isModalOpen} 
+        <Modal
+          title="Đóng góp ý kiến"
+          open={isModalOpen}
           onCancel={handleCancel}
           okButtonProps={{ hidden: true }}
           cancelButtonProps={{ hidden: true }}

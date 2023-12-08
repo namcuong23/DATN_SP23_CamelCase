@@ -67,6 +67,7 @@ import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import OrderManagement from "./components/admin/Order/OrderManagement"
+import BannerForm from "./components/Admin/Banner/BannerAdd"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -162,6 +163,7 @@ function App() {
           <Route path='careers/add' element={<CareerAdd />} />
           <Route path='feedbacks' element={<FeedbackList />} />
           <Route path='order-management' element={<OrderManagement />} />
+          <Route path='banner' element={<BannerForm />} />
         </Route>
 
 

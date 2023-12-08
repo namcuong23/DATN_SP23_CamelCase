@@ -35,7 +35,7 @@ import { serviceAdmApi } from "../service/admin/service";
 import authAdmReducer from "../reducer/authAdm";
 import authEmprReducer from "../reducer/authEpr";
 import { notificationApi } from "../service/notification";
-
+import {bannerApi} from "../service/admin/banner"
 const persistConfig = {
     key: 'root',
     storage,
@@ -68,6 +68,7 @@ const rootReducer = combineReducers({
     [serviceAdmApi.reducerPath]: serviceAdmApi.reducer,
     [candidateApi.reducerPath]: candidateApi.reducer,
     [notificationApi.reducerPath]: notificationApi.reducer,
+    [bannerApi.reducerPath]: bannerApi.reducer,
 })
 
 const persistedRducer = persistReducer(persistConfig, rootReducer);
@@ -100,7 +101,8 @@ export const store = configureStore({
         chartLine.middleware,
         serviceAdmApi.middleware,
         candidateApi.middleware,
-        notificationApi.middleware
+        notificationApi.middleware,
+        bannerApi.middleware
     )
 })
 

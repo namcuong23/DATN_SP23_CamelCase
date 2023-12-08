@@ -7,7 +7,8 @@ import {
   TagsOutlined,
   UserOutlined,
   IdcardOutlined,
-  ShoppingCartOutlined
+  ShoppingCartOutlined,
+  FileImageOutlined
 } from '@ant-design/icons';
 import myImage from '../../../assets/img/logo.jpg';
 
@@ -84,6 +85,12 @@ const SideBar = () => {
                 <li className="nk-menu-item has-sub w-full nk-menu-link ">
                   <span className="nk-menu-icon m-1"><IdcardOutlined /></span>
                   <span className="nk-menu-text">Quản lý Feedback</span>
+                </li>
+              </Link>
+              <Link to="/admin/banner">
+                <li className="nk-menu-item has-sub w-full nk-menu-link ">
+                  <span className="nk-menu-icon m-1"><FileImageOutlined /></span>
+                  <span className="nk-menu-text">Quản lý Banner</span>
                 </li>
               </Link>
            
