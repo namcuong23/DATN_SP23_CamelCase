@@ -274,9 +274,9 @@ const PostList = (): any | null | JSX.Element => {
                 <div className='mt-4 min-h-screen'>
                     <div className='d-flex align-items-center justify-content-between mb-2'>
                         <div>
-                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý bài viết</h2>
+                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý Tin tuyển dụng</h2>
                         </div>
-                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-3 py-2'>
+                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-2 py-1'>
                             <NavLink to={'/home/posts/add'} className='text-white text-decoration-none'>
                                 Đăng tin
                             </NavLink>

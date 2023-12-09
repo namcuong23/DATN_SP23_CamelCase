@@ -163,13 +163,13 @@ const OrderDetail = (): any => {
                         </div>
                         <Popconfirm placement="top"
                             title={text}
-                            className="border-1 border-[#FD6333] text-[#FD6333] py-1 px-2 rounded mt-4"
+                            className="border-1 border-[#FD6333] text-[#FD6333] py-1 px-2 rounded mt-4 hover:bg-[#FD6333] hover:text-white"
                             onConfirm={() => handleRemoveOrder(order._id)}
                             okText="Yes"
                             cancelText="No">
                             <button>Hủy đơn hàng</button>
                         </Popconfirm>
-                        <button onClick={() => VNPayCheckout(order?.order_price,order._id)} className="border-1 border-[#004ad1] text-[#004ad1] ml-4 py-1 px-2 rounded mt-4">Thanh toán bằng VNPAY</button>
+                        <button onClick={() => VNPayCheckout(order?.order_price,order._id)} className="border-1 border-[#004ad1] text-[#004ad1] ml-4 py-1 px-2 rounded mt-4 hover:bg-[#004ad1] hover:text-white">Thanh toán bằng VNPAY</button>
                     </main>
                     <aside className='w-[30%] p-3 bg-white border-1 rounded-md'>
                         <div className='flex justify-center'>

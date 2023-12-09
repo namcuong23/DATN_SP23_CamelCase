@@ -14,7 +14,7 @@ const LayoutEmployer = () => {
             <div className="row">
                 {/* <Sidebar /> */}
                 {/* Content */}
-                <div className="bg-gray-100">
+                <div className="bg-white">
                     <Outlet />
                 </div>
             </div>

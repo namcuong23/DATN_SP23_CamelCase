@@ -3,13 +3,16 @@ import { CSVLink } from 'react-csv';
 import { Table, DatePicker } from 'antd';
 import { useGetHistoryOrderQuery } from '../../../service/admin/chartLine';
 import { Order } from '../../../interface/admin/order';
+import { useGetUserByIdQuery } from '../../../service/admin';
 
 const { MonthPicker } = DatePicker;
 
 const OrderManagement = () => {
     const { data: HistoryPackage } = useGetHistoryOrderQuery([]);
     const [selectedMonth, setSelectedMonth] = useState<any>(null);
-
+    console.log(HistoryPackage);
+    
+    // const nameUser = useGetUserByIdQuery()
     const columns = [
         {
             title: 'STT',

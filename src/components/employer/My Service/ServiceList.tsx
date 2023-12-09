@@ -17,6 +17,7 @@ const ServiceList = (): any => {
     const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
     const { data: services, error, isLoading } = useGetServicesQuery(user?._id)
+    console.log(services)
     const remove = 'Bạn có muốn xoá gói service này?';
     const [removeService] = useRemoveServiceMutation()
     let index = 0
