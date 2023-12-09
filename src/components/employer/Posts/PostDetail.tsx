@@ -3,16 +3,20 @@ import { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 import { useGetPostQuery } from '../../../service/post'
-import { 
-    useApproveCvMutation, 
-    useGetCvsByPostIdQuery, 
-    useRemoveCvMutation 
+import {
+    useApproveCvMutation,
+    useGetCvsByPostIdQuery,
+    useRefuseCvMutation,
+    useRemoveCvMutation
 } from '../../../service/manage_cv'
 import { Modal, Popconfirm, Space, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
 import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
 import { useCreateCandidateMutation } from '../../../service/employer/candidate'
 import React from 'react'
+import { useCreateReplyMutation } from '../../../service/employer/reply'
+import { useAddNotificationMutation } from '../../../service/notification'
+import { LinkedinOutlined, SkypeOutlined, TwitterOutlined, FacebookOutlined, FileDoneOutlined, EnvironmentOutlined, DollarOutlined, EuroCircleOutlined, MobileOutlined } from '@ant-design/icons';
 
 const PostDetail = (): any => {
     const { id } = useParams()
@@ -27,6 +31,8 @@ const PostDetail = (): any => {
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
     const [addCandidate] = useCreateCandidateMutation()
+    // const [addReply] = useCreateReplyMutation()
+    const [addNotification] = useAddNotificationMutation()
 
     const onHandleAdd = async (user: any) => {
         try {
@@ -39,6 +45,20 @@ const PostDetail = (): any => {
                 console.log(data);
             }
 
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    const onHandleNotification = async (user: any) => {
+        try {
+            const response = await addNotification(user);
+            console.log(user);
+            if ('data' in response && response.data) {
+                message.success('Đã gửi thông báo đến ứng viên');
+            } else if ('error' in response) {
+                message.error('Đã gửi thông báo trước đó');
+                console.log(data);
+            }
         } catch (error) {
             console.error(error);
         }
@@ -95,11 +115,14 @@ const PostDetail = (): any => {
                 <Space size="middle" className='flex items-center'>
                     <Popconfirm placement="top"
                         title={"Chấp nhận"}
-                        onConfirm={() => onHandleApprove(record._id)}
+                        onConfirm={() => {
+                            onHandleNotification(record);
+                            onHandleApprove(record._id)
+                        }}
                         okText="Đồng ý"
                         cancelText="Không"
                         className='leading-[22px] flex items-center'
-                        >
+                    >
                         <CheckOutlined className='text-success' />
                     </Popconfirm>
 
@@ -109,13 +132,13 @@ const PostDetail = (): any => {
                         okText="Đồng ý"
                         cancelText="Không"
                         className='leading-[22px] flex items-center'
-                        >
+                    >
                         <CloseOutlined className='text-danger' />
                     </Popconfirm>
                     <NavLink to={`/cv-preview?id=${record._id}`}
                         className='leading-[22px]'
                         target='_blank'
-                        >
+                    >
                         <i className="fa-regular fa-eye text-[#333]"></i>
                     </NavLink>
                 </Space>
@@ -129,10 +152,10 @@ const PostDetail = (): any => {
 
     return (
         <>
-            <div className="recruitment-details" style={{ background: '#f7f7f7', paddingBottom: '1em' }} >
-                <div className='row'>
-                    <div style={{ background: 'white', height: '13em', paddingTop: '1em' }}>
-                        <div style={{ width: '73%', margin: '0 auto' }}>
+            <div className="recruitment-details" style={{ background: 'white', paddingBottom: '1em' }} >
+                <div className='row bg-white'>
+                    <div style={{ background: 'white', height: '13em', paddingTop: '1em' }} >
+                        <div style={{ width: '75%', margin: '0 auto' }} className='border'>
                             <div className='recruitment-details1' style={{ padding: 'auto 0' }}>
                                 <div className='w-[85%] flex items-center'>
                                     <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border w-[20%]' id='logo-area-wrapper'>
@@ -142,44 +165,43 @@ const PostDetail = (): any => {
                                     </div>
                                     <div className='cuong1 w-[80%]'>
                                         <p>
-                                            <a href='#' className='text-[26px] text-[#333] hover:text-[#333]' style={{ width: '80%' }}>{post?.job_name}</a>
-                                            <div style={{ color: '#999', fontSize: '13px' }}>{post?.work_location}</div>
-                                            <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tin: {(new Date(post?.createdAt)).toLocaleDateString()}</span>
-                                            <div style={{ color: '#ff7d55', fontWeight: 500 }}>{(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
+                                            <a href='#' className='job-title fs-4' style={{ color: 'black', width: '80%' }}>{post?.job_name}</a>
+                                            <div style={{ color: 'black', fontSize: '13px' }}>Địa điểm làm việc: {post?.work_location}</div>
+                                            <span style={{ color: 'black', fontSize: '13px' }}>Ngày đăng tin: {(new Date(post?.createdAt)).toLocaleDateString()}</span>
+                                            <div style={{ color: '#ff4a53', fontWeight: 500 }}>{(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div className="content-recruitment-details pt-3" style={{ width: '80%', margin: '0 auto' }}>
-                        <div className='content-recruitment-details'>
+                    <div className="content-recruitment-details pt-3 border" style={{ width: '74%', margin: '0 auto' }}>
+                        <div className='content-recruitment-details '>
                             <div className='pt-2 pl-5' style={{ background: 'white' }}>
-                                <div className='w-[600px]'>
+                                <div>
                                     <div className='flex flex-col p-3'>
-                                        <p className='fs-3'>Mô tả công việc:</p>
-                                        <div className='fs-6 py-3'>
+                                        <p className='fs-3 text-black'>Mô tả công việc:</p>
+                                        <div className='fs-6 py-3 w-[700px]'>
                                             {post?.job_description}
                                         </div>
                                         <div className='flex flex-col py-3'>
-                                            <p className='fs-3'>Yêu cầu:</p>
+                                            <p className='fs-3 text-black w-[150px]'>Yêu cầu:</p>
                                             <div className='fs-6'>{post?.requirements}</div>
                                         </div>
                                         <div className='flex flex-col py-3'>
-                                            <p className='fs-3'>Địa điểm làm việc:</p>
-                                            <div className='fs-6'>{post?.work_location}</div>
+                                            <p className='fs-3 text-black'>Địa điểm làm việc:</p>
+                                            <div className='row'>
+                                                <div className='col-1'><EnvironmentOutlined style={{ fontSize: '20px' }} /></div>
+                                                <div className='fs-6 col'>{post?.work_location}</div>
+                                            </div>
                                         </div>
                                         <div className='flex items-center gap-x-3'>
-                                            <p className='fs-3 m-0'>Chia sẻ</p>
+                                            <p className='fs-6 text-black mt-3'>Chia sẻ:</p>
                                             <div className='d-flex py-3'>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-facebook mx-2" viewBox="0 0 16 16">
-                                                    <path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
-                                                </svg>
-                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-twitter mx-2" viewBox="0 0 16 16">
-                                                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
-                                                </svg>
-                                                <img src='src/image/logo-zalo.jpg' className='mx-2' width="16" height="16" />
-                                                <img src='src/image/linked.jpg' className='mx-2' width="16" height="16" />
+                                                <FacebookOutlined style={{ fontSize: '15px' }} className='mx-2' />
+                                                <TwitterOutlined style={{ fontSize: '15px' }} className='mx-2' />
+                                                <LinkedinOutlined style={{ fontSize: '15px' }} className='mx-2' />
+                                                <SkypeOutlined style={{ fontSize: '15px' }} className='mx-2' />
                                             </div>
                                         </div>
 
@@ -187,39 +209,58 @@ const PostDetail = (): any => {
                                 </div>
                             </div>
                         </div>
-                        <div className='bg-white border-0 w' id="banner-list-job">
-                            <div>
-                                <div className='border-1 shadow-sm p-4'>
+                        <div className='bg-[#f0f7ff] border  rounded mb-3' id="banner-list-job">
+                            <div >
+                                <div className='shadow-sm p-4'>
                                     <div className='pb-2'>
-                                        <h2 className='font-semibold text-xl mb-3'>Thông tin công việc</h2>
                                         <div className='flex mb-2'>
-                                            <div className="w-[150px] text-gray-500">Ngày đăng: </div>
-                                            <div>{(new Date(post?.createdAt)).toLocaleDateString()}</div>
+                                            <div style={{ fontSize: '30px', color: 'black' }}><FileDoneOutlined /></div>
+                                            <div>
+                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >NGÀY ĐĂNG TUYỂN: </div>
+                                                <div className="w-[250px] ml-3">{(new Date(post?.createdAt)).toLocaleDateString()}</div>
+                                            </div>
                                         </div>
+                                        <hr />
+                                        <div className='flex mb-2'>
+                                            <div style={{ fontSize: '30px', color: 'black' }}><EnvironmentOutlined /></div>
+                                            <div>
+                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >ĐỊA ĐIỂM: </div>
+                                                <div className="w-[250px] ml-3">{post?.work_location}</div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className='flex mb-2'>
+                                            <div style={{ fontSize: '30px', color: 'black' }}><DollarOutlined /></div>
+                                            <div>
+                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >NGÂN SÁCH: </div>
+                                                <div className="w-[250px] ml-3">{(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className='flex mb-2'>
+                                            <div style={{ fontSize: '30px', color: 'black' }}><MobileOutlined /></div>
+                                            <div>
+                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >HÌNH THỨC LÀM VIỆC: </div>
+                                                <div className="w-[250px] ml-3">{post?.working_form}</div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div className='flex mb-2'>
+                                            <div style={{ fontSize: '30px', color: 'black' }}><EuroCircleOutlined /></div>
+                                            <div>
+                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >HÌNH THỨC TRẢ LƯƠNG: </div>
+                                                <div className="w-[250px] ml-3">Trả theo dự án</div>
+                                            </div>
+                                        </div>
+                                        <hr />
                                         {/* <div className='flex mb-2'>
                                             <div className="w-[150px] text-gray-500">Chỉ còn: </div>
                                             <div>5 ngày 8 giờ</div>
                                         </div> */}
-                                        <div className='flex mb-2'>
-                                            <div className="w-[150px] text-gray-500">Địa điểm: </div>
-                                            <div>{post?.work_location}</div>
-                                        </div>
-                                        <div className='flex mb-2'>
-                                            <div className="w-[150px] text-gray-500">Ngân sách: </div>
-                                            <div>
-                                                {(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
-                                        </div>
-                                        <div className='flex mb-2'>
-                                            <div className="w-[150px] text-gray-500">Hình thức làm việc: </div>
-                                            <div className='text-orange-500 font-semibold'>{post?.working_form}</div>
-                                        </div>
-                                        <div className='flex mb-2'>
-                                            <div className="w-[150px] text-gray-500">Hình thức trả lương: </div>
-                                            <div>Trả theo dự án</div>
-                                        </div>
+
                                     </div>
                                     <button
-                                        className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-5'
+                                        className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-1'
                                         onClick={showModal} >
                                         Danh sách ứng viên
                                     </button>
@@ -242,7 +283,7 @@ const PostDetail = (): any => {
                     </div>
                 </div>
             </div>
-            <div className='mt-60'>
+            <div className='mt-5'>
                 <FooterEmployer />
             </div>
         </>

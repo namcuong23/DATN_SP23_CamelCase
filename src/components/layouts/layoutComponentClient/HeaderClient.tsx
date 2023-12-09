@@ -75,15 +75,13 @@ const HeaderClient = () => {
     const showModalNoti = (notificationId: string) => {
         if (notificationEmail) {
             const selectedNoti = notificationEmail.find((noti: { _id: string; }) => noti._id === notificationId) as Inotification;
-            if (selectedNoti && !selectedNoti.isRead) {
-                markAsRead(notificationId)
+            if (selectedNoti) {
+                setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
+                setIsModalNoti(true);
             }
-            // Open the modal regardless of the isRead status
-            setIsModalNoti(true);
-            setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
         }
-    };
-    moment.locale('vi');
+      };
+      moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -399,28 +397,14 @@ const HeaderClient = () => {
                                                 ) : (
                                                     <p>Loading notifications...</p>
                                                 )}
-                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
-                                                  footer={[
-                                 
-                                                    <Button key="cancel" onClick={handleCancelNoti}>
-                                                        Đóng
-                                                    </Button>,
-                                                 <Button
-                                                 key="goToURL"
-                                                 type="primary"
-                                                 onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
-                                               >
-                                                 Đến URL
-                                               </Button>
-                                                ]}
-
-                                                >
+                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
                                                     {selectedNotification && (
                                                         <>
+                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
                                                             <span>{selectedNotification.notification_content}</span>
                                                         </>
                                                     )}
-                                                </Modal>
+                                                </Modal> */
                                             </div>
                                         </div>
                                     </div>

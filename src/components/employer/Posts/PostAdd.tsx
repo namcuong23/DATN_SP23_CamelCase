@@ -153,13 +153,13 @@ const PostAdd = (): any => {
                             </div>
                         </div>
                     </div>
-                    <div className='text-center sticky bottom-0 bg-gray-100 border-t-2 py-3'>
-                        <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white text-[16px] py-2 px-8 rounded' type="submit">
+                    <div className='text-center sticky bottom-0 bg-white border-t-2 py-3'>
+                        <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white text-[16px] py-1 px-6 rounded' type="submit">
                             Đăng
                         </button>
                         <NavLink to={'/home/posts'}>
                             <button
-                                className='text-[#838383] hover:text-[#FE7D55] border-1 border-[#686868] hover:border-[#FE7D55] ms-4 py-2 px-8 rounded' type="button">
+                                className='text-[#838383] hover:text-[#FE7D55] border-1 border-[#686868] hover:border-[#FE7D55] ms-4 py-1 px-6 rounded' type="button">
                                 Trở về
                             </button>
                         </NavLink>
