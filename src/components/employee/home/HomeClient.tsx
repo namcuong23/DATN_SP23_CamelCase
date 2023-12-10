@@ -13,22 +13,21 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
 import axios from 'axios'
+import { useGetBannersQuery } from '../../../service/admin/banner'
 
 const HomeClient = (): any => {
   const { email } = useAppSelector((rs) => rs.auth)
   const { data: user }: any = useGetUserByEmailQuery(email)
   const { data: posts } = useGetPostsQuery(user?._id)
+  const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
-  const [banners, setBanners] = useState([]);
 
-  useEffect(() => {
-    // Gọi API để lấy danh sách banner
-    axios.get('http://localhost:4000/api/banners')
-      .then(response => setBanners(response.data))
-      .catch(error => console.error('Error fetching banners:', error));
-  }, []);
-
+  let bannerImg
+  if (banners) {
+      bannerImg = banners[0].imageUrl
+      
+  }
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -75,28 +74,17 @@ const HomeClient = (): any => {
             />
           </div>
           <div className="carousel-inner">
-            {/* <div className="carousel-item active">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Favery_hrbn2_122980.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
+            
+            <div className="carousel-item active">
+              <img src={bannerImg} className="d-block w-100" style={{ backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'center',
+                                    height: '500px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',}}  alt="..." />
             </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fbanvien_hrbn_124682.png&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fitechwx_hrbn_124589.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2FCarlsb_hrbn1_122809.png&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fnab_hrbnOct2_124666.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div> */}
-            <ul>
-              {banners.map(banner => (
-                <li key={banner._id}>
-                  {banner.title} - {banner.imageUrl} - {banner.link}
-                </li>
-              ))}
-            </ul>
+            
           </div>
           <button
             className="carousel-control-prev"

@@ -3,21 +3,24 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
 import { useUploadImage } from '../../../utils/hooks/Upload';
 import { toast } from 'react-toastify';
-import { AvatarIcon } from '../../employee/profile/icons';
-import { useChangeBannerMutation } from '../../../service/admin/banner';
+import { useChangeBannerMutation, useGetBannersQuery } from '../../../service/admin/banner';
+import IBanner from '../../../interface/admin/banner';
+import { SubmitHandler, useForm } from 'react-hook-form';
 
 const BannerForm = () => {
-
-
-    const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
+    const { _id, isLoggedIn } = useAppSelector((res: any) => res.banner)
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<IBanner>()
+    const [changeAvatar] = useChangeBannerMutation()
+    const { data: banners } = useGetBannersQuery()
     const navigate = useNavigate()
-    const [param, setParam] = useSearchParams()
     const [imgUrl, setImgUrl] = useState<any>()
-    const [loading, setLoading] = useState<boolean>(false)
     const [currentUrl, setCurrentUrl] = useState<any>()
     const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
-    const [changeAvatar] = useChangeBannerMutation()
-
+    let bannerImg
+    if (banners) {
+        bannerImg = banners[0].imageUrl
+        
+    }
     useEffect(() => {
         return () => {
             imgUrl && URL.revokeObjectURL(imgUrl.preview)
@@ -31,9 +34,9 @@ const BannerForm = () => {
         setImgUrl(file)
         setCurrentUrl(e)
     }
-
-    const handleChangeBanner = async () => {
-        setLoading(true)
+   
+ 
+    const handleUpdate: SubmitHandler<IBanner> = async (changeAvatarForm: IBanner) => {
         const formData = new FormData()
         const fileUpload = currentUrl?.target.files[0]
 
@@ -46,48 +49,51 @@ const BannerForm = () => {
         formData.append('upload_preset', 'dmjlzwse')
         formData.append('cloud_name', 'dywccbjry')
 
-        let newImage
+        let imgPath
         if (fileUpload !== undefined) {
             const image = await useUploadImage(formData)
-            newImage = image.url
-        }
-        await changeAvatar({
-            email,
-            newImage
-        }).then((res: any) => {
-            {
-                const { data } = res
-                if (data?.success) {
-                    setLoading(false)
-                    toast.success('Cập nhật thành công')
-                }
+            imgPath = image.url
+        }else {
+            if (banners) {
+                
+                imgPath = banners[0].imageUrl
             }
-        }).catch((err: any) => {
-            setLoading(false)
-            console.log(err.message);
-        })
-    }
+        }
+    
 
-    if (isLoggedIn == false) {
-        return navigate('/login')
-    }
+        await changeAvatar({
+            ...changeAvatarForm,
+            image: imgPath
+          }).then((res: any) => {{
+            const {data} = res
+            if (data?.success) {
+              toast.success('Cập nhật thành công')
+            }
+          }})
+        }
+      
+
+
+
     return (
-        <section className='border-1 rounded p-3' style={{ marginTop: "100px" }}>
-            <div className="mb-3">
-                <label className="company-label">Ảnh banner</label>
-                <div className='company-wrapper' style={{height: "300px"}}>
-                    {
-                          !imgUrl && Image === undefined ? "abc"
-                            :
+        <form onSubmit={handleSubmit(handleUpdate)}>
+            <section className='rounded p-3' style={{ marginTop: "100px" }}>
+                <div className="mb-3">
+                    <label className="company-label">Ảnh banner</label>
+                    <div className='company-wrapper' style={{ height: "400px" }}>
+                        {
                             <div className='company-photo'
-                                style={{ backgroundImage: `url(${imgUrl ? imgUrl.preview : Image})`, backgroundSize: 'cover',  // hoặc 'contain'
-                                backgroundRepeat: 'no-repeat',
-                                backgroundPosition: 'center',
-                                width: '100%',  // Thiết lập kích thước của div
-                                height: '200px', // Hoặc đặt chiều cao theo mong muốn
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center', }}>
+                                style={{
+                                    backgroundImage: `url(${imgUrl ? imgUrl.preview : bannerImg})`,
+                                    backgroundSize: 'contain',
+                                    backgroundRepeat: 'no-repeat',
+                                    backgroundPosition: 'center',
+                                    width: '100%',
+                                    height: '100%',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                }}>
                                 <div className="company-photo__action">
                                     <label htmlFor="company-logo" className="company-photo__action-label">
                                         <i className="fa-solid fa-pen"></i>
@@ -99,16 +105,20 @@ const BannerForm = () => {
                                         onChange={handleChangeInputFile}
                                     />
                                 </div>
-
                             </div>
-
-                    }
+                        }
+                    </div>
                 </div>
+                <div className='flex justify-end pt-2'>
+                    <button className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-10 text-[16px] rounded'>Lưu</button>
+                </div>
+            </section>
 
-            </div>
-            <button onClick={handleChangeBanner} className='bg-[#FE7D55] hover:bg-[#FD6333] text-white py-1 px-10 text-[16px] rounded'>Lưu</button>
+        </form>
 
-        </section>
+
+
+
     )
 };
 

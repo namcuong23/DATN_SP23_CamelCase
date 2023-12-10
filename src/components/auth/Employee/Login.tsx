@@ -32,7 +32,7 @@ const Login = () => {
         setLoading(true);
         const login = await signin(user);
         const { data: res }: any = login;
-    
+
         if (res?.success) {
             // Kiểm tra trạng thái isBlock
             if (res.user.isBlock) {
@@ -48,7 +48,7 @@ const Login = () => {
             toast.warning(res.mes);
         }
     }
-    
+
 
     const signInWithFacebook = async () => {
         const provider = new FacebookAuthProvider()
@@ -88,7 +88,9 @@ const Login = () => {
         <>
             <div className="border-0 text-dark relative">
                 <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
-                    <img width={150} height={150} src={myImage} alt="" />
+                    <NavLink to={"/"}>
+                        <img width={150} height={150} src={myImage} alt="" />
+                    </NavLink>
                 </div>
                 <div className="absolute top-[40%] left-[27%] bg-white">
                     {/* Nested Row within Card Body */}
@@ -174,10 +176,10 @@ const Login = () => {
                                 <button className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                     {
                                         loading ?
-                                        <i className="loading-icon fa-solid fa-circle-notch"></i>
-                                        : 'Đăng nhập'
+                                            <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                            : 'Đăng nhập'
                                     }
-                                    
+
                                 </button>
 
                             </form>
