@@ -51,7 +51,7 @@ import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import ChangeCV from "./components/CvPage/ChangeCV"
-import CvDemo from "./components/employee/CvDemo/CvDemo"
+import CvDemo from "./components/CvDemo/CvDemo"
 import PostList from "./components/employer/Posts/PostList"
 import PostAdd from "./components/employer/Posts/PostAdd"
 import PostDetail from "./components/employer/Posts/PostDetail"
@@ -72,7 +72,7 @@ function App() {
   useEffect(() => {
     window.addEventListener('storage', function(event) {
       if (event.key === 'checkout') {
-        navigate('/home/services');
+        window.location.href("/home/services");
         localStorage.removeItem("checkout");
       }
     });
