@@ -39,6 +39,23 @@ const WorkPage = () => {
             salary: [31000, null],
         }
     ]
+    const level = [
+        "Thực tập sinh/Sinh viên",
+        "Mới tốt nghiệp",
+        "Nhân viên",
+        "Trưởng phòng",
+        "Giám đốc và cấp cao hơn",
+      ];
+    
+      const typeOfWork = [
+        "Toàn thời gian",
+        "Bán thời gian",
+        "Thực tập",
+        "Việc làm online",
+        "Nghề tự do",
+        "Hợp đồng thời vụ",
+        "Khác",
+      ];
     const [data, setData] = useState([])
     const [provinces, setProvinces] = useState<any>([])
     const [searchMessage, setSearchMessage] = useState("")
@@ -54,6 +71,9 @@ const WorkPage = () => {
         work_location: "",
         job_salary: "",
         career: careerParams,
+        typeOfWork : "",
+        level : "",
+        sort : "-1",
     })
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -73,11 +93,11 @@ const WorkPage = () => {
     
     useEffect(() => {
         loadData(filterParams); 
-    }, [filterParams.work_location, filterParams.job_salary, filterParams.career,filterParams.key,careerParams]
+    }, [filterParams.work_location, filterParams.job_salary, filterParams.career,filterParams.key,filterParams.typeOfWork,filterParams.level,filterParams.sort,careerParams]
     )
     const loadData = async (params : any = null) => {
-        const {key,job_salary,career} = params
-        if(key || job_salary ||career) {
+        const {key,job_salary,career,work_location,level,typeOfWork,sort} = params
+        if(key || job_salary ||career || work_location || level || typeOfWork || sort) {
             setData([]);
             try {
                 const { data } = await axios({
@@ -179,6 +199,22 @@ const WorkPage = () => {
                                 ) : ''
                             }
                         </select>
+                        <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams, level: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
+                        <option value="">Tất cả cấp bậc</option>
+                            {
+                              level.map((item: any, index: number) =>
+                                    <option key={index} value={item}>{item}</option>
+                                )
+                            }
+                        </select>
+                        <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams, typeOfWork: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
+                        <option value="">Tất cả loại hình</option>
+                            {
+                              typeOfWork.map((item: any, index: number) =>
+                                    <option key={index} value={item}>{item}</option>
+                                )
+                            }
+                        </select>
                     </div>
                     {/* works */}
                     <div className="content-works" style={{ margin: 'auto', marginTop: '20px', display: 'flex', width: '80%', justifyContent: 'space-between' }}>
@@ -188,6 +224,11 @@ const WorkPage = () => {
                                 searchMessage
                                 : <span> Trang chủ &gt; Việc làm &gt; Tất cả việc làm </span>
                             }
+                            <div className="pt-2">
+                                <span> Sắp xếp theo </span>
+                                <span style={{ color : filterParams.sort == "-1" ? 'blue': ''}} className="px-2 cursor-pointer" onClick={() => setFilterParams({ ...filterParams, sort: "-1" })}>Ngày đăng (mới nhất)</span>
+                                <span style={{ color : filterParams.sort == "1" ? 'blue': ''}} className="px-2 cursor-pointer" onClick={() => setFilterParams({ ...filterParams, sort: "1" })}>Ngày đăng (cũ nhất)</span>
+                            </div>
                             {
                                 data?.map((item: any, index: any) => (
                                     <section
@@ -209,7 +250,7 @@ const WorkPage = () => {
                                                 </NavLink>
                                                 <p className="m-0">Hình Thức Làm Việc : {item.working_form}</p>
                                                 <p className="m-0"> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
-                                                <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary)}</span> | {item.work_location}</p>
+                                                <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary)}</span> | {item.work_location?.join(",")}</p>
                                             </div>
                                         </div>
                                         {item && item.priority ?
