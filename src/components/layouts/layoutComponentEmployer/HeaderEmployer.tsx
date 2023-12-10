@@ -34,9 +34,12 @@ const HeaderEmployer = () => {
     const [openNotify, setOpenNotify] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
-        pollingInterval: 5000,
-    });
+    const { data: notificationEmail } = useGetNotificationByEmailQuery(
+        email, 
+        // {
+        //     pollingInterval: 5000,
+        // }
+    );
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
 
     const onSignOut = async () => {
