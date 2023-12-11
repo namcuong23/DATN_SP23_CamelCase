@@ -1,13 +1,13 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react"
 import IPost from "../interface/post"
-
+import ICareer from "../interface/admin/career"
 export const postApi: any = createApi({
     reducerPath: 'postApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
     tagTypes: ['Post'],
     endpoints: (builder) => ({
-        jobCountByCareer: builder.query<IPost[], string>({
-            query: (careerId: string) => `/jobCountByCareer/${careerId}`,
+        jobCountByCareer: builder.query<ICareer[], string>({
+            query: (id: string) => `/jobCountByCareer/${id}`,
             providesTags: ['Post']
         }),
         getPosts: builder.query<IPost[], void>({

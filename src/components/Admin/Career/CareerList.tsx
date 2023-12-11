@@ -1,4 +1,5 @@
 import type { TableProps } from 'antd/es/table';
+import { List, Modal } from 'antd'
 import { NavLink } from 'react-router-dom';
 import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, InputRef, Space, Table } from 'antd';
@@ -10,17 +11,27 @@ import { MessageType } from 'antd/es/message/interface';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react'
 import { useJobCountByCareerQuery } from '../../../service/post';
+
 type Props = {}
+
 const CareerList = () => {
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const searchInput = useRef<InputRef>(null);
     let index = 0
-    const { data1: jobCounts } = useJobCountByCareerQuery();
-    const { data: vouchers, error, isLoading } = useGetCareersQuery()
-    console.log(vouchers);
+    const { data1: jobCounts, isLoading: jobCountsLoading, error: jobCountsError } = useJobCountByCareerQuery();
+    const { data: vouchers, error, isLoading } = useGetCareersQuery();
+    const [openModal, setOpenModal] = useState(false);
+
+    const handleDetails = (id: string | null) => {
+        setSelectedItemId(id);
+        setOpenModal(!!id); // Mở modal khi có ID, đóng modal khi id là null
+    };
+    
     const remove = 'Bạn có muốn xoá gói voucher này?';
-    const [removeVoucher] = useRemoveCareerMutation()
+    const [removeVoucher] = useRemoveCareerMutation();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
@@ -35,13 +46,15 @@ const CareerList = () => {
         clearFilters();
         setSearchText('');
     };
+
     const onHandleRemove = (id: string) => {
         console.log(id);
-        const confirm: MessageType = message.success('Xoá thành công')
+        const confirm: MessageType = message.success('Xoá thành công');
         if (confirm !== null) {
-            removeVoucher(id)
+            removeVoucher(id);
         }
-    }
+    };
+
     const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -118,6 +131,7 @@ const CareerList = () => {
                 text
             ),
     });
+
     const columns: ColumnsType<any> = [
         {
             title: 'STT',
@@ -130,17 +144,31 @@ const CareerList = () => {
             ...getColumnSearchProps('name'),
         },
         {
-            title : 'Ảnh mô tả',
-            dataIndex : 'image',
+            title: 'Ảnh mô tả',
+            dataIndex: 'image',
             render: (image) => <img width={50} src={image} key={image} />,
         },
-
         {
-            title : 'Thông tin chi tiết',
-            dataIndex : '',
-  
+            title: 'Thông tin chi tiết',
+            dataIndex: '',
+            render: (_, record) => (
+                <Button 
+                    type="primary" 
+                    onClick={() => {
+                        if (record._id) {
+                            handleDetails(record._id);
+                            console.log(record._id);
+                            
+                        } else {
+                            console.error("Không tìm thấy ID cho ngành nghề");
+                        }
+                    }} 
+                    style={{ color: 'black' }}
+                >
+                    Xem chi tiết
+                </Button>
+            ),
         },
-
         {
             title: 'Hành động',
             dataIndex: '_id',
@@ -162,18 +190,37 @@ const CareerList = () => {
     const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
+
     if (isLoading)
-        return <Space direction="vertical" style={{ width: '100%' }}>
-            <Spin tip="Loading" size="large">
-                <div className="content" />
-            </Spin>
-        </Space>
+        return (
+            <Space direction="vertical" style={{ width: '100%' }}>
+                <Spin tip="Loading" size="large">
+                    <div className="content" />
+                </Spin>
+            </Space>
+        );
+
     if (error)
-        return <Space direction="vertical" style={{ width: '100%' }}>
-            <Alert message="Error!!!" type="error" />
-        </Space>
+        return (
+            <Space direction="vertical" style={{ width: '100%' }}>
+                <Alert message="Error!!!" type="error" />
+            </Space>
+        );
+
     return (
         <>
+            <Modal
+                style={{ top: 147 }}
+                visible={openModal}
+                onCancel={() => handleDetails(null)}
+                okButtonProps={{ hidden: true }}
+                cancelButtonProps={{ hidden: true }}
+                width={700}
+            >
+                <h3 className='text-xl text-[#333333] border-b-[1px] pb-2 mb-2'>Thông tin các post liên quan</h3>
+               
+           
+            </Modal>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
                     <h2 className='mt-0 text-xl'>Quản lý các ngành nghề</h2>
@@ -186,6 +233,7 @@ const CareerList = () => {
             </div>
             <Table columns={columns} dataSource={vouchers} onChange={onChange} className='mx-3' />
         </>
-    )
+    );
 }
-export default CareerList
+
+export default CareerList;
