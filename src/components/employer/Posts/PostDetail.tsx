@@ -1,3 +1,4 @@
+import React from 'react'
 import { useState } from 'react'
 import { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
@@ -6,19 +7,26 @@ import { useGetPostQuery } from '../../../service/post'
 import {
     useApproveCvMutation,
     useGetCvsByPostIdQuery,
-    useRefuseCvMutation,
     useRemoveCvMutation
 } from '../../../service/manage_cv'
 import { Modal, Popconfirm, Space, message, Table } from 'antd'
 import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer'
-import { CloseOutlined, CheckOutlined, DeleteOutlined, UserAddOutlined } from '@ant-design/icons'
+import { CloseOutlined, CheckOutlined, } from '@ant-design/icons'
 import { useCreateCandidateMutation } from '../../../service/employer/candidate'
-import React from 'react'
-import { useCreateReplyMutation } from '../../../service/employer/reply'
 import { useAddNotificationMutation } from '../../../service/notification'
-import { LinkedinOutlined, SkypeOutlined, TwitterOutlined, FacebookOutlined, FileDoneOutlined, EnvironmentOutlined, DollarOutlined, EuroCircleOutlined, MobileOutlined } from '@ant-design/icons';
+import { 
+    LinkedinOutlined, 
+    SkypeOutlined, 
+    TwitterOutlined, 
+    FacebookOutlined, 
+    FileDoneOutlined, 
+    EnvironmentOutlined, 
+    DollarOutlined, 
+    EuroCircleOutlined, 
+    MobileOutlined 
+} from '@ant-design/icons';
 
-const PostDetail = (): any => {
+const PostDetail: React.FC = (): any => {
     const { id } = useParams()
     const { isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const navigate = useNavigate()
@@ -31,7 +39,6 @@ const PostDetail = (): any => {
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
     const [addCandidate] = useCreateCandidateMutation()
-    // const [addReply] = useCreateReplyMutation()
     const [addNotification] = useAddNotificationMutation()
 
     const onHandleAdd = async (user: any) => {
@@ -86,7 +93,6 @@ const PostDetail = (): any => {
     };
 
     const handleCancel = (e: React.MouseEvent<HTMLElement>) => {
-        console.log(e);
         setOpen(false);
     };
 
@@ -106,7 +112,7 @@ const PostDetail = (): any => {
         {
             title: 'Ngày nộp',
             dataIndex: 'createdAt',
-            render: (_, record) => <div>{new Date((record?.createdAt)).toLocaleDateString()}</div>,
+            render: (_, record) => <div>{new Date(record?.createdAt).toLocaleDateString()}</div>,
         },
         {
             title: 'Hành động',
@@ -253,10 +259,6 @@ const PostDetail = (): any => {
                                             </div>
                                         </div>
                                         <hr />
-                                        {/* <div className='flex mb-2'>
-                                            <div className="w-[150px] text-gray-500">Chỉ còn: </div>
-                                            <div>5 ngày 8 giờ</div>
-                                        </div> */}
 
                                     </div>
                                     <button
