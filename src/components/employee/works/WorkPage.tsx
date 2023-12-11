@@ -250,7 +250,11 @@ const WorkPage = () => {
                                                 </NavLink>
                                                 <p className="m-0">Hình Thức Làm Việc : {item.working_form}</p>
                                                 <p className="m-0"> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
-                                                <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary)}</span> | {item.work_location?.join(",")}</p>
+                                                {item && item.job_salary.length
+                                                    ? <p className="m-0"> <span style={{ color: 'red' }}>{formatCurrency(item.job_salary[0])} {item.job_salary[1] ? `-${formatCurrency(item.job_salary[1])}` : ""}</span> | {item.work_location.join(",")}</p>
+                                                    :<p className="m-0"> <span style={{ color: 'red' }}>Thương lượng</span> | {item.work_location.join(",")}</p>
+                                                    
+                                                }
                                             </div>
                                         </div>
                                         {item && item.priority ?
