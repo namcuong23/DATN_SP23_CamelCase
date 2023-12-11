@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Button, Form, Input, Popover, Select, Space, message } from 'antd';
+import { Checkbox, Form, Input, InputNumber, Select, Space, Switch, message } from 'antd';
 
 import { NavLink, useNavigate } from 'react-router-dom';
 import IPost from '../../../interface/post';
@@ -72,7 +72,7 @@ const PostAdd = (): any => {
                                 <div className='fs-4 font-[600]'>Việc cần tuyển</div>
                                 <Form.Item name="job_name" label="Tên công việc cần tuyển"
                                     rules={[
-                                        { required: true, message: "Please input your job name." },
+                                        { required: true, message: "Vui lòng nhập thông tin công việc" },
                                     ]}>
                                     <Input 
                                         placeholder='VD: Dịch vụ dọn dẹp' 
@@ -86,15 +86,15 @@ const PostAdd = (): any => {
                                 <div className='fs-4 font-[600]'>Thông tin về yêu cầu tuyển dụng</div>
                                 <Form.Item name="job_description" label="Mô tả công việc"
                                     rules={[
-                                        { required: true, message: 'Please input your job description.' },
-                                        { min: 10, message: 'This field is must be at least 10 characters.' }
+                                        { required: true, message: 'Vui lòng nhập thông tin công việc' },
+                                        { min: 10, message: 'Vui lòng nhập ít nhất 10 ký tự' }
                                     ]}>
                                     <Input.TextArea rows={7} placeholder='Nhập mô tả công việc' />
                                 </Form.Item>
                                 <Form.Item name="requirements" label="Yêu cầu tuyển dụng"
                                     rules={[
-                                        { required: true, message: 'Please input your requirements.' },
-                                        { min: 10, message: 'This field is must be at least 10 characters.' }
+                                        { required: true, message: 'Vui lòng nhập thông tin công việc' },
+                                        { min: 10, message: 'Vui lòng nhập ít nhất 10 ký tự' }
                                     ]}>
                                     <Input.TextArea rows={7} placeholder='Nhập yêu cầu tuyển dụng' />
                                 </Form.Item>
@@ -154,7 +154,7 @@ const PostAdd = (): any => {
                                 <Form.Item 
                                     name="gender" 
                                     label="Giới tính"
-                                    rules={[{ required: true, message: 'Please choose a gender.' }]}
+                                    rules={[{ required: true, message: 'This field is required.' }]}
                                     initialValue={'0'}
                                 >
                                     <Select size='large'>
@@ -166,13 +166,13 @@ const PostAdd = (): any => {
                                 </Form.Item>
                                 <Form.Item name="number_of_recruits" label="Số lượng"
                                     rules={[
-                                        { required: true, message: 'Please input number of recruits.' },
-                                        // { type: 'number', message: 'This is not a number.' }
+                                        { required: true, message: 'Vui lòng nhập giá trị số' },
+                                        { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <Input size='large' />
                                 </Form.Item>
                                 <Form.Item name="career" label="Ngành Nghề"
-                                    rules={[{ required: true, message: 'Please input career.' }]}
+                                    rules={[{ required: true, message: 'Vui lòng chọn ngành nghề' }]}
                                 >
                                     <Select 
                                         size='large' 
@@ -189,7 +189,7 @@ const PostAdd = (): any => {
                                 <Form.Item 
                                     name="work_location" 
                                     label="Khu vực"
-                                    rules={[{ required: true, message: 'Please input work location.' }]}
+                                    rules={[{ required: true, message: 'Vui lòng nhập địa điểm làm việc' }]}
                                 >
                                     {/* <Input /> */}
                                     <Select 
@@ -227,21 +227,18 @@ const PostAdd = (): any => {
                                         style={{
                                             width: '300px',
                                         }}
+                                        rules={[
+                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                            { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                        ]}
                                     >
-                                        <Select 
-                                            size='large'
-                                            placeholder="Tối thiểu"
-
-                                        >
-                                            <Select.Option value="100">100</Select.Option>
-                                            <Select.Option value="500">500</Select.Option>
-                                            <Select.Option value="1000">1000</Select.Option>
-                                            <Select.Option value="1500">1500</Select.Option>
-                                            <Select.Option value="2000">2000</Select.Option>
-                                            <Select.Option value="3000">3000</Select.Option>
-                                            <Select.Option value="5000">5000</Select.Option>
-                                            
-                                        </Select>
+                                        <InputNumber 
+                                            min={1} 
+                                            max={10} 
+                                            style={{ width: '300px' }} 
+                                            size='large' 
+                                            placeholder='Tối thiểu'
+                                        />
                                     </Form.Item>
                                     <Form.Item 
                                         name="maximum" 
@@ -249,19 +246,28 @@ const PostAdd = (): any => {
                                             width: '300px',
                                             marginLeft: '24px',
                                         }}
+                                        rules={[
+                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                            { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                        ]}
                                     >
-                                        <Select 
-                                            size='large'
-                                            placeholder="Tối đa"
-
-                                        >
-                                            <Select.Option value="500">500</Select.Option>
-                                            <Select.Option value="1000">1000</Select.Option>
-                                            <Select.Option value="1500">1500</Select.Option>
-                                            <Select.Option value="2000">2000</Select.Option>
-                                            <Select.Option value="3000">3000</Select.Option>
-                                            <Select.Option value="5000">5000</Select.Option>
-                                        </Select>
+                                        <InputNumber 
+                                            min={1} 
+                                            max={10} 
+                                            style={{ width: '100%' }} 
+                                            size='large' 
+                                            placeholder='Tối đa'
+                                        />
+                                    </Form.Item>
+                                    <Form.Item 
+                                        name="salary" 
+                                        style={{
+                                            width: '300px',
+                                            marginLeft: '24px',
+                                            fontSize: 24
+                                        }}
+                                    >
+                                        <Checkbox>Thương lượng</Checkbox>
                                     </Form.Item>
                                 </Space>
                             </div>
