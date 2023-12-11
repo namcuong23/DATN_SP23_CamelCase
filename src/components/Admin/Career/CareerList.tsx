@@ -9,10 +9,12 @@ import { useGetCareersQuery, useRemoveCareerMutation } from '../../../service/ad
 import { MessageType } from 'antd/es/message/interface';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react'
+import { useJobCountByCareerQuery } from '../../../service/post';
 type Props = {}
 const CareerList = () => {
     const searchInput = useRef<InputRef>(null);
     let index = 0
+    const { data1: jobCounts } = useJobCountByCareerQuery();
     const { data: vouchers, error, isLoading } = useGetCareersQuery()
     console.log(vouchers);
     const remove = 'Bạn có muốn xoá gói voucher này?';
@@ -133,7 +135,11 @@ const CareerList = () => {
             render: (image) => <img width={50} src={image} key={image} />,
         },
 
-
+        {
+            title : 'Thông tin chi tiết',
+            dataIndex : '',
+  
+        },
 
         {
             title: 'Hành động',
@@ -141,9 +147,6 @@ const CareerList = () => {
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    {/* <NavLink to={`/admin/vouchers/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
-                    </NavLink> */}
                     <Popconfirm placement="top"
                         title={remove}
                         onConfirm={() => onHandleRemove(record._id)}
