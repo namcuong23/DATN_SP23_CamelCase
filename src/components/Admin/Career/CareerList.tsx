@@ -11,16 +11,17 @@ import { MessageType } from 'antd/es/message/interface';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react'
 import { useJobCountByCareerQuery } from '../../../service/post';
-
 type Props = {}
-
 const CareerList = () => {
     const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const searchInput = useRef<InputRef>(null);
     let index = 0
-    const { data1: jobCounts, isLoading: jobCountsLoading, error: jobCountsError } = useJobCountByCareerQuery();
+    const { data: jobCounts } = useJobCountByCareerQuery(`6447c6e4845a0b738e1d96f8`);
     console.log(jobCounts);
-    
+    const getJobCountForCareer = (careerId: string) => {
+        const careerCount = jobCounts?.find((count) => count._id === careerId);
+        return careerCount?.count || 0;
+    };
     const { data: vouchers, error, isLoading } = useGetCareersQuery();
     const [openModal, setOpenModal] = useState(false);
 
@@ -154,21 +155,7 @@ const CareerList = () => {
             title: 'Thông tin chi tiết',
             dataIndex: '',
             render: (_, record) => (
-                <Button 
-                    type="primary" 
-                    onClick={() => {
-                        if (record._id) {
-                            handleDetails(record._id);
-                            console.log(record._id);
-                            
-                        } else {
-                            console.error("Không tìm thấy ID cho ngành nghề");
-                        }
-                    }} 
-                    style={{ color: 'black' }}
-                >
-                    Xem chi tiết
-                </Button>
+                <span>{getJobCountForCareer(record._id)}</span>
             ),
         },
         {
@@ -211,18 +198,6 @@ const CareerList = () => {
 
     return (
         <>
-            <Modal
-                style={{ top: 147 }}
-                visible={openModal}
-                onCancel={() => handleDetails(null)}
-                okButtonProps={{ hidden: true }}
-                cancelButtonProps={{ hidden: true }}
-                width={700}
-            >
-                <h3 className='text-xl text-[#333333] border-b-[1px] pb-2 mb-2'>Thông tin các post liên quan</h3>
-               
-           
-            </Modal>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
                 <div>
                     <h2 className='mt-0 text-xl'>Quản lý các ngành nghề</h2>
