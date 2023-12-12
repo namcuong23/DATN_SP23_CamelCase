@@ -31,15 +31,7 @@ const PostAdd = (): any => {
 
   const onHandleAdd: any = async (post: any) => {
     try {
-      const postData = {...post};
-      if(bargain){
-      postData['job_salary'] = [];
-      }
-      else {
-      postData['job_salary'] = [postData.minimum,postData.maximum];
-      }
-      delete postData['minimum'];
-      delete postData['maximum']
+      post['offer_salary'] = bargain;
       const data: any = await addPost({
         ...post,
         logo: user?.image,
@@ -60,6 +52,11 @@ const PostAdd = (): any => {
   const onChange = (e: CheckboxChangeEvent) => {
     console.log(e.target.checked);
     setBargain(e.target.checked);
+    form.setFieldsValue({
+        min_job_salary : 0,
+        max_job_salary : 0,
+    })
+    
   };
   if (!isLoggedIn) {
     return navigate("/login-epr");
@@ -242,44 +239,43 @@ const PostAdd = (): any => {
                                     }}
                                 >
                                     <Form.Item 
-                                        name="minimum" 
+                                        name="min_job_salary" 
                                         style={{
                                             width: '300px',
                                         }}
                                         rules={[
                                             { required: true, message: 'Vui lòng nhập giá trị số.' },
                                             { type: 'number', message: 'Vui lòng nhập giá trị số' }
-                                        ]}
+                                         ]}
                                     >
                                         <InputNumber
                                             disabled={bargain}
-                                            min={1} 
+                                            min={0}
                                             style={{ width: '300px' }} 
                                             size='large' 
                                             placeholder='Tối thiểu'
                                         />
                                     </Form.Item>
                                     <Form.Item 
-                                        name="maximum" 
+                                        name="max_job_salary" 
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
                                         }}
                                         rules={[
-                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                            { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                           { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                           { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                         ]}
                                     >
                                         <InputNumber
-                                            disabled={bargain}
-                                            min={1} 
+                                           disabled={bargain}
+                                            min={0} 
                                             style={{ width: '100%' }} 
                                             size='large' 
                                             placeholder='Tối đa'
                                         />
                                     </Form.Item>
-                                    <Form.Item 
-                                        name="salary" 
+                                    <Form.Item
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
