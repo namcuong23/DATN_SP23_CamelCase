@@ -8,10 +8,12 @@ import { apiGetProvinces } from '../../../service/api'
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
 import { useAppSelector } from '../../../app/hook';
 import React from 'react'
+import { useGetCareersQuery } from '../../../service/admin'
 
 const PostEdit = (): any => {
     const navigate = useNavigate()
     const { id } = useParams();
+    const { data: career, error, isLoading } = useGetCareersQuery()
     const [form] = Form.useForm();
     const { data: post } = useGetPostQuery(id as string)
     form.setFieldsValue(post)
@@ -37,6 +39,7 @@ const PostEdit = (): any => {
                 ...postForm,
                 post_status: post.post_status,
                 user_id: user?._id,
+                email: user?.email,
                 _id: id
             })
             message.success('Sửa thành công.')
@@ -104,6 +107,18 @@ const PostEdit = (): any => {
                                         // { type: 'number', message: 'This is not a number.' }
                                     ]}>
                                     <Input />
+                                </Form.Item>
+                                <Form.Item name="career" label="Ngành Nghề"
+                                    rules={[{ required: true, message: 'Please input career.' }]}>
+                                    {/* <Input /> */}
+                                   <Select defaultValue={'0'}>
+                                        <Select.Option value='0'>- Chọn Ngành Nghề -</Select.Option>
+                                        {
+                                            career ? career?.map((item: any) =>
+                                                <Select.Option value={item._id}>{item.name}</Select.Option>
+                                            ) : ''
+                                        }
+                                    </Select>
                                 </Form.Item>
                                 <Form.Item name="work_location" label="Khu vực"
                                     rules={[{ required: true, message: 'Please input work location.' }]}>

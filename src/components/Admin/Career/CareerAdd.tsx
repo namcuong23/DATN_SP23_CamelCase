@@ -73,15 +73,11 @@ const CareerAdd = () => {
     }
     return (
         <>
-            <div style={{ maxWidth: '700px' }} className='mx-auto'>
+          <div style={{ maxWidth: '800px' }} className='mx-10'>
                 <h1 className='mb-3 text-center fw-normal'>Tạo gói mới</h1>
                 <Form onFinish={onHandleAdd} form={form} name="add" layout="vertical">
 
                     <div className='d-flex align-items-top'>
-                        <div>
-                            <BookOutlined style={{ fontSize: '300%' }}
-                                className='text-success border-4 border-success p-3 rounded-circle' />
-                        </div>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Tên ngành nghề</div>
                             <Form.Item name="name" label="Tên ngành nghề"

@@ -19,6 +19,8 @@ const CareerList = () => {
     const searchInput = useRef<InputRef>(null);
     let index = 0
     const { data1: jobCounts, isLoading: jobCountsLoading, error: jobCountsError } = useJobCountByCareerQuery();
+    console.log(jobCounts);
+    
     const { data: vouchers, error, isLoading } = useGetCareersQuery();
     const [openModal, setOpenModal] = useState(false);
 
