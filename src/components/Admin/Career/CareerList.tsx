@@ -16,22 +16,15 @@ const CareerList = () => {
     const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const searchInput = useRef<InputRef>(null);
     let index = 0
-    const { data: jobCounts } = useJobCountByCareerQuery(`6447c6e4845a0b738e1d96f8`);
+    const { data: jobCounts } = useJobCountByCareerQuery();
     console.log(jobCounts);
     const getJobCountForCareer = (careerId: string) => {
         const careerCount = jobCounts?.find((count) => count._id === careerId);
         return careerCount?.count || 0;
     };
-    const { data: vouchers, error, isLoading } = useGetCareersQuery();
-    const [openModal, setOpenModal] = useState(false);
-
-    const handleDetails = (id: string | null) => {
-        setSelectedItemId(id);
-        setOpenModal(!!id); // Mở modal khi có ID, đóng modal khi id là null
-    };
-    
-    const remove = 'Bạn có muốn xoá gói voucher này?';
-    const [removeVoucher] = useRemoveCareerMutation();
+    const { data: careers, error, isLoading } = useGetCareersQuery();
+    const remove = 'Bạn có muốn xoá ngành nghề này?';
+    const [removeCareer] = useRemoveCareerMutation();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
 
@@ -54,7 +47,7 @@ const CareerList = () => {
         console.log(id);
         const confirm: MessageType = message.success('Xoá thành công');
         if (confirm !== null) {
-            removeVoucher(id);
+            removeCareer(id);
         }
     };
 
@@ -142,14 +135,9 @@ const CareerList = () => {
             render: () => { return index += 1 }
         },
         {
-            title: 'Tên gói',
+            title: 'Tên ngành nghề',
             dataIndex: 'name',
             ...getColumnSearchProps('name'),
-        },
-        {
-            title: 'Ảnh mô tả',
-            dataIndex: 'image',
-            render: (image) => <img width={50} src={image} key={image} />,
         },
         {
             title: 'Thông tin chi tiết',
@@ -171,6 +159,9 @@ const CareerList = () => {
                         cancelText="Không">
                         <DeleteOutlined className='text-danger' />
                     </Popconfirm>
+                    <NavLink to={`/admin/careers/edit/${record._id}`}>
+                        <EditOutlined className='text-dark' />
+                    </NavLink>
                 </Space>
             ),
         },
@@ -208,7 +199,7 @@ const CareerList = () => {
                     </NavLink>
                 </div>
             </div>
-            <Table columns={columns} dataSource={vouchers} onChange={onChange} className='mx-3' />
+            <Table columns={columns} dataSource={careers} onChange={onChange} className='mx-3' />
         </>
     );
 }
