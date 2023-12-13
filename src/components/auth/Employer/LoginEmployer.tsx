@@ -10,7 +10,7 @@ import { useAppDispatch } from '../../../app/hook'
 import { toast } from 'react-toastify'
 import { loginAuthEpr } from '../../../app/actions/authEpr'
 import React from 'react'
-
+import myImage from "./anh.jpg"
 const LoginEmployer = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
     const navigate = useNavigate()
@@ -26,7 +26,7 @@ const LoginEmployer = () => {
         setLoading(true);
         const login: any = await signin(user);
         const { data: res } = login;
-    
+
         if (res?.success) {
             // Kiểm tra trạng thái isBlock
             if (res.user.isBlock) {
@@ -42,18 +42,19 @@ const LoginEmployer = () => {
             toast.warning(res.mes);
         }
     }
-    
+
     return (
         <>
             <section>
                 <div className='w-full flex'>
-                    <aside className='bg-gradient-to-b from-[#001744] to-[#0053EB] w-[35%] min-h-screen'>
-                        <span className='text-2xl text-white flex justify-center p-[50%]'>
-                            <img width={150} height={150} src={'https://i.imgur.com/EKE76Ii.png'} alt="" />
-                        </span>
-                    </aside>
+                    <span className=''>
+                        <img src={myImage} alt="" />
+                    </span>
                     <main className='w-[65%] flex flex-col justify-between mt-[100px]'>
                         <div className='w-[60%] mx-auto text-[#474747]'>
+                        <NavLink to={"/"} className="custom-button">
+                                <span>Quay lại</span>
+                            </NavLink>
                             <h3 className='text-3xl font-[600] py-12'>Đăng nhập</h3>
                             <form onSubmit={handleSubmit(signIn)} className="flex flex-col">
                                 <div className='flex flex-col mb-2'>

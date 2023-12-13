@@ -67,6 +67,8 @@ import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import OrderManagement from "./components/admin/Order/OrderManagement"
+import BannerForm from "./components/Admin/Banner/BannerAdd"
+import CareerEdit from "./components/Admin/Career/CareerEdit"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -152,6 +154,7 @@ function App() {
           <LayoutAdmin />
         }>
           <Route index element={<HomeAdmin />} />
+          <Route path="dashboard" element={<HomeAdmin />} />
           <Route path="users-management/employee" element={<EmployeeManage />} />
           <Route path="users-management/employer" element={<EmployerManage />} />
           <Route path='vouchers' element={<VoucherList />} />
@@ -160,8 +163,10 @@ function App() {
           <Route path='posts' element={<PostAdmin />} />
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
+          <Route path='careers/edit/:id' element={<CareerEdit />} />
           <Route path='feedbacks' element={<FeedbackList />} />
           <Route path='order-management' element={<OrderManagement />} />
+          <Route path='banner' element={<BannerForm />} />
         </Route>
 
 

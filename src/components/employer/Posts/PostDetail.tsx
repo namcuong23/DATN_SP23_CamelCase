@@ -132,7 +132,7 @@ const PostDetail: React.FC = (): any => {
                         <CheckOutlined className='text-success' />
                     </Popconfirm>
 
-                    <Popconfirm placement="top"
+                    <Popconfirm 
                         title={remove}
                         onConfirm={() => onHandleDelete(record._id)}
                         okText="Đồng ý"
@@ -140,9 +140,8 @@ const PostDetail: React.FC = (): any => {
                         className='leading-[22px] flex items-center'
                     >
                         <CloseOutlined className='text-danger' />
-                    </Popconfirm>
+                    </Popconfirm >
                     <NavLink to={`/cv-preview?id=${record._id}`}
-                        className='leading-[22px]'
                         target='_blank'
                     >
                         <i className="fa-regular fa-eye text-[#333]"></i>

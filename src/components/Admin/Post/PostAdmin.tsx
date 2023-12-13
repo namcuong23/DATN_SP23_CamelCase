@@ -81,7 +81,6 @@ const PostAdmin = () => {
 
     const [duyet] = useApprovePostMutation()
     const onHandleApprove = (id: string) => {
-        console.log(id);
         const confirm: MessageType = message.info('Duyệt thành công')
         if (confirm !== null) {
             duyet(id)

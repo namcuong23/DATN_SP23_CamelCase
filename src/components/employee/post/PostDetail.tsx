@@ -37,7 +37,18 @@ const PostDetailEp = (): any => {
 
     return () => localStorage.removeItem('lastSubmissionDate')
   }, []);
-
+  useEffect(() => {
+    // Lấy giá trị từ localStorage khi component được tải
+    const storedIsApplied = localStorage.getItem('isApplied');
+    if (storedIsApplied === 'true') {
+      setIsApplied(true);
+    }
+  
+    return () => {
+      // Xoá giá trị từ localStorage khi component bị hủy
+      localStorage.removeItem('isApplied');
+    };
+  }, []);
   const { data: user } = useGetUserByEmailQuery(email)
   const [applyCv] = useApplyCvMutation()
   const [addMyPost] = useAddMyPostMutation()
@@ -48,8 +59,11 @@ const PostDetailEp = (): any => {
   const [file, setFile] = useState<any>()
   const date = new Date()
   const currentDate = useDateFormat(date)
-  
+  // Thêm vào đầu component
+const [isApplied, setIsApplied] = useState(apply !== null);
+
   const applyJob = async (candidate: any) => {
+    
     const currentDate = new Date();
     if (lastSubmissionDate && lastSubmissionDate.toDateString() === currentDate.toDateString()) {
       message.warning('Bạn đã nộp đơn trong ngày hôm nay rồi. Hãy quay lại vào ngày mai!');
@@ -79,6 +93,8 @@ const PostDetailEp = (): any => {
     
     if (rs?.success) {
       setIsAplly(false)
+      setIsApplied(true);
+      localStorage.setItem('isApplied', 'true');
       message.success(rs?.mes)
     }
     localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
@@ -215,23 +231,25 @@ const PostDetailEp = (): any => {
                   )}
                 </div>
                 <div className="w-[170px] h-[50px] ml-[16px]">
-                  { 
-                    isLoggedIn ? (
-                      <label
-                        htmlFor='modal-cv-check'
-                        style={{ fontSize: "18px" }}
-                        className="bg-[#ff7d55] w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center"
-                        onClick={() => setIsAplly(!isAplly)}
-                      >
-                        Nộp đơn
-                      </label>
-                    ) : (
-                      <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
-                        Đăng nhập để ứng tuyển
-                      </div>
-                    )
-                  }
-                </div>
+  {isLoggedIn ? (
+    <label
+      htmlFor='modal-cv-check'
+      style={{
+        fontSize: "18px",
+        background: isApplied ? "#ccc" : "#ff7d55",
+        cursor: isApplied ? "not-allowed" : "pointer",
+      }}
+      className={`w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center`}
+      onClick={() => !isApplied && setIsAplly(!isAplly)}
+    >
+      {isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
+    </label>
+  ) : (
+    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
+      Đăng nhập để ứng tuyển
+    </div>
+  )}
+</div>
                 
               </div>
             </div>
