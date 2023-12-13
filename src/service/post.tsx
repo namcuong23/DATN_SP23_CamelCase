@@ -1,11 +1,15 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/dist/query/react"
 import IPost from "../interface/post"
-
+import ICareer from "../interface/admin/career"
 export const postApi: any = createApi({
     reducerPath: 'postApi',
     baseQuery: fetchBaseQuery({ baseUrl: 'http://localhost:4000/api' }),
     tagTypes: ['Post'],
     endpoints: (builder) => ({
+        jobCountByCareer: builder.query<ICareer[], string>({
+            query: (id: string) => `/jobCountByCareer/${id}`,
+            providesTags: ['Post']
+        }),
         getPosts: builder.query<IPost[], void>({
             query: (id: any) => `/posts?id=${id}`,
             providesTags: ['Post']
@@ -14,8 +18,8 @@ export const postApi: any = createApi({
             query: () => '/posts/my-posts',
             providesTags: ['Post']
         }),
-        getPostsByCareer: builder.query<IPost,string>({
-            query: (query:any) => `/posts?career=${query['career']}&id=${query['id']}`,
+        getPostsByCareer: builder.query<IPost, string>({
+            query: (query: any) => `/posts?career=${query['career']}&id=${query['id']}`,
             providesTags: ['Post']
         }),
         getPost: builder.query<IPost, string>({
@@ -90,6 +94,8 @@ export const postApi: any = createApi({
             }),
             invalidatesTags: ['Post']
         }),
+    
+
     })
 })
 
@@ -105,6 +111,7 @@ export const formatDate = (inputDate: string): any => {
 }
 
 export const {
+    useJobCountByCareerQuery,
     useGetPostsQuery,
     useGetMyPostsQuery,
     useGetPostsByCareerQuery,

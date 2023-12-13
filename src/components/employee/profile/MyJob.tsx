@@ -12,19 +12,6 @@ import {
 import './Profile.scss'
 import MyJobComp from './ProfileComps/MyJobComp';
 
-const jobBtns = [
-  {
-    id: 1,
-    value: "Việc làm đã lưu",
-    isJob: false,
-  },
-  {
-    id: 2,
-    value: "Việc làm đã ứng tuyển",
-    isJob: true,
-  }
-]
-
 const MyJob = () => {
   const [btnId, setBtnId] = useState(1);
   const [isJob, setIsJob] = useState(false)
@@ -44,32 +31,9 @@ const MyJob = () => {
     //SaveJob
     <>
       <div className='myJob border bg-white p-[16px] rounded'>
-        <h3 className='text-[18px]'>Việc làm của tôi</h3>
+        <h3 className='text-[18px]'>Việc làm bạn đã lưu</h3>
       </div>
       <div className='border bg-white p-[16px] mt-[8px]'>
-        <div className="flex items-center py-[10px] ml-[-8px] border-b-[1px] mx-auto">
-
-          {
-            jobBtns && jobBtns.map(jobBtn => (
-              <div className="px-[8px]" key={jobBtn.id}>
-                <button 
-                  onClick={() => {
-                    setBtnId(jobBtn.id)
-                    setIsJob(jobBtn.isJob)
-                  }} 
-                  style={ btnId === jobBtn.id ? { 
-                    fontWeight: 'bold',
-                    color: '#005aff'
-                  } : {}} 
-                  className='hover:text-[#005aff]'
-                >
-                    {jobBtn.value}
-                  </button>
-              </div>
-            ))
-          }
-
-        </div>
         <div className=''>
           <div>
             {
@@ -99,17 +63,7 @@ const MyJob = () => {
                       </div>
 
                       {
-                        isJob ?
-                        <div>
-                          <NavLink 
-                            to={`/posts/${item._id}?apply=1`} 
-                            target='_blank'
-                            className='px-[16px] py-[10px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
-                          >
-                            Ứng tuyển lại
-                          </NavLink>
-                        </div>
-                        : <div className='flex items-center justify-center'>
+                        <div className='flex items-center justify-center'>
                           <button onClick={() => onHandleRemove({
                             _id: item._id,
                             isSave: true

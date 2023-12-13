@@ -4,3 +4,4 @@ export const useUploadImage = (data: any) => {
         body: data
     }).then((resp) => resp.json())
 }
+

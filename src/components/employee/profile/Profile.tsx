@@ -6,6 +6,7 @@ import { useChangeAvatarMutation, useGetUserByEmailQuery } from '../../../servic
 import './Profile.scss'
 import Infotmation from './Information/Infotmation'
 import MyJob from './MyJob';
+import MyApplied from "./MyApplied"
 import AccountMng from './AccountMng';
 import {
     AccountMngIcon,
@@ -31,7 +32,8 @@ const Profile: any = () => {
 
     const profilePages = [
         {id: 1, icon: <InformationIcon />, title: 'Hồ sơ của tôi', page: Infotmation, tab: 'information'},
-        {id: 2, icon: <MyJobIcon />, title: 'Việc làm của tôi', page: MyJob, tab: 'my-job'},
+        {id: 2, icon: <MyJobIcon />, title: 'Việc làm đã lưu', page: MyJob, tab: 'my-job'},
+        {id: 2, icon: <MyJobIcon />, title: 'Việc làm đã ứng tuyển', page: MyApplied, tab: 'my-applied'},
         {id: 3, icon: <AccountMngIcon />, title: 'Quản lý tài khoản', page: AccountMng, tab: 'account-manage'},
     ]
 

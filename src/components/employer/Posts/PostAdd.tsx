@@ -21,6 +21,7 @@ const PostAdd = (): any => {
     const { data: user }: any = useGetUserEprByEmailQuery(email)
     const [provinces, setProvinces] = useState<any>([])
     const [bargain,setBargain] = useState<any>(false);
+    
   useEffect(() => {
     const fetchProvinces = async () => {
       const { data: response }: any = await apiGetProvinces();
