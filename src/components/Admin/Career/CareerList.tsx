@@ -14,7 +14,6 @@ const CareerList = () => {
     const searchInput = useRef<InputRef>(null);
     let index = 0
     const { data: vouchers, error, isLoading } = useGetCareersQuery()
-    console.log(vouchers);
     const remove = 'Bạn có muốn xoá gói voucher này?';
     const [removeVoucher] = useRemoveCareerMutation()
     const [searchText, setSearchText] = useState('');

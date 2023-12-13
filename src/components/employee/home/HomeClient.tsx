@@ -177,8 +177,12 @@ const HomeClient = (): any => {
                                 <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
                                   <div key={post._id} className='job'>
                                     <div className="img-wrapper">
-                                      <img src={post.logo}
-                                        className="job-img" />
+                                      {
+                                        post?.logo !== null ?
+                                          <img src={post.logo} className="job-img" />
+                                          :
+                                          <span>Logo</span>
+                                      }
                                     </div>
                                     <div className="job-info">
                                       <div className='flex justify-end mt-[-8px] mb-[8px]'>

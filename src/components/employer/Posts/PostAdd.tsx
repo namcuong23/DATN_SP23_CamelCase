@@ -32,7 +32,7 @@ const PostAdd = (): any => {
         try {
             const data:any = await addPost({ 
                 ...post, 
-                logo: user?.image,
+                logo: user?.image || null,
                 post_status: null, 
                 user_id: user?._id 
             })

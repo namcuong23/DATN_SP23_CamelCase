@@ -83,7 +83,9 @@ const Register = () => {
         <>
             <div className="border-0 text-dark relative">
                 <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
-                    <img width={150} height={150} src={myImage} alt="" />
+                    <NavLink to='/'>
+                        <img width={150} height={150} src={myImage} alt="" />
+                    </NavLink>
                 </div>
                 <div className="absolute top-[40%] left-[50%] bg-white" style={{
                     transform: 'translateX(-50%)'
