@@ -193,8 +193,8 @@ const CareerList = () => {
                 <div>
                     <h2 className='mt-0 text-xl'>Quản lý các ngành nghề</h2>
                 </div>
-                <div className='bg-success rounded px-2 py-1'>
-                    <NavLink to={'/admin/careers/add'} className='text-white text-decoration-none font-bold'>
+                <div className='bg-success rounded px-3 py-2'>
+                    <NavLink to={'/admin/careers/add'} className='text-white text-decoration-none'>
                         Tạo ngành nghề mới
                     </NavLink>
                 </div>

@@ -321,4 +321,4 @@ const Home = (): any => {
     )
 }
 
-export default Home
+export default Home 
