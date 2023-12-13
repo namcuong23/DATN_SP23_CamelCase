@@ -39,7 +39,7 @@ const Header = (props: Props) => {
             </a>
           </div>{/* .nk-header-brand */}
           <div className="nk-header-search ms-3 ms-xl-0">
-          <SearchOutlined />
+          <SearchOutlined className='w-[40px]'/>
             <input type="text" className="form-control border-transparent form-focus-none" placeholder="Search anything" />
           </div>{/* .nk-header-news */}
           <div className="nk-header-tools">

@@ -42,6 +42,10 @@ export const adminApi = createApi({
             query: (email: string) => `/users/${email}/detail`,
             providesTags: ['User']
         }),
+        getUserById: builder.query<User[],string>({
+            query: (id: string) => `/users/${id}`,
+            providesTags: ['User']
+        }),
         addUser: builder.mutation<User, Partial<User>>({
             query: (user: any) => ({
                 url: `/users`,
@@ -123,5 +127,6 @@ export const {
     useSignupAMutation,
     useBlockUserMutation,
     useEditCareerMutation,
+    useGetUserByIdQuery,
     useUnlockUserMutation,
 } = adminApi

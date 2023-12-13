@@ -27,9 +27,9 @@ const Register = () => {
 
     const signUp: SubmitHandler<any> = async (user: any) => {
         console.log(user);
-        
+
         setLoading(true)
-        const register: any = await signup({...user})
+        const register: any = await signup({ ...user })
         const { data: res } = register
         if (res?.success) {
             setLoading(false)
@@ -82,16 +82,20 @@ const Register = () => {
     return (
         <>
             <div className="border-0 text-dark relative">
-            <NavLink to={'/'} className='cursor-pointer mr-10'>
-                <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
-                    <img width={150} height={150} src={myImage} alt="" />
-                </div>
+                <NavLink to={'/'} className='cursor-pointer mr-10'>
+                    <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
+                        <img width={150} height={150} src={myImage} alt="" />
+                    </div>
+
                 </NavLink>
-         
-                <div className="absolute top-[40%] left-[27%] bg-white">
+
+
+                <div className="absolute top-[40%] left-[50%] bg-white" style={{
+                    transform: 'translateX(-50%)'
+                }}>
                     {/* Nested Row within Card Body */}
                     <div className="">
-                        <div className="w-[600px] min-h-[70vh] shadow">
+                        <div className="w-[600px] mx-auto min-h-[70vh] shadow">
                             <div className="p-5">
                                 <div className="text-center pb-4">
                                     <h1 className="h4 text-gray-900 text-[2.3rem]">
@@ -194,10 +198,10 @@ const Register = () => {
                                         <button onClick={signUp} className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                             {
                                                 loading ?
-                                                <i className="loading-icon fa-solid fa-circle-notch"></i>
-                                                : 'Đăng ký'
+                                                    <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                                    : 'Đăng ký'
                                             }
-                                            
+
                                         </button>
                                     </div>
                                 </form>

@@ -34,9 +34,12 @@ const HeaderEmployer = () => {
     const [openNotify, setOpenNotify] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
-        pollingInterval: 5000,
-    });
+    const { data: notificationEmail } = useGetNotificationByEmailQuery(
+        email, 
+        // {
+        //     pollingInterval: 5000,
+        // }
+    );
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
 
     const onSignOut = async () => {
@@ -78,7 +81,7 @@ const HeaderEmployer = () => {
                         <NavLink to={'/home/posts'}
                             className='d-flex align-items-center text-decoration-none text-white'>
                             <span className='hover:text-orange-400'>
-                                Bài viết
+                                Tin tuyển dụng
                             </span>
 
                         </NavLink>

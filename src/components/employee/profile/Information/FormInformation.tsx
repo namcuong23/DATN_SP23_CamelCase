@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react"
-import { useForm } from "react-hook-form"
+import { Controller, useForm } from "react-hook-form"
 import { useAppSelector } from "../../../../app/hook"
 import { useGetUserByEmailQuery } from "../../../../service/auth"
 import { apiGetDistricts, apiGetProvinces } from "../../../../service/api"
 import useDateFormat from "../../../../utils/hooks/FormatDate"
+import { DatePicker, Space } from "antd"
+
+const { RangePicker } = DatePicker;
 
 const getUser = () => {
-    const { email } = useAppSelector((res: any) => res.auth)
-    const { data: user } = useGetUserByEmailQuery(email)
+    const { email }: any = useAppSelector((res: any) => res.auth)
+    const { data: user }: any = useGetUserByEmailQuery(email)
 
     return user
 }
@@ -82,7 +85,7 @@ export const FormInfor = ({onSubmit}: any) => {
                     <div className='w-50 flex flex-col'>
                         <div className='mb-[8px]'>Giới tính</div>
                         <select  {...register('gender')} defaultValue={0} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
-                            <option selected>--Chọn Giới tính--</option>
+                            <option defaultChecked={true}>--Chọn Giới tính--</option>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                         </select>
@@ -169,16 +172,17 @@ export const FormCareerGoal = ({onSubmit}: any) => {
 }
 
 export const FormWorkExp = ({onSubmit}: any) => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<any>()
+    const { register, handleSubmit, formState: { errors }, control } = useForm<any>()
     const date: any = new Date()
     const dayNow = useDateFormat(date)
 
     return (
         <form 
             onSubmit={handleSubmit(((work_experience: any) => onSubmit({
-                work_experience,
-                type: "form_work_exp"
-            })))}>
+                    work_experience,
+                    type: "form_work_exp"
+                })))
+            }>
             <div className='py-2'>
                 <div className='flex items-center mx-3 gap-x-2'>
                     <div className='w-50 flex flex-col'>
@@ -201,23 +205,29 @@ export const FormWorkExp = ({onSubmit}: any) => {
             </div>
             <div className='py-2'>
                 <div className='flex items-center mx-3 gap-x-2'>
-                    <div className='w-50 flex flex-col'>
-                        <div className='mb-[8px]'>Từ tháng</div>
-                        <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
-                            {...register('month_start')}
-                            type="text"
-                            placeholder="MM/YYYY"
-                            pattern="\d{2}/\d{4}"
+                    <div className='w-100'>
+                        <div className='mb-[8px]'>Thời gian</div>
+                        <Space
+                            direction="horizontal" 
+                            size={12} 
+                            style={{width: '100%', display: 'block'}}
+                        >
+                            
+                            <Controller
+                                name="timeId"
+                                control={control}
+                                render={({field}) => (
+                                    <RangePicker
+                                        style={{ width: '100%', height: '36px'}}
+                                        format="MM/DD/YYYY"
+                                        onChange={(e: any) => {
+                                            field.onChange(e)
+                                        }}
+                                        placeholder={['Bắt đầu', 'Kết thúc']}
+                                    />
+                                )}
                             />
-                    </div>
-                    <div className='w-50 flex flex-col'>
-                        <label>Đến tháng</label>
-                        <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
-                            {...register('month_end')} 
-                            type="text"
-                            placeholder="MM/YYYY"
-                            pattern="\d{2}/\d{4}"
-                            />
+                        </Space>
                     </div>
                 </div>
             </div>
@@ -244,7 +254,7 @@ export const FormWorkExp = ({onSubmit}: any) => {
 }
 
 export const FormEducation = ({onSubmit, propId}: any) => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<any>()
+    const { register, handleSubmit, formState: { errors }, reset, control } = useForm<any>()
 
     if (propId) {
         const { education } = getUser()
@@ -292,23 +302,29 @@ export const FormEducation = ({onSubmit, propId}: any) => {
             </div>
             <div className='py-2'>
                 <div className='flex items-center mx-3 gap-x-2'>
-                    <div className='w-50 flex flex-col'>
-                        <div className='mb-[8px]'>Từ tháng</div>
-                        <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
-                            {...register('month_start')}
-                            type="text"
-                            placeholder="MM/YYYY"
-                            pattern="\d{2}/\d{4}"
+                    <div className='w-100'>
+                        <div className='mb-[8px]'>Thời gian</div>
+                        <Space
+                            direction="horizontal" 
+                            size={12} 
+                            style={{width: '100%', display: 'block'}}
+                        >
+                            
+                            <Controller
+                                name="timeId"
+                                control={control}
+                                render={({field}) => (
+                                    <RangePicker
+                                        style={{ width: '100%', height: '36px'}}
+                                        format="MM/DD/YYYY"
+                                        onChange={(e: any) => {
+                                            field.onChange(e)
+                                        }}
+                                        placeholder={['Bắt đầu', 'Kết thúc']}
+                                    />
+                                )}
                             />
-                    </div>
-                    <div className='w-50 flex flex-col'>
-                        <label>Đến tháng</label>
-                        <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
-                            {...register('month_end')} 
-                            type="text"
-                            placeholder="MM/YYYY"
-                            pattern="\d{2}/\d{4}"
-                            />
+                        </Space>
                     </div>
                 </div>
             </div>

@@ -1,17 +1,17 @@
 import { useState, useRef } from 'react'
 import html2canvas from 'html2canvas';
-import jsPDF from "jspdf";
-import { pdfjs } from 'react-pdf';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { message } from 'antd';
+import jsPDF from "jspdf"
+import { pdfjs } from 'react-pdf'
 
-import { useSaveCVMutation } from '../../service/auth';
-import { useAppSelector } from '../../app/hook';
 import SideBar from './SideBar/SideBar'
 import CVChoose from './CvChoose/CVChoose'
 import Header from './Header/Header'
 
 import "./ChangeCV.css"
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useAppSelector } from '../../app/hook';
+import { useSaveCVMutation } from '../../service/auth';
+import { message } from 'antd';
 
 const ChangeCV = () => {
   const [param] = useSearchParams()

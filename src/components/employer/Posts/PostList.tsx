@@ -1,10 +1,10 @@
 import type { ColumnsType, ColumnType } from 'antd/es/table';
+import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { useGetPostsByUIdQuery } from '../../../service/post';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
-import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from '@ant-design/icons';
@@ -13,21 +13,22 @@ import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-import React from 'react';
+import CandidateList from './PostComponents/CandidateList';
 
 const PostList = (): any | null | JSX.Element => {
-    const [searchText, setSearchText] = useState('');
-    const [searchedColumn, setSearchedColumn] = useState('');
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const [open, setOpen] = useState(false);
+    const [postId, setPostId] = useState('');
 
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const {data: user}: any = useGetUserEprByEmailQuery(email);
-    
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
+    
     const [provinces, setProvinces] = useState<any>([])
-
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
@@ -84,7 +85,6 @@ const PostList = (): any | null | JSX.Element => {
         setSearchText(selectedKeys[0]);
         setSearchedColumn(dataIndex);
     };
-
     const handleReset = (clearFilters: () => void) => {
         clearFilters();
         setSearchText('');
@@ -165,45 +165,23 @@ const PostList = (): any | null | JSX.Element => {
                 text
             ),
     });
+
     const columns: ColumnsType<DataType> = [
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
             ...getColumnSearchProps('job_name'),
-        },
-        {
-            title: 'Hình thức làm việc',
-            dataIndex: 'working_form',
-            filters: [
-                {
-                    text: 'online',
-                    value: 'online',
-                },
-                {
-                    text: 'offline',
-                    value: 'offline',
-                },
-            ],
-            onFilter: (value: any, record) => record.working_form.indexOf(value) === 0,
-        },
-        {
-            title: 'Khu vực',
-            dataIndex: 'work_location',
-            filters: provinces.map((province: any) => (
-                {
-                    text: province.province_name,
-                    value: province.province_name,
-                }
-            )),
-            onFilter: (value: any, record) => record.work_location.indexOf(value) === 0,
+            width: "60%",
+            render: (_, record) => (
+                <span className='text-ellipsis'>{record.job_name}</span>
+            )
         },
         {
             title: 'Ngày đăng',
             dataIndex: 'createdAt',
             render: (_, record) => (
-                <p>{(new Date(record.createdAt)).toLocaleDateString()}</p>
-            ),
-
+                <span>{new Date(record.createdAt).toLocaleDateString()}</span>
+            )
         },
         {
             title: 'Trạng thái',
@@ -211,20 +189,45 @@ const PostList = (): any | null | JSX.Element => {
             render: (_: any, record: DataType) => (
                 <>
                     {
-                        record.post_status == '' ? <Tag
+                        record.post_status == '' ? 
+                        <Tag
                             color={'gold'}
                             key={'Đang chờ duyệt'}>
                             Đang chờ duyệt
                         </Tag>
                             :
-                            <Tag
-                                color={record.post_status ? "green" : "red"}
-                                key={record.post_status ? "Đã duyệt" : "Từ chối"}>
-                                {record.post_status ? "Đã duyệt" : "Từ chối"}
-                            </Tag>
+                        <Tag
+                            color={record.post_status ? "green" : "red"}
+                            key={record.post_status ? "Đã duyệt" : "Từ chối"}>
+                            {record.post_status ? "Đã duyệt" : "Từ chối"}
+                        </Tag>
                     }
                 </>
             ),
+        },
+        {
+            title: 'Ứng viên',
+            dataIndex: 'candidate',
+            render: (_, record) => (
+                <>
+                    <button
+                        className='text-[#005aff] underline text-center'
+                        onClick={() => {
+                            setOpen(true)
+                            setPostId(record._id)
+                        }}
+                    >
+                        Xem
+                    </button>
+
+                    <CandidateList 
+                        isOpen={open} 
+                        handleCancel={() => setOpen(false)}
+                        postId={postId && postId}
+                    />
+                </>
+            ),
+
         },
         {
             title: 'Hành động',
@@ -274,9 +277,9 @@ const PostList = (): any | null | JSX.Element => {
                 <div className='mt-4 min-h-screen'>
                     <div className='d-flex align-items-center justify-content-between mb-2'>
                         <div>
-                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý bài viết</h2>
+                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý Tin tuyển dụng</h2>
                         </div>
-                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-3 py-2'>
+                        <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-2 py-1'>
                             <NavLink to={'/home/posts/add'} className='text-white text-decoration-none'>
                                 Đăng tin
                             </NavLink>

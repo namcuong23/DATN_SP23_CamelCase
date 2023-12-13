@@ -92,7 +92,9 @@ const Login = () => {
                         <img width={150} height={150} src={myImage} alt="" />
                     </NavLink>
                 </div>
-                <div className="absolute top-[40%] left-[27%] bg-white">
+                <div className="absolute top-[40%] left-[50%] bg-white" style={{
+                    transform: 'translate(-50%)'
+                }}>
                     {/* Nested Row within Card Body */}
                     {/* <div className="row p-0"> */}
                     <div className="w-[600px] min-h-[70vh] shadow">
