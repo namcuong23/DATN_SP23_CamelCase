@@ -31,7 +31,7 @@ const Login = () => {
         setLoading(true);
         const login = await signin(user);
         const { data: res }: any = login;
-    
+
         if (res?.success) {
             if (res.user.isBlock) {
                 setLoading(false);
@@ -46,7 +46,7 @@ const Login = () => {
             toast.warning(res.mes);
         }
     }
-    
+
 
     const signInWithFacebook = async () => {
         const provider = new FacebookAuthProvider()
@@ -176,10 +176,10 @@ const Login = () => {
                                 <button className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                     {
                                         loading ?
-                                        <i className="loading-icon fa-solid fa-circle-notch"></i>
-                                        : 'Đăng nhập'
+                                            <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                            : 'Đăng nhập'
                                     }
-                                    
+
                                 </button>
 
                             </form>

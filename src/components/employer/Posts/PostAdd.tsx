@@ -34,7 +34,8 @@ const PostAdd = (): any => {
                 ...post, 
                 logo: user?.image || null,
                 post_status: null, 
-                user_id: user?._id 
+                user_id: user?._id,
+                email: user?.email
             })
             if(data?.error?.status == 400){
                 message.warning(data.error.data.message)

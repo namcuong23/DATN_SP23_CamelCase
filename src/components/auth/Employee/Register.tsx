@@ -27,9 +27,9 @@ const Register = () => {
 
     const signUp: SubmitHandler<any> = async (user: any) => {
         console.log(user);
-        
+
         setLoading(true)
-        const register: any = await signup({...user})
+        const register: any = await signup({ ...user })
         const { data: res } = register
         if (res?.success) {
             setLoading(false)
@@ -195,10 +195,10 @@ const Register = () => {
                                         <button onClick={signUp} className="bg-[#FE7D55] hover:bg-[#FD6333] btn-block flex items-center justify-center py-3 gap-2 rounded text-white">
                                             {
                                                 loading ?
-                                                <i className="loading-icon fa-solid fa-circle-notch"></i>
-                                                : 'Đăng ký'
+                                                    <i className="loading-icon fa-solid fa-circle-notch"></i>
+                                                    : 'Đăng ký'
                                             }
-                                            
+
                                         </button>
                                     </div>
                                 </form>

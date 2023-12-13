@@ -101,7 +101,18 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['User'],
         }),
-        
+        editCareer: builder.mutation<ICareer, Partial<ICareer> & Pick<ICareer, '_id'>>({
+            query: (career: ICareer) => ({
+                url: `/careers/edit/${career._id}`,
+                method: 'PUT',
+                body: career
+            }),
+            invalidatesTags: ['Career']
+        }),
+        getCareer: builder.query({
+            query: (id: string) => `/careers/${id}`,
+            providesTags: ['Career']
+        }),
     })
 });
 export const {
@@ -110,10 +121,12 @@ export const {
     useUpdateUserMutation,
     useAddCareerMutation,
     useGetCareersQuery,
+    useGetCareerQuery,
     useRemoveCareerMutation,
     useSigninAdminMutation,
     useSignupAMutation,
     useBlockUserMutation,
+    useEditCareerMutation,
     useGetUserByIdQuery,
     useUnlockUserMutation,
 } = adminApi
