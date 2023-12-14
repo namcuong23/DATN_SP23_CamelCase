@@ -16,18 +16,22 @@ const PostEdit = (): any => {
     const { data: career, error, isLoading } = useGetCareersQuery()
     const [form] = Form.useForm();
     const { data: post } = useGetPostQuery(id as string);
+    
     const [editPost] = useEditPostMutation()
     const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])
     const [bargain,setBargain] = useState<any>(post?.offer_salary || false);
+
+    useEffect(() => {
+        form.setFieldsValue(post);
+    },[post]);
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
             setProvinces(response?.results);
         }
-        form.setFieldsValue(post)
         fetchProvinces()
     }, [])
 
