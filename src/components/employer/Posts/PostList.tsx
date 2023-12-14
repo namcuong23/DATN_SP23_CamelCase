@@ -43,10 +43,13 @@ const PostList = (): any | null | JSX.Element => {
         job_name: string;
         job_description: string;
         job_salary: number;
+        offer_salary: string;
         working_form: string;
         number_of_recruits: number;
         requirements: string;
         gender: string;
+        min_job_salary: string;
+        max_job_salary: string;
         work_location: string;
         post_status: boolean | string;
         user_id: string;
@@ -60,6 +63,8 @@ const PostList = (): any | null | JSX.Element => {
         job_description: String(item.job_description),
         job_salary: Number(item.job_salary),
         working_form: String(item.working_form),
+        min_job_salary: String(item.min_job_salary),
+        max_job_salary: String(item.max_job_salary),
         number_of_recruits: Number(item.number_of_recruits),
         requirements: String(item.requirements),
         gender: String(item.job_name),
@@ -171,9 +176,16 @@ const PostList = (): any | null | JSX.Element => {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
             ...getColumnSearchProps('job_name'),
-            width: "60%",
             render: (_, record) => (
                 <span className='text-ellipsis'>{record.job_name}</span>
+            )
+        },
+        {
+            title: 'Mức Lương',
+            dataIndex: 'job_name',
+            ...getColumnSearchProps('job_name'),
+            render: (_, record) => (
+                <span className='text-ellipsis'>{record.min_job_salary} - {record.max_job_salary}</span>
             )
         },
         {
