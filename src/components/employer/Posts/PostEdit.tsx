@@ -278,7 +278,7 @@ const PostEdit = (): any => {
                                         fontSize: 24
                                     }}
                                 >
-                                    <Checkbox defaultChecked={post.offer_salary} onChange={onChange}>Thương lượng</Checkbox>
+                                    <Checkbox defaultChecked={post?.offer_salary} onChange={onChange}>Thương lượng</Checkbox>
                                 </Form.Item>
                             </Space>
                         </div>
