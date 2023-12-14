@@ -35,22 +35,22 @@ const WorkPage = () => {
         },
         {
             title: "Từ 10 triệu đến 20 triệu",
-            min_salary: 10000001,
+            min_salary: 10000000,
             max_salary : 20000000
         },
         {
             title: "Từ 20 triệu  đến 25 triệu",
-            min_salary: 20000001,
+            min_salary: 20000000,
             max_salary : 25000000
         },
         {
-            title: "Từ 25 triệu  đến 30 triệu",
-            min_salary: 25000001,
+            title: "Từ 25 triệu đến 30 triệu",
+            min_salary: 25000000,
             max_salary : 30000000,
         },
         {
             title: "30 triệu trở lên",
-            min_salary: 30000001,
+            min_salary: 30000000,
         }
     ]
     const level = [

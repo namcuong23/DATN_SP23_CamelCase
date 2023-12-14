@@ -57,7 +57,6 @@ const PostAdd = (): any => {
         min_job_salary : 0,
         max_job_salary : 0,
     })
-    
   };
   if (!isLoggedIn) {
     return navigate("/login-epr");
