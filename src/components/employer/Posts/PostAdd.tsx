@@ -36,7 +36,7 @@ const PostAdd = (): any => {
       const data: any = await addPost({
         ...post,
         logo: user?.image,
-        post_status: null,
+        post_status: false,
         user_id: user?._id,
       });
       if (data?.error?.status == 400) {
@@ -128,15 +128,15 @@ const PostAdd = (): any => {
                                             size='large'
                                         >
                                             <Select.Option value="0">- Chọn hình thức làm việc -</Select.Option>
-                                            <Select.Option value="Tất cả hình thức">Tất cả hình thức</Select.Option>
-                                            <Select.Option value="Toàn thời gian">Toàn thời gian</Select.Option>
-                                            <Select.Option value="Bán thời gian">Bán thời gian</Select.Option>
-                                            <Select.Option value="Việc làm online">Việc làm online</Select.Option>
-                                            <Select.Option value="Thực tập">Thực tập</Select.Option>
-                                            <Select.Option value="Nghề tự do">Nghề tự do</Select.Option>
-                                            <Select.Option value="Khác">
-                                                Khác
-                                            </Select.Option>
+                                            <Select.Option value="Tất cả hình thức">Toàn thời gian</Select.Option>
+                                            <Select.Option value="Toàn thời gian">Bán thời gian</Select.Option>
+                                            <Select.Option value="Bán thời gian">Công việc tạm thời</Select.Option>
+                                            <Select.Option value="Thực tập">Làm việc từ xa</Select.Option>
+                                            <Select.Option value="Làm việc theo giờ linh hoạt">Làm việc theo giờ linh hoạt</Select.Option>
+                                            <Select.Option value="Làm việc theo dự án">Làm việc theo dự án</Select.Option>
+                                            <Select.Option value="Làm việc theo ca">Làm việc theo ca</Select.Option>
+                                            <Select.Option value="Làm việc không chính thức (Freelance)">Làm việc không chính thức (Freelance)</Select.Option>
+                                            <Select.Option value="Khác">Khác</Select.Option>
                                             
                                         </Select>
                                     </Form.Item>

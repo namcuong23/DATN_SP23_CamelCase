@@ -1,11 +1,12 @@
 import { message } from 'antd'
-import { useState, useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
-import { 
+import React from 'react';
+import {
   useAddMyPostMutation,
   useGetPostQuery,
-  useGetPostsByCareerQuery, 
+  useGetPostsByCareerQuery,
   useRemoveMyPostMutation
 } from '../../../service/post'
 import { useGetUserByEmailQuery } from '../../../service/auth'
@@ -24,7 +25,7 @@ const PostDetailEp = (): any => {
   const { data: post } = useGetPostQuery(id)
   const { data: posts } = useGetPostsByCareerQuery({
     id,
-    career : post?.career
+    career: post?.career
   })
   const { email, isLoggedIn } = useAppSelector((rs: any) => rs.auth)
   const [lastSubmissionDate, setLastSubmissionDate] = useState<Date | null>(null);
@@ -43,7 +44,7 @@ const PostDetailEp = (): any => {
     if (storedIsApplied === 'true') {
       setIsApplied(true);
     }
-  
+
     return () => {
       // Xoá giá trị từ localStorage khi component bị hủy
       localStorage.removeItem('isApplied');
@@ -53,17 +54,17 @@ const PostDetailEp = (): any => {
   const [applyCv] = useApplyCvMutation()
   const [addMyPost] = useAddMyPostMutation()
   const [addNotification] = useAddNotificationMutation()
-  const {register, handleSubmit, formState: {errors}} = useForm()
+  const { register, handleSubmit, formState: { errors } } = useForm()
 
   const [fileName, setFileName] = useState<any>()
   const [file, setFile] = useState<any>()
   const date = new Date()
   const currentDate = useDateFormat(date)
   // Thêm vào đầu component
-const [isApplied, setIsApplied] = useState(apply !== null);
+  const [isApplied, setIsApplied] = useState(apply !== null);
 
   const applyJob = async (candidate: any) => {
-    
+
     const currentDate = new Date();
     if (lastSubmissionDate && lastSubmissionDate.toDateString() === currentDate.toDateString()) {
       message.warning('Bạn đã nộp đơn trong ngày hôm nay rồi. Hãy quay lại vào ngày mai!');
@@ -84,13 +85,14 @@ const [isApplied, setIsApplied] = useState(apply !== null);
 
     const formData: any = new FormData();
     formData.append("name", user?.name)
+    formData.append("image", user?.image)
     formData.append("job_title", candidate.job_title)
     formData.append("email", candidate.email)
     formData.append("post_id", id)
     formData.append("file", file)
     const apply = await applyCv(formData)
     const { data: rs } = apply
-    
+
     if (rs?.success) {
       setIsAplly(false)
       setIsApplied(true);
@@ -114,12 +116,12 @@ const [isApplied, setIsApplied] = useState(apply !== null);
       _id: id,
       isSave: true
     })
-    .then((res: any) => {
-      message.success("Đã thêm vào Việc làm đã lưu")
-    })
-    .catch((err: any) => {
-      message.error(err.message)
-    })
+      .then((res: any) => {
+        message.success("Đã thêm vào Việc làm đã lưu")
+      })
+      .catch((err: any) => {
+        message.error(err.message)
+      })
   }
 
   const [removeMyPost] = useRemoveMyPostMutation()
@@ -128,11 +130,11 @@ const [isApplied, setIsApplied] = useState(apply !== null);
       _id: id,
       isSave: true
     })
-    .then(() => {
+      .then(() => {
         message.success("Đã xoá khỏi Việc làm đã lưu")
-    }).catch((err: any) => {
+      }).catch((err: any) => {
         message.error(err.message)
-    })
+      })
   }
   return (
     <>
@@ -168,10 +170,11 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                       }}
                       className='rounded-full w-[100px] h-[100px]'
                     >
-                      <img src={post?.logo}/>
+                      <img src={post?.logo} />
                     </section>
                   </div>
                   <div className="cuong1 w-[80%]">
+                  <div></div>
                     <a
                       href="#"
                       className="job-name"
@@ -179,8 +182,12 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                     >
                       {post?.job_name}
                     </a>
-                    <div style={{ color: "#005aff" }}>
-                      {post?.work_location}
+                    <div className="">
+                      <span className="text-[#333333] block font-thin text-[15px]">
+                        {post?.offer_salary
+                          ? "Thương lượng"
+                          : `${formatCurrency(post?.min_job_salary)} - ${formatCurrency(post?.max_job_salary)}`}
+                      </span>
                     </div>
                     <span style={{ color: "#999", fontSize: "13px" }}>
                       Ngày đăng tin:{" "}
@@ -198,59 +205,59 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                   {isLoggedIn ? (
                     <>
                       {
-                        post && post.isSave ? 
-                        <button 
-                          onClick={handleRemove}
-                          className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]" 
-                          data-evt-type="save-job"
-                          style={{
-                            borderColor: "#669cff",
-                            color: "#669cff"
-                          }}
-                        >
-                          <i className="fa-solid fa-heart"></i> 
-                        </button>
-                        : 
-                        <button 
-                          onClick={saveJob} 
-                          className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]" 
-                          data-evt-type="save-job"
-                          style={{
-                            borderColor: "#666",
-                            color: "#666"
-                          }}
-                        >
-                          <i className="fa-regular fa-heart"></i>
-                        </button>
+                        post && post.isSave ?
+                          <button
+                            onClick={handleRemove}
+                            className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]"
+                            data-evt-type="save-job"
+                            style={{
+                              borderColor: "#669cff",
+                              color: "#669cff"
+                            }}
+                          >
+                            <i className="fa-solid fa-heart"></i>
+                          </button>
+                          :
+                          <button
+                            onClick={saveJob}
+                            className="text-[20px] px-[16px] h-[50px] border-[1px] rounded-[6px]"
+                            data-evt-type="save-job"
+                            style={{
+                              borderColor: "#666",
+                              color: "#666"
+                            }}
+                          >
+                            <i className="fa-regular fa-heart"></i>
+                          </button>
                       }
                     </>
                   ) : (
                     <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
-                      Đăng nhập để lưu 
+                      Đăng nhập để lưu
                     </div>
                   )}
                 </div>
                 <div className="w-[170px] h-[50px] ml-[16px]">
-  {isLoggedIn ? (
-    <label
-      htmlFor='modal-cv-check'
-      style={{
-        fontSize: "18px",
-        background: isApplied ? "#ccc" : "#ff7d55",
-        cursor: isApplied ? "not-allowed" : "pointer",
-      }}
-      className={`w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center`}
-      onClick={() => !isApplied && setIsAplly(!isAplly)}
-    >
-      {isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
-    </label>
-  ) : (
-    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
-      Đăng nhập để ứng tuyển
-    </div>
-  )}
-</div>
-                
+                  {isLoggedIn ? (
+                    <label
+                      htmlFor='modal-cv-check'
+                      style={{
+                        fontSize: "18px",
+                        background: isApplied ? "#ccc" : "#ff7d55",
+                        cursor: isApplied ? "not-allowed" : "pointer",
+                      }}
+                      className={`w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center`}
+                      onClick={() => !isApplied && setIsAplly(!isAplly)}
+                    >
+                      {isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
+                    </label>
+                  ) : (
+                    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
+                      Đăng nhập để ứng tuyển
+                    </div>
+                  )}
+                </div>
+
               </div>
             </div>
           </div>
@@ -291,8 +298,16 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                     <p className="text-[21px] text-uppercase mt-1 mb-2 text-[#333333] font-medium">
                       Địa điểm làm việc:
                     </p>
-                    <div>{post?.work_location}</div>
+                    <div>
+                      {post?.work_location.map((location, index) => (
+                        <React.Fragment key={index}>
+                          {index > 0 && <br />} {/* Thêm xuống dòng nếu không phải phần tử đầu tiên */}
+                          {location}
+                        </React.Fragment>
+                      ))}
+                    </div>
                   </div>
+
                   <div className="flex items-center gap-x-3">
                     <p className="text-[13px] m-0">Chia sẻ</p>
                     <div className="d-flex py-3">
@@ -316,18 +331,6 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                       >
                         <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
                       </svg>
-                      {/* <img
-                        src="./src/image/logo-zalo.jpg"
-                        className="mx-2"
-                        width="16"
-                        height="16"
-                      />
-                      <img
-                        src="src/image/linked.jpg"
-                        className="mx-2"
-                        width="16"
-                        height="16"
-                      /> */}
                     </div>
                   </div>
                 </div>
@@ -348,22 +351,14 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                     </div>
                     <div className="pb-[15px]">
                       <span className="text-[#949697] block font-thin text-[13px]">
-                        ĐỊA CHỈ LÀM VIỆC
+                       Cấp bậc
                       </span>
                       <span className="text-[#333333] block font-thin text-[15px]">
-                        {post?.work_location}
+                        {post?.level}
                       </span>
                       <hr />
                     </div>
-                    <div className="pb-[15px]">
-                      <span className="text-[#949697] block font-thin text-[13px]">
-                        NGÂN SÁCH
-                      </span>
-                      <span className="text-[#333333] block font-thin text-[15px]">
-                        {formatCurrency(post?.job_salary)}
-                      </span>
-                      <hr />
-                    </div>
+             
                     <div className="pb-[15px]">
                       <span className="text-[#949697] block font-thin text-[13px]">
                         HÌNH THỨC LÀM VIỆC
@@ -393,22 +388,29 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                     </div>
                   </div>
                   <div style={{ border: '1px solid #b3ceff' }} className="mt-5 rounded-xl p-3">
-                    <span className="text-[18px] block font-semibold leading-5 mb-4">Công việc tương tự</span>
-                    {posts && posts.map((item:any) =>{
+                    <span className="text-[18px] block font-semibold leading-5 mb-4">Công việc khác</span>
+                    {posts && posts.map((item: any) => {
                       return (
                         <div style={{ border: '1px solid rgb(241, 241, 241)' }} className="job-similar rounded-xl p-3 flex w-full justify-between">
-                        <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
-                          <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                          <div className="bg-white rounded-xl h-[86px] w-[86px] p-1">
+                            <img className="w-full h-full object-contain rounded-xl" src="https://images.vietnamworks.com/pictureofcompany/d5/10894078.png" alt="logo" />
+                          </div>
+                          <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
+                            <Link to={`/posts/${item._id}`}>
+                              <span className="truncate block font-semibold leading-5">{item.job_name}</span>
+                            </Link>
+                            <span className="truncate block font-[14px] leading-4">{item.user_id?.name}</span>
+                            <span className="truncate block text-[14px] leading-4 text-red-400">
+                              {item.offer_salary
+                                ? "Thương lượng"
+                                : `${item.min_job_salary} - ${item.max_job_salary}`}
+                            </span>
+                            <span className="truncate block">{item.work_location}</span>
+                          </div>
                         </div>
-                        <div className="min-w-[0] flex flex-col w-[124px]" style={{ gap: '4px' }}>
-                          <Link to={`/posts/${item._id}`}><span className="truncate block font-semibold leading-5">{item.job_name}</span></Link>
-                          <span className="truncate block font-[14px] leading-4">{item.user_id?.name}</span>
-                          <span className="truncate block text-[14px] leading-4 text-red-400">{formatCurrency(item.job_salary)}</span>
-                          <span className="truncate block">{item.work_location}</span>
-                        </div>
-                      </div>
-                      )
+                      );
                     })}
+
                   </div>
                 </div>
               </div>
@@ -417,11 +419,11 @@ const [isApplied, setIsApplied] = useState(apply !== null);
         </div>
       </div>
 
-      <input 
-        type="checkbox" 
-        hidden 
-        id="modal-cv-check" 
-        className='modal-open-check' 
+      <input
+        type="checkbox"
+        hidden
+        id="modal-cv-check"
+        className='modal-open-check'
         checked={isAplly}
         readOnly
       />
@@ -429,7 +431,7 @@ const [isApplied, setIsApplied] = useState(apply !== null);
       {/* Modal CV */}
       <section className="modal-cv">
         <section className="modal-cv__job">
-          <section 
+          <section
             className="modal-cv__job-img"
             style={{ backgroundImage: "url('https://images.vietnamworks.com/pictureofcompany/bb/11125895.png')" }}
           ></section>
@@ -451,24 +453,24 @@ const [isApplied, setIsApplied] = useState(apply !== null);
               </svg>
               <section className="modal-cv__form-input">
                 <h5>{user?.name}</h5>
-                <input type="text" 
-                      {...register('job_title', {
-                        required: true,
-                      })} 
-                      placeholder='Nhập Chức danh'
-                      name='job_title' />
+                <input type="text"
+                  {...register('job_title', {
+                    required: true,
+                  })}
+                  placeholder='Nhập Chức danh'
+                  name='job_title' />
                 {errors.job_title && errors.job_title.type === 'required' && <span className='text-red-500 text-[12px] mt-1'>Vui lòng nhập Chức danh</span>}
-                <input type="text" 
-                      {...register('email', {
-                        required: true,
-                      })} 
-                      placeholder='Nhập email'
-                      defaultValue={user?.email ? user?.email : ""}
-                      name='email'  />
+                <input type="text"
+                  {...register('email', {
+                    required: true,
+                  })}
+                  placeholder='Nhập email'
+                  defaultValue={user?.email ? user?.email : ""}
+                  name='email' />
                 {errors.email && errors.email.type === 'required' && <span className='text-red-500 text-[12px] mt-1'>Vui lòng nhập Email</span>}
               </section>
             </section>
-            
+
             <section className="modal-cv__form-file">
               <p className="modal-cv__form-para">
                 <b>Chọn hồ sơ ứng tuyển:</b> Nhà tuyển dụng ưu tiên hồ sơ ứng tuyển viết bằng <b>Tiếng Anh</b>
@@ -491,30 +493,30 @@ const [isApplied, setIsApplied] = useState(apply !== null);
                   Chọn hồ sơ từ máy của bạn
                 </label>
                 <input hidden type="file"
-                      id="file-upload" 
-                      accept='application/pdf'
-                      {...register('cv', {
-                        required: true,
-                        onChange: (e: any) => {
-                          const {name} = e.target.files[0]
+                  id="file-upload"
+                  accept='application/pdf'
+                  {...register('cv', {
+                    required: true,
+                    onChange: (e: any) => {
+                      const { name } = e.target.files[0]
 
-                          setFileName({name, currentDate})
-                          setFile(e.target.files[0])
-                        }
-                      })}
-                     />
+                      setFileName({ name, currentDate })
+                      setFile(e.target.files[0])
+                    }
+                  })}
+                />
                 <p>Hỗ trợ định dạng .doc, .docx, pdf có kích thước dưới 5120KB</p>
               </section>
               {errors.cv && errors.cv.type === 'required' && <span className='text-red-500 text-[12px] mt-1'>Vui lòng đính kèm file CV để ứng tuyển</span>}
             </section>
-            <section style={{padding: '16px 0'}}>
+            <section style={{ padding: '16px 0' }}>
               <NavLink to="/change-cv" className="modal-cv__form-link">Tạo hồ sơ ngay</NavLink>
             </section>
           </section>
 
           <button type='submit' className="modal-cv__btn">Nộp đơn</button>
         </form>
-        
+
       </section>
     </>
   )

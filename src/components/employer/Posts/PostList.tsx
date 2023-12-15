@@ -14,6 +14,7 @@ import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import CandidateList from './PostComponents/CandidateList';
+import { useGetCareersQuery } from '../../../service/admin';
 
 const PostList = (): any | null | JSX.Element => {
     const searchInput = useRef<InputRef>(null);
@@ -22,12 +23,17 @@ const PostList = (): any | null | JSX.Element => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [open, setOpen] = useState(false);
     const [postId, setPostId] = useState('');
+    const { data: careers } = useGetCareersQuery();
+    const getCareerNameById = (careerId: string) => {
+        const career = careers?.find((c) => c._id === careerId);
+        return career?.name || 'Không xác định';
+    };
 
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
-    const {data: user}: any = useGetUserEprByEmailQuery(email);
+    const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
-    
+
     const [provinces, setProvinces] = useState<any>([])
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -43,7 +49,7 @@ const PostList = (): any | null | JSX.Element => {
         job_name: string;
         job_description: string;
         job_salary: number;
-        offer_salary: string;
+        offer_salary: boolean;
         working_form: string;
         number_of_recruits: number;
         requirements: string;
@@ -54,12 +60,14 @@ const PostList = (): any | null | JSX.Element => {
         post_status: boolean | string;
         user_id: string;
         createdAt: string;
+        career: string;
     }
     type DataIndex = keyof DataType;
     const dataSource = posts?.map((item: DataType, index: string) => ({
         key: String(index),
         _id: String(item._id),
         job_name: String(item.job_name),
+        offer_salary: Boolean(item.offer_salary),
         job_description: String(item.job_description),
         job_salary: Number(item.job_salary),
         working_form: String(item.working_form),
@@ -72,6 +80,7 @@ const PostList = (): any | null | JSX.Element => {
         post_status: Boolean(item.post_status),
         user_id: String(item.user_id),
         createdAt: String(item.createdAt),
+        career: getCareerNameById(item.career),
     }))
 
     const [removePost] = useRemovePostMutation()
@@ -185,8 +194,22 @@ const PostList = (): any | null | JSX.Element => {
             dataIndex: 'job_name',
             ...getColumnSearchProps('job_name'),
             render: (_, record) => (
-                <span className='text-ellipsis'>{record.min_job_salary} - {record.max_job_salary}</span>
-            )
+                <span className='text-ellipsis'>
+                    {record.offer_salary ? 'Thương lượng' : `${record.min_job_salary} - ${record.max_job_salary}`}
+                </span>
+            ),
+        },
+        {
+            title: 'Ngành nghề',
+            dataIndex: 'career',
+            ...getColumnSearchProps('career'),
+            render: (text) => <span className='text-ellipsis'>{text}</span>,
+        },
+        {
+            title: 'Hình thức',
+            dataIndex: 'working_form',
+            ...getColumnSearchProps('working_form'),
+            render: (text) => <span className='text-ellipsis'>{text}</span>,
         },
         {
             title: 'Ngày đăng',
@@ -201,18 +224,18 @@ const PostList = (): any | null | JSX.Element => {
             render: (_: any, record: DataType) => (
                 <>
                     {
-                        record.post_status == '' ? 
-                        <Tag
-                            color={'gold'}
-                            key={'Đang chờ duyệt'}>
-                            Đang chờ duyệt
-                        </Tag>
+                        record.post_status == '' ?
+                            <Tag
+                                color={'gold'}
+                                key={'Đang chờ duyệt'}>
+                                Đang chờ duyệt
+                            </Tag>
                             :
-                        <Tag
-                            color={record.post_status ? "green" : "red"}
-                            key={record.post_status ? "Đã duyệt" : "Từ chối"}>
-                            {record.post_status ? "Đã duyệt" : "Từ chối"}
-                        </Tag>
+                            <Tag
+                                color={record.post_status ? "green" : "red"}
+                                key={record.post_status ? "Đã duyệt" : "Từ chối"}>
+                                {record.post_status ? "Đã duyệt" : "Từ chối"}
+                            </Tag>
                     }
                 </>
             ),
@@ -232,8 +255,8 @@ const PostList = (): any | null | JSX.Element => {
                         Xem
                     </button>
 
-                    <CandidateList 
-                        isOpen={open} 
+                    <CandidateList
+                        isOpen={open}
                         handleCancel={() => setOpen(false)}
                         postId={postId && postId}
                     />
