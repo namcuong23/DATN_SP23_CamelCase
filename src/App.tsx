@@ -153,6 +153,7 @@ function App() {
           <LayoutAdmin />
         }>
           <Route index element={<HomeAdmin />} />
+          <Route path="dashboard" element={<HomeAdmin />} />
           <Route path="users-management/employee" element={<EmployeeManage />} />
           <Route path="users-management/employer" element={<EmployerManage />} />
           <Route path='vouchers' element={<VoucherList />} />

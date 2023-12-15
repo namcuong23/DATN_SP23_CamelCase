@@ -75,21 +75,11 @@ const HomeClient = (): any => {
             />
           </div>
           <div className="carousel-inner">
-            {/* <div className="carousel-item active">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Favery_hrbn2_122980.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fbanvien_hrbn_124682.png&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
+       
             <div className="carousel-item">
               <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fitechwx_hrbn_124589.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
             </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2FCarlsb_hrbn1_122809.png&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div>
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fnab_hrbnOct2_124666.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
-            </div> */}
+    
             <ul>
               {banners.map(banner => (
                 <li key={banner._id}>
