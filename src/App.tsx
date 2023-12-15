@@ -54,8 +54,8 @@ import ChangeCV from "./components/CvPage/ChangeCV"
 import CvDemo from "./components/CvDemo/CvDemo"
 import PostList from "./components/employer/posts/PostList"
 import PostAdd from "./components/employer/posts/PostAdd"
-import PostDetail from "./components/employer/posts/PostDetail"
 import PostEdit from "./components/employer/posts/PostEdit"
+import PostDetail from "./components/employer/posts/PostDetail"
 import HomeAdmin from "./components/admin/home/HomeAdmin"
 import EmployeeManage from "./components/admin/home/EmployeeManage"
 import EmployerManage from "./components/admin/home/EmployerManage"
@@ -68,12 +68,13 @@ import CareerAdd from "./components/admin/Career/CareerAdd"
 import FeedbackList from "./components/admin/Feedback/FeedbackList"
 import OrderManagement from "./components/admin/Order/OrderManagement"
 import BannerForm from "./components/Admin/Banner/BannerAdd"
+import CareerEdit from "./components/Admin/Career/CareerEdit"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
     window.addEventListener('storage', function(event) {
       if (event.key === 'checkout') {
-        navigate('/home/services');
+        window.location.href("/home/services");
         localStorage.removeItem("checkout");
       }
     });
@@ -162,6 +163,7 @@ function App() {
           <Route path='posts' element={<PostAdmin />} />
           <Route path='careers' element={<CareerList />} />
           <Route path='careers/add' element={<CareerAdd />} />
+          <Route path='careers/edit/:id' element={<CareerEdit />} />
           <Route path='feedbacks' element={<FeedbackList />} />
           <Route path='order-management' element={<OrderManagement />} />
           <Route path='banner' element={<BannerForm />} />

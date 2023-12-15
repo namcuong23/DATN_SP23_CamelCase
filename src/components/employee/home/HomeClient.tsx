@@ -13,22 +13,21 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
 import axios from 'axios'
+import { useGetBannersQuery } from '../../../service/admin/banner'
 
 const HomeClient = (): any => {
   const { email } = useAppSelector((rs) => rs.auth)
   const { data: user }: any = useGetUserByEmailQuery(email)
   const { data: posts } = useGetPostsQuery(user?._id)
+  const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
-  const [banners, setBanners] = useState([]);
 
-  useEffect(() => {
-    // Gọi API để lấy danh sách banner
-    axios.get('http://localhost:4000/api/banners')
-      .then(response => setBanners(response.data))
-      .catch(error => console.error('Error fetching banners:', error));
-  }, []);
+  let bannerImg
+  if (banners) {
+    bannerImg = banners[0].imageUrl
 
+  }
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -75,18 +74,17 @@ const HomeClient = (): any => {
             />
           </div>
           <div className="carousel-inner">
-       
-            <div className="carousel-item">
-              <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fitechwx_hrbn_124589.jpg&w=1920&q=75" className="d-block w-100" alt="..." />
+            <div className="carousel-item active">
+              <img src={bannerImg} className="d-block w-100" style={{
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                backgroundPosition: 'center',
+                height: '500px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }} alt="..." />
             </div>
-    
-            <ul>
-              {banners.map(banner => (
-                <li key={banner._id}>
-                  {banner.title} - {banner.imageUrl} - {banner.link}
-                </li>
-              ))}
-            </ul>
           </div>
           <button
             className="carousel-control-prev"
@@ -161,7 +159,7 @@ const HomeClient = (): any => {
           </div>
         </section>
       </div>
-      <div id="pageContentWrapper" className='pb-[4px]'>
+      <div id="pageContentWrapper" className='pb-[4px] mb-[32px]'>
         <section className="home-content__jobs sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
           <div style={{ maxWidth: '100%' }} className="container p-0">
             <div className="is-flex justify-between align-center section-title">
@@ -393,7 +391,7 @@ const HomeClient = (): any => {
           </div>
 
         </section>
-        <section className="sectionBlock hr-insider">
+        {/* <section className="sectionBlock hr-insider">
           <div className="home-content__advises">
             <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
               <h2 className="sectionBlock__title">Tư vấn nghề nghiệp từ HR Insider</h2>
@@ -435,7 +433,7 @@ const HomeClient = (): any => {
               </div>
             </div>
           </div>
-        </section>
+        </section> */}
       </div>
 
       <div className="float-contact ">

@@ -1,4 +1,5 @@
 import type { TableProps } from 'antd/es/table';
+import { List, Modal } from 'antd'
 import { NavLink } from 'react-router-dom';
 import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, InputRef, Space, Table } from 'antd';
@@ -9,16 +10,24 @@ import { useGetCareersQuery, useRemoveCareerMutation } from '../../../service/ad
 import { MessageType } from 'antd/es/message/interface';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react'
+import { useJobCountByCareerQuery } from '../../../service/post';
 type Props = {}
 const CareerList = () => {
+    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const searchInput = useRef<InputRef>(null);
     let index = 0
-    const { data: vouchers, error, isLoading } = useGetCareersQuery()
-    console.log(vouchers);
-    const remove = 'Bạn có muốn xoá gói voucher này?';
-    const [removeVoucher] = useRemoveCareerMutation()
+    const { data: jobCounts } = useJobCountByCareerQuery();
+    console.log(jobCounts);
+    const getJobCountForCareer = (careerId: string) => {
+        const careerCount = jobCounts?.find((count: any) => count._id === careerId);
+        return careerCount?.count || 0;
+    };
+    const { data: careers, error, isLoading } = useGetCareersQuery();
+    const remove = 'Bạn có muốn xoá ngành nghề này?';
+    const [removeCareer] = useRemoveCareerMutation();
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
+
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
@@ -33,13 +42,15 @@ const CareerList = () => {
         clearFilters();
         setSearchText('');
     };
+
     const onHandleRemove = (id: string) => {
         console.log(id);
-        const confirm: MessageType = message.success('Xoá thành công')
+        const confirm: MessageType = message.success('Xoá thành công');
         if (confirm !== null) {
-            removeVoucher(id)
+            removeCareer(id);
         }
-    }
+    };
+
     const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -116,6 +127,7 @@ const CareerList = () => {
                 text
             ),
     });
+
     const columns: ColumnsType<any> = [
         {
             title: 'STT',
@@ -123,27 +135,23 @@ const CareerList = () => {
             render: () => { return index += 1 }
         },
         {
-            title: 'Tên gói',
+            title: 'Tên ngành nghề',
             dataIndex: 'name',
             ...getColumnSearchProps('name'),
         },
         {
-            title : 'Ảnh mô tả',
-            dataIndex : 'image',
-            render: (image) => <img width={50} src={image} key={image} />,
+            title: 'Thông tin chi tiết',
+            dataIndex: '',
+            render: (_, record) => (
+                <span>{getJobCountForCareer(record._id)}</span>
+            ),
         },
-
-
-
         {
             title: 'Hành động',
             dataIndex: '_id',
             key: '_id',
             render: (_, record) => (
                 <Space size="middle">
-                    {/* <NavLink to={`/admin/vouchers/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
-                    </NavLink> */}
                     <Popconfirm placement="top"
                         title={remove}
                         onConfirm={() => onHandleRemove(record._id)}
@@ -151,6 +159,9 @@ const CareerList = () => {
                         cancelText="Không">
                         <DeleteOutlined className='text-danger' />
                     </Popconfirm>
+                    <NavLink to={`/admin/careers/edit/${record._id}`}>
+                        <EditOutlined className='text-dark' />
+                    </NavLink>
                 </Space>
             ),
         },
@@ -159,16 +170,23 @@ const CareerList = () => {
     const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {
         console.log('params', pagination, filters, sorter, extra);
     };
+
     if (isLoading)
-        return <Space direction="vertical" style={{ width: '100%' }}>
-            <Spin tip="Loading" size="large">
-                <div className="content" />
-            </Spin>
-        </Space>
+        return (
+            <Space direction="vertical" style={{ width: '100%' }}>
+                <Spin tip="Loading" size="large">
+                    <div className="content" />
+                </Spin>
+            </Space>
+        );
+
     if (error)
-        return <Space direction="vertical" style={{ width: '100%' }}>
-            <Alert message="Error!!!" type="error" />
-        </Space>
+        return (
+            <Space direction="vertical" style={{ width: '100%' }}>
+                <Alert message="Error!!!" type="error" />
+            </Space>
+        );
+
     return (
         <>
             <div className='d-flex align-items-center justify-content-between mb-2 pt-20 mx-3'>
@@ -181,8 +199,9 @@ const CareerList = () => {
                     </NavLink>
                 </div>
             </div>
-            <Table columns={columns} dataSource={vouchers} onChange={onChange} className='mx-3' />
+            <Table columns={columns} dataSource={careers} onChange={onChange} className='mx-3' />
         </>
-    )
+    );
 }
-export default CareerList
+
+export default CareerList;

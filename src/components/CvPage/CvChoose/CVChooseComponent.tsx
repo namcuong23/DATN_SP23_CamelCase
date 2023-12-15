@@ -10,7 +10,8 @@ function CVChooseComponent({
         desc1, 
         desc2, 
         isValue, 
-        isshow
+        isshow,
+        data
     }: any) {
     return (
         <>

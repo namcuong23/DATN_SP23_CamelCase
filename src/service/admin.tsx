@@ -42,6 +42,10 @@ export const adminApi = createApi({
             query: (email: string) => `/users/${email}/detail`,
             providesTags: ['User']
         }),
+        getUserById: builder.query<User[],string>({
+            query: (id: string) => `/users/${id}`,
+            providesTags: ['User']
+        }),
         addUser: builder.mutation<User, Partial<User>>({
             query: (user: any) => ({
                 url: `/users`,
@@ -97,7 +101,18 @@ export const adminApi = createApi({
             }),
             invalidatesTags: ['User'],
         }),
-        
+        editCareer: builder.mutation<ICareer, Partial<ICareer> & Pick<ICareer, '_id'>>({
+            query: (career: ICareer) => ({
+                url: `/careers/edit/${career._id}`,
+                method: 'PUT',
+                body: career
+            }),
+            invalidatesTags: ['Career']
+        }),
+        getCareer: builder.query({
+            query: (id: string) => `/careers/${id}`,
+            providesTags: ['Career']
+        }),
     })
 });
 export const {
@@ -106,9 +121,12 @@ export const {
     useUpdateUserMutation,
     useAddCareerMutation,
     useGetCareersQuery,
+    useGetCareerQuery,
     useRemoveCareerMutation,
     useSigninAdminMutation,
     useSignupAMutation,
     useBlockUserMutation,
+    useEditCareerMutation,
+    useGetUserByIdQuery,
     useUnlockUserMutation,
 } = adminApi

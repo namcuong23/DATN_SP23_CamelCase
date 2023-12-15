@@ -7,21 +7,16 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 import myImage from '../../../assets/img/logo.jpg';
 import classNames from 'classnames/bind';
 import styles from './HeaderClient.module.scss';
-import { useGetNotificationByEmailQuery } from '../../../service/notification';
+import { useGetNotificationByEmailQuery, useMarkAsReadMutation } from '../../../service/notification';
 import moment from 'moment';
 import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
-import { Modal, notification } from 'antd';
+import { Button, Modal, notification } from 'antd';
 import { AvatarIcon } from '../../employee/profile/icons';
 import logoImage from './logo-noti.jpg';
 import 'moment/locale/vi';
+import { Inotification } from '../../../interface/notification';
 const cx = classNames.bind(styles);
-interface Inotification {
-    _id: string;
-    notification_title: string;
-    notification_content: string;
-    created_at: Date;
-    notificationImage?: string;
-}
+
 const HeaderClient = () => {
     const { email, isLoggedIn, token } = useAppSelector((res: any) => res.auth)
     const navigate = useNavigate()
@@ -52,14 +47,15 @@ const HeaderClient = () => {
     }
     //notification
     const [shownNotificationIds, setShownNotificationIds] = useState<string[]>([]);
+    const [markAsRead] = useMarkAsReadMutation();
     const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
-        pollingInterval: 5000,
+        pollingInterval: 10000,
     });
-    
+
     const showNotification = (notifications: Inotification) => {
-        const { _id, notification_title, notification_content } = notifications;
-    
-        if (!shownNotificationIds.includes(_id)) {
+        const { _id, notification_title, notification_content, isRead } = notifications;
+
+        if (!isRead) {
             notification.info({
                 message: 'Bạn có thông báo mới',
                 description: notification_title,
@@ -67,14 +63,14 @@ const HeaderClient = () => {
             setShownNotificationIds((prevIds) => [...prevIds, _id]);
         }
     };
-    
+
     useEffect(() => {
 
         if (notificationEmail && notificationEmail.length > 0) {
             const latestNotification = notificationEmail[notificationEmail.length - 1]; //-1 cuoi danh sách
             showNotification(latestNotification);
         }
-    }, [notificationEmail]); 
+    }, [notificationEmail]);
 
     const showModalNoti = (notificationId: string) => {
         if (notificationEmail) {
@@ -84,8 +80,8 @@ const HeaderClient = () => {
                 setIsModalNoti(true);
             }
         }
-      };
-      moment.locale('vi');
+    };
+    moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -122,19 +118,22 @@ const HeaderClient = () => {
                 <ul className="cMKKZy listMenu-homepage">
                     <li><NavLink to={'/interview'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Phỏng vấn" tabIndex={0}>Phỏng vấn</NavLink></li>
                     <li><NavLink to={'/company'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Công ty" tabIndex={0}>Công ty</NavLink></li>
-                    <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li>
+                    {/* <li><a className="text-decoration-none text-[#fff] hover:text-[#fd7e14]" target="_blank" href="#" data-text="HR Insider" tabIndex={0}>HR Insider</a></li> */}
                 </ul >
                 <div className="sc-gCLdxd eAZlAg rightNavigation-homepage" >
                     <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
-                    <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
-                        <div className="notify-btn notificationEmail-icon">
-                            <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
-                                <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 16 L 4.4648438 17.15625 L 4.4628906 17.15625 A 1 1 0 0 0 4 18 A 1 1 0 0 0 5 19 L 12 19 L 19 19 A 1 1 0 0 0 20 18 A 1 1 0 0 0 19.537109 17.15625 L 18 16 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 10 20 C 10 21.1 10.9 22 12 22 C 13.1 22 14 21.1 14 20 L 10 20 z">
-                                </path>
-                            </svg>
-                        </div>
-                    </button>
+                    {
+                        isLoggedIn &&
+                        <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
+                            <div className="notify-btn notificationEmail-icon">
+                                <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
+                                    <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 16 L 4.4648438 17.15625 L 4.4628906 17.15625 A 1 1 0 0 0 4 18 A 1 1 0 0 0 5 19 L 12 19 L 19 19 A 1 1 0 0 0 20 18 A 1 1 0 0 0 19.537109 17.15625 L 18 16 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 10 20 C 10 21.1 10.9 22 12 22 C 13.1 22 14 21.1 14 20 L 10 20 z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </button>
+                    }
                     {
                         isLoggedIn ?
                             <div>
@@ -374,23 +373,25 @@ const HeaderClient = () => {
                                     </div>
                                     <div className={cx('modal-body__content')}>
                                         <div className={cx('modal-body__content')}>
-                                        {notificationEmail ? (
-    notificationEmail
-        .slice()
-        .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-        .map((noti) => (
-            <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
-                {/* ... (Các phần còn lại giữ nguyên) */}
-                <div className={cx('notify-desc')}>
-                    <span className={cx('notify-expirate')}>
-                        {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
-                    </span>
-                </div>
-            </div>
-        ))
-) : (
-    <p>Loading notifications...</p>
-)}
+
+                                            {notificationEmail ? (
+                                                notificationEmail
+                                                    .slice()
+                                                    .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                                    .map((noti) => (
+                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                            {/* ... (Các phần còn lại giữ nguyên) */}
+                                                            <div className={cx('notify-desc')}>
+                                                                <span className={cx('notify-expirate')}>
+                                                                    {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    ))
+                                            ) : (
+                                                <p>Loading notifications...</p>
+                                            )}
+
 
                                         </div>
                                     </div>

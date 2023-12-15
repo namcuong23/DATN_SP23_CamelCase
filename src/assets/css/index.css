@@ -13458,7 +13458,7 @@ screen and (min-width:769px) {
 .sectionBlock_job-list .container .section-title {
     border-radius: 5px 5px 0 0;
     background-color: #f2f7ff;
-    background-image: url(/assets-page-container/images/featured-jobs-background.png);
+    /* background-image: url(/assets-page-container/images/featured-jobs-background.png); */
     background-repeat: no-repeat;
     background-position: 0;
     background-size: contain;
