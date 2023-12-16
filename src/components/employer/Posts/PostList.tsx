@@ -2,12 +2,11 @@ import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
 import { 
     useGetPostsByUIdQuery, 
-    useReadPostMutation, 
     useResetNewCandidatesMutation 
 } from '../../../service/post';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
-import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
+import { Alert, Avatar, Badge, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
@@ -21,7 +20,6 @@ import CandidateList from './PostComponents/CandidateList';
 import { useGetCareersQuery } from '../../../service/admin';
 
 const PostList: React.FC = (): any => {
-    const [readPost] = useReadPostMutation()
     const [resetNewCandidates] = useResetNewCandidatesMutation()
 
     const searchInput = useRef<InputRef>(null);
@@ -31,10 +29,6 @@ const PostList: React.FC = (): any => {
     const [open, setOpen] = useState(false);
     const [postId, setPostId] = useState('');
     const { data: careers } = useGetCareersQuery();
-    const getCareerNameById = (careerId: string) => {
-        const career = careers?.find((c) => c._id === careerId);
-        return career?.name || 'Không xác định';
-    };
 
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const { data: user }: any = useGetUserEprByEmailQuery(email);
@@ -162,16 +156,6 @@ const PostList: React.FC = (): any => {
             )
         },
         {
-            title: 'Mức Lương',
-            dataIndex: 'job_name',
-            ...getColumnSearchProps('job_name'),
-            render: (_, record) => (
-                <span className='text-ellipsis'>
-                    {record.offer_salary ? 'Thương lượng' : `${record.min_job_salary} - ${record.max_job_salary}`}
-                </span>
-            ),
-        },
-        {
             title: 'Ngành nghề',
             dataIndex: 'career',
             ...getColumnSearchProps('career'),
@@ -217,17 +201,20 @@ const PostList: React.FC = (): any => {
             dataIndex: 'candidate',
             render: (_, record) => (
                 <>
-                    <button
-                        className='text-[#005aff] underline text-center'
-                        onClick={() => {
-                            setOpen(true)
-                            setPostId(record._id)
-                        }}
-                    >
-                        Xem
-                    </button>
-
-                    <span className='badge bg-danger'>{record.newCandidates}</span>
+                    <Badge count={record.newCandidates} dot offset={[2, 2]} >
+                        <button
+                            className='text-[#1677ff] underline'
+                            onClick={() => {
+                                setOpen(true)
+                                setPostId(record._id)
+                                resetNewCandidates({
+                                    post_id: record._id
+                                })
+                            }}
+                        >
+                            Xem
+                        </button>
+                    </Badge>
 
                     <CandidateList 
                         isOpen={open} 

@@ -1,8 +1,9 @@
-import { Modal } from 'antd'
+import { Badge, Modal } from 'antd'
 import { 
     useApproveCvMutation, 
     useGetCvsByPostIdQuery, 
-    useRemoveCvMutation 
+    useRemoveCvMutation, 
+    useSetIsNewMutation
 } from '../../../../service/manage_cv';
 import { useAddNotificationMutation } from '../../../../service/notification';
 import { CloseOutlined, CheckOutlined, } from '@ant-design/icons'
@@ -25,6 +26,7 @@ type Props = {
 
 const CandidateList = (props: Props) => {
     const searchInput = useRef<InputRef>(null);
+    const [setIsNew] = useSetIsNewMutation()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const handleSearch = (
@@ -140,14 +142,20 @@ const CandidateList = (props: Props) => {
             title: 'CV',
             dataIndex: 'CV',
             render: (_, record) => (
-                <NavLink to={`/cv-preview?id=${record._id}`}
-                    target='_blank'
-                    className="text-[#005aff] hover:text-[#005aff] underline hover:underline"
-                >
-                    Xem
-                </NavLink>
-            ),
-        },
+                <Badge dot={record.isNew} offset={[2, 2]}>
+                    <NavLink to={`/cv-preview?id=${record._id}`}
+                        onClick={() => setIsNew({
+                            cv_id: record._id
+                        })}
+                        target='_blank'
+                        className="text-[#005aff] hover:text-[#005aff] underline hover:underline"
+                    >
+                        Xem
+                    </NavLink>
+                </Badge>
+                    
+                ),
+            },
         {
             title: 'Hành động',
             dataIndex: 'action',
@@ -180,7 +188,7 @@ const CandidateList = (props: Props) => {
         },
     ];
 
-    const [addNotification] = useAddNotificationMutation()
+    const [addNotification]: any = useAddNotificationMutation()
     const { data } = useGetCvsByPostIdQuery(props.postId && props.postId)
     const cvs = data?.cvs?.map((post: any, index: number) => ({
         key: index,

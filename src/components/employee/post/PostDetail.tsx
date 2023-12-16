@@ -92,11 +92,14 @@ const PostDetailEp = (): any => {
     formData.append("email", candidate.email)
     formData.append("post_id", id)
     formData.append("file", file)
+    formData.append("isNew", true)
     const apply = await applyCv(formData)
     const { data: rs } = apply
 
     if (rs?.success) {
-      countNewCandidates(id)
+      countNewCandidates({
+        post_id: id
+      })
       setIsAplly(false)
       setIsApplied(true);
       localStorage.setItem('isApplied', 'true');

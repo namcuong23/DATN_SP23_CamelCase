@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Checkbox, Form, Input, InputNumber, Select, Space, Switch, message } from 'antd';
 
 import { NavLink, useNavigate } from 'react-router-dom';
-import IPost from '../../../interface/post';
 import { useAddPostMutation } from '../../../service/post';
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
@@ -10,7 +9,6 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetCareersQuery } from '../../../service/admin';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import './Post.css'
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
 
 const PostAdd = (): any => {
     const [form] = Form.useForm();
