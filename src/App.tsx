@@ -74,7 +74,7 @@ function App() {
   useEffect(() => {
     window.addEventListener('storage', function(event) {
       if (event.key === 'checkout') {
-        navigate('/home/services');
+        window.location.href("/home/services");
         localStorage.removeItem("checkout");
       }
     });

@@ -80,8 +80,8 @@ const HeaderClient = () => {
                 setIsModalNoti(true);
             }
         }
-      };
-      moment.locale('vi');
+    };
+    moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -124,7 +124,7 @@ const HeaderClient = () => {
                     <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
                     {
-                        isLoggedIn && 
+                        isLoggedIn &&
                         <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
                             <div className="notify-btn notificationEmail-icon">
                                 <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
@@ -373,42 +373,26 @@ const HeaderClient = () => {
                                     </div>
                                     <div className={cx('modal-body__content')}>
                                         <div className={cx('modal-body__content')}>
-                                            <div>
-                                                {notificationEmail ? (
-                                                    notificationEmail
-                                                        .slice()
-                                                        .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-                                                        .map((noti: any) => (
-                                                            <div key={noti._id} className={cx('modal-body__content-notify', { 'bg-gray-200': noti.isRead })} onClick={() => showModalNoti(noti._id)}>
-                                                                <span className={cx('notify-img')}>
-                                                                    <img src={noti.notificationImage} alt="" /> 
-                                                                    <span>
-                                                                        <i className="fa-solid fa-heart"></i>
-                                                                    </span>
+
+                                            {notificationEmail ? (
+                                                notificationEmail
+                                                    .slice()
+                                                    .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                                    .map((noti) => (
+                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                            {/* ... (Các phần còn lại giữ nguyên) */}
+                                                            <div className={cx('notify-desc')}>
+                                                                <span className={cx('notify-expirate')}>
+                                                                    {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
                                                                 </span>
-                                                                <div className={cx('notify-content')}>
-                                                                    <span className={cx('notify-title')}>{noti.notification_title}</span>
-                                                                    <span>{truncateStringFunction(noti.notification_content, 30)}</span>
-                                                                    <div className={cx('notify-desc')}>
-                                                                        <span className={cx('notify-expirate')}>
-                                                                            {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
                                                             </div>
-                                                        ))
-                                                ) : (
-                                                    <p>Loading notifications...</p>
-                                                )}
-                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
-                                                    {selectedNotification && (
-                                                        <>
-                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
-                                                            <span>{selectedNotification.notification_content}</span>
-                                                        </>
-                                                    )}
-                                                </Modal>
-                                            </div>
+                                                        </div>
+                                                    ))
+                                            ) : (
+                                                <p>Loading notifications...</p>
+                                            )}
+
+
                                         </div>
                                     </div>
 

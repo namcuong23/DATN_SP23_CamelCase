@@ -84,7 +84,6 @@ const HomeClient = (): any => {
                 alt="..." 
               />
             </div>
-            
           </div>
           <button
             className="carousel-control-prev"

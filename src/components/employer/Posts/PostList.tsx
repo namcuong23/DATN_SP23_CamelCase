@@ -18,6 +18,7 @@ import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import CandidateList from './PostComponents/CandidateList';
+import { useGetCareersQuery } from '../../../service/admin';
 
 const PostList: React.FC = (): any => {
     const [readPost] = useReadPostMutation()
@@ -29,12 +30,17 @@ const PostList: React.FC = (): any => {
     const [searchedColumn, setSearchedColumn] = useState('');
     const [open, setOpen] = useState(false);
     const [postId, setPostId] = useState('');
+    const { data: careers } = useGetCareersQuery();
+    const getCareerNameById = (careerId: string) => {
+        const career = careers?.find((c) => c._id === careerId);
+        return career?.name || 'Không xác định';
+    };
 
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
-    const {data: user}: any = useGetUserEprByEmailQuery(email);
+    const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
-    
+
     const [provinces, setProvinces] = useState<any>([])
     useEffect(() => {
         const fetchProvinces = async () => {
@@ -151,10 +157,31 @@ const PostList: React.FC = (): any => {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
             ...getColumnSearchProps('job_name'),
-            width: "60%",
             render: (_, record) => (
                 <span className='text-ellipsis'>{record.job_name}</span>
             )
+        },
+        {
+            title: 'Mức Lương',
+            dataIndex: 'job_name',
+            ...getColumnSearchProps('job_name'),
+            render: (_, record) => (
+                <span className='text-ellipsis'>
+                    {record.offer_salary ? 'Thương lượng' : `${record.min_job_salary} - ${record.max_job_salary}`}
+                </span>
+            ),
+        },
+        {
+            title: 'Ngành nghề',
+            dataIndex: 'career',
+            ...getColumnSearchProps('career'),
+            render: (text) => <span className='text-ellipsis'>{text}</span>,
+        },
+        {
+            title: 'Hình thức',
+            dataIndex: 'working_form',
+            ...getColumnSearchProps('working_form'),
+            render: (text) => <span className='text-ellipsis'>{text}</span>,
         },
         {
             title: 'Ngày đăng',
@@ -169,18 +196,18 @@ const PostList: React.FC = (): any => {
             render: (_: any, record: any) => (
                 <>
                     {
-                        record.post_status == '' ? 
-                        <Tag
-                            color={'gold'}
-                            key={'Đang chờ duyệt'}>
-                            Đang chờ duyệt
-                        </Tag>
+                        record.post_status == '' ?
+                            <Tag
+                                color={'gold'}
+                                key={'Đang chờ duyệt'}>
+                                Đang chờ duyệt
+                            </Tag>
                             :
-                        <Tag
-                            color={record.post_status ? "green" : "red"}
-                            key={record.post_status ? "Đã duyệt" : "Từ chối"}>
-                            {record.post_status ? "Đã duyệt" : "Từ chối"}
-                        </Tag>
+                            <Tag
+                                color={record.post_status ? "green" : "red"}
+                                key={record.post_status ? "Đã duyệt" : "Từ chối"}>
+                                {record.post_status ? "Đã duyệt" : "Từ chối"}
+                            </Tag>
                     }
                 </>
             ),
