@@ -302,7 +302,7 @@ const PostDetailEp = (): any => {
                       Địa điểm làm việc:
                     </p>
                     <div>
-                      {post?.work_location.map((location, index) => (
+                      {post?.work_location.map((location: any, index: number) => (
                         <React.Fragment key={index}>
                           {index > 0 && <br />} {/* Thêm xuống dòng nếu không phải phần tử đầu tiên */}
                           {location}
