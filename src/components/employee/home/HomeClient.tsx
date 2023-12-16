@@ -1,18 +1,16 @@
 import { NavLink } from 'react-router-dom'
-import { useGetGoodPostsQuery, useGetPostsByUIdQuery, useGetPostsQuery } from '../../../service/post'
+import { useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
 import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
-import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
-import axios from 'axios'
 import { useGetBannersQuery } from '../../../service/admin/banner'
 
 const HomeClient = (): any => {
@@ -53,13 +51,7 @@ const HomeClient = (): any => {
     const shuffledPosts = [...currentPosts].sort(() => Math.random() - 0.5);
     setCurrentPosts(shuffledPosts);
   };
-
   
-  let bannerImg
-  if (banners) {
-    bannerImg = banners[0].imageUrl
-
-  }
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -107,7 +99,7 @@ const HomeClient = (): any => {
           </div>
           <div className="carousel-inner">
             <div className="carousel-item active">
-              <img src={bannerImg} className="d-block w-100" style={{
+              <img src={banners && banners.length > 0 && banners[0].imageUrl || 'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
