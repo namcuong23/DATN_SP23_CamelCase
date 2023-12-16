@@ -179,7 +179,7 @@ const PostAdd = (): any => {
                                 <Form.Item name="number_of_recruits" label="Số lượng"
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
-                                        { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                        // { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <InputNumber
                                             min={1} 
@@ -221,7 +221,7 @@ const PostAdd = (): any => {
                                     {/* <Input /> */}
                                     <Select 
                                         size='large'
-                                        mode='multiple'
+                                        // mode='multiple'
                                         allowClear
                                         placeholder='Chọn khu vực'
                                     >

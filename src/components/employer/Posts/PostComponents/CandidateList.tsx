@@ -137,6 +137,18 @@ const CandidateList = (props: Props) => {
             render: (_, record) => <div>{useDateFormat(record?.createdAt)}</div>,
         },
         {
+            title: 'CV',
+            dataIndex: 'CV',
+            render: (_, record) => (
+                <NavLink to={`/cv-preview?id=${record._id}`}
+                    target='_blank'
+                    className="text-[#005aff] hover:text-[#005aff] underline hover:underline"
+                >
+                    Xem
+                </NavLink>
+            ),
+        },
+        {
             title: 'Hành động',
             dataIndex: 'action',
             render: (_, record) => (
@@ -163,12 +175,6 @@ const CandidateList = (props: Props) => {
                     >
                         <CloseOutlined className='text-danger' />
                     </Popconfirm>
-                    <NavLink to={`/cv-preview?id=${record._id}`}
-                        className='leading-[22px]'
-                        target='_blank'
-                    >
-                        <i className="fa-regular fa-eye text-[#333]"></i>
-                    </NavLink>
                 </Space>
             ),
         },

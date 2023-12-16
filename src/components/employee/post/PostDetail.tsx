@@ -5,6 +5,7 @@ import { useApplyCvMutation } from '../../../service/manage_cv'
 import React from 'react';
 import {
   useAddMyPostMutation,
+  useCountNewCandidatesMutation,
   useGetPostQuery,
   useGetPostsByCareerQuery,
   useRemoveMyPostMutation
@@ -18,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { useAddNotificationMutation } from '../../../service/notification';
 import './postDetail.scss';
 const PostDetailEp = (): any => {
+  const [countNewCandidates] = useCountNewCandidatesMutation()
   const [params] = useSearchParams()
   const apply = params.get('apply')
   const [isAplly, setIsAplly] = useState(apply !== null)
@@ -94,6 +96,7 @@ const PostDetailEp = (): any => {
     const { data: rs } = apply
 
     if (rs?.success) {
+      countNewCandidates(id)
       setIsAplly(false)
       setIsApplied(true);
       localStorage.setItem('isApplied', 'true');
@@ -305,7 +308,7 @@ const PostDetailEp = (): any => {
                       Địa điểm làm việc:
                     </p>
                     <div>
-                      {post?.work_location.map((location :any, index :any) => (
+                      {post?.work_location.map((location: any, index: number) => (
                         <React.Fragment key={index}>
                           {index > 0 && <br />} {/* Thêm xuống dòng nếu không phải phần tử đầu tiên */}
                           {location}
