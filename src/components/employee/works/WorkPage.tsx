@@ -189,7 +189,8 @@ const WorkPage = () => {
                                 : <span> Trang chủ &gt; Việc làm &gt; Tất cả việc làm </span>
                             }
                             {
-                                data?.map((item: any, index: any) => (
+                                data?.map((item: any, index: any) => 
+                                    item.post_status && 
                                     <section
                                         key={index} 
                                         className="flex items-start justify-between bg-[#f0f7ff] hover:bg-[#fff] w-100 p-[16px] mt-[12px] border-[1px] border-[#a0c1ff] rounded-[6px]"
@@ -236,7 +237,7 @@ const WorkPage = () => {
                                             }
                                         </button>
                                     </section>
-                                ))
+                                )
                             }
                         </div>
                         <div className='ml-[16px]' id="banner-list-job">

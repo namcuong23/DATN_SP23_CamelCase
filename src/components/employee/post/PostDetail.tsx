@@ -4,6 +4,7 @@ import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
 import { 
   useAddMyPostMutation,
+  useCountNewCandidatesMutation,
   useGetPostQuery,
   useGetPostsByCareerQuery, 
   useRemoveMyPostMutation
@@ -17,6 +18,7 @@ import { useForm } from 'react-hook-form';
 import { useAddNotificationMutation } from '../../../service/notification';
 import './postDetail.scss';
 const PostDetailEp = (): any => {
+  const [countNewCandidates] = useCountNewCandidatesMutation()
   const [params] = useSearchParams()
   const apply = params.get('apply')
   const [isAplly, setIsAplly] = useState(apply !== null)
@@ -60,7 +62,7 @@ const PostDetailEp = (): any => {
   const date = new Date()
   const currentDate = useDateFormat(date)
   // Thêm vào đầu component
-const [isApplied, setIsApplied] = useState(apply !== null);
+  const [isApplied, setIsApplied] = useState(apply !== null);
 
   const applyJob = async (candidate: any) => {
     
@@ -92,6 +94,7 @@ const [isApplied, setIsApplied] = useState(apply !== null);
     const { data: rs } = apply
     
     if (rs?.success) {
+      countNewCandidates(id)
       setIsAplly(false)
       setIsApplied(true);
       localStorage.setItem('isApplied', 'true');

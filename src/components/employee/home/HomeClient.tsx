@@ -22,12 +22,7 @@ const HomeClient = (): any => {
   const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
-
-  let bannerImg
-  if (banners) {
-      bannerImg = banners[0].imageUrl
-      
-  }
+  
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -74,15 +69,20 @@ const HomeClient = (): any => {
             />
           </div>
           <div className="carousel-inner">
-            
             <div className="carousel-item active">
-              <img src={bannerImg} className="d-block w-100" style={{ backgroundSize: 'contain',
-                                    backgroundRepeat: 'no-repeat',
-                                    backgroundPosition: 'center',
-                                    height: '500px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',}}  alt="..." />
+              <img 
+                src={banners && banners.length > 0 ? banners[0].imageUrl : "https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75"} 
+                className="d-block w-100" 
+                style={{ backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  backgroundPosition: 'center',
+                  height: '500px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}  
+                alt="..." 
+              />
             </div>
             
           </div>
@@ -360,25 +360,26 @@ const HomeClient = (): any => {
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
                           posts && posts.map((post: any, index: number) =>
-                            <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-                              <div key={post._id} className='job'>
-                                <div className="img-wrapper">
-                                  <img src={post.logo}
-                                    className="job-img" />
+                              post.post_status &&
+                              <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                                <div key={post._id} className='job'>
+                                  <div className="img-wrapper">
+                                    <img src={post.logo}
+                                      className="job-img" />
+                                  </div>
+                                  <div className="job-info">
+                                    {
+                                      post?.priority &&
+                                      <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                        <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                      </div>
+                                    }
+                                    <h4 className="job-namee">{post.job_name}</h4>
+                                    <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
+                                    <p className='job-location'>{post.work_location}</p>
+                                  </div>
                                 </div>
-                                <div className="job-info">
-                                  {
-                                    post?.priority &&
-                                    <div className='flex justify-end mt-[-8px] mb-[8px]'>
-                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
-                                    </div>
-                                  }
-                                  <h4 className="job-namee">{post.job_name}</h4>
-                                  <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
-                                  <p className='job-location'>{post.work_location}</p>
-                                </div>
-                              </div>
-                            </NavLink>
+                              </NavLink>
                           )
                         }
                       </div>

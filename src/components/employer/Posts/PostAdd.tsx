@@ -168,7 +168,7 @@ const PostAdd = (): any => {
                                 <Form.Item name="number_of_recruits" label="Số lượng"
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
-                                        { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                        // { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <Input size='large' />
                                 </Form.Item>
@@ -195,7 +195,7 @@ const PostAdd = (): any => {
                                     {/* <Input /> */}
                                     <Select 
                                         size='large'
-                                        mode='multiple'
+                                        // mode='multiple'
                                         allowClear
                                         placeholder='Chọn khu vực'
                                     >
@@ -224,7 +224,7 @@ const PostAdd = (): any => {
                                     }}
                                 >
                                     <Form.Item 
-                                        name="minimum" 
+                                        name="job_salary" 
                                         style={{
                                             width: '300px',
                                         }}
@@ -234,8 +234,6 @@ const PostAdd = (): any => {
                                         ]}
                                     >
                                         <InputNumber 
-                                            min={1} 
-                                            max={10} 
                                             style={{ width: '300px' }} 
                                             size='large' 
                                             placeholder='Tối thiểu'

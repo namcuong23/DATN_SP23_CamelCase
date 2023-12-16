@@ -10,10 +10,13 @@ interface IPost {
     work_location: string;
     post_status: boolean;
     user_id: string;
+    career: string;
     logo: string;
     priority: boolean;
     isSave: boolean;
     isDone: boolean;
+    isRead : boolean;
+    newCandidates: number;
     
 }
 

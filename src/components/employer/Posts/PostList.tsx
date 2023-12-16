@@ -1,6 +1,10 @@
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { useGetPostsByUIdQuery } from '../../../service/post';
+import { 
+    useGetPostsByUIdQuery, 
+    useReadPostMutation, 
+    useResetNewCandidatesMutation 
+} from '../../../service/post';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
@@ -15,7 +19,10 @@ import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import CandidateList from './PostComponents/CandidateList';
 
-const PostList = (): any | null | JSX.Element => {
+const PostList: React.FC = (): any => {
+    const [readPost] = useReadPostMutation()
+    const [resetNewCandidates] = useResetNewCandidatesMutation()
+
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
@@ -37,36 +44,9 @@ const PostList = (): any | null | JSX.Element => {
         fetchProvinces()
     }, [])
 
-    interface DataType {
-        key: string;
-        _id: string;
-        job_name: string;
-        job_description: string;
-        job_salary: number;
-        working_form: string;
-        number_of_recruits: number;
-        requirements: string;
-        gender: string;
-        work_location: string;
-        post_status: boolean | string;
-        user_id: string;
-        createdAt: string;
-    }
-    type DataIndex = keyof DataType;
-    const dataSource = posts?.map((item: DataType, index: string) => ({
+    const dataSource = posts?.map((item: any, index: string) => ({
         key: String(index),
-        _id: String(item._id),
-        job_name: String(item.job_name),
-        job_description: String(item.job_description),
-        job_salary: Number(item.job_salary),
-        working_form: String(item.working_form),
-        number_of_recruits: Number(item.number_of_recruits),
-        requirements: String(item.requirements),
-        gender: String(item.job_name),
-        work_location: String(item.work_location),
-        post_status: Boolean(item.post_status),
-        user_id: String(item.user_id),
-        createdAt: String(item.createdAt),
+        ...item
     }))
 
     const [removePost] = useRemovePostMutation()
@@ -79,7 +59,7 @@ const PostList = (): any | null | JSX.Element => {
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
-        dataIndex: DataIndex,
+        dataIndex: any,
     ) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -89,7 +69,7 @@ const PostList = (): any | null | JSX.Element => {
         clearFilters();
         setSearchText('');
     };
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<any> => ({
+    const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -166,7 +146,7 @@ const PostList = (): any | null | JSX.Element => {
             ),
     });
 
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<any> = [
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
@@ -186,7 +166,7 @@ const PostList = (): any | null | JSX.Element => {
         {
             title: 'Trạng thái',
             dataIndex: 'post_status',
-            render: (_: any, record: DataType) => (
+            render: (_: any, record: any) => (
                 <>
                     {
                         record.post_status == '' ? 
@@ -219,6 +199,8 @@ const PostList = (): any | null | JSX.Element => {
                     >
                         Xem
                     </button>
+
+                    <span className='badge bg-danger'>{record.newCandidates}</span>
 
                     <CandidateList 
                         isOpen={open} 
