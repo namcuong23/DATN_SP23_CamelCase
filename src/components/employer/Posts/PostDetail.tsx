@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { ColumnsType } from 'antd/es/table'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useAppSelector } from '../../../app/hook'
-import { useGetPostQuery } from '../../../service/post'
+import { useGetPostQuery, useGetPostsByCareerQuery } from '../../../service/post'
 import {
     useApproveCvMutation,
     useGetCvsByPostIdQuery,
@@ -14,17 +14,19 @@ import FooterEmployer from '../../layouts/layoutComponentEmployer/FooterEmployer
 import { CloseOutlined, CheckOutlined, } from '@ant-design/icons'
 import { useCreateCandidateMutation } from '../../../service/employer/candidate'
 import { useAddNotificationMutation } from '../../../service/notification'
-import { 
-    LinkedinOutlined, 
-    SkypeOutlined, 
-    TwitterOutlined, 
-    FacebookOutlined, 
-    FileDoneOutlined, 
-    EnvironmentOutlined, 
-    DollarOutlined, 
-    EuroCircleOutlined, 
-    MobileOutlined 
+import {
+    LinkedinOutlined,
+    SkypeOutlined,
+    TwitterOutlined,
+    FacebookOutlined,
+    FileDoneOutlined,
+    EnvironmentOutlined,
+    DollarOutlined,
+    EuroCircleOutlined,
+    MobileOutlined
 } from '@ant-design/icons';
+import useDateFormat from '../../../utils/hooks/FormatDate'
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 
 const PostDetail: React.FC = (): any => {
     const { id } = useParams()
@@ -32,7 +34,10 @@ const PostDetail: React.FC = (): any => {
     const navigate = useNavigate()
     const { data: post } = useGetPostQuery(id);
     const [open, setOpen] = useState(false);
-    
+    const { data: posts } = useGetPostsByCareerQuery({
+        id,
+        career: post?.career
+    })
     const { data } = useGetCvsByPostIdQuery(post && post?._id)
     const cvs = data?.cvs
 
@@ -117,6 +122,7 @@ const PostDetail: React.FC = (): any => {
         {
             title: 'Hành động',
             dataIndex: 'action',
+
             render: (_, record) => (
                 <Space size="middle" className='flex items-center'>
                     <Popconfirm placement="top"
@@ -132,7 +138,7 @@ const PostDetail: React.FC = (): any => {
                         <CheckOutlined className='text-success' />
                     </Popconfirm>
 
-                    <Popconfirm 
+                    <Popconfirm
                         title={remove}
                         onConfirm={() => onHandleDelete(record._id)}
                         okText="Đồng ý"
@@ -162,19 +168,25 @@ const PostDetail: React.FC = (): any => {
                     <div style={{ background: 'white', height: '13em', paddingTop: '1em' }} >
                         <div style={{ width: '75%', margin: '0 auto' }} className='border'>
                             <div className='recruitment-details1' style={{ padding: 'auto 0' }}>
-                                <div className='w-[85%] flex items-center'>
-                                    <div className='d-flex justify-content-center align-items-center logo-area-wrapper logo-border w-[20%]' id='logo-area-wrapper'>
-                                        <a style={{ background: 'white', justifyContent: 'center', display: 'flex', padding: '5px', border: '1px solid #fff' }}>
-                                            <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '100px', height: '60px', margin: '20px 0px' }} />
-                                        </a>
+                                <div className="cuong1 w-[80%]" style={{ marginLeft: '60px' }}>
+                                    <p className="job-name" style={{ fontSize: "26px" }}>
+                                        {post?.job_name}
+                                    </p>
+                                    <div className="">
+                                        <span className="text-[#333333] block font-thin text-[15px]">
+                                            {post?.offer_salary
+                                                ? "Thương lượng"
+                                                : `${formatCurrency(post?.min_job_salary)} - ${formatCurrency(post?.max_job_salary)}`}
+                                        </span>
                                     </div>
-                                    <div className='cuong1 w-[80%]'>
-                                        <p>
-                                            <a href='#' className='job-title fs-4' style={{ color: 'black', width: '80%' }}>{post?.job_name}</a>
-                                            <div style={{ color: 'black', fontSize: '13px' }}>Địa điểm làm việc: {post?.work_location}</div>
-                                            <span style={{ color: 'black', fontSize: '13px' }}>Ngày đăng tin: {(new Date(post?.createdAt)).toLocaleDateString()}</span>
-                                            <div style={{ color: '#ff4a53', fontWeight: 500 }}>{(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
-                                        </p>
+                                    <span style={{ color: "#999", fontSize: "13px" }}>
+                                        Ngày đăng tin: {useDateFormat(post?.createdAt)}
+                                    </span>
+                                    <div style={{ color: "#ff7d55", fontWeight: 500 }}>
+                                        {post?.job_salary?.toLocaleString("vi", {
+                                            style: "currency",
+                                            currency: "VND",
+                                        })}
                                     </div>
                                 </div>
                             </div>
@@ -195,9 +207,13 @@ const PostDetail: React.FC = (): any => {
                                         </div>
                                         <div className='flex flex-col py-3'>
                                             <p className='fs-3 text-black'>Địa điểm làm việc:</p>
-                                            <div className='row'>
-                                                <div className='col-1'><EnvironmentOutlined style={{ fontSize: '20px' }} /></div>
-                                                <div className='fs-6 col'>{post?.work_location}</div>
+                                            <div>
+                                                {post?.work_location.map((location: any, index: any) => (
+                                                    <React.Fragment key={index}>
+                                                        {index > 0 && <br />} {/* Thêm xuống dòng nếu không phải phần tử đầu tiên */}
+                                                        {location}
+                                                    </React.Fragment>
+                                                ))}
                                             </div>
                                         </div>
                                         <div className='flex items-center gap-x-3'>
@@ -217,48 +233,53 @@ const PostDetail: React.FC = (): any => {
                         <div className='bg-[#f0f7ff] border  rounded mb-3' id="banner-list-job">
                             <div >
                                 <div className='shadow-sm p-4'>
-                                    <div className='pb-2'>
-                                        <div className='flex mb-2'>
-                                            <div style={{ fontSize: '30px', color: 'black' }}><FileDoneOutlined /></div>
-                                            <div>
-                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >NGÀY ĐĂNG TUYỂN: </div>
-                                                <div className="w-[250px] ml-3">{(new Date(post?.createdAt)).toLocaleDateString()}</div>
-                                            </div>
+                                    <div style={{ backgroundColor: "#f0f7ff", padding: "23px" }}>
+                                        <div className="pb-[15px]">
+                                            <span className="text-[#949697] block font-thin text-[13px]">
+                                                NGÀY ĐĂNG TUYỂN
+                                            </span>
+                                            <span className="text-[#333333] block font-thin text-[15px]">
+                                                {useDateFormat(post?.createdAt)}
+                                            </span>
+                                            <hr />
                                         </div>
-                                        <hr />
-                                        <div className='flex mb-2'>
-                                            <div style={{ fontSize: '30px', color: 'black' }}><EnvironmentOutlined /></div>
-                                            <div>
-                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >ĐỊA ĐIỂM: </div>
-                                                <div className="w-[250px] ml-3">{post?.work_location}</div>
-                                            </div>
+                                        <div className="pb-[15px]">
+                                            <span className="text-[#949697] block font-thin text-[13px]">
+                                                Cấp bậc
+                                            </span>
+                                            <span className="text-[#333333] block font-thin text-[15px]">
+                                                {post?.level}
+                                            </span>
+                                            <hr />
                                         </div>
-                                        <hr />
-                                        <div className='flex mb-2'>
-                                            <div style={{ fontSize: '30px', color: 'black' }}><DollarOutlined /></div>
-                                            <div>
-                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >NGÂN SÁCH: </div>
-                                                <div className="w-[250px] ml-3">{(post?.job_salary)?.toLocaleString('vi', { style: 'currency', currency: 'VND' })}</div>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <div className='flex mb-2'>
-                                            <div style={{ fontSize: '30px', color: 'black' }}><MobileOutlined /></div>
-                                            <div>
-                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >HÌNH THỨC LÀM VIỆC: </div>
-                                                <div className="w-[250px] ml-3">{post?.working_form}</div>
-                                            </div>
-                                        </div>
-                                        <hr />
-                                        <div className='flex mb-2'>
-                                            <div style={{ fontSize: '30px', color: 'black' }}><EuroCircleOutlined /></div>
-                                            <div>
-                                                <div className="w-[250px] text-gray-400 ml-3 mt-2" >HÌNH THỨC TRẢ LƯƠNG: </div>
-                                                <div className="w-[250px] ml-3">Trả theo dự án</div>
-                                            </div>
-                                        </div>
-                                        <hr />
 
+                                        <div className="pb-[15px]">
+                                            <span className="text-[#949697] block font-thin text-[13px]">
+                                                HÌNH THỨC LÀM VIỆC
+                                            </span>
+                                            <span className="text-[#333333] block font-thin text-[15px] text-uppercase">
+                                                {post?.working_form}
+                                            </span>
+                                            <hr />
+                                        </div>
+                                        <div className="pb-[15px]">
+                                            <span className="text-[#949697] block font-thin text-[13px]">
+                                                SỐ LƯỢNG YÊU CẦU
+                                            </span>
+                                            <span className="text-[#333333] block font-thin text-[15px]">
+                                                {post?.number_of_recruits}
+                                            </span>
+                                            <hr />
+                                        </div>
+                                        <div className="pb-[15px]">
+                                            <span className="text-[#949697] block font-thin text-[13px]">
+                                                GIỚI TÍNH
+                                            </span>
+                                            <span className="text-[#333333] block font-thin text-[15px]">
+                                                {post?.gender}
+                                            </span>
+                                            <hr />
+                                        </div>
                                     </div>
                                     <button
                                         className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-1'

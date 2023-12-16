@@ -187,6 +187,17 @@ const PostEdit = (): any => {
                                         size='large' 
                                     />
                             </Form.Item>
+                            <Form.Item name="period" label="Thời gian hết hạn"
+                                rules={[
+                                    { required: true, message: 'Vui lòng nhập giá trị số' },
+                                    { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                ]}>
+                                <InputNumber
+                                        min={1} 
+                                        style={{ width: '100%' }} 
+                                        size='large' 
+                                    />
+                            </Form.Item>
                             <Form.Item name="career" label="Ngành Nghề"
                                 rules={[{ required: true, message: 'Vui lòng chọn ngành nghề' }]}
                             >

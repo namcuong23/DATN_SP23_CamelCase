@@ -36,7 +36,7 @@ const PostAdd = (): any => {
       const data: any = await addPost({
         ...post,
         logo: user?.image,
-        post_status: false,
+        post_status: null,
         user_id: user?._id,
       });
       if (data?.error?.status == 400) {
@@ -177,6 +177,17 @@ const PostAdd = (): any => {
                                     </Select>
                                 </Form.Item>
                                 <Form.Item name="number_of_recruits" label="Số lượng"
+                                    rules={[
+                                        { required: true, message: 'Vui lòng nhập giá trị số' },
+                                        { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                    ]}>
+                                    <InputNumber
+                                            min={1} 
+                                            style={{ width: '100%' }} 
+                                            size='large' 
+                                        />
+                                </Form.Item>
+                                <Form.Item name="period" label="Thời gian hết hạn"
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
                                         { type: 'number', message: 'Vui lòng nhập giá trị số' }
