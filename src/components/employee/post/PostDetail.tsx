@@ -180,7 +180,13 @@ const PostDetailEp = (): any => {
                     </section>
                   </div>
                   <div className="cuong1 w-[80%]">
-                  <div></div>
+                  <a
+                      href="#"
+                      className="job-name"
+                      style={{ fontSize: "26px" }}
+                    >
+                     <img src={post?.image} alt="" />
+                    </a>
                     <a
                       href="#"
                       className="job-name"

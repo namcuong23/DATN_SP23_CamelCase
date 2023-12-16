@@ -16,8 +16,8 @@ import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-import CandidateList from './PostComponents/CandidateList';
 import { useGetCareersQuery } from '../../../service/admin';
+import CandidateList from './PostComponents/CandidateList';
 
 const PostList: React.FC = (): any => {
     const [resetNewCandidates] = useResetNewCandidatesMutation()
@@ -34,15 +34,33 @@ const PostList: React.FC = (): any => {
     const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
-
+    const removeExpiredPosts = async ()=> {
+        // Lọc ra những bài viết đã hết hạn
+        const expiredPosts = posts?.filter((post: any) => {
+            const expirationDate = new Date(post.createdAt);
+            const expirationMinutes = expirationDate.getMinutes() + post.period;
+            return expirationMinutes < new Date().getMinutes(); //kệ cái lỗi này
+        });
+    
+        // Xóa những bài viết hết hạn
+        if (expiredPosts?.length > 0) {
+            for (const expiredPost of expiredPosts) {
+                await removePost(expiredPost._id);
+            }
+        }
+    };
     const [provinces, setProvinces] = useState<any>([])
     useEffect(() => {
         const fetchProvinces = async () => {
-            const { data: response }: any = await apiGetProvinces()
+            const { data: response }: any = await apiGetProvinces();
             setProvinces(response?.results);
-        }
-        fetchProvinces()
-    }, [])
+        };
+        fetchProvinces();
+    
+        // Gọi hàm xóa bài viết hết hạn
+        removeExpiredPosts();
+    }, [posts]);
+    
 
     const dataSource = posts?.map((item: any, index: string) => ({
         key: String(index),
@@ -172,6 +190,13 @@ const PostList: React.FC = (): any => {
             dataIndex: 'createdAt',
             render: (_, record) => (
                 <span>{new Date(record.createdAt).toLocaleDateString()}</span>
+            )
+        },
+        {
+            title: 'Thời gian hết hạn',
+            dataIndex: 'period',
+            render: (_, record) => (
+                <span> Còn {(record.period)} Ngày</span>
             )
         },
         {
