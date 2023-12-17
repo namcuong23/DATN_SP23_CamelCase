@@ -6,6 +6,7 @@ import { CheckOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons';
 import { useRemoveVoucherMutation, useGetVouchersQuery } from '../../../service/admin_voucher';
 import { MessageType } from 'antd/es/message/interface';
 import React from 'react';
+import { convertDaysToMonth, convertDaysToMonths } from '../../../utils/hooks/ConvertMonth';
 
 type Props = {}
 const VoucherList = () => {
@@ -45,7 +46,7 @@ const VoucherList = () => {
             dataIndex: 'package_day',
             render: (_, record) => (
                 <>
-                    <div>{record.package_day} tháng</div>
+                    <div>{convertDaysToMonths(record.package_day)}</div>
                 </>
             )
         },

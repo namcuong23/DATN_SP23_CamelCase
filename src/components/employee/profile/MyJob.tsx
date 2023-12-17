@@ -58,7 +58,7 @@ const MyJob = () => {
                           </NavLink>
                           <p className='mb-0 mt-[4px] text-[13px]'>Hình thức: {item.working_form}</p>
                           <p className='mb-0 text-[13px]'>{item.work_location}</p>
-                          <p className='text-danger mb-0 text-[13px]'>{formatCurrency(item.job_salary)}</p>
+                          <p className='text-danger mb-0 text-[13px]'>{item?.min_job_salary ? `${formatCurrency(item.min_job_salary)}` : "Lên đến"} {item?.min_job_salary && item?.max_job_salary ? '-' : ""} {item?.max_job_salary ? `${formatCurrency(item.max_job_salary)}` : "trở lên"}</p>
                         </div>
                       </div>
 

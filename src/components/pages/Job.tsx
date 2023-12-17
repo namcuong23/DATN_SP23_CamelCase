@@ -5,6 +5,7 @@ import { useGetPostsQuery } from '../../service/post'
 import IPost from '../../interface/post'
 import { NavLink } from 'react-router-dom'
 import FooterEmployer from '../layouts/layoutComponentEmployer/FooterEmployer'
+import { formatCurrency } from '../../utils/hooks/FormatCurrrency'
 
 const job = () => {
 
@@ -134,7 +135,7 @@ const job = () => {
                                             <div style={{ fontSize: '14px' }}>Hình thức làm việc: {post.working_form}</div>
                                             <div style={{ color: '#999', fontSize: '13px' }}>Nơi làm việc: {post.work_location}</div>
                                             <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tuyển: {(new Date(post?.createdAt)).toLocaleDateString()}</span>
-                                            <div style={{ color: '#ff7d55', fontWeight: 500 }}>Mức lương: {post.job_salary}</div>
+                                            <div  style={{ color: '#ff7d55', fontWeight: 500 }}> Mức lương: {post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</div>
                                         </p>
                                     </div>
 

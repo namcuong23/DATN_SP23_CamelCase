@@ -212,7 +212,8 @@ const PostAdd = (): any => {
                                     </Select>
                                 </Form.Item>
                                 <Form.Item 
-                                    name="work_location" 
+                                    name="work_location"
+                                    mode='multiple'
                                     label="Khu vực"
                                     rules={[{ required: true, message: 'Vui lòng nhập địa điểm làm việc' }]}
                                 >
@@ -252,9 +253,19 @@ const PostAdd = (): any => {
                                         style={{
                                             width: '300px',
                                         }}
+                                        dependencies={['max_job_salary']}
                                         rules={[
                                             { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                            { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                            { type: 'number', message: 'Vui lòng nhập giá trị số' },
+                                            ({ getFieldValue }) => ({
+                                                validator(_, value) {
+                                                    console.log(value);
+                                                  if (!value || !getFieldValue('max_job_salary') || getFieldValue('max_job_salary') > value) {
+                                                    return Promise.resolve();
+                                                  }
+                                                  return Promise.reject(new Error('Lương tối thiểu không được lớn hơn lương tối đa.'));
+                                                },
+                                              }),
                                          ]}
                                     >
                                         <InputNumber
@@ -266,14 +277,24 @@ const PostAdd = (): any => {
                                         />
                                     </Form.Item>
                                     <Form.Item 
-                                        name="max_job_salary" 
+                                        name="max_job_salary"
+                                        dependencies={['min_job_salary']}
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
                                         }}
                                         rules={[
                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                           { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                           { type: 'number', message: 'Vui lòng nhập giá trị số' },
+                                           ({ getFieldValue }) => ({
+                                            validator(_, value) {
+    
+                                              if (!value || !getFieldValue('min_job_salary') || getFieldValue('min_job_salary') < value) {
+                                                return Promise.resolve();
+                                              }
+                                              return Promise.reject(new Error('Lương tối đa không thể thấp hơn lương tối thiểu.'));
+                                            },
+                                          }),
                                         ]}
                                     >
                                         <InputNumber

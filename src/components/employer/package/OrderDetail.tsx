@@ -10,6 +10,7 @@ import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import axios from 'axios';
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency';
+import { convertDaysToMonths } from '../../../utils/hooks/ConvertMonth';
 
 const OrderDetail = (): any => {
     const { id } = useParams();
@@ -41,7 +42,7 @@ const OrderDetail = (): any => {
             dataIndex: 'package_id',
             key: 'package_id',
             render: (_, record: any) => (
-                <span>{`${record.package_id.package_day}`} ngày</span>
+                <span>{`${convertDaysToMonths(record.package_id.package_day)}`}</span>
             ),
         },
         {

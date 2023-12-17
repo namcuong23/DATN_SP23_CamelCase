@@ -170,14 +170,14 @@ const PostList: React.FC = (): any => {
             dataIndex: 'job_name',
             ...getColumnSearchProps('job_name'),
             render: (_, record) => (
-                <span className='text-ellipsis'>{record.job_name}</span>
+                <span className='text-ellipsis overflow-hidden w-[100px] max-w-8 block'>{record.job_name}</span>
             )
         },
         {
             title: 'Ngành nghề',
             dataIndex: 'career',
             ...getColumnSearchProps('career'),
-            render: (text) => <span className='text-ellipsis'>{text}</span>,
+            render: (text) => <span className='text-ellipsis'>{text?.name ?? ""}</span>,
         },
         {
             title: 'Hình thức',
