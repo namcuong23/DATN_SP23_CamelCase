@@ -168,7 +168,9 @@ const PostAdd = (): any => {
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
                                         { type: 'number', message: 'Vui lòng nhập giá trị số' }
-                                    ]}>
+                                   
+                                   ]}
+                                   >
                                     <Input size='large' />
                                 </Form.Item>
                                 <Form.Item name="career" label="Ngành Nghề"

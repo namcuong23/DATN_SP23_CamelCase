@@ -205,6 +205,7 @@ const PostList = (): any | null | JSX.Element => {
                 </>
             ),
         },
+       
         {
             title: 'Ứng viên',
             dataIndex: 'candidate',
