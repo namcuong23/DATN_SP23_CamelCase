@@ -72,14 +72,14 @@ import CareerEdit from "./components/Admin/Career/CareerEdit"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
-    window.addEventListener('storage', function(event) {
+    window.addEventListener('storage', function (event) {
       if (event.key === 'checkout') {
         window.location.href("/home/services");
         localStorage.removeItem("checkout");
       }
     });
-  },[]);
-  
+  }, []);
+
   return (
     <div className="App">
       <Routes>
@@ -87,7 +87,7 @@ function App() {
 
         {/* CV DEMO */}
         <Route path="cv-preview" element={<CvDemo />} />
-
+        
         {/* AUTH EMPLOYEE */}
         <Route path='signup' element={
           <Register />
@@ -131,6 +131,7 @@ function App() {
         {/* EMPLOYER */}
         <Route path='/home' element={<LayoutEmployer />}>
           <Route index element={<Home />} />
+          <Route path="sendmail" element={<SendMail />} />
           <Route path='profile-epr' element={<ProfileEpr />} />
           <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
@@ -180,12 +181,12 @@ function App() {
         <Route path='/personalInfors' element={<LayoutClient />}>
           <Route index element={<PersonalInfor />} />
           <Route path="/personalInfors/:id" element={<PersonalInfor />} />
-          
+
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
-        <Route path="/report" element={<Report/>}></Route>
+        <Route path="/report" element={<Report />}></Route>
       </Routes>
-    
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

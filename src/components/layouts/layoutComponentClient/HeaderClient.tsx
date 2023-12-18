@@ -51,7 +51,6 @@ const HeaderClient = () => {
     const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
         pollingInterval: 10000,
     });
-
     const showNotification = (notifications: Inotification) => {
         const { _id, notification_title, notification_content, isRead } = notifications;
 

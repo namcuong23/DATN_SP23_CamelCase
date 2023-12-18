@@ -46,6 +46,7 @@ const PostDetail: React.FC = (): any => {
     const [addCandidate] = useCreateCandidateMutation()
     const [addNotification] = useAddNotificationMutation()
 
+
     const onHandleAdd = async (user: any) => {
         try {
             const response = await addCandidate(user);
@@ -61,6 +62,8 @@ const PostDetail: React.FC = (): any => {
             console.error(error);
         }
     }
+    const notification_title = "Chúc mừng bạn đã ứng tuyển thành công"
+    const notification_content = "Thư mời phỏng vấn đã được gửi tới email của bạn"
     const onHandleNotification = async (user: any) => {
         try {
             const response = await addNotification(user);
@@ -82,6 +85,7 @@ const PostDetail: React.FC = (): any => {
 
         if (confirm !== null) {
             approveCv(id)
+            message.success('Đã gửi thông báo đến ứng viên');
         }
     }
     const [deleteCv] = useRemoveCvMutation()
@@ -125,22 +129,29 @@ const PostDetail: React.FC = (): any => {
 
             render: (_, record) => (
                 <Space size="middle" className='flex items-center'>
-                    <Popconfirm placement="top"
-                        title={"Chấp nhận"}
+                    {/* <Popconfirm placement="top"
+                        title={"Hãy gửi email phỏng vấn"}
                         onConfirm={() => {
                             onHandleNotification(record);
                             onHandleApprove(record._id)
+
                         }}
                         okText="Đồng ý"
                         cancelText="Không"
                         className='leading-[22px] flex items-center'
                     >
                         <CheckOutlined className='text-success' />
-                    </Popconfirm>
-
-                    <Popconfirm
+                    </Popconfirm> */}
+                    <NavLink to={`/home/sendmail`}
+                        className='leading-[22px] flex items-center'
+                        target='_blank'
+                    >
+                        <CheckOutlined className='text-success' />
+                    </NavLink>
+                    <Popconfirm placement="top"
                         title={remove}
                         onConfirm={() => onHandleDelete(record._id)}
+                        // onClick={() => }
                         okText="Đồng ý"
                         cancelText="Không"
                         className='leading-[22px] flex items-center'
