@@ -47,11 +47,19 @@ const Home = (): any => {
     return (
         <>
             <div className='mx-5'>
+            <div>
+                    <img src="https://employer.vietnamworks.com/v2/img/gallery/emp_hero_banner.jpg" alt="" />
+                </div>
+
+                <div className='text-center mt-5'>
+                    <h4>DỊCH VỤ CỦA CHÚNG TÔI</h4>
+                    <p>Chúng tôi cung cấp nhiều dịch vụ giúp nhà tuyển dụng kết nối với nhiều nhân tài hơn, để họ có thể kết nối với ứng cử viên nhanh hơn</p>
+                </div>
                 <div className="row mt-4">
                     <div style={{ marginTop: '20px', height: '450px' }} className=" rounded">
                         <div className=" margin-bottom--10 row row-cols-sm-12 row-cols-12">
                             <div className="col-lg-5 col-sm-12 col-12" style={{backgroundColor: "white", borderRadius: "8px"}}>
-                                <div className="width-percent--100" style={{paddingTop: "14px"}}>
+                                <div className="width-percent--100" style={{paddingTop: "10px"}}>
                                     <div
                                         className="flex-box flex-box--align-end flex-box--between"
                                         style={{
@@ -122,7 +130,7 @@ const Home = (): any => {
                                                     <div>
                                                         <div
                                                             className="fw--bold title colour--gray-dark"
-                                                            style={{ color: "rgb(255, 125, 85)" }}
+                                                            style={{ color: "rgb(255+, 125, 85)" }}
                                                         >
                                                             0
                                                         </div>
@@ -147,7 +155,7 @@ const Home = (): any => {
                                             className="margin-top--70"
                                             src="https://employer.vietnamworks.com/v2/dashboard/static/media/icon-empty-current-status.dc7c121ad253b15972a4bb894e7084fd.svg"
                                             alt=""
-                                            style={{ width: "90%", height: "50%" }}
+                                            style={{ width: "80%", height: "40%" }}
                                         />
                                     </div>
                                 </div>
@@ -205,14 +213,67 @@ const Home = (): any => {
 
                         </div>
                     </div>
-                    <div style={{ backgroundColor: 'white', marginTop: '20px', height: '250px' }} className=" rounded">
+                    {/* <div style={{ backgroundColor: 'white', marginTop: '20px', height: '250px' }} className=" rounded">
                         <h4 className="m-3">Quản lý công việc</h4>
                         <div id="nkcv">
                             <a href="#"><img src="./src/assets/img/nhatkyhoatdong.jpg" style={{ textAlign: 'center' }} /></a>
                         </div>
+                    </div> */}
+                    <div >
+                        <h4 className='text-center my-5'>KHÁCH HÀNG NÓI GÌ VỀ CHÚNG TÔI?</h4>
+                        <div className='flex w-[1100px] mt-3 justify-between m-auto'>
+                        <div className='w-[330px] h-[200px] border border-spacing-1'>
+                            <div className='pb-3'>
+                                Lorem ipsum dolor Nisi illo itaque ipsam aut neque corrupti in, debitis adipisci praesentium possimus eos hic molestiae voluptatum optio dolorum!
+                                </div>
+                                <hr />
+                                <div className='flex items-center'>
+                                    <div>
+                                        <img src="https://employer.vietnamworks.com/v2/img/slider/logo-pepsico.svg" alt="" />
+                                    </div>
+                                    <div>
+                                        công ty tnhh vợ 1 con
+                                    </div>
+                                </div>
+                            
+                        </div>
+
+                        <div className='w-[330px] h-[200px] border border-spacing-1'>
+                            <div className='pb-3'>
+                                Lorem ipsum dolor Nisi illo itaque ipsam aut neque corrupti in, debitis adipisci praesentium possimus eos hic molestiae voluptatum optio dolorum!
+                                </div>
+                                <hr />
+                                <div className='flex items-center'>
+                                    <div>
+                                        <img src="https://employer.vietnamworks.com/v2/img/slider/logo-pepsico.svg" alt="" />
+                                    </div>
+                                    <div>
+                                        công ty tnhh vợ 1 con
+                                    </div>
+                                </div>
+                            
+                        </div>
+
+
+                        <div className='w-[330px] h-[200px] border border-spacing-1'>
+                            <div className='pb-3'>
+                                Lorem ipsum dolor Nisi illo itaque ipsam aut neque corrupti in, debitis adipisci praesentium possimus eos hic molestiae voluptatum optio dolorum!
+                                </div>
+                                <hr />
+                                <div className='flex items-center'>
+                                    <div>
+                                        <img src="https://employer.vietnamworks.com/v2/img/slider/logo-pepsico.svg" alt="" />
+                                    </div>
+                                    <div>
+                                        công ty tnhh vợ 1 con
+                                    </div>
+                                </div>
+                            
+                        </div>
+                        </div>
                     </div>
                     <div>
-                        <div className="mt--20 row row-cols-sm-12 row-cols-12" style={{ marginTop: '50px', marginBottom: '50px', backgroundColor: "white", borderRadius: "8px" }}>
+                        <div className="mt--20 row row-cols-sm-12 row-cols-12 my-5" style={{ marginTop: '50px', marginBottom: '50px', backgroundColor: "white", borderRadius: "8px" }}>
                             <div className="col-lg-7 col-sm-12 col-12" style={{ borderRightWidth: "10px" }}>
                                 <div className="tab-page tab-page--customed bg-white ">
                                     <div className="fz--18 fw--bold"><h4 style={{ fontWeight: '700', fontSize: "20px", marginTop: '10px' }}>Thông tin khách hàng thân thiết</h4></div>
