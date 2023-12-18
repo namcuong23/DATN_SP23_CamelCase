@@ -201,7 +201,8 @@ const PostDetailEp = (): any => {
                       <span className="text-[#333333] block font-thin text-[15px]">
                         {post?.offer_salary
                           ? "Thương lượng"
-                          : `${formatCurrency(post?.min_job_salary)} - ${formatCurrency(post?.max_job_salary)}`}
+                          : <div>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</div>
+                          }
                       </span>
                     </div>
                     <span style={{ color: "#999", fontSize: "13px" }}>
@@ -452,7 +453,7 @@ const PostDetailEp = (): any => {
           ></section>
           <section className="modal-cv__job-info">
             <h4 className="modal-cv__job-name">{post?.job_name}</h4>
-            <p className="modal-cv__job-salary">{formatCurrency(post?.job_salary)}</p>
+            <p className="modal-cv__job-salary">{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</p>
             <p className="modal-cv__job-location">{post?.work_location}</p>
           </section>
           <label htmlFor="modal-cv-check" onClick={() => setIsAplly(!isAplly)}>

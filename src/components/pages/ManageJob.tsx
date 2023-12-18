@@ -3,6 +3,7 @@ import HeaderSearchhJob from '../layouts/HeaderSearchhJob'
 import IPost from '../../interface/post'
 import { useGetPostsQuery } from '../../service/post'
 import { useState ,useEffect} from 'react';
+import { formatCurrency } from '../../utils/hooks/FormatCurrrency';
 
 const ManageJob = () => {
     const { data: posts, error, isLoading } = useGetPostsQuery()
@@ -144,7 +145,7 @@ const ManageJob = () => {
                                            <a href='#' style={{ opacity: '0.9', fontSize: '14px' }}>Hình thức làm việc: {post.working_form}</a>
                                             <div style={{ color: '#999', fontSize: '13px' }}>Nơi làm việc: {post?.work_location}</div>
                                             <span style={{ color: '#999', fontSize: '13px' }}>Ngày đăng tuyển: {(new Date(post.createdAt)).toLocaleDateString()}</span>
-                                            <div style={{ color: '#ff7d55', fontWeight: 500 }}>Mức lương: {post.job_salary}</div>
+                                            <div  style={{ color: '#ff7d55', fontWeight: 500 }}> Mức lương: {post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</div>
                                         </p>
                                     </div>
                                 </div>

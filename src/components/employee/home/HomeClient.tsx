@@ -12,6 +12,7 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
 import { useGetBannersQuery } from '../../../service/admin/banner'
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 
 const HomeClient = (): any => {
   const { email } = useAppSelector((rs) => rs.auth)
@@ -211,7 +212,7 @@ const HomeClient = (): any => {
                 </div>
                 <h4 className="job-namee">{post.job_name}</h4>
                 <p className="truncate block text-[14px] leading-4 text-red-400">
-                  {post.offer_salary ? "Thương lượng" : `${post.min_job_salary} - ${post.max_job_salary}`}
+                  {post.offer_salary ? "Thương lượng" : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
                 </p>
                 <p className='job-location'>{post.work_location}</p>
               </div>
@@ -398,7 +399,7 @@ const HomeClient = (): any => {
                                   <p className="truncate block text-[14px] leading-4 text-red-400">
                                       {post.offer_salary
                                         ? "Thương lượng"
-                                        : `${post.min_job_salary} - ${post.max_job_salary}`}
+                                        : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
                                     </p>
                                   <p className='job-location'>{post.work_location}</p>
                                 </div>

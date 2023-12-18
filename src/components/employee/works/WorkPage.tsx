@@ -67,9 +67,13 @@ const WorkPage = () => {
         "Thực tập",
         "Việc làm online",
         "Nghề tự do",
+        "Làm việc theo giờ linh hoạt",
+        "Làm việc theo dự án",
         "Hợp đồng thời vụ",
+        "Làm việc không chính thức (Freelance)",
         "Khác",
       ];
+      
     const [data, setData] = useState([])
     const [provinces, setProvinces] = useState<any>([])
     const [searchMessage, setSearchMessage] = useState("")
@@ -86,7 +90,7 @@ const WorkPage = () => {
         min_job_salary: "",
         max_job_salary: "",
         career: careerParams,
-        typeOfWork : "",
+        working_form : "",
         level : "",
         sort : "-1",
     })
@@ -108,11 +112,11 @@ const WorkPage = () => {
     
     useEffect(() => {
         loadData(filterParams); 
-    }, [filterParams.work_location, filterParams.min_job_salary, filterParams.career,filterParams.key,filterParams.typeOfWork,filterParams.level,filterParams.sort,careerParams]
+    }, [filterParams.work_location, filterParams.min_job_salary, filterParams.career,filterParams.key,filterParams.working_form,filterParams.level,filterParams.sort,careerParams]
     )
     const loadData = async (params : any = null) => {
-        const {key,min_job_salary,max_job_salary,career,work_location,level,typeOfWork,sort} = params
-        if(key || min_job_salary || max_job_salary ||career || work_location || level || typeOfWork || sort) {
+        const {key,min_job_salary,max_job_salary,career,work_location,level, working_form,sort} = params
+        if(key || min_job_salary || max_job_salary ||career || work_location || level ||  working_form || sort) {
             setData([]);
             try {
                 const { data } = await axios({
@@ -227,7 +231,7 @@ const WorkPage = () => {
                                 )
                             }
                         </select>
-                        <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams, typeOfWork: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
+                        <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams,  working_form: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
                         <option value="">Tất cả loại hình</option>
                             {
                               typeOfWork.map((item: any, index: number) =>
@@ -273,7 +277,7 @@ const WorkPage = () => {
                                                 <p className="m-0"> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
                                                 {item && item.offer_salary 
                                                  ? <p className="m-0"> <span style={{ color: 'red' }}>Thương lượng</span> | {item.work_location.join(",")}</p>
-                                                 : <p className="m-0"> <span style={{ color: 'red' }}>{item.min_job_salary ? `${formatCurrency(item.min_job_salary)}` : ""} {item.max_job_salary ? `- ${formatCurrency(item.max_job_salary)}` : ""}</span> | {item.work_location.join(",")}</p>
+                                                 : <p className="m-0"> <span style={{ color: 'red' }}>{item.min_job_salary ? `${formatCurrency(item.min_job_salary)}` : "Lên đến"} {item.min_job_salary && item.max_job_salary ? '-' : ""} {item.max_job_salary ? `${formatCurrency(item.max_job_salary)}` : "trở lên"}</span> | {item.work_location.join(",")}</p>
                                                 }
                                                 
                                             </div>

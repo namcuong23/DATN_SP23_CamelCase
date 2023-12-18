@@ -187,7 +187,7 @@ const PostDetail: React.FC = (): any => {
                                         <span className="text-[#333333] block font-thin text-[15px]">
                                             {post?.offer_salary
                                                 ? "Thương lượng"
-                                                : `${formatCurrency(post?.min_job_salary)} - ${formatCurrency(post?.max_job_salary)}`}
+                                                : <div>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</div>}
                                         </span>
                                     </div>
                                     <span style={{ color: "#999", fontSize: "13px" }}>
