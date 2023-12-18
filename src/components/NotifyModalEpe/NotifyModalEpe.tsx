@@ -8,7 +8,7 @@ const cx = classNames.bind(styles);
 const NotifyModalEpe = (
     closeModal: any,
 ) => {
-    const { email, isLoggedIn } = useAppSelector((rs) => rs.auth)
+    const { email, isLoggedIn } = useAppSelector((rs: any) => rs.auth)
     const { data: notification } = useGetNotificationByEmailQuery(email);
     return (
         <div className={cx('container')}>

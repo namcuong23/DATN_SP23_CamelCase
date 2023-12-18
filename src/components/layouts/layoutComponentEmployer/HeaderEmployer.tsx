@@ -87,14 +87,6 @@ const HeaderEmployer = () => {
                         </NavLink>
                     </li>
                     <li className='p-3 text-decoration-none text-white'>
-                        <NavLink to={'/home/candidates'}
-                            className='d-flex align-items-center text-decoration-none text-white'>
-                            <span className='hover:text-orange-400'>
-                                Ứng viên
-                            </span>
-                        </NavLink>
-                    </li>
-                    <li className='p-3 text-decoration-none text-white'>
                         <NavLink to={'/home/packages'}
                             className='d-flex align-items-center text-decoration-none text-white'>
                             <span className='hover:text-orange-400'>

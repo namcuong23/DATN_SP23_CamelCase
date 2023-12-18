@@ -61,11 +61,11 @@ const MyApplied = () => {
 
                                                 <div>
                                                     <NavLink
-                                                        to={`/posts/${item._id}`}
+                                                        to={`/posts/${item._id}?apply=1`}
                                                         target='_blank'
                                                         className='px-[16px] py-[10px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
                                                     >
-                                                        Chi tiết
+                                                        Ứng tuyển lại
                                                     </NavLink>
                                                 </div>
 

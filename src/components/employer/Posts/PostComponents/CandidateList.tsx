@@ -195,6 +195,10 @@ const CandidateList = (props: Props) => {
         ...post
     }))
 
+    cvs?.sort((prevPost: any, nextPost: any) => {
+        return (prevPost.isNew === nextPost.isNew) ? 0 : prevPost.isNew ? -1 : 1
+    })
+
     const onHandleNotification = async (user: any) => {
         try {
             const response = await addNotification(user);

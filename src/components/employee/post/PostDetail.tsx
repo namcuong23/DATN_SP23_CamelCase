@@ -122,9 +122,6 @@ const PostDetailEp = (): any => {
       _id: id,
       isSave: true
     })
-      .then((res: any) => {
-        message.success("Đã thêm vào Việc làm đã lưu")
-      })
       .catch((err: any) => {
         message.error(err.message)
       })
@@ -132,13 +129,18 @@ const PostDetailEp = (): any => {
 
   const [removeMyPost] = useRemoveMyPostMutation()
   const handleRemove = async (post: any) => {
+    await addNotification({
+      email,
+      role: 2,
+      notification_title: "Đã xoá khỏi Việc làm đã lưu",
+      notification_content: post.job_content
+    })
+
     await removeMyPost({
       _id: id,
       isSave: true
     })
-      .then(() => {
-        message.success("Đã xoá khỏi Việc làm đã lưu")
-      }).catch((err: any) => {
+      .catch((err: any) => {
         message.error(err.message)
       })
   }

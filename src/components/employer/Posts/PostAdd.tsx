@@ -18,7 +18,10 @@ const PostAdd = (): any => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
     const { data: user }: any = useGetUserEprByEmailQuery(email)
     const [provinces, setProvinces] = useState<any>([])
-    const [bargain,setBargain] = useState<any>(false);
+    const [bargain, setBargain] = useState<any>(false);
+
+    const date = new Date()
+    const expireDate = date.setDate(date.getDate() + 5)
     
   useEffect(() => {
     const fetchProvinces = async () => {
@@ -36,6 +39,7 @@ const PostAdd = (): any => {
         logo: user?.image,
         post_status: null,
         user_id: user?._id,
+        period: (new Date(expireDate)).toLocaleDateString()
       });
       if (data?.error?.status == 400) {
         message.warning(data.error.data.message);
@@ -178,17 +182,6 @@ const PostAdd = (): any => {
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
                                         // { type: 'number', message: 'Vui lòng nhập giá trị số' }
-                                    ]}>
-                                    <InputNumber
-                                            min={1} 
-                                            style={{ width: '100%' }} 
-                                            size='large' 
-                                        />
-                                </Form.Item>
-                                <Form.Item name="period" label="Thời gian hết hạn"
-                                    rules={[
-                                        { required: true, message: 'Vui lòng nhập giá trị số' },
-                                        { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <InputNumber
                                             min={1} 

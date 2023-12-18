@@ -40,48 +40,46 @@ const MyJob = () => {
               myPosts?.length >= 1 ?
               myPosts.map((item: any, index: any) => 
                 (
-                  <>
-                    <div key={index} className='flex items-center justify-between border rounded my-[10px] p-[16px] hover:bg-[#f9fcff]'>
-                      <div className='flex items-center w-[75%]'>
-                        <div className=''>
-                          <img 
-                            src={item.logo} 
-                            style={{ width: '100px', height: 'auto' }} 
-                            className='rounded-[6px]' 
-                          />
-                        </div>
-                        <div className='ml-[16px] flex-1'>
-                          <NavLink to={`/posts/${item._id}`} target='_blank'> 
-                              <h5 className='text-[#333] text-[18px] font-medium job-name'>
-                                {item.job_name}
-                              </h5>
-                          </NavLink>
-                          <p className='mb-0 mt-[4px] text-[13px]'>Hình thức: {item.working_form}</p>
-                          <p className='mb-0 text-[13px]'>{item.work_location}</p>
-                          <p className='text-danger mb-0 text-[13px]'>{formatCurrency(item.job_salary)}</p>
-                        </div>
+                  <div key={index} className='flex items-center justify-between border rounded my-[10px] p-[16px] hover:bg-[#f9fcff]'>
+                    <div className='flex items-center w-[75%]'>
+                      <div className=''>
+                        <img 
+                          src={item.logo} 
+                          style={{ width: '100px', height: 'auto' }} 
+                          className='rounded-[6px]' 
+                        />
                       </div>
-
-                      {
-                        <div className='flex items-center justify-center'>
-                          <button onClick={() => onHandleRemove({
-                            _id: item._id,
-                            isSave: true
-                          })}>
-                            <AiFillHeart className='fill-[#669cff] hover:cursor-pointer' style={{ width: '20px', height: '20px' }} />
-                          </button>
-                          <NavLink 
-                            to={`/posts/${item._id}?apply=1`} 
-                            target='_blank'
-                            className='px-[16px] py-[6px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
-                          >
-                            Ứng tuyển
-                          </NavLink>
-                        </div>
-                      }
-
+                      <div className='ml-[16px] flex-1'>
+                        <NavLink to={`/posts/${item._id}`} target='_blank'> 
+                            <h5 className='text-[#333] text-[18px] font-medium job-name'>
+                              {item.job_name}
+                            </h5>
+                        </NavLink>
+                        <p className='mb-0 mt-[4px] text-[13px]'>Hình thức: {item.working_form}</p>
+                        <p className='mb-0 text-[13px]'>{item.work_location}</p>
+                        <p className='text-danger mb-0 text-[13px]'>{formatCurrency(item.job_salary)}</p>
+                      </div>
                     </div>
-                  </>
+
+                    {
+                      <div className='flex items-center justify-center'>
+                        <button onClick={() => onHandleRemove({
+                          _id: item._id,
+                          isSave: true
+                        })}>
+                          <AiFillHeart className='fill-[#669cff] hover:cursor-pointer' style={{ width: '20px', height: '20px' }} />
+                        </button>
+                        <NavLink 
+                          to={`/posts/${item._id}?apply=1`} 
+                          target='_blank'
+                          className='px-[16px] py-[6px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
+                        >
+                          Ứng tuyển
+                        </NavLink>
+                      </div>
+                    }
+
+                  </div>
                 )
               ) :
               <MyJobComp isCheck={isJob} />

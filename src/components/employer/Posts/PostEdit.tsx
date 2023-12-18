@@ -1,13 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Form, Input, InputNumber, message, Select,Checkbox, Space, Switch} from 'antd'
-import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
-import IPost from '../../../interface/post'
+import { Form, Input, InputNumber, message, Select,Checkbox, Space} from 'antd'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
 import { apiGetProvinces } from '../../../service/api'
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
 import { useAppSelector } from '../../../app/hook';
-import React from 'react'
 import { useGetCareersQuery } from '../../../service/admin'
 
 const PostEdit = (): any => {
@@ -40,9 +37,9 @@ const PostEdit = (): any => {
             postForm['offer_salary'] = bargain;
             editPost({
                 ...postForm,
-                post_status: post.post_status,
                 user_id: user?._id,
                 email: user?.email,
+                post_status: null,
                 _id: id
             })
             message.success('Sửa thành công.')
@@ -52,7 +49,7 @@ const PostEdit = (): any => {
         }
     }
 
-    const onChange = (e: CheckboxChangeEvent) => {
+    const onChange = (e: any) => {
         form.setFieldsValue({
             min_job_salary : 0,
             max_job_salary : 0,
