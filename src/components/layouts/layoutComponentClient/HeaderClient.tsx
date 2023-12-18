@@ -51,7 +51,6 @@ const HeaderClient = () => {
     const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
         pollingInterval: 10000,
     });
-
     const showNotification = (notifications: Inotification) => {
         const { _id, notification_title, notification_content, isRead } = notifications;
 
@@ -80,8 +79,8 @@ const HeaderClient = () => {
                 setIsModalNoti(true);
             }
         }
-      };
-      moment.locale('vi');
+    };
+    moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -378,7 +377,7 @@ const HeaderClient = () => {
                                                         .map((noti: any) => (
                                                             <div key={noti._id} className={cx('modal-body__content-notify', { 'bg-gray-200': noti.isRead })} onClick={() => showModalNoti(noti._id)}>
                                                                 <span className={cx('notify-img')}>
-                                                                    <img src={noti.notificationImage} alt="" /> 
+                                                                    <img src={noti.notificationImage} alt="" />
                                                                     <span>
                                                                         <i className="fa-solid fa-heart"></i>
                                                                     </span>
@@ -400,7 +399,6 @@ const HeaderClient = () => {
                                                 <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
                                                     {selectedNotification && (
                                                         <>
-                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
                                                             <span>{selectedNotification.notification_content}</span>
                                                         </>
                                                     )}

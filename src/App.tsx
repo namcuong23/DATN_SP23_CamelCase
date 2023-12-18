@@ -51,7 +51,8 @@ import VNPayCheckout from "./components/employer/package/VNPayCheckout"
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
 import ChangeCV from "./components/CvPage/ChangeCV"
-import CvDemo from "./components/employee/CvDemo/CvDemo"
+import CvDemo from "./components/CvDemo/CvDemo"
+
 import PostList from "./components/employer/Posts/PostList"
 import PostAdd from "./components/employer/Posts/PostAdd"
 import PostDetail from "./components/employer/Posts/PostDetail"
@@ -67,17 +68,18 @@ import CareerList from "./components/Admin/Career/CareerList"
 import CareerAdd from "./components/Admin/Career/CareerAdd"
 import FeedbackList from "./components/Admin/Feedback/FeedbackList"
 import OrderManagement from "./components/Admin/Order/OrderManagement"
+import SendMail from "./components/employer/SendMail/SendMail"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
-    window.addEventListener('storage', function(event) {
+    window.addEventListener('storage', function (event) {
       if (event.key === 'checkout') {
         navigate('/home/services');
         localStorage.removeItem("checkout");
       }
     });
-  },[]);
-  
+  }, []);
+
   return (
     <div className="App">
       <Routes>
@@ -85,7 +87,7 @@ function App() {
 
         {/* CV DEMO */}
         <Route path="cv-preview" element={<CvDemo />} />
-
+        
         {/* AUTH EMPLOYEE */}
         <Route path='signup' element={
           <Register />
@@ -129,6 +131,7 @@ function App() {
         {/* EMPLOYER */}
         <Route path='/home' element={<LayoutEmployer />}>
           <Route index element={<Home />} />
+          <Route path="sendmail" element={<SendMail />} />
           <Route path='profile-epr' element={<ProfileEpr />} />
           <Route path='acc-epr-manage' element={<AccEprMng />} />
           <Route path='posts' element={<PostList />} />
@@ -175,12 +178,12 @@ function App() {
         <Route path='/personalInfors' element={<LayoutClient />}>
           <Route index element={<PersonalInfor />} />
           <Route path="/personalInfors/:id" element={<PersonalInfor />} />
-          
+
         </Route>
         <Route path='*' element={<h1>404 | NOT FOUND</h1>} />
-        <Route path="/report" element={<Report/>}></Route>
+        <Route path="/report" element={<Report />}></Route>
       </Routes>
-    
+
       <ToastContainer
         position="top-right"
         autoClose={5000}
