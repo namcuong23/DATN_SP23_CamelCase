@@ -43,7 +43,7 @@ const Login = () => {
             }
         } else {
             setLoading(false);
-            toast.warning(res.mes);
+            toast.warning(res?.mes);
         }
     }
 

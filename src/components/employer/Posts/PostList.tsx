@@ -1,9 +1,12 @@
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { useGetPostsByUIdQuery } from '../../../service/post';
+import { 
+    useGetPostsByUIdQuery, 
+    useResetNewCandidatesMutation 
+} from '../../../service/post';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
-import { Alert, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
+import { Alert, Avatar, Badge, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
@@ -13,10 +16,12 @@ import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-import CandidateList from './PostComponents/CandidateList';
 import { useGetCareersQuery } from '../../../service/admin';
+import CandidateList from './PostComponents/CandidateList';
 
-const PostList = (): any | null | JSX.Element => {
+const PostList: React.FC = (): any => {
+    const [resetNewCandidates] = useResetNewCandidatesMutation()
+
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
@@ -24,63 +29,42 @@ const PostList = (): any | null | JSX.Element => {
     const [open, setOpen] = useState(false);
     const [postId, setPostId] = useState('');
     const { data: careers } = useGetCareersQuery();
-    const getCareerNameById = (careerId: string) => {
-        const career = careers?.find((c) => c._id === careerId);
-        return career?.name || 'Không xác định';
-    };
 
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
-
+    const removeExpiredPosts = async ()=> {
+        // Lọc ra những bài viết đã hết hạn
+        const expiredPosts = posts?.filter((post: any) => {
+            const expirationDate = new Date(post.createdAt);
+            const expirationMinutes = expirationDate.getMinutes() + post.period;
+            return expirationMinutes < new Date().getMinutes(); //kệ cái lỗi này
+        });
+    
+        // Xóa những bài viết hết hạn
+        if (expiredPosts?.length > 0) {
+            for (const expiredPost of expiredPosts) {
+                await removePost(expiredPost._id);
+            }
+        }
+    };
     const [provinces, setProvinces] = useState<any>([])
     useEffect(() => {
         const fetchProvinces = async () => {
-            const { data: response }: any = await apiGetProvinces()
+            const { data: response }: any = await apiGetProvinces();
             setProvinces(response?.results);
-        }
-        fetchProvinces()
-    }, [])
+        };
+        fetchProvinces();
+    
+        // Gọi hàm xóa bài viết hết hạn
+        removeExpiredPosts();
+    }, [posts]);
+    
 
-    interface DataType {
-        key: string;
-        _id: string;
-        job_name: string;
-        job_description: string;
-        job_salary: number;
-        offer_salary: boolean;
-        working_form: string;
-        number_of_recruits: number;
-        requirements: string;
-        gender: string;
-        min_job_salary: string;
-        max_job_salary: string;
-        work_location: string;
-        post_status: boolean | string;
-        user_id: string;
-        createdAt: string;
-        career: string;
-    }
-    type DataIndex = keyof DataType;
-    const dataSource = posts?.map((item: DataType, index: string) => ({
+    const dataSource = posts?.map((item: any, index: string) => ({
         key: String(index),
-        _id: String(item._id),
-        job_name: String(item.job_name),
-        offer_salary: Boolean(item.offer_salary),
-        job_description: String(item.job_description),
-        job_salary: Number(item.job_salary),
-        working_form: String(item.working_form),
-        min_job_salary: String(item.min_job_salary),
-        max_job_salary: String(item.max_job_salary),
-        number_of_recruits: Number(item.number_of_recruits),
-        requirements: String(item.requirements),
-        gender: String(item.job_name),
-        work_location: String(item.work_location),
-        post_status: Boolean(item.post_status),
-        user_id: String(item.user_id),
-        createdAt: String(item.createdAt),
-        career: getCareerNameById(item.career),
+        ...item
     }))
 
     const [removePost] = useRemovePostMutation()
@@ -93,7 +77,7 @@ const PostList = (): any | null | JSX.Element => {
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
-        dataIndex: DataIndex,
+        dataIndex: any,
     ) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -103,7 +87,7 @@ const PostList = (): any | null | JSX.Element => {
         clearFilters();
         setSearchText('');
     };
-    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<any> => ({
+    const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -180,7 +164,7 @@ const PostList = (): any | null | JSX.Element => {
             ),
     });
 
-    const columns: ColumnsType<DataType> = [
+    const columns: ColumnsType<any> = [
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
@@ -188,16 +172,6 @@ const PostList = (): any | null | JSX.Element => {
             render: (_, record) => (
                 <span className='text-ellipsis'>{record.job_name}</span>
             )
-        },
-        {
-            title: 'Mức Lương',
-            dataIndex: 'job_name',
-            ...getColumnSearchProps('job_name'),
-            render: (_, record) => (
-                <span className='text-ellipsis'>
-                    {record.offer_salary ? 'Thương lượng' : `${record.min_job_salary} - ${record.max_job_salary}`}
-                </span>
-            ),
         },
         {
             title: 'Ngành nghề',
@@ -219,9 +193,16 @@ const PostList = (): any | null | JSX.Element => {
             )
         },
         {
+            title: 'Thời gian hết hạn',
+            dataIndex: 'period',
+            render: (_, record) => (
+                <span> Còn {(record.period)} Ngày</span>
+            )
+        },
+        {
             title: 'Trạng thái',
             dataIndex: 'post_status',
-            render: (_: any, record: DataType) => (
+            render: (_: any, record: any) => (
                 <>
                     {
                         record.post_status == '' ?
@@ -245,18 +226,23 @@ const PostList = (): any | null | JSX.Element => {
             dataIndex: 'candidate',
             render: (_, record) => (
                 <>
-                    <button
-                        className='text-[#005aff] underline text-center'
-                        onClick={() => {
-                            setOpen(true)
-                            setPostId(record._id)
-                        }}
-                    >
-                        Xem
-                    </button>
+                    <Badge count={record.newCandidates} dot offset={[2, 2]} >
+                        <button
+                            className='text-[#1677ff] underline'
+                            onClick={() => {
+                                setOpen(true)
+                                setPostId(record._id)
+                                resetNewCandidates({
+                                    post_id: record._id
+                                })
+                            }}
+                        >
+                            Xem
+                        </button>
+                    </Badge>
 
-                    <CandidateList
-                        isOpen={open}
+                    <CandidateList 
+                        isOpen={open} 
                         handleCancel={() => setOpen(false)}
                         postId={postId && postId}
                     />

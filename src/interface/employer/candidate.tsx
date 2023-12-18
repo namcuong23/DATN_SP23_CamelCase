@@ -2,7 +2,7 @@ interface ICandidate {
     name: string,
     email: string,
     phone: string,
-    province: string,
+    isNew: boolean,
 }
 
 export default ICandidate

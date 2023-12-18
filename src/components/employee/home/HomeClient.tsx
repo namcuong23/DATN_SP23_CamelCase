@@ -1,18 +1,16 @@
 import { NavLink } from 'react-router-dom'
-import { useGetGoodPostsQuery, useGetPostsByUIdQuery, useGetPostsQuery } from '../../../service/post'
+import { useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { IFeedback } from '../../../interfaces/feedback'
 import { message, Button, Modal } from 'antd';
 import { useAppSelector } from '../../../app/hook'
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
-import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
-import axios from 'axios'
 import { useGetBannersQuery } from '../../../service/admin/banner'
 
 const HomeClient = (): any => {
@@ -22,12 +20,38 @@ const HomeClient = (): any => {
   const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
+  const [currentPosts, setCurrentPosts] = useState<any[]>([]);
+  const [shuffled, setShuffled] = useState(false);
+  useEffect(() => {
+    if (posts && !shuffled) {
+      // Lọc và xáo trộn danh sách công việc ngẫu nhiên khi component được tạo ra
+      const filteredPosts = posts.filter((post: any) => post.post_status && post.priority);
+      const shuffledPosts = [...filteredPosts].sort(() => Math.random() - 0.5);
+      setCurrentPosts(shuffledPosts);
 
-  let bannerImg
-  if (banners) {
-    bannerImg = banners[0].imageUrl
+      const interval = setInterval(() => {
+        setShuffled(true);
+      }, 60000); // 5 giây (1 giây = 1000 milliseconds)
 
-  }
+      return () => clearInterval(interval);
+    }
+  }, [posts, shuffled]);
+
+  useEffect(() => {
+    if (shuffled) {
+      const shuffleTimeout = setTimeout(() => {
+        shuffleAndSetPosts();
+        setShuffled(false);
+      }, 0); // Sử dụng setTimeout để chờ tới sau render
+
+      return () => clearTimeout(shuffleTimeout);
+    }
+  }, [shuffled]);
+  const shuffleAndSetPosts = () => {
+    const shuffledPosts = [...currentPosts].sort(() => Math.random() - 0.5);
+    setCurrentPosts(shuffledPosts);
+  };
+  
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -75,7 +99,7 @@ const HomeClient = (): any => {
           </div>
           <div className="carousel-inner">
             <div className="carousel-item active">
-              <img src={bannerImg} className="d-block w-100" style={{
+              <img src={banners && banners.length > 0 && banners[0].imageUrl || 'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
@@ -173,31 +197,28 @@ const HomeClient = (): any => {
                 <div className="swiper-container">
                   <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
                     <div className="sc-jtcaXd dhnMFx">
-                      <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
-                        {
-                          posts ?
-                            posts.map((post: any, index: number) =>
-                              post.post_status && post.priority &&
-                              <NavLink to={`/posts/${post._id}`} key={index} className="sc-gJwTLC doaJYu col-4">
-                                <div key={post._id} className='job'>
-                                  <div className="img-wrapper">
-                                    <img src={post.logo}
-                                      className="job-img" />
-                                  </div>
-                                  <div className="job-info">
-                                    <div className='flex justify-end mt-[-8px] mb-[8px]'>
-                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
-                                    </div>
-                                    <h4 className="job-namee">{post.job_name}</h4>
-                                    <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
-                                    <p className='job-location'>{post.work_location}</p>
-                                  </div>
-                                </div>
-                              </NavLink>
-                            )
-                            : ''
-                        }
-                      </div>
+                    <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
+      {currentPosts &&
+        currentPosts.map((post: any, index: number) => (
+          <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+            <div key={post._id} className='job'>
+              <div className="img-wrapper">
+                <img src={post.logo} className="job-img" />
+              </div>
+              <div className="job-info">
+                <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                  <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                </div>
+                <h4 className="job-namee">{post.job_name}</h4>
+                <p className="truncate block text-[14px] leading-4 text-red-400">
+                  {post.offer_salary ? "Thương lượng" : `${post.min_job_salary} - ${post.max_job_salary}`}
+                </p>
+                <p className='job-location'>{post.work_location}</p>
+              </div>
+            </div>
+          </NavLink>
+        ))}
+    </div>
                     </div>
                   </div>
                 </div>
@@ -374,7 +395,11 @@ const HomeClient = (): any => {
                                     </div>
                                   }
                                   <h4 className="job-namee">{post.job_name}</h4>
-                                  <p className='job-salary'>{formatCurrency(post.job_salary)}</p>
+                                  <p className="truncate block text-[14px] leading-4 text-red-400">
+                                      {post.offer_salary
+                                        ? "Thương lượng"
+                                        : `${post.min_job_salary} - ${post.max_job_salary}`}
+                                    </p>
                                   <p className='job-location'>{post.work_location}</p>
                                 </div>
                               </div>
@@ -391,49 +416,6 @@ const HomeClient = (): any => {
           </div>
 
         </section>
-        {/* <section className="sectionBlock hr-insider">
-          <div className="home-content__advises">
-            <div className="is-flex justify-between align-center section-title lunar-new-year-bottom">
-              <h2 className="sectionBlock__title">Tư vấn nghề nghiệp từ HR Insider</h2>
-              <div className="sectionBlock__link">
-                <a href="http://hrinsider.vietnamworks.com" title="Xem Tất Cả" className="is-hidden-mobile" rel="noreferrer">Xem Tất Cả</a>
-              </div>
-            </div>
-            <div className="sectionBlock__content mb-4" style={{ height: '100%' }}>
-              <div className="article-wrapper">
-                <article>
-                  <div className="cardBlock">
-                    <a href="/hrinsider/3-con-giap-nen-can-trong-trong-nam-2023.html?utm_source_navi=vnw_homepage" title="3 con giáp nên cẩn trọng trong năm 2023" target="_blank">
-                      <figure className="image is-16by9 cardBlock__image">
-                        <img src="https://www.vietnamworks.com//hrinsider//wp-content/uploads/2023/01/Shutterstock_2207479401-1-1080x675.jpg" alt="3 con giáp nên cẩn trọng trong năm 2023" />
-                      </figure>
-                    </a>
-                    <div className="cardBlock__content-wrapper">
-                      <div className="cardBlock__title">
-                        <a href="/hrinsider/3-con-giap-nen-can-trong-trong-nam-2023.html?utm_source_navi=vnw_homepage" title="3 con giáp nên cẩn trọng trong năm 2023" className="text-like" target="_blank">
-                          <div className="clamp-lines ">
-                            <div id="clamped-content-card-title" aria-hidden="true">3 con giáp nên cẩn trọng trong năm 2023</div>
-                          </div>
-                        </a>
-                      </div>
-                      <div className="cardBlock__content content-title" title="Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.">
-                        <div className="clamp-lines ">
-                          <div id="clamped-content-card-content" aria-hidden="true">
-                            Sau một năm 2022 khó khăn, Quý Mão 2023 được cho mang lại nhiều may mắn hơn. Tuy vậy, theo các nhà chiêm tinh, một số con giáp tương khắc với Mão vẫn có thể gặp trắc trở.
-                          </div>
-                        </div>
-                      </div>
-                      <div className="cardBlock__category ellipsis">
-                        <span className="cardBlock__point" />
-                        <span>Trắc Nghiệm Vui</span>
-                      </div>
-                    </div>
-                  </div>
-                </article>
-              </div>
-            </div>
-          </div>
-        </section> */}
       </div>
 
       <div className="float-contact ">

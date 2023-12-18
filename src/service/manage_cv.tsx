@@ -50,6 +50,14 @@ export const cvApi: any = createApi({
             }),
             invalidatesTags: ['Cv']
         }),
+        setIsNew: builder.mutation({
+            query: (id: string) => ({
+                url: `/cvs/set`,
+                method: 'POST',
+                body: id
+            }),
+            invalidatesTags: ['Cv']
+        }),
     })
 })
 
@@ -60,5 +68,6 @@ export const {
     useApplyCvMutation,
     useRemoveCvMutation,
     useApproveCvMutation,
-    useRefuseCvMutation,
+    useRefuseCvMutation,    
+    useSetIsNewMutation,
 } = cvApi

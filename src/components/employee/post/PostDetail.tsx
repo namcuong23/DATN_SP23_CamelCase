@@ -5,6 +5,7 @@ import { useApplyCvMutation } from '../../../service/manage_cv'
 import React from 'react';
 import {
   useAddMyPostMutation,
+  useCountNewCandidatesMutation,
   useGetPostQuery,
   useGetPostsByCareerQuery,
   useRemoveMyPostMutation
@@ -18,6 +19,7 @@ import { useForm } from 'react-hook-form';
 import { useAddNotificationMutation } from '../../../service/notification';
 import './postDetail.scss';
 const PostDetailEp = (): any => {
+  const [countNewCandidates] = useCountNewCandidatesMutation()
   const [params] = useSearchParams()
   const apply = params.get('apply')
   const [isAplly, setIsAplly] = useState(apply !== null)
@@ -90,10 +92,14 @@ const PostDetailEp = (): any => {
     formData.append("email", candidate.email)
     formData.append("post_id", id)
     formData.append("file", file)
+    formData.append("isNew", true)
     const apply = await applyCv(formData)
     const { data: rs } = apply
 
     if (rs?.success) {
+      countNewCandidates({
+        post_id: id
+      })
       setIsAplly(false)
       setIsApplied(true);
       localStorage.setItem('isApplied', 'true');
@@ -174,7 +180,13 @@ const PostDetailEp = (): any => {
                     </section>
                   </div>
                   <div className="cuong1 w-[80%]">
-                  <div></div>
+                  <a
+                      href="#"
+                      className="job-name"
+                      style={{ fontSize: "26px" }}
+                    >
+                     <img src={post?.image} alt="" />
+                    </a>
                     <a
                       href="#"
                       className="job-name"
@@ -299,7 +311,7 @@ const PostDetailEp = (): any => {
                       Địa điểm làm việc:
                     </p>
                     <div>
-                      {post?.work_location.map((location, index) => (
+                      {post?.work_location.map((location: any, index: number) => (
                         <React.Fragment key={index}>
                           {index > 0 && <br />} {/* Thêm xuống dòng nếu không phải phần tử đầu tiên */}
                           {location}

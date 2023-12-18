@@ -94,8 +94,22 @@ export const postApi: any = createApi({
             }),
             invalidatesTags: ['Post']
         }),
-    
-
+        countNewCandidates: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
+            query: (id: any) => ({
+                url: `/posts/count-new-candidate`,
+                method: 'POST',
+                body: id
+            }),
+            invalidatesTags: ['Post']
+        }),
+        resetNewCandidates: builder.mutation<IPost, Partial<IPost> & Pick<IPost, '_id'>>({
+            query: (id: any) => ({
+                url: `/posts/reset-new-candidate`,
+                method: 'POST',
+                body: id
+            }),
+            invalidatesTags: ['Post']
+        }),
     })
 })
 
@@ -126,4 +140,6 @@ export const {
     useApprovePostMutation,
     useRefusePostMutation,
     useGetGoodPostsQuery,
+    useCountNewCandidatesMutation,
+    useResetNewCandidatesMutation,
 } = postApi

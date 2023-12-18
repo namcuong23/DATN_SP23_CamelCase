@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Checkbox, Form, Input, InputNumber, Select, Space, Switch, message } from 'antd';
 
 import { NavLink, useNavigate } from 'react-router-dom';
-import IPost from '../../../interface/post';
 import { useAddPostMutation } from '../../../service/post';
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
@@ -10,7 +9,6 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetCareersQuery } from '../../../service/admin';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import './Post.css'
-import { AnyAsyncThunk } from '@reduxjs/toolkit/dist/matchers';
 
 const PostAdd = (): any => {
     const [form] = Form.useForm();
@@ -36,7 +34,7 @@ const PostAdd = (): any => {
       const data: any = await addPost({
         ...post,
         logo: user?.image,
-        post_status: false,
+        post_status: null,
         user_id: user?._id,
       });
       if (data?.error?.status == 400) {
@@ -179,6 +177,17 @@ const PostAdd = (): any => {
                                 <Form.Item name="number_of_recruits" label="Số lượng"
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
+                                        // { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                    ]}>
+                                    <InputNumber
+                                            min={1} 
+                                            style={{ width: '100%' }} 
+                                            size='large' 
+                                        />
+                                </Form.Item>
+                                <Form.Item name="period" label="Thời gian hết hạn"
+                                    rules={[
+                                        { required: true, message: 'Vui lòng nhập giá trị số' },
                                         { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <InputNumber
@@ -210,7 +219,7 @@ const PostAdd = (): any => {
                                     {/* <Input /> */}
                                     <Select 
                                         size='large'
-                                        mode='multiple'
+                                        // mode='multiple'
                                         allowClear
                                         placeholder='Chọn khu vực'
                                     >
