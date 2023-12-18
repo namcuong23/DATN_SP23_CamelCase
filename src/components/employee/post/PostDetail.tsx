@@ -1,4 +1,4 @@
-import { message } from 'antd'
+import { message, notification } from 'antd'
 import { useState, useEffect } from 'react';
 import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
@@ -77,7 +77,8 @@ const PostDetailEp = (): any => {
       email,
       role: 2,
       notification_title: "Ứng tuyển thành công",
-      notification_content: post.job_content
+      notification_content: post.job_content,
+      notification_url : post.id
     })
 
     await addMyPost({

@@ -88,6 +88,7 @@ const HeaderClient = () => {
     const handleCancelNoti = () => {
         setIsModalNoti(false);
     };
+    console.log(selectedNotification?.notification_url);
 
     return (
         <>
@@ -332,9 +333,9 @@ const HeaderClient = () => {
                             <span onClick={() => setIsActive(false)} className={cx('modal-body__tabs-notify', {
                                 active: isActive === false
                             })}>Thông báo</span>
-                            <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
+                            {/* <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
                                 active: isActive
-                            })}>Tin tức</span>
+                            })}>Tin tức</span> */}
                         </div>
 
                         {
@@ -377,29 +378,57 @@ const HeaderClient = () => {
                                             {notificationEmail ? (
                                                 notificationEmail
                                                     .slice()
-                                                    .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-                                                    .map((noti) => (
-                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
-                                                            {/* ... (Các phần còn lại giữ nguyên) */}
-                                                            <div className={cx('notify-desc')}>
-                                                                <span className={cx('notify-expirate')}>
-                                                                    {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
+                                                    .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                                    .map((noti: any) => (
+                                                        <div key={noti._id} className={cx('modal-body__content-notify', { 'bg-gray-200': noti.isRead })} onClick={() => showModalNoti(noti._id)}>
+                                                            <span className={cx('notify-img')}>
+                                                                <img src={noti.notificationImage} alt="" />
+                                                                <span>
+                                                                    <i className="fa-solid fa-heart"></i>
                                                                 </span>
+                                                            </span>
+                                                            <div className={cx('notify-content')}>
+                                                                <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                                <span>{truncateStringFunction(noti.notification_content, 30)}</span>
+                                                                <div className={cx('notify-desc')}>
+                                                                    <span className={cx('notify-expirate')}>
+                                                                        {moment(noti.created_at).fromNow()}
+                                                                    </span>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     ))
-                                            ) : (
-                                                <p>Loading notifications...</p>
-                                            )}
-
-
+                                            ) :
+                                                (
+                                                    <p>Loading notifications...</p>
+                                                )}
                                         </div>
                                     </div>
 
                                 </>
                         }
+                        <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
+                            footer={[
 
+                                <Button key="cancel" onClick={handleCancelNoti}>
+                                    Đóng
+                                </Button>,
+                                <Button
+                                    key="goToURL"
+                                    type="primary"
+                                    onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
+                                >
+                                    Đến URL
+                                </Button>
+                            ]}
 
+                        >
+                            {selectedNotification && (
+                                <>
+                                    <span>{selectedNotification.notification_content}</span>
+                                </>
+                            )}
+                        </Modal>
                     </div>
 
                     <div className={cx('modal-footer')}>
