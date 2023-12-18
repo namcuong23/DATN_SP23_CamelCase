@@ -80,8 +80,8 @@ const HeaderClient = () => {
                 setIsModalNoti(true);
             }
         }
-      };
-      moment.locale('vi');
+    };
+    moment.locale('vi');
     const handleOkNoti = () => {
         setIsModalNoti(false);
     };
@@ -123,14 +123,17 @@ const HeaderClient = () => {
                 <div className="sc-gCLdxd eAZlAg rightNavigation-homepage" >
                     <NavLink to={'/home'} target='_blank' tabIndex={0} className="sc-fSTJYd bpcIQX">Nhà tuyển dụng</NavLink>
                     <div className="sc-iJRSss bniaTV" />
-                    <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
-                        <div className="notify-btn notificationEmail-icon">
-                            <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
-                                <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 16 L 4.4648438 17.15625 L 4.4628906 17.15625 A 1 1 0 0 0 4 18 A 1 1 0 0 0 5 19 L 12 19 L 19 19 A 1 1 0 0 0 20 18 A 1 1 0 0 0 19.537109 17.15625 L 18 16 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 10 20 C 10 21.1 10.9 22 12 22 C 13.1 22 14 21.1 14 20 L 10 20 z">
-                                </path>
-                            </svg>
-                        </div>
-                    </button>
+                    {
+                        isLoggedIn &&
+                        <button className={`sc-iMJOuO hHYTlq NotificationIcon`} onClick={handleOpenModalNotify}>
+                            <div className="notify-btn notificationEmail-icon">
+                                <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={18} height={18}>
+                                    <path d="M 12 2 C 11.172 2 10.5 2.672 10.5 3.5 L 10.5 4.1953125 C 7.9131836 4.862095 6 7.2048001 6 10 L 6 16 L 4.4648438 17.15625 L 4.4628906 17.15625 A 1 1 0 0 0 4 18 A 1 1 0 0 0 5 19 L 12 19 L 19 19 A 1 1 0 0 0 20 18 A 1 1 0 0 0 19.537109 17.15625 L 18 16 L 18 10 C 18 7.2048001 16.086816 4.862095 13.5 4.1953125 L 13.5 3.5 C 13.5 2.672 12.828 2 12 2 z M 10 20 C 10 21.1 10.9 22 12 22 C 13.1 22 14 21.1 14 20 L 10 20 z">
+                                    </path>
+                                </svg>
+                            </div>
+                        </button>
+                    }
                     {
                         isLoggedIn ?
                             <div>
@@ -370,42 +373,26 @@ const HeaderClient = () => {
                                     </div>
                                     <div className={cx('modal-body__content')}>
                                         <div className={cx('modal-body__content')}>
-                                            <div>
-                                                {notificationEmail ? (
-                                                    notificationEmail
-                                                        .slice()
-                                                        .sort((a: { created_at: moment.MomentInput; }, b: { created_at: moment.MomentInput; }) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-                                                        .map((noti: any) => (
-                                                            <div key={noti._id} className={cx('modal-body__content-notify', { 'bg-gray-200': noti.isRead })} onClick={() => showModalNoti(noti._id)}>
-                                                                <span className={cx('notify-img')}>
-                                                                    <img src={noti.notificationImage} alt="" /> 
-                                                                    <span>
-                                                                        <i className="fa-solid fa-heart"></i>
-                                                                    </span>
+
+                                            {notificationEmail ? (
+                                                notificationEmail
+                                                    .slice()
+                                                    .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                                    .map((noti) => (
+                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                            {/* ... (Các phần còn lại giữ nguyên) */}
+                                                            <div className={cx('notify-desc')}>
+                                                                <span className={cx('notify-expirate')}>
+                                                                    {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
                                                                 </span>
-                                                                <div className={cx('notify-content')}>
-                                                                    <span className={cx('notify-title')}>{noti.notification_title}</span>
-                                                                    <span>{truncateStringFunction(noti.notification_content, 30)}</span>
-                                                                    <div className={cx('notify-desc')}>
-                                                                        <span className={cx('notify-expirate')}>
-                                                                            {moment(noti.created_at).format('DD/MM/YYYY HH:mm')}
-                                                                        </span>
-                                                                    </div>
-                                                                </div>
                                                             </div>
-                                                        ))
-                                                ) : (
-                                                    <p>Loading notifications...</p>
-                                                )}
-                                                <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}>
-                                                    {selectedNotification && (
-                                                        <>
-                                                            <span className={cx('notify-title')}>{ selectedNotification.notification_title}</span>
-                                                            <span>{selectedNotification.notification_content}</span>
-                                                        </>
-                                                    )}
-                                                </Modal> */
-                                            </div>
+                                                        </div>
+                                                    ))
+                                            ) : (
+                                                <p>Loading notifications...</p>
+                                            )}
+
+
                                         </div>
                                     </div>
 

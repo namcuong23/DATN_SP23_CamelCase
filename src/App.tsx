@@ -65,8 +65,8 @@ import VoucherEdit from "./components/admin/Voucher/VoucherEdit"
 import PostAdmin from "./components/admin/Post/PostAdmin"
 import CareerList from "./components/admin/Career/CareerList"
 import CareerAdd from "./components/admin/Career/CareerAdd"
-import FeedbackList from "./components/admin/Feedback/FeedbackList"
-import OrderManagement from "./components/admin/Order/OrderManagement"
+import FeedbackList from "./components/Admin/Feedback/FeedbackList"
+import OrderManagement from "./components/Admin/Order/OrderManagement"
 import BannerForm from "./components/Admin/Banner/BannerAdd"
 import CareerEdit from "./components/Admin/Career/CareerEdit"
 function App() {
@@ -74,7 +74,7 @@ function App() {
   useEffect(() => {
     window.addEventListener('storage', function(event) {
       if (event.key === 'checkout') {
-        navigate('/home/services');
+        window.location.href("/home/services");
         localStorage.removeItem("checkout");
       }
     });

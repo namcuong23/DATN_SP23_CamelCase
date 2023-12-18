@@ -10,18 +10,12 @@ import { useGetCareersQuery, useRemoveCareerMutation } from '../../../service/ad
 import { MessageType } from 'antd/es/message/interface';
 import type { ColumnType, ColumnsType, FilterConfirmProps, FilterValue, SorterResult } from 'antd/es/table/interface';
 import React, { useRef, useState } from 'react'
-import { useJobCountByCareerQuery } from '../../../service/post';
+import { useGetPostsQuery, useJobCountByCareerQuery } from '../../../service/post';
 type Props = {}
 const CareerList = () => {
-    const [selectedItemId, setSelectedItemId] = useState<string | null>(null);
     const searchInput = useRef<InputRef>(null);
     let index = 0
-    const { data: jobCounts } = useJobCountByCareerQuery();
-    console.log(jobCounts);
-    const getJobCountForCareer = (careerId: string) => {
-        const careerCount = jobCounts?.find((count) => count._id === careerId);
-        return careerCount?.count || 0;
-    };
+    const { data: posts } = useGetPostsQuery()
     const { data: careers, error, isLoading } = useGetCareersQuery();
     const remove = 'Bạn có muốn xoá ngành nghề này?';
     const [removeCareer] = useRemoveCareerMutation();
@@ -44,7 +38,6 @@ const CareerList = () => {
     };
 
     const onHandleRemove = (id: string) => {
-        console.log(id);
         const confirm: MessageType = message.success('Xoá thành công');
         if (confirm !== null) {
             removeCareer(id);
@@ -142,9 +135,12 @@ const CareerList = () => {
         {
             title: 'Thông tin chi tiết',
             dataIndex: '',
-            render: (_, record) => (
-                <span>{getJobCountForCareer(record._id)}</span>
-            ),
+            render: (_, record) => {
+                const data = posts.filter((post: any) => post.career._id === record._id)
+                console.log(data)
+
+                return <span>{data.length}</span>
+            },
         },
         {
             title: 'Hành động',

@@ -2,13 +2,12 @@ import { useEffect, useState } from 'react'
 import { Checkbox, Form, Input, InputNumber, Select, Space, Switch, message } from 'antd';
 
 import { NavLink, useNavigate } from 'react-router-dom';
-import IPost from '../../../interface/post';
 import { useAddPostMutation } from '../../../service/post';
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetCareersQuery } from '../../../service/admin';
-
+import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import './Post.css'
 
 const PostAdd = (): any => {
@@ -19,39 +18,47 @@ const PostAdd = (): any => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
     const { data: user }: any = useGetUserEprByEmailQuery(email)
     const [provinces, setProvinces] = useState<any>([])
+    const [bargain,setBargain] = useState<any>(false);
+    
+  useEffect(() => {
+    const fetchProvinces = async () => {
+      const { data: response }: any = await apiGetProvinces();
+      setProvinces(response?.results);
+    };
+    fetchProvinces();
+  }, []);
 
-    useEffect(() => {
-        const fetchProvinces = async () => {
-            const { data: response }: any = await apiGetProvinces()
-            setProvinces(response?.results);
-        }
-        fetchProvinces()
-    }, [])
-
-    const onHandleAdd: any = async (post: IPost) => {
-        try {
-            const data:any = await addPost({ 
-                ...post, 
-                logo: user?.image,
-                post_status: null, 
-                user_id: user?._id,
-                email: user?.email
-            })
-            if(data?.error?.status == 400){
-                message.warning(data.error.data.message)
-            }
-            if(data.data){
-                message.success('Đăng tin thành công.')
-                navigate('/home/posts')
-            }
-        } catch (error:any) {
-           console.log(error);
-        }
+  const onHandleAdd: any = async (post: any) => {
+    try {
+      post['offer_salary'] = bargain;
+      const data: any = await addPost({
+        ...post,
+        logo: user?.image,
+        post_status: null,
+        user_id: user?._id,
+      });
+      if (data?.error?.status == 400) {
+        message.warning(data.error.data.message);
+      }
+      if (data.data) {
+        message.success("Đăng tin thành công.");
+        navigate("/home/posts");
+      }
+    } catch (error: any) {
+      console.log(error);
     }
-
-    if (!isLoggedIn) {
-        return navigate('/login-epr')
-    }
+  };
+  const onChange = (e: CheckboxChangeEvent) => {
+    console.log(e.target.checked);
+    setBargain(e.target.checked);
+    form.setFieldsValue({
+        min_job_salary : 0,
+        max_job_salary : 0,
+    })
+  };
+  if (!isLoggedIn) {
+    return navigate("/login-epr");
+  }
 
     return (
         <>
@@ -119,14 +126,15 @@ const PostAdd = (): any => {
                                             size='large'
                                         >
                                             <Select.Option value="0">- Chọn hình thức làm việc -</Select.Option>
-                                            <Select.Option value="Toàn thời gian">Toàn thời gian</Select.Option>
-                                            <Select.Option value="Bán thời gian">Bán thời gian</Select.Option>
-                                            <Select.Option value="Việc làm online">Việc làm online</Select.Option>
-                                            <Select.Option value="Thực tập">Thực tập</Select.Option>
-                                            <Select.Option value="Nghề tự do">Nghề tự do</Select.Option>
-                                            <Select.Option value="Khác">
-                                                Khác
-                                            </Select.Option>
+                                            <Select.Option value="Tất cả hình thức">Toàn thời gian</Select.Option>
+                                            <Select.Option value="Toàn thời gian">Bán thời gian</Select.Option>
+                                            <Select.Option value="Bán thời gian">Công việc tạm thời</Select.Option>
+                                            <Select.Option value="Thực tập">Làm việc từ xa</Select.Option>
+                                            <Select.Option value="Làm việc theo giờ linh hoạt">Làm việc theo giờ linh hoạt</Select.Option>
+                                            <Select.Option value="Làm việc theo dự án">Làm việc theo dự án</Select.Option>
+                                            <Select.Option value="Làm việc theo ca">Làm việc theo ca</Select.Option>
+                                            <Select.Option value="Làm việc không chính thức (Freelance)">Làm việc không chính thức (Freelance)</Select.Option>
+                                            <Select.Option value="Khác">Khác</Select.Option>
                                             
                                         </Select>
                                     </Form.Item>
@@ -143,7 +151,8 @@ const PostAdd = (): any => {
                                         <Select 
                                             size='large'
                                         >
-                                            <Select.Option value="0">- Chọn cấp bậc -</Select.Option>
+                                            <Select.Option value="0">Chọn cấp bậc</Select.Option>
+                                            <Select.Option value="Tất cả cấp bậc">Tất cả cấp bậc</Select.Option>
                                             <Select.Option value="Thực tập sinh/Sinh viên">Thực tập sinh/Sinh viên</Select.Option>
                                             <Select.Option value="Mới tốt nghiệp">Mới tốt nghiệp</Select.Option>
                                             <Select.Option value="Nhân viên">Nhân viên</Select.Option>
@@ -168,9 +177,24 @@ const PostAdd = (): any => {
                                 <Form.Item name="number_of_recruits" label="Số lượng"
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số' },
+                                        // { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                    ]}>
+                                    <InputNumber
+                                            min={1} 
+                                            style={{ width: '100%' }} 
+                                            size='large' 
+                                        />
+                                </Form.Item>
+                                <Form.Item name="period" label="Thời gian hết hạn"
+                                    rules={[
+                                        { required: true, message: 'Vui lòng nhập giá trị số' },
                                         { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
-                                    <Input size='large' />
+                                    <InputNumber
+                                            min={1} 
+                                            style={{ width: '100%' }} 
+                                            size='large' 
+                                        />
                                 </Form.Item>
                                 <Form.Item name="career" label="Ngành Nghề"
                                     rules={[{ required: true, message: 'Vui lòng chọn ngành nghề' }]}
@@ -195,7 +219,7 @@ const PostAdd = (): any => {
                                     {/* <Input /> */}
                                     <Select 
                                         size='large'
-                                        mode='multiple'
+                                        // mode='multiple'
                                         allowClear
                                         placeholder='Chọn khu vực'
                                     >
@@ -224,51 +248,50 @@ const PostAdd = (): any => {
                                     }}
                                 >
                                     <Form.Item 
-                                        name="minimum" 
+                                        name="min_job_salary" 
                                         style={{
                                             width: '300px',
                                         }}
                                         rules={[
                                             { required: true, message: 'Vui lòng nhập giá trị số.' },
                                             { type: 'number', message: 'Vui lòng nhập giá trị số' }
-                                        ]}
+                                         ]}
                                     >
-                                        <InputNumber 
-                                            min={1} 
-                                            max={10} 
+                                        <InputNumber
+                                            disabled={bargain}
+                                            min={0}
                                             style={{ width: '300px' }} 
                                             size='large' 
                                             placeholder='Tối thiểu'
                                         />
                                     </Form.Item>
                                     <Form.Item 
-                                        name="maximum" 
+                                        name="max_job_salary" 
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
                                         }}
                                         rules={[
-                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                            { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                           { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                           { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                         ]}
                                     >
-                                        <InputNumber 
-                                            min={1} 
-                                            max={10} 
+                                        <InputNumber
+                                           disabled={bargain}
+                                            min={0} 
                                             style={{ width: '100%' }} 
                                             size='large' 
                                             placeholder='Tối đa'
                                         />
                                     </Form.Item>
-                                    <Form.Item 
-                                        name="salary" 
+                                    <Form.Item
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
                                             fontSize: 24
                                         }}
                                     >
-                                        <Checkbox>Thương lượng</Checkbox>
+                                        <Checkbox  onChange={onChange}>Thương lượng</Checkbox>
                                     </Form.Item>
                                 </Space>
                             </div>
@@ -288,9 +311,9 @@ const PostAdd = (): any => {
                         </NavLink>
                     </div>
                 </Form>
-            </div>
-        </>
-    )
-}
+      </div>
+    </>
+  );
+};
 
-export default PostAdd
+export default PostAdd;

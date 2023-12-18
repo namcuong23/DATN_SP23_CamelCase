@@ -15,7 +15,6 @@ import { toast } from 'react-toastify'
 import myImage from '../../../assets/img/logo.jpg';
 
 import './AuthEpe.css'
-import React from 'react'
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<any>()
@@ -34,7 +33,6 @@ const Login = () => {
         const { data: res }: any = login;
 
         if (res?.success) {
-            // Kiểm tra trạng thái isBlock
             if (res.user.isBlock) {
                 setLoading(false);
                 toast.warning("Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
@@ -45,7 +43,7 @@ const Login = () => {
             }
         } else {
             setLoading(false);
-            toast.warning(res.mes);
+            toast.warning(res?.mes);
         }
     }
 
@@ -88,7 +86,7 @@ const Login = () => {
         <>
             <div className="border-0 text-dark relative">
                 <div className='bg-gradient-to-r from-[#001744] to-[#0053EB] min-h-[30vh] z-[-1000] text-white font-[500] pl-10'>
-                    <NavLink to={"/"}>
+                    <NavLink to='/'>
                         <img width={150} height={150} src={myImage} alt="" />
                     </NavLink>
                 </div>

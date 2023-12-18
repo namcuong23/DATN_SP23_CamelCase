@@ -259,33 +259,49 @@ const PostAdmin = () => {
             title: 'Hành động',
             dataIndex: '_id',
             key: '_id',
-            render: (_, record) => (
-                <Space size="middle">
-                    <NavLink to={`/home/posts/${record._id}`}>
-                        <EyeOutlined className='text-dark' />
-                    </NavLink>
-
-
-                    <Popconfirm placement="top"
-                        title={text_V}
-                        onConfirm={() => onHandleApprove(record._id)}
-                        okText="Đồng ý"
-                        cancelText="Không">
-                        <CheckOutlined className='text-success' />
-                    </Popconfirm>
-
-
-                    <Popconfirm placement="top"
-                        title={text_X}
-                        onConfirm={() => onHandleRefuse(record._id)}
-                        okText="Đồng ý"
-                        cancelText="Không">
-                        <CloseOutlined className='text-danger' />
-                    </Popconfirm>
-
-                </Space>
-            ),
-        },
+            render: (_, record) => {
+                const isDisabled = record.post_status !== null;
+                const red = 'red';
+                const green = 'green';
+        
+                return (
+                    <Space size="middle">
+                        <NavLink to={`/home/posts/${record._id}`}>
+                            <EyeOutlined className='text-dark' />
+                        </NavLink>
+        
+                        <Popconfirm
+                            placement="top"
+                            title={text_V}
+                            onConfirm={() => onHandleApprove(record._id)}
+                            okText="Đồng ý"
+                            cancelText="Không"
+                            disabled={isDisabled}
+                        >
+                            <CheckOutlined
+                                className={`action-icon ${isDisabled ? 'disabled-icon' : ''}`}
+                                style={{ color: isDisabled ? 'inherit' : green }}
+                            />
+                        </Popconfirm>
+        
+                        <Popconfirm
+                            placement="top"
+                            title={text_X}
+                            onConfirm={() => onHandleRefuse(record._id)}
+                            okText="Đồng ý"
+                            cancelText="Không"
+                            disabled={isDisabled}
+                        >
+                            <CloseOutlined
+                                className={`action-icon ${isDisabled ? 'disabled-icon' : ''}`}
+                                style={{ color: isDisabled ? 'inherit' : red }}
+                            />
+                        </Popconfirm>
+                    </Space>
+                );
+            },
+        }
+        
     ];
 
     const onChange: TableProps<any>['onChange'] = (pagination, filters, sorter, extra) => {

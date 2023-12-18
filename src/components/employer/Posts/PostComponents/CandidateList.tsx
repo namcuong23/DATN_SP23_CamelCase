@@ -1,14 +1,22 @@
-import { Modal, Popconfirm, Space, Table, message } from 'antd'
+import { Badge, Modal } from 'antd'
 import { 
     useApproveCvMutation, 
     useGetCvsByPostIdQuery, 
-    useRemoveCvMutation 
+    useRemoveCvMutation, 
+    useSetIsNewMutation
 } from '../../../../service/manage_cv';
-import { ColumnsType } from 'antd/es/table';
 import { useAddNotificationMutation } from '../../../../service/notification';
 import { CloseOutlined, CheckOutlined, } from '@ant-design/icons'
-import { NavLink } from 'react-router-dom';
 import useDateFormat from '../../../../utils/hooks/FormatDate';
+
+import type { ColumnsType, ColumnType } from 'antd/es/table';
+import type { FilterConfirmProps } from 'antd/es/table/interface';
+import { NavLink } from 'react-router-dom';
+import { SearchOutlined } from '@ant-design/icons';
+import { InputRef, message, Popconfirm, Spin, Tag } from 'antd';
+import { Button, Input, Space, Table } from 'antd';
+import { useRef, useState } from 'react';
+import Highlighter from 'react-highlight-words';
 
 type Props = {
     postId?: string,
@@ -17,10 +25,105 @@ type Props = {
 }
 
 const CandidateList = (props: Props) => {
+    const searchInput = useRef<InputRef>(null);
+    const [setIsNew] = useSetIsNewMutation()
+    const [searchText, setSearchText] = useState('');
+    const [searchedColumn, setSearchedColumn] = useState('');
+    const handleSearch = (
+        selectedKeys: string[],
+        confirm: (param?: FilterConfirmProps) => void,
+        dataIndex: any,
+    ) => {
+        confirm();
+        setSearchText(selectedKeys[0]);
+        setSearchedColumn(dataIndex);
+    };
+    const handleReset = (clearFilters: () => void) => {
+        clearFilters();
+        setSearchText('');
+    };
+    const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
+        filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
+            <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+                <Input
+                    ref={searchInput}
+                    placeholder={`Search ${dataIndex}`}
+                    value={selectedKeys[0]}
+                    onChange={(e) => setSelectedKeys(e.target.value ? [e.target.value] : [])}
+                    onPressEnter={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                    style={{ marginBottom: 8, display: 'block' }}
+                />
+                <Space>
+                    <Button
+                        type="primary"
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        icon={<SearchOutlined />}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Search
+                    </Button>
+                    <Button
+                        onClick={() => clearFilters && handleReset(clearFilters)}
+                        size="small"
+                        style={{ width: 90 }}
+                    >
+                        Reset
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            confirm({ closeDropdown: false });
+                            setSearchText((selectedKeys as string[])[0]);
+                            setSearchedColumn(dataIndex);
+                        }}
+                    >
+                        Filter
+                    </Button>
+                    <Button
+                        type="link"
+                        size="small"
+                        onClick={() => {
+                            close();
+                        }}
+                    >
+                        close
+                    </Button>
+                </Space>
+            </div>
+        ),
+        filterIcon: (filtered: boolean) => (
+            <SearchOutlined style={{ color: filtered ? '#1890ff' : undefined }} />
+        ),
+        onFilter: (value, record) =>
+            record[dataIndex]
+            .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase()),
+        onFilterDropdownOpenChange: (visible) => {
+            if (visible) {
+                setTimeout(() => searchInput.current?.select(), 100);
+            }
+        },
+        render: (text) =>
+        searchedColumn === dataIndex ? (
+            <Highlighter
+                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                searchWords={[searchText]}
+                autoEscape
+                textToHighlight={text ? text.toString() : ''}
+            />
+        ) : (
+            text
+        ),
+    });
+
     const columns: ColumnsType<any> = [
         {
             title: 'Tên ứng viên',
             dataIndex: 'name',
+            ...getColumnSearchProps('name'),
         },
         {
             title: 'Vị trí',
@@ -35,6 +138,24 @@ const CandidateList = (props: Props) => {
             dataIndex: 'createdAt',
             render: (_, record) => <div>{useDateFormat(record?.createdAt)}</div>,
         },
+        {
+            title: 'CV',
+            dataIndex: 'CV',
+            render: (_, record) => (
+                <Badge dot={record.isNew} offset={[2, 2]}>
+                    <NavLink to={`/cv-preview?id=${record._id}`}
+                        onClick={() => setIsNew({
+                            cv_id: record._id
+                        })}
+                        target='_blank'
+                        className="text-[#005aff] hover:text-[#005aff] underline hover:underline"
+                    >
+                        Xem
+                    </NavLink>
+                </Badge>
+                    
+                ),
+            },
         {
             title: 'Hành động',
             dataIndex: 'action',
@@ -62,18 +183,12 @@ const CandidateList = (props: Props) => {
                     >
                         <CloseOutlined className='text-danger' />
                     </Popconfirm>
-                    <NavLink to={`/cv-preview?id=${record._id}`}
-                        className='leading-[22px]'
-                        target='_blank'
-                    >
-                        <i className="fa-regular fa-eye text-[#333]"></i>
-                    </NavLink>
                 </Space>
             ),
         },
     ];
 
-    const [addNotification] = useAddNotificationMutation()
+    const [addNotification]: any = useAddNotificationMutation()
     const { data } = useGetCvsByPostIdQuery(props.postId && props.postId)
     const cvs = data?.cvs?.map((post: any, index: number) => ({
         key: index,
