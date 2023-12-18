@@ -88,6 +88,7 @@ const HeaderClient = () => {
     const handleCancelNoti = () => {
         setIsModalNoti(false);
     };
+    console.log(selectedNotification?.notification_url);
 
     return (
         <>
@@ -319,9 +320,9 @@ const HeaderClient = () => {
                             <span onClick={() => setIsActive(false)} className={cx('modal-body__tabs-notify', {
                                 active: isActive === false
                             })}>Thông báo</span>
-                            <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
+                            {/* <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
                                 active: isActive
-                            })}>Tin tức</span>
+                            })}>Tin tức</span> */}
                         </div>
 
                         {
@@ -358,7 +359,6 @@ const HeaderClient = () => {
                                         Cập nhật hồ sơ để tìm thấy công việc phù hợp.
                                         <span>Cập nhật</span>
                                     </div>
-                                    <>
 
                                         {notificationEmail ? (
                                             notificationEmail
@@ -380,6 +380,15 @@ const HeaderClient = () => {
                                                                     {moment(noti.created_at).fromNow()}
                                                                 </span>
                                                             </div>
+                                                            <div className={cx('notify-content')}>
+                                                                <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                                <span>{truncateStringFunction(noti.notification_content, 30)}</span>
+                                                                <div className={cx('notify-desc')}>
+                                                                    <span className={cx('notify-expirate')}>
+                                                                        {moment(noti.created_at).fromNow()}
+                                                                    </span>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </div>
                                                     // <div key={noti._id} className={cx('modal-body__content')} onClick={() => showModalNoti(noti._id)}>
@@ -395,13 +404,30 @@ const HeaderClient = () => {
                                             <p>Loading notifications...</p>
                                         )}
 
-
-                                    </>
-
                                 </>
                         }
+                        <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
+                            footer={[
 
+                                <Button key="cancel" onClick={handleCancelNoti}>
+                                    Đóng
+                                </Button>,
+                                <Button
+                                    key="goToURL"
+                                    type="primary"
+                                    onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
+                                >
+                                    Đến URL
+                                </Button>
+                            ]}
 
+                        >
+                            {selectedNotification && (
+                                <>
+                                    <span>{selectedNotification.notification_content}</span>
+                                </>
+                            )}
+                        </Modal>
                     </div>
 
                     <div className={cx('modal-footer')}>
