@@ -77,11 +77,11 @@ const HeaderEmployer = () => {
                 for (const cv of cvs) {
                     if (!cv.read && !notifiedEmails.has(cv.email)) {
                         await addNotification({
-                            email: cv.email,
+                            email: email,
                             role: 2,
                             notification_title: "Bạn có ứng viên ứng tuyển mới",
                             notification_content: `${cv.email} đã ứng tuyển với vị trí ${cv.job_title}`,
-                            notification_url: `/home/posts/${cv._id}`
+                            notification_url: `/home/posts/${cv.post_id}`
                         });
                         notifiedEmails.add(cv.email);
                     }
