@@ -145,13 +145,6 @@ const WorkPage = () => {
             .then((responsive) => setCareer(responsive.data))
             .catch((error) => console.log(error))
     }
-    // const resetSearch = (e: any) => {
-    //     e.preventDefault()
-    //     setSearchMessage("")
-    //     setFilterParams({ ...filterParams, key: "" })
-    //     navigate('/works')
-    //         loadData()
-    // }
     //savejob
     const { email } = useAppSelector((res: any) => res.auth)
     const [addMyPost] = useAddMyPostMutation()
@@ -190,10 +183,10 @@ const WorkPage = () => {
         navigate(`/works?q=${search}&career=${e.target.value}`)
     }
     const getSearchKey = () => { }
-    const setFilterSalary = (e) => {
+    const setFilterSalary = (e: any) => {
        const data =  salaryOptions[e.target.value];
        console.log(data);
-       setFilterParams({ ...filterParams, min_job_salary: data['min_salary'],max_job_salary : data['max_salary'], offer_salary : data['offer_salary']})
+       setFilterParams({ ...filterParams, min_job_salary: data['min_salary'], max_job_salary: data['max_salary'], offer_salary : data['offer_salary']})
        
     }
     return (

@@ -1,9 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { useGetUsersQuery } from '../../../service/admin'
 import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
-import { User } from '../../../interface/admin/users';
 import Highlighter from 'react-highlight-words';;
-import { formatDate, useApprovePostMutation, useGetPostsQuery, useRefusePostMutation } from '../../../service/post';
+import { useApprovePostMutation, useGetPostsQuery, useRefusePostMutation } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, message, Popconfirm, Spin, Tag } from 'antd';

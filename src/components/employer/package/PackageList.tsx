@@ -13,7 +13,7 @@ const PackageList = (): any => {
     const navigate = useNavigate()
     const { isLoggedIn, email } = useAppSelector((rs) => rs.authEmpr)
     const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
-    const {data :user }:any= useGetUserEprByEmailQuery(email)
+    const {data: user }:any= useGetUserEprByEmailQuery(email)
     const onHandleBuy = async (pack: IAdPackage) => {
         const {package_price,package_name,_id} = pack;
         const body = {

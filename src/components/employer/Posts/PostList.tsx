@@ -15,7 +15,7 @@ import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import CandidateList from './PostComponents/CandidateList';
 import { useGetCareersQuery } from '../../../service/admin';
-import { useGetCvsByPostIdQuery } from '../../../service/manage_cv';
+import moment from 'moment';
 
 const PostList = (): any | null | JSX.Element => {
     const [resetNewCandidate] = useResetNewCandidatesMutation()
@@ -35,6 +35,7 @@ const PostList = (): any | null | JSX.Element => {
     const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
+    const date = new Date()
 
     const [provinces, setProvinces] = useState<any>([])
     useEffect(() => {
@@ -221,6 +222,9 @@ const PostList = (): any | null | JSX.Element => {
         {
             title: 'Thời hạn',
             dataIndex: 'period',
+            render: (_, record) => (
+                <span>{new Date(record.period).toLocaleDateString()}</span>
+            )
         },
         {
             title: 'Trạng thái',
@@ -278,24 +282,30 @@ const PostList = (): any | null | JSX.Element => {
             title: 'Hành động',
             dataIndex: '_id',
             key: '_id',
-            render: (_, record) => (
-                <Space size="middle">
-                    <NavLink to={`/home/posts/${record._id}`}>
-                        <EyeOutlined className='text-dark' />
-                    </NavLink>
-                    <NavLink to={`/home/posts/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
-                    </NavLink>
-                    <Popconfirm placement="top"
-                        title={text}
-                        onConfirm={() => onHandleRemove(record._id)}
-                        okText="Yes"
-                        cancelText="No">
-                        <DeleteOutlined className='text-danger' />
-                    </Popconfirm>
+            render: (_, record) => {
+                // if(!(moment(record.period)).isBefore(moment(date))) {
+                //     onHandleRemove(record._id)
+                // }
 
-                </Space>
-            ),
+                return (
+                    <Space size="middle">
+                        <NavLink to={`/home/posts/${record._id}`}>
+                            <EyeOutlined className='text-dark' />
+                        </NavLink>
+                        <NavLink to={`/home/posts/${record._id}/edit`}>
+                            <EditOutlined className='text-dark' />
+                        </NavLink>
+                        <Popconfirm placement="top"
+                            title={text}
+                            onConfirm={() => onHandleRemove(record._id)}
+                            okText="Yes"
+                            cancelText="No">
+                            <DeleteOutlined className='text-danger' />
+                        </Popconfirm>
+
+                    </Space>
+                )
+            },
         },
     ];
 

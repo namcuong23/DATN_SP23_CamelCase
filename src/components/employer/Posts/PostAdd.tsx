@@ -39,7 +39,7 @@ const PostAdd = (): any => {
         logo: user?.image,
         post_status: null,
         user_id: user?._id,
-        period: (new Date(expireDate)).toLocaleDateString()
+        period: new Date(expireDate),
       });
       if (data?.error?.status == 400) {
         message.warning(data.error.data.message);

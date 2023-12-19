@@ -379,25 +379,8 @@ const HeaderClient = () => {
                                                                     {moment(noti.created_at).fromNow()}
                                                                 </span>
                                                             </div>
-                                                            <div className={cx('notify-content')}>
-                                                                <span className={cx('notify-title')}>{noti.notification_title}</span>
-                                                                <span>{truncateStringFunction(noti.notification_content, 30)}</span>
-                                                                <div className={cx('notify-desc')}>
-                                                                    <span className={cx('notify-expirate')}>
-                                                                        {moment(noti.created_at).fromNow()}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
                                                         </div>
                                                     </div>
-                                                    // <div key={noti._id} className={cx('modal-body__content')} onClick={() => showModalNoti(noti._id)}>
-                                                    //         <span className={cx('notify-title')}>{noti.notification_title}</span>
-                                                    //     <div className={cx('notify-desc')}>
-                                                    //         <span className={cx('notify-expirate')}>
-                                                    //             {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
-                                                    //         </span>
-                                                    //     </div>
-                                                    // </div>
                                                 ))
                                         ) : (
                                             <p>Loading notifications...</p>
