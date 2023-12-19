@@ -34,7 +34,7 @@ const VNPayCheckout = (): any => {
   if(responseCode) {
     if(responseCode == "00"){
         try {
-        const {data} = await updateOrderStatus(vnp_OrderInfo)
+        const {data}:any = await updateOrderStatus(vnp_OrderInfo)
         const service:any = {
             userId :data.user_id,
             packageDay : data.package_id.package_day,
@@ -42,24 +42,23 @@ const VNPayCheckout = (): any => {
             currentService : data.order_name            
         }
         await createService(service);
-        localStorage.setItem('checkout',responseCodeList[responseCode])
-        setTimeout(() => {
-          localStorage.setItem('checkout',responseCodeList[responseCode])
-          window.close();
-        },1000)
+        console.log(data);
+        
+        message.success(responseCodeList[responseCode])
+          setTimeout(()=>{
+            window.close()
+            localStorage.setItem(
+              "checkout",
+              responseCodeList[responseCode]
+            );
+          },1000)
         } catch (error:any) {
-          window.close();
-          setTimeout(() =>{
-            window.close();
-          },1500)
+          message.error(error);
         }
         
     }
     else {
-        message.error(responseCodeList[responseCode]);
-        setTimeout(() =>{
-          window.close();
-        },1500)
+      message.error("Giao dịch không thành công,");
     }
   }
   },[])
