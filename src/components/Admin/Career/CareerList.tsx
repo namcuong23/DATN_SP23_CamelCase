@@ -136,7 +136,7 @@ const CareerList = () => {
             title: 'Thông tin chi tiết',
             dataIndex: '',
             render: (_, record) => {
-                const data = posts.filter((post: any) => post?.career?._id === record._id)
+                const data = posts?.filter((post: any) => post?.career?._id === record._id)
                 return <span>{data?.length}</span>
             },
         },
