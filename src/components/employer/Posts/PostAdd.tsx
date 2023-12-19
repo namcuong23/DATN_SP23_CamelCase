@@ -213,7 +213,7 @@ const PostAdd = (): any => {
                                     {/* <Input /> */}
                                     <Select 
                                         size='large'
-                                        // mode='multiple'
+                                        mode='multiple'
                                         allowClear
                                         placeholder='Chọn khu vực'
                                     >
