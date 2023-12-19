@@ -130,13 +130,15 @@ const PostAdd = (): any => {
                                             size='large'
                                         >
                                             <Select.Option value="0">- Chọn hình thức làm việc -</Select.Option>
-                                            <Select.Option value="Tất cả hình thức">Toàn thời gian</Select.Option>
-                                            <Select.Option value="Toàn thời gian">Bán thời gian</Select.Option>
-                                            <Select.Option value="Bán thời gian">Công việc tạm thời</Select.Option>
-                                            <Select.Option value="Thực tập">Làm việc từ xa</Select.Option>
+                                            <Select.Option value="Tất cả loại hình">Tất cả loại hình</Select.Option>
+                                            <Select.Option value="Toàn thời gian">Toàn thời gian</Select.Option>
+                                            <Select.Option value="Bán thời gian">Bán thời gian</Select.Option>
+                                            <Select.Option value="Thực tập">Thực tập</Select.Option>
+                                            <Select.Option value="Việc làm online">Việc làm online</Select.Option>
+                                            <Select.Option value="Nghề tự do">Nghề tự do</Select.Option>
                                             <Select.Option value="Làm việc theo giờ linh hoạt">Làm việc theo giờ linh hoạt</Select.Option>
                                             <Select.Option value="Làm việc theo dự án">Làm việc theo dự án</Select.Option>
-                                            <Select.Option value="Làm việc theo ca">Làm việc theo ca</Select.Option>
+                                            <Select.Option value="Hợp đồng thời vụ">Hợp đồng thời vụ</Select.Option>
                                             <Select.Option value="Làm việc không chính thức (Freelance)">Làm việc không chính thức (Freelance)</Select.Option>
                                             <Select.Option value="Khác">Khác</Select.Option>
                                             
@@ -246,23 +248,33 @@ const PostAdd = (): any => {
                                         style={{
                                             width: '300px',
                                         }}
-                                        dependencies={['max_job_salary']}
-                                        rules={[
-                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                            { type: 'number', message: 'Vui lòng nhập giá trị số' },
-                                            ({ getFieldValue }) => ({
-                                                validator(_, value) {
-                                                    console.log(value);
-                                                  if (!value || !getFieldValue('max_job_salary') || getFieldValue('max_job_salary') > value) {
-                                                    return Promise.resolve();
-                                                  }
-                                                  return Promise.reject(new Error('Lương tối thiểu không được lớn hơn lương tối đa.'));
-                                                },
-                                              }),
-                                         ]}
+                                        dependencies={['max_job_salary','offer_salary']}
+                                    rules={[
+                                        { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                        { type: 'number', message: 'Vui lòng nhập giá trị số' },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                              if (!getFieldValue('max_job_salary') && !value && !getFieldValue('offer_salary')) {
+                                                return Promise.reject(new Error('Lương tối thiểu hoặc tối đa không được để trống.'));
+                                              }
+                                              else  if (value && getFieldValue('offer_salary')) {
+                                                return Promise.reject(new Error('Vui lòng để trống lương khi chọn thương lượng.'));
+                                              }
+                                              return Promise.resolve();
+                                            },
+                                          }),
+                                          ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                              if (!value || !getFieldValue('max_job_salary') || getFieldValue('max_job_salary') > value) {
+                                                return Promise.resolve();
+                                              }
+                                              return Promise.reject(new Error('Lương tối thiểu không được lớn hơn lương tối đa.'));
+                                            },
+                                          }),
+                                     ]}
                                     >
                                         <InputNumber
-                                            disabled={bargain}
+                                            // disabled={bargain}
                                             min={0}
                                             style={{ width: '300px' }} 
                                             size='large' 
@@ -271,27 +283,34 @@ const PostAdd = (): any => {
                                     </Form.Item>
                                     <Form.Item 
                                         name="max_job_salary"
-                                        dependencies={['min_job_salary']}
-                                        style={{
-                                            width: '300px',
-                                            marginLeft: '24px',
-                                        }}
-                                        rules={[
-                                           { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                           { type: 'number', message: 'Vui lòng nhập giá trị số' },
-                                           ({ getFieldValue }) => ({
-                                            validator(_, value) {
-    
-                                              if (!value || !getFieldValue('min_job_salary') || getFieldValue('min_job_salary') < value) {
-                                                return Promise.resolve();
-                                              }
-                                              return Promise.reject(new Error('Lương tối đa không thể thấp hơn lương tối thiểu.'));
-                                            },
-                                          }),
-                                        ]}
+                                        dependencies={['min_job_salary','offer_salary']}
+                                    rules={[
+                                       { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                       { type: 'number', message: 'Vui lòng nhập giá trị số' },
+                                       ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                          if (!getFieldValue('min_job_salary') && !value && !getFieldValue('offer_salary')) {
+                                            return Promise.reject(new Error('Lương tối thiểu hoặc tối đa không được để trống.'));
+                                          }
+                                          else  if (value && getFieldValue('offer_salary')) {
+                                            return Promise.reject(new Error('Vui lòng để trống lương khi chọn thương lượng.'));
+                                          }
+                                          return Promise.resolve();
+                                        },
+                                      }),
+                                      ({ getFieldValue }) => ({
+                                        validator(_, value) {
+
+                                          if (!value || !getFieldValue('min_job_salary') || getFieldValue('min_job_salary') < value) {
+                                            return Promise.resolve();
+                                          }
+                                          return Promise.reject(new Error('Lương tối đa không thể thấp hơn lương tối thiểu.'));
+                                        },
+                                      }),
+                                    ]}
                                     >
                                         <InputNumber
-                                           disabled={bargain}
+                                        //    disabled={bargain}
                                             min={0} 
                                             style={{ width: '100%' }} 
                                             size='large' 
@@ -299,11 +318,14 @@ const PostAdd = (): any => {
                                         />
                                     </Form.Item>
                                     <Form.Item
+                                        name="offer_salary"
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
                                             fontSize: 24
                                         }}
+                                        dependencies={['min_job_salary',',max_job_salary']}
+                                        valuePropName="checked"
                                     >
                                         <Checkbox  onChange={onChange}>Thương lượng</Checkbox>
                                     </Form.Item>
