@@ -94,9 +94,10 @@ const PostDetailEp = (): any => {
     formData.append("post_id", id)
     formData.append("file", file)
     formData.append("isNew", true)
-    const apply = await applyCv(formData)
+    const apply = await applyCv(formData);
     const { data: rs } = apply
-
+    console.log(applyCv);
+    
     if (rs?.success) {
       countNewCandidates({
         post_id: id

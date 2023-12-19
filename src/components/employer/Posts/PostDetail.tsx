@@ -40,7 +40,8 @@ const PostDetail: React.FC = (): any => {
     })
     const { data } = useGetCvsByPostIdQuery(post && post?._id)
     const cvs = data?.cvs
-
+    console.log(cvs);
+    
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
     const [addCandidate] = useCreateCandidateMutation()

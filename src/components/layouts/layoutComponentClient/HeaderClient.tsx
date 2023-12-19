@@ -88,8 +88,6 @@ const HeaderClient = () => {
     const handleCancelNoti = () => {
         setIsModalNoti(false);
     };
-    console.log(selectedNotification?.notification_url);
-
     return (
         <>
             <div className="sticky top-0 z-[997] sc-lkcIho hIprbQ menu-homepage ">
