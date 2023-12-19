@@ -292,24 +292,6 @@ const PostDetail: React.FC = (): any => {
                                             <hr />
                                         </div>
                                     </div>
-                                    <button
-                                        className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-1'
-                                        onClick={showModal} >
-                                        Danh sách ứng viên
-                                    </button>
-                                    <Modal
-                                        title="Danh sách ứng viên"
-                                        open={open}
-                                        onCancel={handleCancel}
-                                        okButtonProps={{ hidden: true }}
-                                        cancelButtonProps={{ hidden: true }}
-                                        width={1000}
-                                    >
-                                        <Table dataSource={cvs} columns={columns}
-                                            pagination={{ defaultPageSize: 6 }}
-                                        />
-
-                                    </Modal>
                                 </div>
                             </div>
                         </div>
