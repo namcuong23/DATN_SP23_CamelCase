@@ -40,6 +40,7 @@ const PostDetail: React.FC = (): any => {
     })
     const { data } = useGetCvsByPostIdQuery(post && post?._id)
     const cvs = data?.cvs
+    console.log(cvs);
 
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
@@ -66,7 +67,15 @@ const PostDetail: React.FC = (): any => {
     const notification_content = "Thư mời phỏng vấn đã được gửi tới email của bạn"
     const onHandleNotification = async (user: any) => {
         try {
-            const response = await addNotification(user);
+            const response = await addNotification(
+                {
+                    email: user.email,
+                    role:2,
+                    notification_title: "Bạn đã được nhà tuyển dụng đồng ý cv",
+                    notification_content: `Chúc mừng bạn đã được nhà ứng tuyển đồng ý với CV hãy vào URL để xem nhé !`,
+                    notification_url: `/home/posts/${user.post_id}`
+                }
+            );
             console.log(user);
             if ('data' in response && response.data) {
                 message.success('Đã gửi thông báo đến ứng viên');

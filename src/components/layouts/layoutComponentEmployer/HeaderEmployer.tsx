@@ -1,13 +1,13 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { BsPersonCircle } from 'react-icons/bs'
-import { Drawer, message } from 'antd';
+import { Drawer, message, notification } from 'antd';
 import { FaCartPlus } from "react-icons/fa"
 import { WhatsAppOutlined, SettingOutlined } from '@ant-design/icons'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { MessageType } from 'antd/es/message/interface'
 import { Button, Modal } from 'antd';
-import {IoMdNotifications} from "react-icons/io"
+import { IoMdNotifications } from "react-icons/io"
 import moment from 'moment';
 
 import { useAppDispatch, useAppSelector } from '../../../app/hook';
@@ -15,12 +15,12 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { IFeedback } from '../../../interfaces/feedback'
 import { logoutAuthEpr } from '../../../app/actions/authEpr';
-import { useGetNotificationByEmailQuery } from '../../../service/notification';
+import { useAddNotificationMutation, useGetNotificationByEmailQuery, useMarkAsReadMutation } from '../../../service/notification';
 import { truncateStringFunction } from '../../../utils/hooks/TruncateString';
 import { Inotification } from '../../../interface/notification';
-
 import classNames from 'classnames/bind';
 import styles from "./HeaderEpr.module.scss";
+import { useGetCvsQuery } from '../../../service/manage_cv';
 
 const cx = classNames.bind(styles);
 
@@ -33,12 +33,11 @@ const HeaderEmployer = () => {
     const [open, setOpen] = useState(false);
     const [openNotify, setOpenNotify] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-
     const { data: notificationEmail } = useGetNotificationByEmailQuery(
-        email, 
-        // {
-        //     pollingInterval: 5000,
-        // }
+        email,
+        {
+            pollingInterval: 5000,
+        }
     );
     const { data: user } = useGetUserEprByEmailQuery<any>(email)
 
@@ -64,6 +63,73 @@ const HeaderEmployer = () => {
         })
         const confirm: MessageType = message.info('Gửi yêu cầu thành công')
     }
+    // get cvs
+    const { data: cvs, error, isLoading } = useGetCvsQuery();
+    console.log(cvs);
+    //notification
+    const [shownNotificationIds, setShownNotificationIds] = useState<string[]>([]);
+    const [markAsRead] = useMarkAsReadMutation();
+    const [addNotification] = useAddNotificationMutation()
+    useEffect(() => {
+        const notifiedEmails = new Set(); // Sử dụng Set để đảm bảo giữ duy nhất các email
+        const addNotificationsForUnreadCvs = async () => {
+            try {
+                for (const cv of cvs) {
+                    if (!cv.read && !notifiedEmails.has(cv.email)) {
+                        await addNotification({
+                            email: email,
+                            role: 2,
+                            notification_title: "Bạn có ứng viên ứng tuyển mới",
+                            notification_content: `${cv.email} đã ứng tuyển với vị trí ${cv.job_title}`,
+                            notification_url: `/home/posts/${cv.post_id}`
+                        });
+                        notifiedEmails.add(cv.email);
+                    }
+                }
+            } catch (error) {
+                console.error('Error adding notifications:', error);
+            }
+        };
+
+        addNotificationsForUnreadCvs();
+    }, [addNotification, cvs]);
+
+    const showNotification = async (notifications: Inotification) => {
+        const { _id, notification_title, notification_content, isRead } = notifications;
+
+        if (!isRead) {
+            notification.info({
+                message: 'Bạn có thông báo mới',
+                description: notification_title,
+            });
+            setShownNotificationIds((prevIds) => [...prevIds, _id]);
+        }
+    };
+
+    useEffect(() => {
+
+        if (notificationEmail && notificationEmail.length > 0) {
+            const latestNotification = notificationEmail[notificationEmail.length - 1]; //-1 cuoi danh sách
+            showNotification(latestNotification);
+        }
+    }, [notificationEmail]);
+
+    const showModalNoti = (notificationId: string) => {
+        if (notificationEmail) {
+            const selectedNoti = notificationEmail.find((noti: { _id: string; }) => noti._id === notificationId) as Inotification;
+            if (selectedNoti) {
+                setSelectedNotification(selectedNoti as Inotification | null); // Explicitly cast to null
+                setIsModalNoti(true);
+            }
+        }
+    };
+    moment.locale('vi');
+    const handleOkNoti = () => {
+        setIsModalNoti(false);
+    };
+    const handleCancelNoti = () => {
+        setIsModalNoti(false);
+    };
     return (
         <>
             {/* Header */}
@@ -106,13 +172,13 @@ const HeaderEmployer = () => {
                         <NavLink to={'/report'}
                             className='d-flex align-items-center text-decoration-none text-white'>
                             <span className='hover:text-orange-400'>
-                            Hỗ trợ
+                                Hỗ trợ
                             </span>
                         </NavLink>
                     </li>
                 </ul>
                 <ul className='flex items-center '>
-                <li className='p-3 pr-4 text-decoration-none text-white'>
+                    <li className='p-3 pr-4 text-decoration-none text-white'>
                         <button onClick={() => setOpenNotify(true)}>
                             <IoMdNotifications className='text-3xl' />
                         </button>
@@ -127,7 +193,7 @@ const HeaderEmployer = () => {
                             <BsPersonCircle className='text-3xl' />
                         </button>
                     </li>
-                    
+
                 </ul>
                 <Drawer
                     placement={'right'}
@@ -225,7 +291,7 @@ const HeaderEmployer = () => {
                     </form>
                 </Modal>
             </div>
-            
+
             <Drawer
                 placement={'right'}
                 closable={false}
@@ -236,8 +302,8 @@ const HeaderEmployer = () => {
                 className='relative w-full stick bottom-0'
             >
                 <div className={cx('modal')} onClick={(e: any) => {
-                        e.stopPropagation();
-                    }}
+                    e.stopPropagation();
+                }}
                 >
                     <div className={cx('modal-header')}>
                         <div className={cx('modal-header__icon')}>
@@ -292,19 +358,48 @@ const HeaderEmployer = () => {
                                     ) : (
                                         <p>Loading notifications...</p>
                                     )}
-                                    <Modal 
-                                        title={selectedNotification?.notification_title || "Thông báo"} 
-                                        open={isModalNoti} 
-                                        onOk={() => setIsModalNoti(false)} 
-                                        onCancel={() => setIsModalNoti(false)}
+                                    <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
+                                        footer={[
+
+                                            <Button key="cancel" onClick={handleCancelNoti}>
+                                                Đóng
+                                            </Button>,
+                                            <Button
+                                                key="goToURL"
+                                                type="primary"
+                                                onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
+                                            >
+                                                Đến URL
+                                            </Button>
+                                        ]}
+
                                     >
-                                        {
-                                            selectedNotification && (
-                                                <>
-                                                    <span>{selectedNotification.notification_content}</span>
-                                                </>
-                                            )
-                                        }
+                                        {selectedNotification && (
+                                            <>
+                                                <span>{selectedNotification.notification_content}</span>
+                                            </>
+                                        )}
+                                    </Modal>  <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
+                                        footer={[
+
+                                            <Button key="cancel" onClick={handleCancelNoti}>
+                                                Đóng
+                                            </Button>,
+                                            <Button
+                                                key="goToURL"
+                                                type="primary"
+                                                onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
+                                            >
+                                                Đến URL
+                                            </Button>
+                                        ]}
+
+                                    >
+                                        {selectedNotification && (
+                                            <>
+                                                <span>{selectedNotification.notification_content}</span>
+                                            </>
+                                        )}
                                     </Modal>
                                 </div>
                             </div>
@@ -314,7 +409,7 @@ const HeaderEmployer = () => {
                     </div>
                 </div>
             </Drawer>
-            
+
         </>
     )
 }
