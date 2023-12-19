@@ -40,6 +40,7 @@ const PostDetail: React.FC = (): any => {
     })
     const { data } = useGetCvsByPostIdQuery(post && post?._id)
     const cvs = data?.cvs
+    console.log(cvs);
 
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
@@ -66,7 +67,15 @@ const PostDetail: React.FC = (): any => {
     const notification_content = "Thư mời phỏng vấn đã được gửi tới email của bạn"
     const onHandleNotification = async (user: any) => {
         try {
-            const response = await addNotification(user);
+            const response = await addNotification(
+                {
+                    email: user.email,
+                    role:2,
+                    notification_title: "Bạn đã được nhà tuyển dụng đồng ý cv",
+                    notification_content: `Chúc mừng bạn đã được nhà ứng tuyển đồng ý với CV hãy vào URL để xem nhé !`,
+                    notification_url: `/home/posts/${user.post_id}`
+                }
+            );
             console.log(user);
             if ('data' in response && response.data) {
                 message.success('Đã gửi thông báo đến ứng viên');
@@ -292,24 +301,6 @@ const PostDetail: React.FC = (): any => {
                                             <hr />
                                         </div>
                                     </div>
-                                    <button
-                                        className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-1'
-                                        onClick={showModal} >
-                                        Danh sách ứng viên
-                                    </button>
-                                    <Modal
-                                        title="Danh sách ứng viên"
-                                        open={open}
-                                        onCancel={handleCancel}
-                                        okButtonProps={{ hidden: true }}
-                                        cancelButtonProps={{ hidden: true }}
-                                        width={1000}
-                                    >
-                                        <Table dataSource={cvs} columns={columns}
-                                            pagination={{ defaultPageSize: 6 }}
-                                        />
-
-                                    </Modal>
                                 </div>
                             </div>
                         </div>

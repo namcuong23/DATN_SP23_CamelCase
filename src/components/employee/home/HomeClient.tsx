@@ -54,6 +54,8 @@ const HomeClient = (): any => {
     const shuffledPosts = [...currentPosts].sort(() => Math.random() - 0.5);
     setCurrentPosts(shuffledPosts);
   };
+
+  console.log(currentPosts)
   
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
@@ -201,27 +203,27 @@ const HomeClient = (): any => {
                   <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
                     <div className="sc-jtcaXd dhnMFx">
                     <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
-      {currentPosts &&
-        currentPosts.map((post: any, index: number) => (
-          <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-            <div key={post._id} className='job'>
-              <div className="img-wrapper">
-                <img src={post.logo} className="job-img" />
-              </div>
-              <div className="job-info">
-                <div className='flex justify-end mt-[-8px] mb-[8px]'>
-                  <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
-                </div>
-                <h4 className="job-namee">{post.job_name}</h4>
-                <p className="truncate block text-[14px] leading-4 text-red-400">
-                  {post.offer_salary ? "Thương lượng" : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
-                </p>
-                <p className='job-location'>{post.work_location}</p>
-              </div>
-            </div>
-          </NavLink>
-        ))}
-    </div>
+                        {currentPosts &&
+                          currentPosts.map((post: any, index: number) => (
+                            <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                              <div key={post._id} className='job'>
+                                <div className="img-wrapper">
+                                  <img src={post.logo} className="job-img" />
+                                </div>
+                                <div className="job-info">
+                                  <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                    <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                  </div>
+                                  <h4 className="job-namee">{post.job_name}</h4>
+                                  <p className="truncate block text-[14px] leading-4 text-red-400">
+                                    {post.offer_salary ? "Thương lượng" : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
+                                  </p>
+                                  <p className='job-location'>{post.work_location}</p>
+                                </div>
+                              </div>
+                            </NavLink>
+                          ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -290,7 +292,7 @@ const HomeClient = (): any => {
                     <div className="sc-jtcaXd dhnMFx">
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
-                          posts && posts.map((post: any, index: number) =>
+                          posts && posts.filter((post: any) => post.post_status === true).map((post: any, index: number) =>
                             <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                               <div key={post._id} className='job'>
                                 <div className="img-wrapper">

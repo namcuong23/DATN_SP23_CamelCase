@@ -69,6 +69,7 @@ import FeedbackList from "./components/Admin/Feedback/FeedbackList"
 import OrderManagement from "./components/Admin/Order/OrderManagement"
 import BannerForm from "./components/Admin/Banner/BannerAdd"
 import CareerEdit from "./components/Admin/Career/CareerEdit"
+import SendMail from "./components/employer/SendMail/SendMail"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
