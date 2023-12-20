@@ -1,11 +1,12 @@
-import { Modal } from 'antd'
-import {
-    useApproveCvMutation,
-    useGetCvsByPostIdQuery,
-    useRemoveCvMutation
+import { Badge, Modal } from 'antd'
+import { 
+    useApproveCvMutation, 
+    useGetCvsByPostIdQuery, 
+    useRemoveCvMutation, 
+    useSetIsNewMutation
 } from '../../../../service/manage_cv';
 import { useAddNotificationMutation } from '../../../../service/notification';
-import { CloseOutlined, CheckOutlined, MailOutlined, } from '@ant-design/icons'
+import { CloseOutlined, CheckOutlined, } from '@ant-design/icons'
 import useDateFormat from '../../../../utils/hooks/FormatDate';
 
 import type { ColumnsType, ColumnType } from 'antd/es/table';
@@ -25,6 +26,7 @@ type Props = {
 
 const CandidateList = (props: Props) => {
     const searchInput = useRef<InputRef>(null);
+    const [setIsNew] = useSetIsNewMutation()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const handleSearch = (
@@ -40,19 +42,6 @@ const CandidateList = (props: Props) => {
         clearFilters();
         setSearchText('');
     };
-    const { data } = useGetCvsByPostIdQuery(props.postId && props.postId)
-    const [isConfirmed, setConfirmed] = useState(false);
-    const handleConfirmation = (email: string, id: string,) => {
-      const result = window.confirm('Bạn cần xác nhận hành động này khi từ chối ứng viên');
-      const customSubject = 'Custom Subject';
-      const customBody = 'Custom Body';
-      if (result) {
-        const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(customSubject)}&body=${encodeURIComponent(customBody)}`;
-          window.location.href = mailtoLink;
-          deleteCv(id)
-      } else {
-      }
-    };
     const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
@@ -67,7 +56,7 @@ const CandidateList = (props: Props) => {
                 <Space>
                     <Button
                         type="primary"
-onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
+                        onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
                         icon={<SearchOutlined />}
                         size="small"
                         style={{ width: 90 }}
@@ -109,25 +98,25 @@ onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
         ),
         onFilter: (value, record) =>
             record[dataIndex]
-                .toString()
-                .toLowerCase()
-                .includes((value as string).toLowerCase()),
+            .toString()
+            .toLowerCase()
+            .includes((value as string).toLowerCase()),
         onFilterDropdownOpenChange: (visible) => {
             if (visible) {
                 setTimeout(() => searchInput.current?.select(), 100);
             }
         },
         render: (text) =>
-            searchedColumn === dataIndex ? (
-                <Highlighter
-                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                    searchWords={[searchText]}
-                    autoEscape
-                    textToHighlight={text ? text.toString() : ''}
-                />
-            ) : (
-                text
-            ),
+        searchedColumn === dataIndex ? (
+            <Highlighter
+                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                searchWords={[searchText]}
+                autoEscape
+                textToHighlight={text ? text.toString() : ''}
+            />
+        ) : (
+            text
+        ),
     });
 
     const columns: ColumnsType<any> = [
@@ -150,6 +139,24 @@ onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             render: (_, record) => <div>{useDateFormat(record?.createdAt)}</div>,
         },
         {
+            title: 'CV',
+            dataIndex: 'CV',
+            render: (_, record) => (
+                <Badge dot={record.isNew} offset={[2, 2]}>
+                    <NavLink to={`/cv-preview?id=${record._id}`}
+                        onClick={() => setIsNew({
+                            cv_id: record._id
+                        })}
+                        target='_blank'
+                        className="text-[#005aff] hover:text-[#005aff] underline hover:underline"
+                    >
+                        Xem
+                    </NavLink>
+                </Badge>
+                    
+                ),
+            },
+        {
             title: 'Hành động',
             dataIndex: 'action',
             render: (_, record) => (
@@ -166,26 +173,31 @@ onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
                     >
                         <CheckOutlined className='text-success' />
                     </Popconfirm>
-                    <button onClick={() => handleConfirmation(record.email, record._id)} disabled={isConfirmed}>
-                        {isConfirmed ? 'Email Sent!' : 'Từ chối'}
-                    </button>
-          
-                    <NavLink to={`/cv-preview?id=${record._id}`}
-                        className='leading-[22px]'
-                        target='_blank'
+
+                    <Popconfirm placement="top"
+                        title="Bạn có muốn xoá không?"
+                        onConfirm={() => onHandleDelete(record._id)}
+                        okText="Đồng ý"
+                        cancelText="Không"
+                        className='leading-[22px] flex items-center'
                     >
-                        <i className="fa-regular fa-eye text-[#333]"></i>
-                    </NavLink>
+                        <CloseOutlined className='text-danger' />
+                    </Popconfirm>
                 </Space>
             ),
         },
     ];
 
-    const [addNotification] = useAddNotificationMutation()
+    const [addNotification]: any = useAddNotificationMutation()
+    const { data } = useGetCvsByPostIdQuery(props.postId && props.postId)
     const cvs = data?.cvs?.map((post: any, index: number) => ({
         key: index,
         ...post
     }))
+
+    cvs?.sort((prevPost: any, nextPost: any) => {
+        return (prevPost.isNew === nextPost.isNew) ? 0 : prevPost.isNew ? -1 : 1
+    })
 
     const onHandleNotification = async (user: any) => {
         try {
@@ -216,21 +228,21 @@ onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             deleteCv(id)
         }
     }
-    return (
-        <Modal
-            title="Danh sách ứng viên"
-            open={props.isOpen}
-            onCancel={props.handleCancel}
-            okButtonProps={{ hidden: true }}
-            cancelButtonProps={{ hidden: true }}
-            width={1000}
-        >
-            <Table dataSource={cvs} columns={columns}
-                pagination={{ defaultPageSize: 6 }}
-            />
+  return (
+    <Modal
+        title="Danh sách ứng viên"
+        open={props.isOpen}
+        onCancel={props.handleCancel}
+        okButtonProps={{ hidden: true }}
+        cancelButtonProps={{ hidden: true }}
+        width={1000}
+    >
+        <Table dataSource={cvs} columns={columns}
+            pagination={{ defaultPageSize: 6 }}
+        />
 
-        </Modal>
-    )
+    </Modal>
+  )
 }
 
 export default CandidateList

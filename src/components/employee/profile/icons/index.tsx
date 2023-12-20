@@ -19,7 +19,7 @@ export const AccountMngIcon = () => (
 
 export const AvatarIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg"
-        width="80" height="80"
+        width="45" height="45"
         fill="currentColor"
         className="bi bi-person-fill text-[#CCDEFF] bg-[#E6EFFF] p-2"
         viewBox="0 0 16 16">
