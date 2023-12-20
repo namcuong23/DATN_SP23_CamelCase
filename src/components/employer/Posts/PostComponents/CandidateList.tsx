@@ -154,7 +154,7 @@ onClick={() => handleSearch(selectedKeys as string[], confirm, dataIndex)}
             dataIndex: 'action',
             render: (_, record) => (
                 <Space size="middle" className='flex items-center'>
-<Popconfirm placement="top"
+                    <Popconfirm placement="top"
                         title={"Chấp nhận"}
                         onConfirm={() => {
                             onHandleNotification(record);

@@ -70,6 +70,7 @@ import OrderManagement from "./components/Admin/Order/OrderManagement"
 import BannerForm from "./components/Admin/Banner/BannerAdd"
 import CareerEdit from "./components/Admin/Career/CareerEdit"
 import SendMail from "./components/employer/SendMail/SendMail"
+import CompanyDetail from "./components/pages/CompanyDetail"
 function App() {
   const navigate = useNavigate();
   useEffect(() => {
@@ -126,6 +127,7 @@ function App() {
           <Route path="recruitmentdetails" element={<RecruitmentDetails />} />
           <Route path="profile" element={<Profile />} />
           <Route path="company" element={<Company />} />
+          <Route path="company/:id" element={<CompanyDetail />} />
           <Route path='posts/:id' element={<PostDetailEp />} />
         </Route>
 

@@ -4,6 +4,7 @@ import './Company.css'
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob';
 import React from 'react';
 import { useGetUsersEprQuery } from '../../../service/auth_employer';
+import { NavLink } from 'react-router-dom';
 
 type Props = {}
 
@@ -103,9 +104,9 @@ const Company = (props: Props) => {
                                             <p className='company-content_desc'>{user.desc_epr}</p>
                                         </div>
 
-                                        <div className="company-content__item-btn">
+                                        <NavLink to={`/company/${user._id}`} className="company-content__item-btn">
                                             Xem
-                                        </div>
+                                        </NavLink>
                                     </div>
                                 </div>
                             ))

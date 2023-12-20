@@ -26,6 +26,10 @@ export const authEprApi = createApi({
             query: (email: string) => `/epr-users/${email}/detail`,
             providesTags: ['authEpr']
         }),
+        getUserEpr: builder.query({
+            query: (id: string) => `/epr-users/${id}`,
+            providesTags: ['authEpr']
+        }),
         getUsersEpr: builder.query({
             query: () => '/epr-users',
             providesTags: ['authEpr']
@@ -92,4 +96,5 @@ export const {
     useSendEmailVerifiedMutation,
     useActiveEmailMutation,
     useGetUsersEprQuery,
+    useGetUserEprQuery,
 } = authEprApi

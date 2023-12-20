@@ -322,9 +322,11 @@
     padding: 8px 0;
     border-radius: 6px;
     text-align: center;
+    display: block;
 }
 
 .company-content__item-btn:hover {
+    color: #fff;
     opacity: 0.9;
     cursor: pointer;
 }
