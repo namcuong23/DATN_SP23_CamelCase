@@ -13,9 +13,9 @@ import { useRemovePostMutation } from '../../../service/post'
 import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
-import CandidateList from './PostComponents/CandidateList';
 import { useGetCareersQuery } from '../../../service/admin';
 import moment from 'moment';
+import CandidateList from './PostComponents/CandidateList';
 
 const PostList = (): any | null | JSX.Element => {
     const [resetNewCandidate] = useResetNewCandidatesMutation()
@@ -26,14 +26,16 @@ const PostList = (): any | null | JSX.Element => {
     const [open, setOpen] = useState(false);
     const [postId, setPostId] = useState('');
     const { data: careers } = useGetCareersQuery();
-    const getCareerNameById = (careerId: string) => {
+    const getCareerNameById = (careerId: any) => {
         const career = careers?.find((c) => c._id === careerId);
-        return career?.name || 'Không xác định';
+        console.log(careerId)
+        return career?.name;
     };
 
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
+    console.log(posts)
     const text: string = 'Are you sure to delete this post?';
     const date = new Date()
 
@@ -63,12 +65,12 @@ const PostList = (): any | null | JSX.Element => {
         post_status: boolean | string;
         user_id: string;
         createdAt: string;
-        career: string;
+        career: any;
         newCandidates: number;
         period: string
     }
     type DataIndex = keyof DataType;
-    const dataSource = posts?.map((item: DataType, index: string) => ({
+const dataSource = posts?.map((item: DataType, index: string) => ({
         key: String(index),
         _id: String(item._id),
         job_name: String(item.job_name),
@@ -85,7 +87,7 @@ const PostList = (): any | null | JSX.Element => {
         post_status: Boolean(item.post_status),
         user_id: String(item.user_id),
         createdAt: String(item.createdAt),
-        career: getCareerNameById(item.career),
+        career: getCareerNameById(item?.career) || '',
         newCandidates: Number(item.newCandidates),
         period: String(item.period)
     }))
@@ -93,7 +95,7 @@ const PostList = (): any | null | JSX.Element => {
     dataSource?.sort((prevPost: any, nextPost: any) => {
         return nextPost.newCandidates - prevPost.newCandidates
     })
-
+    
     const [removePost] = useRemovePostMutation()
     const onHandleRemove = (id: string) => {
         const confirmMsg: MessageType = message.success('Xoa thanh cong.')
@@ -138,7 +140,7 @@ const PostList = (): any | null | JSX.Element => {
                     <Button
                         onClick={() => clearFilters && handleReset(clearFilters)}
                         size="small"
-                        style={{ width: 90 }}
+style={{ width: 90 }}
                     >
                         Reset
                     </Button>
@@ -201,12 +203,6 @@ const PostList = (): any | null | JSX.Element => {
             )
         },
         {
-            title: 'Ngành nghề',
-            dataIndex: 'career',
-            ...getColumnSearchProps('career'),
-            render: (text) => <span className='text-ellipsis'>{text?.name ?? ""}</span>,
-        },
-        {
             title: 'Hình thức',
             dataIndex: 'working_form',
             ...getColumnSearchProps('working_form'),
@@ -225,7 +221,7 @@ const PostList = (): any | null | JSX.Element => {
             render: (_, record) => (
                 <span>{new Date(record.period).toLocaleDateString()}</span>
             )
-        },
+},
         {
             title: 'Trạng thái',
             dataIndex: 'post_status',
@@ -306,7 +302,7 @@ const PostList = (): any | null | JSX.Element => {
                     </Space>
                 )
             },
-        },
+},
     ];
 
     if (isLoggedIn == false) {

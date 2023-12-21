@@ -11,6 +11,7 @@ import HeaderSearchhJob from "../../layouts/HeaderSearchhJob";
 import { useAddMyPostMutation, useRemoveMyPostMutation } from "../../../service/post";
 import { useAddNotificationMutation } from "../../../service/notification";
 import { message } from "antd";
+import { useGetUsersEprQuery } from "../../../service/auth_employer";
 
 const WorkPage = () => {
     const salaryOptions = [
@@ -81,7 +82,12 @@ const WorkPage = () => {
     const [params] = useSearchParams()
     const searchParams = params.get('q');
     const careerParams = params.get('career');
-   
+    const { data: userEpr }: any = useGetUsersEprQuery('')
+    const getLogo = (user_id: string) => {
+        const data = userEpr?.find((user: any) => user._id === user_id)
+    
+        return data.image
+    }
     
     const navigate = useNavigate()
     const [filterParams, setFilterParams] = useState({
@@ -256,7 +262,7 @@ const WorkPage = () => {
                                         <div className="flex items-center m-0 w-[84%]">
                                             <div className='mr-[16px]'>
                                                 <a className="rounded-[6px]" style={{ background: 'white', justifyContent: 'center', display: 'flex' }}>
-                                                    <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '120px', height: 'auto', margin: '20px 0px' }} />
+                                                    <img src={getLogo(item.user_id)} style={{ width: '120px', height: 'auto', margin: '20px 0px' }} />
                                                 </a>
                                             </div>
                                             <div className="w-100">

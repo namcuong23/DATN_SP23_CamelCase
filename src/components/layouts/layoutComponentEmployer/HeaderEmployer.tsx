@@ -65,7 +65,6 @@ const HeaderEmployer = () => {
     }
     // get cvs
     const { data: cvs, error, isLoading } = useGetCvsQuery();
-    console.log(cvs);
     //notification
     const [shownNotificationIds, setShownNotificationIds] = useState<string[]>([]);
     const [markAsRead] = useMarkAsReadMutation();

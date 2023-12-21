@@ -1,8 +1,8 @@
 import { Badge, Modal } from 'antd'
-import { 
-    useApproveCvMutation, 
-    useGetCvsByPostIdQuery, 
-    useRemoveCvMutation, 
+import {
+    useApproveCvMutation,
+    useGetCvsByPostIdQuery,
+    useRemoveCvMutation,
     useSetIsNewMutation
 } from '../../../../service/manage_cv';
 import { useAddNotificationMutation } from '../../../../service/notification';
@@ -15,7 +15,7 @@ import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
 
 type Props = {
@@ -24,9 +24,53 @@ type Props = {
     handleCancel?: () => void,
 }
 
-const CandidateList = (props: Props) => {
+const CandidateList = (props: Props, post: any) => {
+
+    useEffect(() => {
+        // Khi component được tạo, kiểm tra xem có trạng thái đã lưu trong localStorage không
+        const storedIsConfirmed: any = {};
+        for (const key in localStorage) {
+            if (key.startsWith('isConfirmed_')) {
+                storedIsConfirmed[key] = JSON.parse(localStorage.getItem(key)!);
+            }
+        }
+        setIsConfirmed(storedIsConfirmed);
+    }, []);
+    const handleConfirmation = (email: string, id: string,) => {
+        const result = window.confirm('Bạn cần xác nhận hành động này khi từ chối ứng viên');
+        const customSubject = 'Custom Subject';
+        const customBody = 'Custom Body';
+        if (result) {
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(customSubject)}&body=${encodeURIComponent(customBody)}`;
+            window.location.href = mailtoLink;
+            deleteCv(id)
+        } else {
+        }
+    };
+
+
+    const [isConfirmed, setIsConfirmed] = useState<{ [key: string]: boolean }>({});
+    const handlePasstion = (email: string, id: string, jobId: string) => {
+        const result = window.confirm('Bạn cần xác nhận hành động này khi phê duyệt ứng viên');
+        const customSubject = 'Custom Subject';
+        const customBody = 'Custom Body';
+        if (result) {
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(customSubject)}&body=${encodeURIComponent(customBody)}`;
+            window.location.href = mailtoLink;
+            approveCv(id);
+    
+            // Lưu trạng thái vào localStorage sau khi đã xác nhận hành động
+            const key = `isConfirmed_${id}_${jobId}`;
+            localStorage.setItem(key, JSON.stringify(true));
+    
+            // Nếu bạn muốn cập nhật state ngay lập tức, hãy thêm dòng sau:
+            setIsConfirmed((prev) => ({ ...prev, [`${id}_${jobId}`]: true }));
+        }
+    };
+    
+
     const searchInput = useRef<InputRef>(null);
-    const [setIsNew] = useSetIsNewMutation()
+const [setIsNew] = useSetIsNewMutation()
     const [searchText, setSearchText] = useState('');
     const [searchedColumn, setSearchedColumn] = useState('');
     const handleSearch = (
@@ -98,25 +142,25 @@ const CandidateList = (props: Props) => {
         ),
         onFilter: (value, record) =>
             record[dataIndex]
-            .toString()
-            .toLowerCase()
-            .includes((value as string).toLowerCase()),
+                .toString()
+                .toLowerCase()
+.includes((value as string).toLowerCase()),
         onFilterDropdownOpenChange: (visible) => {
             if (visible) {
                 setTimeout(() => searchInput.current?.select(), 100);
             }
         },
         render: (text) =>
-        searchedColumn === dataIndex ? (
-            <Highlighter
-                highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
-                searchWords={[searchText]}
-                autoEscape
-                textToHighlight={text ? text.toString() : ''}
-            />
-        ) : (
-            text
-        ),
+            searchedColumn === dataIndex ? (
+                <Highlighter
+                    highlightStyle={{ backgroundColor: '#ffc069', padding: 0 }}
+                    searchWords={[searchText]}
+                    autoEscape
+                    textToHighlight={text ? text.toString() : ''}
+                />
+            ) : (
+                text
+            ),
     });
 
     const columns: ColumnsType<any> = [
@@ -153,36 +197,23 @@ const CandidateList = (props: Props) => {
                         Xem
                     </NavLink>
                 </Badge>
-                    
-                ),
-            },
+
+            ),
+        },
         {
             title: 'Hành động',
             dataIndex: 'action',
             render: (_, record) => (
                 <Space size="middle" className='flex items-center'>
-                    <Popconfirm placement="top"
-                        title={"Chấp nhận"}
-                        onConfirm={() => {
-                            onHandleNotification(record);
-                            onHandleApprove(record._id)
-                        }}
-                        okText="Đồng ý"
-                        cancelText="Không"
-                        className='leading-[22px] flex items-center'
+                    <button
+                        onClick={() => handlePasstion(record.email, record._id, props.postId)}
+                        disabled={isConfirmed[`${record._id}_${props.postId}`]}
                     >
-                        <CheckOutlined className='text-success' />
-                    </Popconfirm>
-
-                    <Popconfirm placement="top"
-                        title="Bạn có muốn xoá không?"
-                        onConfirm={() => onHandleDelete(record._id)}
-                        okText="Đồng ý"
-                        cancelText="Không"
-                        className='leading-[22px] flex items-center'
-                    >
-                        <CloseOutlined className='text-danger' />
-                    </Popconfirm>
+                        {isConfirmed[`${record._id}_${props.postId}`] ? 'Đã duyệt!' : 'Phê duyệt'}
+                    </button>
+                    <button onClick={() => handleConfirmation(record.email, record._id)}>
+                        {isConfirmed[`${record._id}_${props.postId}`] ? '' : 'Từ chối'}
+                    </button>
                 </Space>
             ),
         },
@@ -198,8 +229,7 @@ const CandidateList = (props: Props) => {
     cvs?.sort((prevPost: any, nextPost: any) => {
         return (prevPost.isNew === nextPost.isNew) ? 0 : prevPost.isNew ? -1 : 1
     })
-
-    const onHandleNotification = async (user: any) => {
+const onHandleNotification = async (user: any) => {
         try {
             const response = await addNotification(user);
             console.log(user);
@@ -214,35 +244,22 @@ const CandidateList = (props: Props) => {
     }
 
     const [approveCv] = useApproveCvMutation()
-    const onHandleApprove = (id: string) => {
-        console.log(id);
-
-        if (confirm !== null) {
-            approveCv(id)
-        }
-    }
     const [deleteCv] = useRemoveCvMutation()
-    const onHandleDelete = (id: string) => {
+    return (
+        <Modal
+            title="Danh sách ứng viên"
+            open={props.isOpen}
+            onCancel={props.handleCancel}
+            okButtonProps={{ hidden: true }}
+            cancelButtonProps={{ hidden: true }}
+            width={1000}
+        >
+            <Table dataSource={cvs} columns={columns}
+                pagination={{ defaultPageSize: 6 }}
+            />
 
-        if (confirm !== null) {
-            deleteCv(id)
-        }
-    }
-  return (
-    <Modal
-        title="Danh sách ứng viên"
-        open={props.isOpen}
-        onCancel={props.handleCancel}
-        okButtonProps={{ hidden: true }}
-        cancelButtonProps={{ hidden: true }}
-        width={1000}
-    >
-        <Table dataSource={cvs} columns={columns}
-            pagination={{ defaultPageSize: 6 }}
-        />
-
-    </Modal>
-  )
+        </Modal>
+    )
 }
 
 export default CandidateList

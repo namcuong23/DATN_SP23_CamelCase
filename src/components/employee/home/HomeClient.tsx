@@ -14,10 +14,17 @@ import './HomeClient.css'
 import { useGetBannersQuery } from '../../../service/admin/banner'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useGetCareersQuery } from '../../../service/admin';
+import { useGetUsersEprQuery } from '../../../service/auth_employer'
 
 const HomeClient = (): any => {
   const { email } = useAppSelector((rs) => rs.auth)
   const { data: user }: any = useGetUserByEmailQuery(email)
+  const { data: userEpr }: any = useGetUsersEprQuery('')
+  const getLogo = (user_id: string) => {
+    const data = userEpr.find((user: any) => user._id === user_id)
+
+    return data.image
+  }
   const { data: posts } = useGetPostsQuery(user?._id)
   const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
@@ -79,32 +86,8 @@ const HomeClient = (): any => {
     <>
       <div className="home-banner">
         <HeaderSearchhJob className='bg' />
-        <div id="carouselExampleIndicators" className="carousel slide home-banner__item">
-          <div className="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to={0}
-              className="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            />
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to={1}
-              aria-label="Slide 2"
-            />
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to={2}
-              aria-label="Slide 3"
-            />
-          </div>
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img src={banners && banners.length > 0 && banners[0].imageUrl || 'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
+        <div id="" className=" home-banner__item">
+              <img src={'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
@@ -113,26 +96,6 @@ const HomeClient = (): any => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }} alt="..." />
-            </div>
-          </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev"
-          >
-            <span className="carousel-control-prev-icon" aria-hidden="true" />
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next"
-          >
-            <span className="carousel-control-next-icon" aria-hidden="true" />
-            <span className="visually-hidden">Next</span>
-          </button>
 
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch fadeIn">
@@ -208,7 +171,7 @@ const HomeClient = (): any => {
                             <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                               <div key={post._id} className='job'>
                                 <div className="img-wrapper">
-                                  <img src={post.logo} className="job-img" />
+                                  <img src={getLogo(post.user_id)} className="job-img" />
                                 </div>
                                 <div className="job-info">
                                   <div className='flex justify-end mt-[-8px] mb-[8px]'>
@@ -296,7 +259,7 @@ const HomeClient = (): any => {
                             <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                               <div key={post._id} className='job'>
                                 <div className="img-wrapper">
-                                  <img src={post.logo}
+                                  <img src={getLogo(post.user_id)}
                                     className="job-img" />
                                 </div>
                                 <div className="job-info">
