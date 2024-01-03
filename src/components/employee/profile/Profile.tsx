@@ -17,7 +17,6 @@ import {
 import HeaderSearchhJob from '../../layouts/HeaderSearchhJob';
 import { useUploadImage } from '../../../utils/hooks/Upload';
 import { toast } from 'react-toastify';
-import Suitable from './Suitable';
 
 const Profile: any = () => {
     const { email, isLoggedIn } = useAppSelector((res: any) => res.auth)
@@ -35,7 +34,6 @@ const Profile: any = () => {
         {id: 1, icon: <InformationIcon />, title: 'Hồ sơ của tôi', page: Infotmation, tab: 'information'},
         {id: 2, icon: <MyJobIcon />, title: 'Việc làm đã lưu', page: MyJob, tab: 'my-job'},
         {id: 2, icon: <MyJobIcon />, title: 'Việc làm đã ứng tuyển', page: MyApplied, tab: 'my-applied'},
-        {id: 4, icon: <MyJobIcon />, title: 'Việc làm cho bạn', page: Suitable, tab: 'suitable'},
         {id: 3, icon: <AccountMngIcon />, title: 'Quản lý tài khoản', page: AccountMng, tab: 'account-manage'},
     ]
 

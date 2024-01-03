@@ -27,15 +27,13 @@ const PostList = (): any | null | JSX.Element => {
     const [postId, setPostId] = useState('');
     const { data: careers } = useGetCareersQuery();
     const getCareerNameById = (careerId: any) => {
-        const career = careers?.find((c) => c._id === careerId);
-        console.log(careerId)
-        return career?.name;
+        const career = careers?.find((c) => c._id === careerId)
+        return careerId?.name;
     };
-
+    const [selectedPostTitle, setSelectedPostTitle] = useState(null);
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
-    console.log(posts)
     const text: string = 'Are you sure to delete this post?';
     const date = new Date()
 
@@ -65,12 +63,12 @@ const PostList = (): any | null | JSX.Element => {
         post_status: boolean | string;
         user_id: string;
         createdAt: string;
-        career: any;
+        career: string;
         newCandidates: number;
         period: string
     }
     type DataIndex = keyof DataType;
-const dataSource = posts?.map((item: DataType, index: string) => ({
+    const dataSource = posts?.map((item: DataType, index: string) => ({
         key: String(index),
         _id: String(item._id),
         job_name: String(item.job_name),
@@ -95,7 +93,7 @@ const dataSource = posts?.map((item: DataType, index: string) => ({
     dataSource?.sort((prevPost: any, nextPost: any) => {
         return nextPost.newCandidates - prevPost.newCandidates
     })
-    
+
     const [removePost] = useRemovePostMutation()
     const onHandleRemove = (id: string) => {
         const confirmMsg: MessageType = message.success('Xoa thanh cong.')
@@ -140,7 +138,7 @@ const dataSource = posts?.map((item: DataType, index: string) => ({
                     <Button
                         onClick={() => clearFilters && handleReset(clearFilters)}
                         size="small"
-style={{ width: 90 }}
+                        style={{ width: 90 }}
                     >
                         Reset
                     </Button>
@@ -151,7 +149,7 @@ style={{ width: 90 }}
                             confirm({ closeDropdown: false });
                             setSearchText((selectedKeys as string[])[0]);
                             setSearchedColumn(dataIndex);
-}}
+                        }}
                     >
                         Filter
                     </Button>
@@ -203,6 +201,12 @@ style={{ width: 90 }}
             )
         },
         {
+            title: 'Ngành nghề',
+            dataIndex: 'career',
+            ...getColumnSearchProps('career'),
+            render: (text) => <span className='text-ellipsis'>{text}</span>,
+        },
+        {
             title: 'Hình thức',
             dataIndex: 'working_form',
             ...getColumnSearchProps('working_form'),
@@ -238,12 +242,12 @@ style={{ width: 90 }}
                 </>
             ),
         },
-       
+
         {
             title: 'Ứng viên',
             dataIndex: 'newCandidates',
             render: (_, record) => {
-                
+
                 return <>
                     <Badge dot={record.newCandidates > 0} offset={[2, 2]}>
                         <button
@@ -251,10 +255,11 @@ style={{ width: 90 }}
                             onClick={() => {
                                 setOpen(true)
                                 setPostId(record._id)
-                                resetNewCandidate({post_id: record._id})
+                                resetNewCandidate({ post_id: record._id })
+                                setSelectedPostTitle(record.job_name);
                             }}
                         >
-                            Xem 
+                            Xem
                         </button>
                     </Badge>
 
@@ -296,7 +301,7 @@ style={{ width: 90 }}
                     </Space>
                 )
             },
-},
+        },
     ];
 
     if (isLoggedIn == false) {

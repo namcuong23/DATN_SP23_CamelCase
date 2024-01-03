@@ -4,7 +4,7 @@ import { useAppSelector } from "../../../../app/hook"
 import { useGetUserByEmailQuery } from "../../../../service/auth"
 import { apiGetDistricts, apiGetProvinces } from "../../../../service/api"
 import useDateFormat from "../../../../utils/hooks/FormatDate"
-import { DatePicker, Select, Space } from "antd"
+import { DatePicker, Form, Select, Space } from "antd"
 import { useGetCareersQuery } from "../../../../service/admin"
 
 const { RangePicker } = DatePicker;
@@ -17,12 +17,12 @@ const getUser = () => {
 }
 
 export const FormInfor = ({ onSubmit }: any) => {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<any>()
+    const { register,setValue, handleSubmit, formState: { errors }, reset } = useForm<any>()
     const { email } = useAppSelector((res: any) => res.auth)
     const { data: user } = useGetUserByEmailQuery(email)
     const [provinces, setProvinces] = useState<any>([])
     const [districts, setDistricts] = useState<any>([])
-
+    const { data: career } = useGetCareersQuery()
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
@@ -40,7 +40,10 @@ export const FormInfor = ({ onSubmit }: any) => {
         }
         fetchDistricts()
     }
-
+    const { desiredPosition } = useAppSelector((res: any) => res.auth);
+    const handleSelectChange = (value :any) => {
+        setValue('desiredPosition', value);
+    };
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='py-2'>
@@ -137,6 +140,41 @@ export const FormInfor = ({ onSubmit }: any) => {
                     </div>
                 </div>
             </div>
+            <div className='py-3'>
+                <div className='mx-3'>
+                    <div className='flex flex-col'>
+                        <div className='mb-[8px]'>Vị trí ứng tuyển mong muốn</div>
+                        <Select {...register('desiredPosition')} defaultValue={0}  size='large' onChange={handleSelectChange}>
+                            <Select.Option value="0">Chọn cấp bậc</Select.Option>
+                            <Select.Option value="Tất cả cấp bậc">Tất cả cấp bậc</Select.Option>
+                            <Select.Option value="Thực tập sinh/Sinh viên">Thực tập sinh/Sinh viên</Select.Option>
+                            <Select.Option value="Mới tốt nghiệp">Mới tốt nghiệp</Select.Option>
+                            <Select.Option value="Nhân viên">Nhân viên</Select.Option>
+                            <Select.Option value="Trưởng phòng">Trưởng phòng</Select.Option>
+                            <Select.Option value="Giám Đốc và Cấp Cao Hơn">Giám Đốc và Cấp Cao Hơn</Select.Option>
+                        </Select>
+                    </div>
+                </div>
+            </div>
+            <div className='py-3'>
+                <div className='mx-3'>
+                    <div className='flex flex-col'>
+                        <div className='mb-[8px]'>Lĩnh vực làm việc mong muốn</div>
+                        <select {...register('fieldPosition')} defaultValue={0} className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'>
+                            <option value={0}>--Lĩnh vực--</option>
+                            {
+                                career ? career?.map((career: any) =>
+                                    <option key={career} value={career._id}>
+                                        {career.name}
+                                    </option>
+                                ) : ''
+                            }
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+
             <div className='flex items-center justify-end gap-x-2 mt-2'>
                 <button className='bg-[#ff7d55] text-white font-[700] rounded-[6px] min-w-[80px] py-[8px]'>Lưu</button>
             </div>
@@ -349,49 +387,20 @@ export const FormEducation = ({ onSubmit, propId }: any) => {
 }
 
 export const FormSkills = ({ onSubmit, handleRemove }: any) => {
-    const { data: career } = useGetCareersQuery();
-    const [selectedCareer, setSelectedCareer] = useState('');
-
-    const handleSave = async () => {
-        try {
-            if (!career) {
-                console.error('Career is undefined');
-                return;
-            }
-
-            onSubmit({
-                skills: {
-                    selectedCareer,
-                    existingSkills: user?.skills || [], // Lấy danh sách kỹ năng từ user
-                },
-                type: "form_skills"
-            });
-
-        } catch (error) {
-            console.error('Error saving skills:', error);
-        }
-    };
     const user = getUser();
     const { register, handleSubmit } = useForm<any>()
     return (
-        <form onSubmit={handleSubmit(((skills: any) => handleSave()))}>
-            {/* Tên kỹ năng và Chọn ngành nghề */}
+        <form
+            onSubmit={handleSubmit(((skills: any) => onSubmit({
+                skills,
+                type: "form_skills"
+            })))}>
             <div className='py-3'>
                 <div className='mb-[8px]'>Tên kỹ năng</div>
-                <Select
-                    className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
-                    size='large'
-                    allowClear
-                    placeholder='Chọn ngành nghề'
-                    onChange={(value) => setSelectedCareer(value)}
-                >
-                    {career ? career?.map((item: any, index: any) =>
-                        <Select.Option key={index} value={item._id}>{item.name}</Select.Option>
-                    ) : ''}
-                </Select>
+                <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                    {...register("skill_name")}
+                />
             </div>
-
-            {/* Danh sách kỹ năng hiện tại của người dùng */}
             <div>
                 <section className="flex items-center flex-wrap">
                     {
@@ -410,15 +419,8 @@ export const FormSkills = ({ onSubmit, handleRemove }: any) => {
                     }
                 </section>
             </div>
-
-            {/* Nút Lưu */}
             <div className='flex items-center justify-end gap-x-2 mt-2'>
-                <button
-                    className='bg-[#ff7d55] text-white font-[700] rounded-[6px] min-w-[80px] py-[8px]'
-                    type="submit"
-                >
-                    Lưu
-                </button>
+                <button className='bg-[#ff7d55] text-white font-[700] rounded-[6px] min-w-[80px] py-[8px]'>Lưu</button>
             </div>
         </form>
     )

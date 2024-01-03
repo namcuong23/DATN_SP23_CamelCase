@@ -1,35 +1,37 @@
 import { useState } from "react"
 import { SubmitHandler } from 'react-hook-form'
-import { 
+import {
     useGetUserByEmailQuery,
     useUpdateUserMutation
 } from '../../../../service/auth'
 import { toast } from 'react-toastify'
 import IUserNTV from '../../../../interface/user'
 import ModalInformation from './ModalInformation'
-import { 
-    FormCareerGoal, 
-    FormEducation, 
-    FormInfor, 
-    FormMoreInfo, 
-    FormSkills, 
+import {
+    FormCareerGoal,
+    FormEducation,
+    FormInfor,
+    FormMoreInfo,
+    FormSkills,
     FormWorkExp
 } from './FormInformation'
+import { UserOutlined } from '@ant-design/icons';
 import { useAppSelector } from '../../../../app/hook'
 import { AvatarIcon } from '../icons'
 import InformationComponent from './InformationComponent'
 import { NavLink } from "react-router-dom"
+import { useGetCareersQuery } from "../../../../service/admin"
 
 const forms = [
-    {id: 1, component: FormInfor},
-    {id: 2, component: FormCareerGoal},
-    {id: 3, component: FormWorkExp},
-    {id: 4, component: FormEducation},
-    {id: 5, component: FormSkills},
-    {id: 6, component: FormMoreInfo},
+    { id: 1, component: FormInfor },
+    { id: 2, component: FormCareerGoal },
+    { id: 3, component: FormWorkExp },
+    { id: 4, component: FormEducation },
+    { id: 5, component: FormSkills },
+    { id: 6, component: FormMoreInfo },
 ]
 
-const Infotmation = ({imgUrl}: any) => {
+const Infotmation = ({ imgUrl }: any) => {
     let Component = forms[0].component
     const [formProps, setFormProps] = useState<any>()
     const { email } = useAppSelector((res: any) => res.auth)
@@ -44,7 +46,7 @@ const Infotmation = ({imgUrl}: any) => {
     }
 
     const [updateUser] = useUpdateUserMutation()
-    const handleUpdate: SubmitHandler<IUserNTV> = async ( userForm: any) => {
+    const handleUpdate: SubmitHandler<IUserNTV> = async (userForm: any) => {
         const [key] = Object.keys(userForm);
         const currentData = user[key];
         const formData = userForm[key];
@@ -72,6 +74,10 @@ const Infotmation = ({imgUrl}: any) => {
                 ...currentData,
                 {
                     id: currentData ? currentData.length + 1 : 1,
+                    time: {
+                        start_date,
+                        end_date,
+                    },
                     ...formData
                 }
             ]
@@ -83,8 +89,14 @@ const Infotmation = ({imgUrl}: any) => {
         })
 
     }
+    const { data: careers } = useGetCareersQuery();
+    const getCareerNameById = (careerId: any) => {
+        const career = careers?.find((c) => c._id === careerId);
+        return career?.name || "Tên ngành nghề không xác định";
+    };
 
     const handleRemove = async ({ id, key }: any) => {
+
         const currentData = user[key];
         const newData = currentData.filter((item: any) => item.id !== id)
         return await updateUser({
@@ -103,29 +115,29 @@ const Infotmation = ({imgUrl}: any) => {
     return (
         <>
             <div className="">
-                <label htmlFor="modal-form-check" 
+                <label htmlFor="modal-form-check"
                     className='flex flex-start w-100 border-1 rounded bg-white py-[20px] px-[24px]'
                     onClick={() => setFormProps({
-                        title: "Thông tin cá nhân", 
+                        title: "Thông tin cá nhân",
                         id: 1
                     })}
                 >
                     <div className="avatar-info">
                         {
                             !imgUrl && user?.image === undefined ?
-                            <AvatarIcon /> :
-                            <div 
-                                style={{backgroundImage: `url(${imgUrl ? imgUrl?.preview : user?.image})`}}
-                                className='avatar-img-info'
-                            />
+                                <AvatarIcon /> :
+                                <div
+                                    style={{ backgroundImage: `url(${imgUrl ? imgUrl?.preview : user?.image})` }}
+                                    className='avatar-img-info'
+                                />
                         }
                     </div>
                     <section className='ml-[24px]'>
                         <h4 className="infor-name">{user?.name}</h4>
                         <section className="flex flex-wrap items-center w-100">
                             <span className='w-[50%]'>
-                                <i className="fa-solid fa-briefcase mr-[8px]"></i>
-                                {user?.career ? "" : "Thêm vị trí ứng tuyển"}
+                                <UserOutlined />
+                                {user?.desiredPosition}
                             </span>
                             <span className='w-[50%]'>
                                 <i className="fa-solid fa-graduation-cap mr-[8px]"></i>
@@ -143,30 +155,34 @@ const Infotmation = ({imgUrl}: any) => {
                                 <i className="fa-solid fa-house mr-[8px]"></i>
                                 {user?.specific_address + ', ' + user?.district + ', ' + user?.province}
                             </span>
+                            <span className='w-[50%]'>
+                                <i className="fa-solid fa-briefcase mr-[8px]"></i>
+                                {getCareerNameById(user?.fieldPosition)}
+                            </span>
                         </section>
                     </section>
                 </label>
 
-                <section 
+                <section
                     className='w-100 border-1 rounded bg-white py-[20px] mt-[8px] px-[24px]'
                 >
                     <h4 className="text-[22px]">Hồ sơ của tôi</h4>
 
                     <section className="flex items-start mt-[18px]">
-                        <img 
-                            src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fwww.vietnamworks.com%2Fassets-wowcv%2Fimages%2Flist_templates%2Fcv_template_35.png&w=96&q=75" 
-                            alt="" 
+                        <img
+                            src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fwww.vietnamworks.com%2Fassets-wowcv%2Fimages%2Flist_templates%2Fcv_template_35.png&w=96&q=75"
+                            alt=""
                         />
                         <section className="flex flex-column items-start ml-[16px] mt-[16px]">
-                            <NavLink to={`/change-cv${user?.cv_id && `?templateId=`+user?.cv_id || ''}`} className='flex items-center text-[#005aff] hover:text-[#fe7d55] mb-[16px]'>
+                            <NavLink to={`/change-cv${user?.cv_id && `?templateId=` + user?.cv_id || ''}`} className='flex items-center text-[#005aff] hover:text-[#fe7d55] mb-[16px]'>
                                 <i className="text-[22px] fa-solid fa-file-pdf"></i>
                                 <span className="ml-[6px]">{user?.cv_id ? 'Thay đổi mẫu hồ sơ' : 'Tạo hồ sơ'}</span>
                             </NavLink>
 
                             {
                                 user?.cv_id &&
-                                <NavLink 
-                                    to={'http://localhost:4000/files/1701073309689Do-Quoc-Vuong.pdf'} 
+                                <NavLink
+                                    to={'http://localhost:4000/files/1701073309689Do-Quoc-Vuong.pdf'}
                                     target="_blank"
                                     className='flex items-center text-[#005aff] hover:text-[#fe7d55]'
                                 >
@@ -175,7 +191,7 @@ const Infotmation = ({imgUrl}: any) => {
                                 </NavLink>
                             }
                         </section>
-                    
+
                     </section>
                 </section>
 
@@ -185,7 +201,7 @@ const Infotmation = ({imgUrl}: any) => {
                     title={"Mục tiêu nghề nghiệp"}
                     desc={"Giới thiệu bản thân và miêu tả mục tiêu nghề nghiệp của bạn"}
                     btn_value={"Thêm Mục Tiêu Nghề Nghiệp"}
-                    onClick={({title, id}: any) => setFormProps({title, id})}
+                    onClick={({ title, id }: any) => setFormProps({ title, id })}
                     hidden={user?.career_goal}
                 >
                     {user?.career_goal && <label htmlFor='modal-form-check'>{user?.career_goal}</label>}
@@ -197,10 +213,10 @@ const Infotmation = ({imgUrl}: any) => {
                     title={"Kinh nghiệm làm việc"}
                     desc={"Mô tả kinh nghiệm làm việc của bạn càng chi tiết càng tốt, điều đó giúp bạn có cơ hội hiển thị nhiều hơn trong kết quả tìm kiếm"}
                     btn_value={"Thêm Kinh Nghiệm Làm Việc"}
-                    onClick={({title, id}: any) => setFormProps({title, id})}
+                    onClick={({ title, id }: any) => setFormProps({ title, id })}
                 >
                     {
-                        user?.work_experience && 
+                        user?.work_experience &&
                         user?.work_experience.map((item: any) => (
                             <section className="info-children flex items-start justify-between w-100 mt-[24px]" key={item.id}>
                                 <section className="flex items-center">
@@ -210,9 +226,9 @@ const Infotmation = ({imgUrl}: any) => {
                                         <p className="text-[14px] mb-0">{item.company}</p>
                                         <p className="text-[14px]">
                                             {
-                                                item?.timeId ? 
-                                                <span>{item?.time?.start_date} - {item?.time?.end_date}</span>
-                                                : <span>Ví dụ: 09/2008 - 12/2014</span>
+                                                item?.timeId ?
+                                                    <span>{item?.time?.start_date} - {item?.time?.end_date}</span>
+                                                    : <span>Ví dụ: 09/2008 - 12/2014</span>
                                             }
                                         </p>
                                     </section>
@@ -234,10 +250,10 @@ const Infotmation = ({imgUrl}: any) => {
                     title={"Học vấn"}
                     desc={"Mô tả toàn bộ quá trình học vấn của bạn, cũng như các bằng cấp bạn đã được và các khóa huấn luyện bạn đã tham gia"}
                     btn_value={"Thêm Học vấn"}
-                    onClick={({title, id}: any) => setFormProps({title, id})}
+                    onClick={({ title, id }: any) => setFormProps({ title, id })}
                 >
                     {
-                        user?.education && 
+                        user?.education &&
                         user?.education.map((item: any) => (
                             <section className="info-children flex items-start justify-between w-100 mt-[24px]" key={item.id}>
                                 <section className="flex items-center">
@@ -250,9 +266,9 @@ const Infotmation = ({imgUrl}: any) => {
                                         <p className="text-[14px] mb-0">{item.school} - {item.edu_level}</p>
                                         <p className="text-[14px]">
                                             {
-                                                item?.timeId ? 
-                                                <span>{item?.time?.start_date} - {item?.time?.end_date}</span>
-                                                : <span>Ví dụ: 09/2008 - 12/2014</span>
+                                                item?.timeId ?
+                                                    <span>{item?.time?.start_date} - {item?.time?.end_date}</span>
+                                                    : <span>Ví dụ: 09/2008 - 12/2014</span>
                                             }
                                         </p>
                                     </section>
@@ -267,19 +283,19 @@ const Infotmation = ({imgUrl}: any) => {
                         ))
                     }
                 </InformationComponent>
-                
+
                 {/* Skill */}
                 <InformationComponent
                     id={5}
                     title={"Kỹ năng"}
                     desc={"Trong phần này, bạn nên liệt kê các kỹ năng phù hợp với vị trí hoặc lĩnh vực nghề nghiệp mà bạn quan tâm."}
                     btn_value={"Thêm Kỹ Năng"}
-                    onClick={({title, id}: any) => setFormProps({title, id})}
+                    onClick={({ title, id }: any) => setFormProps({ title, id })}
                     hidden={user?.skills.length !== 0}
                 >
                     <section className="flex items-center flex-wrap">
                         {
-                            user?.skills && 
+                            user?.skills &&
                             user?.skills.map((item: any) => (
                                 <section key={item.id} className="bg-[#fbfbfb] border-[1px] border-[#ddd] rounded-[6px] text-[14px] flex items-center justify-center min-w-[100px] mr-[8px] px-[10px] py-[7px]">
                                     <span>{item?.skill_name}</span>
@@ -296,7 +312,7 @@ const Infotmation = ({imgUrl}: any) => {
                     title={"Thông tin thêm"}
                     desc={"Điền thông tin thêm nếu có"}
                     btn_value={"Thêm Thông Tin"}
-                    onClick={({title, id}: any) => setFormProps({title, id})}
+                    onClick={({ title, id }: any) => setFormProps({ title, id })}
                     hidden={user?.more_info}
                 >
                     {user?.more_info && <label htmlFor='modal-form-check'>{user?.more_info}</label>}
