@@ -11,6 +11,7 @@ import HeaderSearchhJob from "../../layouts/HeaderSearchhJob";
 import { useAddMyPostMutation, useRemoveMyPostMutation } from "../../../service/post";
 import { useAddNotificationMutation } from "../../../service/notification";
 import { message } from "antd";
+import { useGetUsersEprQuery } from "../../../service/auth_employer";
 
 const WorkPage = () => {
     const salaryOptions = [
@@ -67,9 +68,13 @@ const WorkPage = () => {
         "Thực tập",
         "Việc làm online",
         "Nghề tự do",
+        "Làm việc theo giờ linh hoạt",
+        "Làm việc theo dự án",
         "Hợp đồng thời vụ",
+        "Làm việc không chính thức (Freelance)",
         "Khác",
       ];
+      
     const [data, setData] = useState([])
     const [provinces, setProvinces] = useState<any>([])
     const [searchMessage, setSearchMessage] = useState("")
@@ -77,7 +82,12 @@ const WorkPage = () => {
     const [params] = useSearchParams()
     const searchParams = params.get('q');
     const careerParams = params.get('career');
-   
+    const { data: userEpr }: any = useGetUsersEprQuery('')
+    const getLogo = (user_id: string) => {
+        const data = userEpr?.find((user: any) => user._id === user_id)
+    
+        return data.image
+    }
     
     const navigate = useNavigate()
     const [filterParams, setFilterParams] = useState({
@@ -86,7 +96,7 @@ const WorkPage = () => {
         min_job_salary: "",
         max_job_salary: "",
         career: careerParams,
-        typeOfWork : "",
+        working_form : "",
         level : "",
         sort : "-1",
     })
@@ -108,11 +118,11 @@ const WorkPage = () => {
     
     useEffect(() => {
         loadData(filterParams); 
-    }, [filterParams.work_location, filterParams.min_job_salary, filterParams.career,filterParams.key,filterParams.typeOfWork,filterParams.level,filterParams.sort,careerParams]
+    }, [filterParams.work_location, filterParams.min_job_salary, filterParams.career,filterParams.key,filterParams.working_form,filterParams.level,filterParams.sort,careerParams]
     )
     const loadData = async (params : any = null) => {
-        const {key,min_job_salary,max_job_salary,career,work_location,level,typeOfWork,sort} = params
-        if(key || min_job_salary || max_job_salary ||career || work_location || level || typeOfWork || sort) {
+        const {key,min_job_salary,max_job_salary,career,work_location,level, working_form,sort} = params
+        if(key || min_job_salary || max_job_salary ||career || work_location || level ||  working_form || sort) {
             setData([]);
             try {
                 const { data } = await axios({
@@ -141,13 +151,6 @@ const WorkPage = () => {
             .then((responsive) => setCareer(responsive.data))
             .catch((error) => console.log(error))
     }
-    // const resetSearch = (e: any) => {
-    //     e.preventDefault()
-    //     setSearchMessage("")
-    //     setFilterParams({ ...filterParams, key: "" })
-    //     navigate('/works')
-    //         loadData()
-    // }
     //savejob
     const { email } = useAppSelector((res: any) => res.auth)
     const [addMyPost] = useAddMyPostMutation()
@@ -186,10 +189,10 @@ const WorkPage = () => {
         navigate(`/works?q=${search}&career=${e.target.value}`)
     }
     const getSearchKey = () => { }
-    const setFilterSalary = (e) => {
+    const setFilterSalary = (e: any) => {
        const data =  salaryOptions[e.target.value];
        console.log(data);
-       setFilterParams({ ...filterParams, min_job_salary: data['min_salary'],max_job_salary : data['max_salary'], offer_salary : data['offer_salary']})
+       setFilterParams({ ...filterParams, min_job_salary: data['min_salary'], max_job_salary: data['max_salary'], offer_salary : data['offer_salary']})
        
     }
     return (
@@ -227,7 +230,7 @@ const WorkPage = () => {
                                 )
                             }
                         </select>
-                        <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams, typeOfWork: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
+                        <select className="px-[4px] border rounded" onChange={(e) => setFilterParams({ ...filterParams,  working_form: e.target.value })} name="cars" id="cars" style={{ height: "40px", minWidth: '80px', borderRadius: '4px', outline: 'none', marginLeft: '10px', gap: '5px' }}>
                         <option value="">Tất cả loại hình</option>
                             {
                               typeOfWork.map((item: any, index: number) =>
@@ -259,7 +262,7 @@ const WorkPage = () => {
                                         <div className="flex items-center m-0 w-[84%]">
                                             <div className='mr-[16px]'>
                                                 <a className="rounded-[6px]" style={{ background: 'white', justifyContent: 'center', display: 'flex' }}>
-                                                    <img src="https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Fpictureofcompany%2F6e%2F10922087.png&w=128&q=75" style={{ width: '120px', height: 'auto', margin: '20px 0px' }} />
+                                                    <img src={getLogo(item.user_id)} style={{ width: '120px', height: 'auto', margin: '20px 0px' }} />
                                                 </a>
                                             </div>
                                             <div className="w-100">
@@ -273,7 +276,7 @@ const WorkPage = () => {
                                                 <p className="m-0"> Số Lượng Cần Tuyển : {item.number_of_recruits}</p>
                                                 {item && item.offer_salary 
                                                  ? <p className="m-0"> <span style={{ color: 'red' }}>Thương lượng</span> | {item.work_location.join(",")}</p>
-                                                 : <p className="m-0"> <span style={{ color: 'red' }}>{item.min_job_salary ? `${formatCurrency(item.min_job_salary)}` : ""} {item.max_job_salary ? `- ${formatCurrency(item.max_job_salary)}` : ""}</span> | {item.work_location.join(",")}</p>
+                                                 : <p className="m-0"> <span style={{ color: 'red' }}>{item.min_job_salary ? `${formatCurrency(item.min_job_salary)}` : "Lên đến"} {item.min_job_salary && item.max_job_salary ? '-' : ""} {item.max_job_salary ? `${formatCurrency(item.max_job_salary)}` : "trở lên"}</span> | {item.work_location.join(",")}</p>
                                                 }
                                                 
                                             </div>

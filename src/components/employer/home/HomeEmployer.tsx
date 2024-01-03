@@ -15,7 +15,7 @@ const Home = (): any => {
     const navigate = useNavigate()
     useEffect(() => {
         setPostData(posts);
-    }, [posts]); // Sử dụng một dependency để cập nhật postData khi giá trị posts thay đổi
+    }, [posts]);
 
 
     const jobIsOK = postData?.filter((post) => {
@@ -46,9 +46,9 @@ const Home = (): any => {
 
     return (
         <>
-            <div className='mx-5'>
+            <div className='mx-5' style={{backgroundColor: "rgb(216, 214, 213)", borderRadius: "8px"}}>
                 <div className="row mt-4">
-                    <div style={{ marginTop: '20px', height: '450px' }} className=" rounded">
+                    <div style={{ marginTop: '10px', height: '450px' }} className=" rounded">
                         <div className=" margin-bottom--10 row row-cols-sm-12 row-cols-12">
                             <div className="col-lg-5 col-sm-12 col-12" style={{backgroundColor: "white", borderRadius: "8px"}}>
                                 <div className="width-percent--100" style={{paddingTop: "14px"}}>
@@ -205,14 +205,14 @@ const Home = (): any => {
 
                         </div>
                     </div>
-                    <div style={{ backgroundColor: 'white', marginTop: '20px', height: '250px' }} className=" rounded">
+                    <div style={{ backgroundColor: 'white', marginTop: '10px', height: '250px' }} className=" rounded">
                         <h4 className="m-3">Quản lý công việc</h4>
                         <div id="nkcv">
                             <a href="#"><img src="./src/assets/img/nhatkyhoatdong.jpg" style={{ textAlign: 'center' }} /></a>
                         </div>
                     </div>
                     <div>
-                        <div className="mt--20 row row-cols-sm-12 row-cols-12" style={{ marginTop: '50px', marginBottom: '50px', backgroundColor: "white", borderRadius: "8px" }}>
+                        <div className="mt--20 row row-cols-sm-12 row-cols-12" style={{ marginTop: '10px', marginBottom: '10px', backgroundColor: "white", borderRadius: "8px" }}>
                             <div className="col-lg-7 col-sm-12 col-12" style={{ borderRightWidth: "10px" }}>
                                 <div className="tab-page tab-page--customed bg-white ">
                                     <div className="fz--18 fw--bold"><h4 style={{ fontWeight: '700', fontSize: "20px", marginTop: '10px' }}>Thông tin khách hàng thân thiết</h4></div>
@@ -321,4 +321,4 @@ const Home = (): any => {
     )
 }
 
-export default Home 
+export default Home

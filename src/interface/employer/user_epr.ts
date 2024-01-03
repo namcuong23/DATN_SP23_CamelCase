@@ -7,8 +7,6 @@ interface IUserNTD {
     isPhoneVerified: boolean;
     desc_epr: string;
     image: string;
-    gender: string;
-    age: string;
     address: string;
     password: string;
     passwordResetToken: string;
@@ -16,6 +14,11 @@ interface IUserNTD {
     passwordResetExpires: string;
     role: number;
     isBlock: boolean;
+    next_post_time: Date;
+    company_name: string;
+    company_banner: string;
+    company_size: string;
+    company_field: string;
 }
 
-export default IUserNTD
+export default IUserNTD 

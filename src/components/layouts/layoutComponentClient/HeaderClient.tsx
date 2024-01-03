@@ -51,7 +51,6 @@ const HeaderClient = () => {
     const { data: notificationEmail } = useGetNotificationByEmailQuery(email, {
         pollingInterval: 10000,
     });
-
     const showNotification = (notifications: Inotification) => {
         const { _id, notification_title, notification_content, isRead } = notifications;
 
@@ -88,7 +87,6 @@ const HeaderClient = () => {
     const handleCancelNoti = () => {
         setIsModalNoti(false);
     };
-
     return (
         <>
             <div className="sticky top-0 z-[997] sc-lkcIho hIprbQ menu-homepage ">
@@ -96,24 +94,9 @@ const HeaderClient = () => {
                     <img className='w-[100px] h-[100px]' src={myImage} alt="" />
                 </NavLink>
                 <div className="sc-jtJlRs fqkDtm" data-text="Việc làm" tabIndex={0}>
-                    <span className='flex items-center space-x-1'>
-                        <div>
-                            Việc làm
-                        </div>
-                        <svg width={13} height={7} viewBox="0 0 13 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11.5 1L6.5 6L1.5 1" stroke="white" strokeWidth="1.1" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                    </span>
-                    <div className="sc-fbHdRr fDvwxk">
-                        <div className="sc-bjjCGC iJdSOK">
-                            <a className="sc-eYPhOV bZvuew" href="#">
-                                Việc làm mới nhất
-                            </a>
-                            <NavLink to={'/works'} className="sc-eYPhOV bZvuew">
-                                Tìm việc làm
-                            </NavLink>
-                        </div>
-                    </div>
+                    <NavLink to={'/works'} className="text-[#fff] hover:text-[#fd7e14]">
+                        Việc làm
+                    </NavLink>
                 </div>
                 <ul className="cMKKZy listMenu-homepage">
                     <li><NavLink to={'/interview'} className="text-decoration-none text-[#fff] hover:text-[#fd7e14] pr-3" target="_self" data-text="Phỏng vấn" tabIndex={0}>Phỏng vấn</NavLink></li>
@@ -170,14 +153,6 @@ const HeaderClient = () => {
                                         </div>
                                     </div>
                                     <div className='mx-3'>
-                                        <button className='flex items-center mb-1 w-100 px-[8px] py-[12px] hover:rounded hover:bg-[#EBF2FF]'>
-                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M12 3.35986C5.91184 3.35986 0.959961 8.31174 0.959961 14.3999C0.959961 16.048 1.28809 17.5424 1.94621 18.9449C1.97621 19.0105 2.00809 19.0742 2.03809 19.1399C2.08309 19.228 2.12621 19.318 2.17309 19.4061C2.35121 19.753 2.54059 20.0942 2.75621 20.4224C2.84434 20.5574 2.99434 20.6399 3.15746 20.6399H20.8425C21.0056 20.6399 21.1556 20.5574 21.2437 20.4224C21.4593 20.0942 21.6487 19.753 21.8268 19.4061C21.8718 19.318 21.9168 19.228 21.9618 19.1399C21.9918 19.0742 22.0237 19.0105 22.0537 18.9449C22.7118 17.5424 23.04 16.048 23.04 14.3999C23.04 8.31174 18.0881 3.35986 12 3.35986ZM14.88 18.7199H9.11996C8.85371 18.7199 8.63996 18.5042 8.63996 18.2399C8.63996 17.9755 8.85371 17.7599 9.11996 17.7599H14.88C15.1462 17.7599 15.36 17.9755 15.36 18.2399C15.36 18.5042 15.1462 18.7199 14.88 18.7199ZM17.4412 11.7636L12.9581 14.3905C12.9581 14.3942 12.96 14.3961 12.96 14.3999C12.96 14.9305 12.5306 15.3599 12 15.3599C11.4693 15.3599 11.04 14.9305 11.04 14.3999C11.04 13.8692 11.4693 13.4399 12 13.4399C12.1706 13.4399 12.3281 13.4886 12.4668 13.5655L16.9518 10.9367C17.1787 10.8017 17.475 10.8767 17.61 11.1055C17.745 11.3342 17.67 11.6286 17.4412 11.7636ZM20.7206 19.4399C20.6306 19.5936 20.4693 19.6799 20.3043 19.6799C20.2818 19.6799 20.2575 19.6742 20.235 19.6705C20.2106 19.6742 20.1843 19.6799 20.16 19.6799C20.0681 19.6799 19.9762 19.6536 19.8937 19.5992L18.4537 18.6392C18.2325 18.493 18.1725 18.1949 18.3206 17.9736C18.4668 17.7524 18.765 17.6924 18.9862 17.8405L20.0943 18.5792C20.1 18.568 20.1056 18.5567 20.1112 18.5474C20.1131 18.5192 20.1131 18.4911 20.1337 18.4967C20.1356 18.4967 20.1375 18.4967 20.1375 18.4967C20.7075 17.368 21.0375 16.1342 21.105 14.8799H19.68C19.4137 14.8799 19.2 14.6661 19.2 14.3999C19.2 14.1355 19.4137 13.9199 19.68 13.9199H21.0956C21.0281 12.6299 20.6943 11.413 20.1431 10.318C20.1318 10.2974 20.115 10.2805 20.1037 10.258L18.9712 10.9536C18.8925 11.0024 18.8062 11.0249 18.72 11.0249C18.5587 11.0249 18.4012 10.9424 18.3112 10.7942C18.1725 10.5692 18.2437 10.273 18.4687 10.1342L19.6237 9.42736C19.5881 9.37299 19.56 9.31861 19.53 9.26424C18.8137 8.21799 17.8818 7.33299 16.8018 6.66174C16.7831 6.65049 16.7606 6.63924 16.7418 6.62799L16.05 7.88236C15.9618 8.03986 15.7987 8.12986 15.6281 8.12986C15.5512 8.12986 15.4706 8.11111 15.3975 8.06986C15.165 7.94236 15.0806 7.64986 15.21 7.41736L15.8981 6.17049C15.8868 6.16486 15.8756 6.15736 15.8643 6.15174C14.8256 5.66236 13.6837 5.36799 12.4781 5.30424V6.71986C12.4781 6.98424 12.2643 7.19986 11.9981 7.19986C11.7337 7.19986 11.5181 6.98424 11.5181 6.71986V5.30424C10.2112 5.37361 8.97559 5.71486 7.86934 6.27924C7.82996 6.30361 7.78871 6.32799 7.74934 6.34861L8.48809 7.54299C8.62684 7.76799 8.55746 8.06424 8.33059 8.20299C8.25184 8.25174 8.16559 8.27424 8.07934 8.27424C7.91809 8.27424 7.76246 8.19361 7.67059 8.04736L6.92621 6.83986C6.89246 6.86236 6.85871 6.87924 6.82496 6.89799C5.77871 7.62361 4.89746 8.56111 4.23184 9.64674L5.42809 10.2974C5.66246 10.4249 5.74871 10.7155 5.62121 10.948C5.53496 11.1092 5.36996 11.1992 5.19934 11.1992C5.12246 11.1992 5.04371 11.1805 4.97059 11.1411L3.77246 10.4905C3.27184 11.5405 2.96809 12.6974 2.90434 13.9199H4.31996C4.58621 13.9199 4.79996 14.1355 4.79996 14.3999C4.79996 14.6642 4.58621 14.8799 4.31996 14.8799H2.89496C2.96246 16.1249 3.28496 17.3474 3.84746 18.4686C3.85121 18.478 3.86059 18.4874 3.86621 18.4949C3.88121 18.5249 3.91121 18.5755 3.91121 18.5755L5.01371 17.8405C5.23496 17.6924 5.53309 17.7524 5.67934 17.9736C5.82746 18.193 5.76746 18.4911 5.54621 18.6392L4.10621 19.5992C4.02371 19.6536 3.93184 19.6799 3.83996 19.6799C3.83434 19.6799 3.82684 19.6649 3.81746 19.6555C3.61496 19.7099 3.38996 19.633 3.27934 19.4399C2.39059 17.9042 1.91996 16.1624 1.91996 14.3999C1.91996 8.84236 6.44246 4.31986 12 4.31986C17.5575 4.31986 22.08 8.84236 22.08 14.3999C22.08 16.1624 21.6093 17.9042 20.7206 19.4399Z" fill="#888888"></path>
-                                            </svg>
-                                            <span className='text-[14px] pl-[10px]'>Tổng quan</span>
-                                        </button>
-                                    </div>
-                                    <div className='mx-3'>
                                         <NavLink to={'/profile?tab=information'} className='flex items-center mb-1 w-100 px-[8px] py-[12px] text-[#677793] hover:rounded hover:bg-[#EBF2FF] hover:no-underline hover:text-[#6F6F6F]'>
                                             <svg width="20" height="20"
                                                 viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -192,7 +167,17 @@ const HeaderClient = () => {
                                                 <path d="M11.2 2.3999C10.316 2.3999 9.59998 3.1159 9.59998 3.9999H3.19998C2.31598 3.9999 1.59998 4.7159 1.59998 5.5999V12.7999C1.59998 13.6839 2.31598 14.3999 3.19998 14.3999H20.8C21.684 14.3999 22.4 13.6839 22.4 12.7999V5.5999C22.4 4.7159 21.684 3.9999 20.8 3.9999H14.4C14.4 3.1159 13.684 2.3999 12.8 2.3999H11.2ZM12 11.1999C12.4416 11.1999 12.8 11.5583 12.8 11.9999C12.8 12.4415 12.4416 12.7999 12 12.7999C11.5584 12.7999 11.2 12.4415 11.2 11.9999C11.2 11.5583 11.5584 11.1999 12 11.1999ZM1.59998 15.5546V18.3999C1.59998 19.2839 2.31598 19.9999 3.19998 19.9999H20.8C21.684 19.9999 22.4 19.2839 22.4 18.3999V15.5546C21.9272 15.8298 21.3856 15.9999 20.8 15.9999H3.19998C2.61438 15.9999 2.07278 15.8298 1.59998 15.5546Z" fill="#888888"></path>
                                             </svg>
                                             <span className='text-[14px] pl-[10px] text-[#677793]'>
-                                                Việc làm của tôi
+                                                Việc làm đã lưu
+                                            </span>
+                                        </NavLink>
+                                    </div>
+                                    <div className='mx-3'>
+                                        <NavLink to={'/profile?tab=my-applied'} className='flex items-center mb-1 w-100 px-[8px] py-[12px] hover:rounded hover:bg-[#EBF2FF]'>
+                                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M11.2 2.3999C10.316 2.3999 9.59998 3.1159 9.59998 3.9999H3.19998C2.31598 3.9999 1.59998 4.7159 1.59998 5.5999V12.7999C1.59998 13.6839 2.31598 14.3999 3.19998 14.3999H20.8C21.684 14.3999 22.4 13.6839 22.4 12.7999V5.5999C22.4 4.7159 21.684 3.9999 20.8 3.9999H14.4C14.4 3.1159 13.684 2.3999 12.8 2.3999H11.2ZM12 11.1999C12.4416 11.1999 12.8 11.5583 12.8 11.9999C12.8 12.4415 12.4416 12.7999 12 12.7999C11.5584 12.7999 11.2 12.4415 11.2 11.9999C11.2 11.5583 11.5584 11.1999 12 11.1999ZM1.59998 15.5546V18.3999C1.59998 19.2839 2.31598 19.9999 3.19998 19.9999H20.8C21.684 19.9999 22.4 19.2839 22.4 18.3999V15.5546C21.9272 15.8298 21.3856 15.9999 20.8 15.9999H3.19998C2.61438 15.9999 2.07278 15.8298 1.59998 15.5546Z" fill="#888888"></path>
+                                            </svg>
+                                            <span className='text-[14px] pl-[10px] text-[#677793]'>
+                                                Việc làm đã ứng tuyển
                                             </span>
                                         </NavLink>
                                     </div>
@@ -262,28 +247,6 @@ const HeaderClient = () => {
                                     aria-labelledby="dropdownMenuButton1">
                                     <li className="title w-full">
                                         <span className="ask">Người tìm việc đăng nhập</span>
-                                        <div className="social-login-appShell">
-                                            <a href="https://www.vietnamworks.com/dang-nhap?type=facebook" className="social-login-facebook" tabIndex={0}>
-                                                <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                                                    <path d="M44,38.44A5.56,5.56,0,0,1,38.44,44H9.56A5.56,5.56,0,0,1,4,38.44V9.56A5.56,5.56,0,0,1,9.56,4H38.44A5.56,5.56,0,0,1,44,9.56Z" style={{ fill: '#3f51b5' }} />
-                                                    <path d="M35.52,25.11H31.78V39.56H26.22V25.11H22.89V20.67h3.33V18c0-3.9,1.62-6.21,6.22-6.21h3.78v4.44H33.68c-1.79,0-1.91.67-1.91,1.91v2.53h4.44Z" style={{ fill: '#fff' }} />
-                                                </svg>
-                                                <span>Với Facebook</span>
-                                            </a>
-                                            <a href="https://www.vietnamworks.com/dang-nhap?type=google" className="social-login-google" tabIndex={0}>
-                                                <svg fill="currentColor" stroke="unset" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
-                                                    <path style={{ fill: '#FFC107' }} d="M 43.609375 20.082031 L 42 20.082031 L 42 20 L 24 20 L 24 28 L 35.304688 28 C 33.652344 32.65625 29.222656 36 24 36 C 17.371094 36 12 30.628906 12 24 C 12 17.371094 17.371094 12 24 12 C 27.058594 12 29.84375 13.152344 31.960938 15.039063 L 37.617188 9.382813 C 34.046875 6.054688 29.269531 4 24 4 C 12.953125 4 4 12.953125 4 24 C 4 35.046875 12.953125 44 24 44 C 35.046875 44 44 35.046875 44 24 C 44 22.660156 43.863281 21.351563 43.609375 20.082031 Z ">
-                                                    </path>
-                                                    <path style={{ fill: '#FF3D00' }} d="M 6.304688 14.691406 L 12.878906 19.511719 C 14.65625 15.109375 18.960938 12 24 12 C 27.058594 12 29.84375 13.152344 31.960938 15.039063 L 37.617188 9.382813 C 34.046875 6.054688 29.269531 4 24 4 C 16.316406 4 9.65625 8.335938 6.304688 14.691406 Z ">
-                                                    </path>
-                                                    <path style={{ fill: '#4CAF50' }} d="M 24 44 C 29.164063 44 33.859375 42.023438 37.410156 38.808594 L 31.21875 33.570313 C 29.210938 35.089844 26.714844 36 24 36 C 18.796875 36 14.382813 32.683594 12.71875 28.054688 L 6.195313 33.078125 C 9.503906 39.554688 16.226563 44 24 44 Z ">
-                                                    </path>
-                                                    <path style={{ fill: '#1976D2' }} d="M 43.609375 20.082031 L 42 20.082031 L 42 20 L 24 20 L 24 28 L 35.304688 28 C 34.511719 30.238281 33.070313 32.164063 31.214844 33.570313 C 31.21875 33.570313 31.21875 33.570313 31.21875 33.570313 L 37.410156 38.808594 C 36.972656 39.203125 44 34 44 24 C 44 22.660156 43.863281 21.351563 43.609375 20.082031 Z ">
-                                                    </path>
-                                                </svg>
-                                                <span>với Google</span>
-                                            </a>
-                                        </div>
                                     </li>
                                     <li className="dropdownSection login w-full">
                                         <NavLink to={'/login'} tabIndex={0}>
@@ -332,9 +295,9 @@ const HeaderClient = () => {
                             <span onClick={() => setIsActive(false)} className={cx('modal-body__tabs-notify', {
                                 active: isActive === false
                             })}>Thông báo</span>
-                            <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
+                            {/* <span onClick={() => setIsActive(true)} className={cx('modal-body__tabs-news', {
                                 active: isActive
-                            })}>Tin tức</span>
+                            })}>Tin tức</span> */}
                         </div>
 
                         {
@@ -371,35 +334,58 @@ const HeaderClient = () => {
                                         Cập nhật hồ sơ để tìm thấy công việc phù hợp.
                                         <span>Cập nhật</span>
                                     </div>
-                                    <div className={cx('modal-body__content')}>
-                                        <div className={cx('modal-body__content')}>
 
-                                            {notificationEmail ? (
-                                                notificationEmail
-                                                    .slice()
-                                                    .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
-                                                    .map((noti) => (
-                                                        <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
-                                                            {/* ... (Các phần còn lại giữ nguyên) */}
+                                        {notificationEmail ? (
+                                            notificationEmail
+                                                .slice()
+                                                .sort((a, b) => moment(b.created_at).valueOf() - moment(a.created_at).valueOf())
+                                                .map((noti) => (
+                                                    <div key={noti._id} className={cx('modal-body__content-notify')} onClick={() => showModalNoti(noti._id)}>
+                                                        <span className={cx('notify-img')}>
+                                                            <img src={noti.notificationImage} alt="" />
+                                                            <span>
+                                                                <i className="fa-solid fa-heart"></i>
+                                                            </span>
+                                                        </span>
+                                                        <div className={cx('notify-content')}>
+                                                            <span className={cx('notify-title')}>{noti.notification_title}</span>
+                                                        
                                                             <div className={cx('notify-desc')}>
                                                                 <span className={cx('notify-expirate')}>
-                                                                    {moment(noti.created_at).fromNow()} {/* Sử dụng moment().fromNow() để hiển thị thời gian tương đối */}
+                                                                    {moment(noti.created_at).fromNow()}
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                    ))
-                                            ) : (
-                                                <p>Loading notifications...</p>
-                                            )}
-
-
-                                        </div>
-                                    </div>
+                                                    </div>
+                                                ))
+                                        ) : (
+                                            <p>Loading notifications...</p>
+                                        )}
 
                                 </>
                         }
+                        <Modal title={selectedNotification?.notification_title || "Thông báo"} open={isModalNoti} onOk={handleOkNoti} onCancel={handleCancelNoti}
+                            footer={[
 
+                                <Button key="cancel" onClick={handleCancelNoti}>
+                                    Đóng
+                                </Button>,
+                                <Button
+                                    key="goToURL"
+                                    type="primary"
+                                    onClick={() => window.location.href = selectedNotification?.notification_url ?? ''}
+                                >
+                                    Đến URL
+                                </Button>
+                            ]}
 
+                        >
+                            {selectedNotification && (
+                                <>
+                                    <span>{selectedNotification.notification_content}</span>
+                                </>
+                            )}
+                        </Modal>
                     </div>
 
                     <div className={cx('modal-footer')}>

@@ -9,7 +9,6 @@ import {
 import IUserNTD from '../../../interface/employer/user_epr'
 import { toast } from 'react-toastify'
 import { useUploadImage } from '../../../utils/hooks/Upload'
-import React from 'react'
 
 const ProfileEpr = (): any => {
   const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
@@ -18,7 +17,9 @@ const ProfileEpr = (): any => {
   const [updateUser] = useUpdateUserEprMutation()
   const navigate = useNavigate()
   const [imgUrl, setImgUrl] = useState<any>()
-  const [currentUrl, setCurrentUrl] = useState<any>()
+  const [bannerUrl, setBannerUrl] = useState<any>()
+  const [logoFile, setLogoFile] = useState<any>()
+  const [bannerFile, setBannerFile] = useState<any>()
   const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
 
   useEffect(() => {
@@ -28,41 +29,60 @@ const ProfileEpr = (): any => {
   useEffect(() => {
     return () => {
       imgUrl && URL.revokeObjectURL(imgUrl.preview)
+      bannerUrl && URL.revokeObjectURL(bannerUrl.preview)
     }
-  }, [imgUrl])
+  }, [imgUrl || bannerUrl])
 
-  const handleChangeInputFile = (e: any) => {
-    const file = e.target.files[0]
-    file.preview = URL.createObjectURL(file)
-
-    setImgUrl(file)
-    setCurrentUrl(e)
-  }
-
-  const handleUpdate: SubmitHandler<IUserNTD> = async (userEprForm: IUserNTD) => {
+  const handleChangeInputFile = ({ logo, banner }: any) => {
     const formData = new FormData()
-    const fileUpload = currentUrl?.target.files[0]
-
-    //Check image size
-    if (fileUpload.size > maxSizeInBytes) {
-      return toast.warn('Kích thước quá lớn.')
-    }
-
-    formData.append('file', fileUpload)
     formData.append('upload_preset', 'dmjlzwse')
     formData.append('cloud_name', 'dywccbjry')
 
-    let imgPath
-    if (fileUpload !== undefined) {
-        const image = await useUploadImage(formData)
-        imgPath = image.url
-    } else {
-        imgPath = userEpr?.image
+    const logoUpload = logo?.target.files[0]
+    const bannerUpload = banner?.target.files[0]
+
+    //Check image size
+    if (logoUpload?.size > maxSizeInBytes || bannerUpload?.size > maxSizeInBytes) {
+      return toast.warn('Kích thước quá lớn.')
     }
+
+    if (!banner) {
+      logoUpload.preview = URL.createObjectURL(logoUpload)
+      formData.append('file', logoUpload)
+      setImgUrl(logoUpload)
+      setLogoFile(formData)
+    } else {
+
+      bannerUpload.preview = URL.createObjectURL(bannerUpload)
+      formData.append('file', bannerUpload)
+      setBannerUrl(bannerUpload)
+      setBannerFile(formData)
+    }
+
+
+  }
+
+  const handleUpdate: SubmitHandler<IUserNTD> = async (userEprForm: any) => {
+    let imgPath
+    let bannerPath
+
+    if (!logoFile) {
+      imgPath = userEpr?.image
+    }
+
+    if (!bannerFile) {
+      bannerPath = userEpr?.company_banner
+    }
+
+    const image = await useUploadImage(logoFile)
+    const banner = await useUploadImage(bannerFile)
+    imgPath = image.url
+    bannerPath = banner.url
 
     await updateUser({
       ...userEprForm,
-      image: imgPath
+      image: imgPath,
+      company_banner: bannerPath
     }).then((res: any) => {{
       const {data} = res
       if (data?.success) {
@@ -142,22 +162,45 @@ const ProfileEpr = (): any => {
               </div>
               <div className='flex items-center gap-x-10 w-full mb-2'>
                 <div className='flex flex-col w-[50%]'>
-                  <label className='text-[15px] font-[550]'> Địa chỉ thường chú: </label>
+                  <label className='text-[15px] font-[550]'> Tên công ty<span className='text-[#ca5b54]'>*</span> </label>
+                  <input type="text"
+                    {...register("company_name", {
+                      required: true
+                    })}
+                    name='company_name'
+                    className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' 
+                  />
+                  {errors.company_name && errors.company_name.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng nhập Tên công ty.</span>}
+                </div>
+                <div className='flex flex-col w-[50%]'>
+                  <label className='text-[15px] font-[550]'> Địa chỉ công ty </label>
                   <input type="text"
                     {...register("address")}
                     name='address'
-                    className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
-                </div>
-                <div className='flex flex-col w-[50%]'>
-                  <label className='text-[15px] font-[550]'> Tuổi: </label>
-                  <input type="text"
-                    {...register("age")}
-                    name='age'
-                    className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' />
+                    className='border-1 border-[#C9C9C9] rounded py-1 px-2 focus:outline-none focus:border-blue-500 focus:bg-[#F7FAFF] hover:border-blue-500 hover:bg-[#F7FAFF]' 
+                  />
                 </div>
               </div>
               <div className='flex flex-col gap-x-10 w-full mb-2'>
-                <label className='text-[15px] font-[550]'>Sơ lược về NTD: </label>
+                <label className='text-[15px] font-[550]'>Lĩnh vực<span className='text-[#ca5b54]'>*</span> </label>
+                <select 
+                  {...register("company_field", {
+                    required: true,
+                  })} 
+                  name='company_field'
+                  className='border-1 border-[#C9C9C9] rounded py-2 px-1 text-[14px]'
+                >
+                  <option className='py-2' defaultValue="Chọn lĩnh vực">Chọn lĩnh vực</option>
+                  <option className='py-2' value="Bán lẻ / Bán sỉ">Bán lẻ / Bán sỉ</option>
+                  <option className='py-2' value="Bảo hiểm">Bảo hiểm</option>
+                  <option className='py-2' value="Bất động sản">Bất động sản</option>
+                  <option className='py-2' value="Điện / Điện tử">Điện / Điện tử</option>
+                  <option className='py-2' value="Giáo dục / Đào tạo">Giáo dục / Đào tạo</option>
+                </select>
+                {errors.company_field && errors.company_field.type == 'required' && <span className='text-red-500 fw-bold mt-1'>Vui lòng chọn Lĩnh vực.</span>}
+              </div>
+              <div className='flex flex-col gap-x-10 w-full mb-2'>
+                <label className='text-[15px] font-[550]'>Giới thiệu về NTD </label>
                 <textarea
                   {...register("desc_epr")}
                   name='desc_epr'
@@ -178,7 +221,7 @@ const ProfileEpr = (): any => {
                       <input style={{ display: 'none' }} type="file"
                           id='company-logo'
                           accept="image/*"
-                          onChange={handleChangeInputFile}
+                          onChange={(e: any) => handleChangeInputFile({ logo: e})}
                         />
                     </label> :
                     <div className='company-photo'
@@ -191,7 +234,47 @@ const ProfileEpr = (): any => {
                           <input style={{ display: 'none' }} type="file"
                             id='company-logo'
                             accept="image/*"
-                            onChange={handleChangeInputFile}
+                            onChange={(e: any) => handleChangeInputFile({ logo: e})}
+                          />
+                        </div>
+                    </div>
+                  }
+                </div>
+              </div>
+              
+              <div className="mb-3">
+                <label className="company-label">Banner công ty</label>
+                <div className='company-wrapper' style={{ height: 260 }}>
+                  {
+                    !bannerUrl && userEpr?.company_banner === undefined ? 
+                    <label htmlFor="company-banner" className='company-logo'>
+                      <span>
+                        <i className="company-logo__icon fa-solid fa-arrow-up-from-bracket"></i>
+                        Chọn file
+                      </span>
+                      <input style={{ display: 'none' }} type="file"
+                          id='company-banner'
+                          accept="image/*"
+                          onChange={(e) => handleChangeInputFile({ banner: e })}
+                        />
+                    </label> :
+                    <div className='company-photo'
+                      style={{
+                        backgroundImage: `url(${bannerUrl ? bannerUrl.preview : userEpr?.company_banner})`,
+                        backgroundPosition: 'center',
+                        width: '80%',
+                        height: '60%'
+                      }}
+                    >
+                        <div className="company-photo__action">
+                          <label htmlFor="company-banner" className="company-photo__action-label">
+                            <i className="fa-solid fa-pen"></i>
+                          </label>
+                          <span className='company-photo__action-desc'>Sửa banner</span>
+                          <input style={{ display: 'none' }} type="file"
+                            id='company-banner'
+                            accept="image/*"
+                            onChange={(e) => handleChangeInputFile({ banner: e })}
                           />
                         </div>
                     </div>

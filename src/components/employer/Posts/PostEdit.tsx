@@ -1,32 +1,24 @@
 import { useState, useEffect } from 'react'
-import { Form, Input, InputNumber, message, Select,Checkbox, Space, Switch} from 'antd'
-import { BookOutlined, MoneyCollectOutlined } from '@ant-design/icons'
-import IPost from '../../../interface/post'
+import { Form, Input, InputNumber, message, Select,Checkbox, Space} from 'antd'
 import { NavLink, useNavigate, useParams } from 'react-router-dom'
 import { useGetPostQuery, useEditPostMutation } from '../../../service/post';
 import { apiGetProvinces } from '../../../service/api'
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer'
 import { useAppSelector } from '../../../app/hook';
-import React from 'react'
 import { useGetCareersQuery } from '../../../service/admin'
 
 const PostEdit = (): any => {
     const navigate = useNavigate()
     const { id } = useParams();
     const { data: career, error, isLoading } = useGetCareersQuery()
-    const [form] = Form.useForm();
+    const [form] = Form.useForm();    
     const { data: post } = useGetPostQuery(id as string);
-    
+    form.setFieldsValue(post);
     const [editPost] = useEditPostMutation()
     const { email, isLoggedIn } = useAppSelector((rs) => rs.authEmpr)
     const data: any = useGetUserEprByEmailQuery(email)
     const user: any = data.currentData
     const [provinces, setProvinces] = useState<any>([])
-    const [bargain,setBargain] = useState<any>(post?.offer_salary || false);
-
-    useEffect(() => {
-        form.setFieldsValue(post);
-    },[post]);
     useEffect(() => {
         const fetchProvinces = async () => {
             const { data: response }: any = await apiGetProvinces()
@@ -37,12 +29,11 @@ const PostEdit = (): any => {
 
     const onHandleEdit = (postForm: any) => {
         try {
-            postForm['offer_salary'] = bargain;
             editPost({
                 ...postForm,
-                post_status: post.post_status,
                 user_id: user?._id,
                 email: user?.email,
+                post_status: null,
                 _id: id
             })
             message.success('Sửa thành công.')
@@ -52,13 +43,13 @@ const PostEdit = (): any => {
         }
     }
 
-    const onChange = (e: CheckboxChangeEvent) => {
+    const onChange = (e: any) => {
         form.setFieldsValue({
             min_job_salary : 0,
             max_job_salary : 0,
-        })
-        setBargain(e.target.checked);
-      };
+            offer_salary : e.target.checked
+        })    
+      };    
     if (!isLoggedIn) {
         return navigate('/login-epr')
     }
@@ -128,15 +119,17 @@ const PostEdit = (): any => {
                                         size='large'
                                     >
                                         <Select.Option value="0">- Chọn hình thức làm việc -</Select.Option>
-                                        <Select.Option value="Tất cả hình thức">Tất cả hình thức</Select.Option>
-                                        <Select.Option value="Toàn thời gian">Toàn thời gian</Select.Option>
-                                        <Select.Option value="Bán thời gian">Bán thời gian</Select.Option>
-                                        <Select.Option value="Việc làm online">Việc làm online</Select.Option>
-                                        <Select.Option value="Thực tập">Thực tập</Select.Option>
-                                        <Select.Option value="Nghề tự do">Nghề tự do</Select.Option>
-                                        <Select.Option value="Khác">
-                                            Khác
-                                        </Select.Option>
+                                            <Select.Option value="Tất cả loại hình">Tất cả loại hình</Select.Option>
+                                            <Select.Option value="Toàn thời gian">Toàn thời gian</Select.Option>
+                                            <Select.Option value="Bán thời gian">Bán thời gian</Select.Option>
+                                            <Select.Option value="Thực tập">Thực tập</Select.Option>
+                                            <Select.Option value="Việc làm online">Việc làm online</Select.Option>
+                                            <Select.Option value="Nghề tự do">Nghề tự do</Select.Option>
+                                            <Select.Option value="Làm việc theo giờ linh hoạt">Làm việc theo giờ linh hoạt</Select.Option>
+                                            <Select.Option value="Làm việc theo dự án">Làm việc theo dự án</Select.Option>
+                                            <Select.Option value="Hợp đồng thời vụ">Hợp đồng thời vụ</Select.Option>
+                                            <Select.Option value="Làm việc không chính thức (Freelance)">Làm việc không chính thức (Freelance)</Select.Option>
+                                            <Select.Option value="Khác">Khác</Select.Option>
                                         
                                     </Select>
                                 </Form.Item>
@@ -177,17 +170,6 @@ const PostEdit = (): any => {
                                 </Select>
                             </Form.Item>
                             <Form.Item name="number_of_recruits" label="Số lượng"
-                                rules={[
-                                    { required: true, message: 'Vui lòng nhập giá trị số' },
-                                    { type: 'number', message: 'Vui lòng nhập giá trị số' }
-                                ]}>
-                                <InputNumber
-                                        min={1} 
-                                        style={{ width: '100%' }} 
-                                        size='large' 
-                                    />
-                            </Form.Item>
-                            <Form.Item name="period" label="Thời gian hết hạn"
                                 rules={[
                                     { required: true, message: 'Vui lòng nhập giá trị số' },
                                     { type: 'number', message: 'Vui lòng nhập giá trị số' }
@@ -254,32 +236,72 @@ const PostEdit = (): any => {
                                     style={{
                                         width: '300px',
                                     }}
+                                    dependencies={['max_job_salary','offer_salary']}
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                        { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                        { type: 'number', message: 'Vui lòng nhập giá trị số' },
+                                        ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                              if (!getFieldValue('max_job_salary') && !value && !getFieldValue('offer_salary')) {
+                                                return Promise.reject(new Error('Lương tối thiểu hoặc tối đa không được để trống.'));
+                                              }
+                                              else  if (value && getFieldValue('offer_salary')) {
+                                                return Promise.reject(new Error('Vui lòng để trống lương khi chọn thương lượng.'));
+                                              }
+                                              return Promise.resolve();
+                                            },
+                                          }),
+                                          ({ getFieldValue }) => ({
+                                            validator(_, value) {
+                                              if (!value || !getFieldValue('max_job_salary') || getFieldValue('max_job_salary') > value) {
+                                                return Promise.resolve();
+                                              }
+                                              return Promise.reject(new Error('Lương tối thiểu không được lớn hơn lương tối đa.'));
+                                            },
+                                          }),
                                      ]}
                                 >
                                     <InputNumber
-                                         disabled={bargain}
                                         min={0}
                                         style={{ width: '300px' }} 
                                         size='large' 
                                         placeholder='Tối thiểu'
                                     />
                                 </Form.Item>
-                                <Form.Item 
+                                <Form.Item
+                                   
                                     name="max_job_salary" 
                                     style={{
                                         width: '300px',
                                         marginLeft: '24px',
                                     }}
+                                    dependencies={['min_job_salary','offer_salary']}
                                     rules={[
                                        { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                       { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                       { type: 'number', message: 'Vui lòng nhập giá trị số' },
+                                       ({ getFieldValue }) => ({
+                                        validator(_, value) {
+                                          if (!getFieldValue('min_job_salary') && !value && !getFieldValue('offer_salary')) {
+                                            return Promise.reject(new Error('Lương tối thiểu hoặc tối đa không được để trống.'));
+                                          }
+                                          else  if (value && getFieldValue('offer_salary')) {
+                                            return Promise.reject(new Error('Vui lòng để trống lương khi chọn thương lượng.'));
+                                          }
+                                          return Promise.resolve();
+                                        },
+                                      }),
+                                      ({ getFieldValue }) => ({
+                                        validator(_, value) {
+
+                                          if (!value || !getFieldValue('min_job_salary') || getFieldValue('min_job_salary') < value) {
+                                            return Promise.resolve();
+                                          }
+                                          return Promise.reject(new Error('Lương tối đa không thể thấp hơn lương tối thiểu.'));
+                                        },
+                                      }),
                                     ]}
                                 >
                                     <InputNumber
-                                        disabled={bargain}
                                         min={0} 
                                         style={{ width: '100%' }} 
                                         size='large' 
@@ -287,15 +309,18 @@ const PostEdit = (): any => {
                                     />
                                 </Form.Item>
                                 <Form.Item
+                                name='offer_salary'
+                                dependencies={['min_job_salary',',max_job_salary']}
+                                valuePropName="checked"
                                     style={{
                                         width: '300px',
                                         marginLeft: '24px',
                                         fontSize: 24
                                     }}
                                 >
-                                    <Checkbox defaultChecked={post?.offer_salary} onChange={onChange}>Thương lượng</Checkbox>
+                                    <Checkbox  onChange={onChange}>Thương lượng</Checkbox>
                                 </Form.Item>
-                            </Space>
+                            </Space>    
                         </div>
                     </div>
                 </div>

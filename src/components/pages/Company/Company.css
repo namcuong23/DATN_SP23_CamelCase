@@ -322,9 +322,11 @@
     padding: 8px 0;
     border-radius: 6px;
     text-align: center;
+    display: block;
 }
 
 .company-content__item-btn:hover {
+    color: #fff;
     opacity: 0.9;
     cursor: pointer;
 }
@@ -383,6 +385,17 @@ a>.img-fluid{
     text-decoration: none;
     text-transform: uppercase;
 }
+
+.company-content_desc {
+    display: block;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4;
+    height: 80px;
+    line-height: 20px;
+    overflow: hidden;
+}
+
 .h3{
     line-height: 10px;
     margin-bottom: 0;

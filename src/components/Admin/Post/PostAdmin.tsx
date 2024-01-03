@@ -1,9 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { useGetUsersQuery } from '../../../service/admin'
 import { Button, Input, InputRef, Space, Table, TableProps } from 'antd';
-import { User } from '../../../interface/admin/users';
 import Highlighter from 'react-highlight-words';;
-import { formatDate, useApprovePostMutation, useGetPostsQuery, useRefusePostMutation } from '../../../service/post';
+import { useApprovePostMutation, useGetPostsQuery, useRefusePostMutation } from '../../../service/post';
 import { NavLink } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
 import { Alert, message, Popconfirm, Spin, Tag } from 'antd';
@@ -36,7 +34,8 @@ const PostAdmin = () => {
         _id: string;
         job_name: string;
         job_description: string;
-        job_salary: number;
+        min_job_salary: number;
+        max_job_salary: number;
         working_form: string;
         number_of_recruits: number;
         requirements: string;
@@ -52,7 +51,8 @@ const PostAdmin = () => {
         _id: item._id,
         job_name: item.job_name,
         job_description: item.job_description,
-        job_salary: item.job_salary,
+        min_job_salary: item.min_job_salary,
+        max_job_salary: item.max_job_salary,
         working_form: item.working_form,
         number_of_recruits: item.number_of_recruits,
         requirements: item.requirements,

@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom'
+import { Link, NavLink } from 'react-router-dom'
 import { useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
@@ -12,16 +12,26 @@ import { useGetUserByEmailQuery } from '../../../service/auth'
 
 import './HomeClient.css'
 import { useGetBannersQuery } from '../../../service/admin/banner'
+import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
+import { useGetCareersQuery } from '../../../service/admin';
+import { useGetUsersEprQuery } from '../../../service/auth_employer'
 
 const HomeClient = (): any => {
   const { email } = useAppSelector((rs) => rs.auth)
   const { data: user }: any = useGetUserByEmailQuery(email)
+  const { data: userEpr }: any = useGetUsersEprQuery('')
+  const getLogo = (user_id: string) => {
+    const data = userEpr.find((user: any) => user._id === user_id)
+
+    return data.image
+  }
   const { data: posts } = useGetPostsQuery(user?._id)
   const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const [currentPosts, setCurrentPosts] = useState<any[]>([]);
   const [shuffled, setShuffled] = useState(false);
+  const { data: careers } = useGetCareersQuery();
   useEffect(() => {
     if (posts && !shuffled) {
       // Lọc và xáo trộn danh sách công việc ngẫu nhiên khi component được tạo ra
@@ -51,6 +61,8 @@ const HomeClient = (): any => {
     const shuffledPosts = [...currentPosts].sort(() => Math.random() - 0.5);
     setCurrentPosts(shuffledPosts);
   };
+
+  console.log(currentPosts)
   
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
@@ -74,32 +86,8 @@ const HomeClient = (): any => {
     <>
       <div className="home-banner">
         <HeaderSearchhJob className='bg' />
-        <div id="carouselExampleIndicators" className="carousel slide home-banner__item">
-          <div className="carousel-indicators">
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to={0}
-              className="active"
-              aria-current="true"
-              aria-label="Slide 1"
-            />
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to={1}
-              aria-label="Slide 2"
-            />
-            <button
-              type="button"
-              data-bs-target="#carouselExampleIndicators"
-              data-bs-slide-to={2}
-              aria-label="Slide 3"
-            />
-          </div>
-          <div className="carousel-inner">
-            <div className="carousel-item active">
-              <img src={banners && banners.length > 0 && banners[0].imageUrl || 'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
+        <div id="" className=" home-banner__item">
+              <img src={'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
                 backgroundSize: 'contain',
                 backgroundRepeat: 'no-repeat',
                 backgroundPosition: 'center',
@@ -108,26 +96,6 @@ const HomeClient = (): any => {
                 alignItems: 'center',
                 justifyContent: 'center',
               }} alt="..." />
-            </div>
-          </div>
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="prev"
-          >
-            <span className="carousel-control-prev-icon" aria-hidden="true" />
-            <span className="visually-hidden">Previous</span>
-          </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselExampleIndicators"
-            data-bs-slide="next"
-          >
-            <span className="carousel-control-next-icon" aria-hidden="true" />
-            <span className="visually-hidden">Next</span>
-          </button>
 
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch fadeIn">
@@ -198,27 +166,27 @@ const HomeClient = (): any => {
                   <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
                     <div className="sc-jtcaXd dhnMFx">
                     <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
-      {currentPosts &&
-        currentPosts.map((post: any, index: number) => (
-          <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-            <div key={post._id} className='job'>
-              <div className="img-wrapper">
-                <img src={post.logo} className="job-img" />
-              </div>
-              <div className="job-info">
-                <div className='flex justify-end mt-[-8px] mb-[8px]'>
-                  <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
-                </div>
-                <h4 className="job-namee">{post.job_name}</h4>
-                <p className="truncate block text-[14px] leading-4 text-red-400">
-                  {post.offer_salary ? "Thương lượng" : `${post.min_job_salary} - ${post.max_job_salary}`}
-                </p>
-                <p className='job-location'>{post.work_location}</p>
-              </div>
-            </div>
-          </NavLink>
-        ))}
-    </div>
+                        {currentPosts &&
+                          currentPosts.map((post: any, index: number) => (
+                            <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                              <div key={post._id} className='job'>
+                                <div className="img-wrapper">
+                                  <img src={getLogo(post.user_id)} className="job-img" />
+                                </div>
+                                <div className="job-info">
+                                  <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                    <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                  </div>
+                                  <h4 className="job-namee">{post.job_name}</h4>
+                                  <p className="truncate block text-[14px] leading-4 text-red-400">
+                                    {post.offer_salary ? "Thương lượng" : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
+                                  </p>
+                                  <p className='job-location'>{post.work_location}</p>
+                                </div>
+                              </div>
+                            </NavLink>
+                          ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -235,114 +203,21 @@ const HomeClient = (): any => {
             </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
               <div id="hot-cagories" className="sc-dvwKko jrSuUk"><div className="sc-jtcaXd dhnMFx">
-                <div className="sc-dkSuNL gvXlWC ">
-                  <div className='row'>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-tai-chinh-dau-tu-i59-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true"><img src="https://images02.vietnamworks.com/mobile_banner/43615b63f0b281d216616f74630fb274.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Tài chính / Đầu tư</h3>
-                            </div>
-                            <p className="total">1124 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
+              <div className="grid  grid-cols-4">
+                 { careers && careers.map((item:any) => {
+                  return  <div className='my-2'>
+                    <div  className="wrap-item">
+                      <div style={{width:'290px',height:'210px'}} className="category-item">
+                        <Link to={`works?career=${item._id}`}><img width={60} style={{height:'60px'}} src={item.image} />
+                          <div className="wrap-name">
+                            <h3 className="title truncate-text-2-line">{item.name}</h3>
+                          </div>
+                          {/* <p className="total">1124 <span>Việc Làm</span></p> */}
+                        </Link>
                       </div>
                     </div>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-ban-hang-i33-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/39fc1e25eac4528661800fe9e28267ca.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Bán hàng</h3>
-                            </div>
-                            <p className="total">1045 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-it-phan-mem-i35-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/4196a5fa1e29ac68a2f8e1a7f2df9086.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">IT - Phần mềm</h3>
-                            </div>
-                            <p className="total">817 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-ngan-hang-i42-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/23689c11d14510257843715c9ab51106.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Ngân hàng</h3>
-                            </div>
-                            <p className="total">656 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div className='mt-5 row'>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-marketing-i27-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/85667b6343cc3133b2eb70c8486c592b.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Marketing</h3>
-                            </div>
-                            <p className="total">617 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-hanh-chanh-thu-ky-i2-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/1bc3dd0e7376dcbd8561d6780a64dd6e.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Hành chánh / Thư ký</h3>
-                            </div>
-                            <p className="total">592 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-ke-toan-i1-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/5f7c2e72ad9117e6189de072f4dc87a7.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Kế toán</h3>
-                            </div>
-                            <p className="total">592 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="sc-gJwTLC gsSTVe col-3">
-                      <div className="wrap-item">
-                        <div className="category-item">
-                          <a href="https://www.vietnamworks.com/viec-lam-dien-dien-tu-i64-vn?utm_source_navi=vnw_homepage&utm_medium_navi=HotCategories&ignoreLocation=true">
-                            <img src="https://images02.vietnamworks.com/mobile_banner/5eca9f2f6165e80fc5f7bda53b3490f3.png" alt="category icon" />
-                            <div className="wrap-name">
-                              <h3 className="title truncate-text-2-line">Điện / Điện tử</h3>
-                            </div>
-                            <p className="total">563 <span>Việc Làm</span></p>
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                </div>
+                 } ) }
                 </div>
 
               </div>
@@ -380,11 +255,11 @@ const HomeClient = (): any => {
                     <div className="sc-jtcaXd dhnMFx">
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
-                          posts && posts.map((post: any, index: number) =>
+                          posts && posts.filter((post: any) => post.post_status === true).map((post: any, index: number) =>
                             <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                               <div key={post._id} className='job'>
                                 <div className="img-wrapper">
-                                  <img src={post.logo}
+                                  <img src={getLogo(post.user_id)}
                                     className="job-img" />
                                 </div>
                                 <div className="job-info">
@@ -398,7 +273,7 @@ const HomeClient = (): any => {
                                   <p className="truncate block text-[14px] leading-4 text-red-400">
                                       {post.offer_salary
                                         ? "Thương lượng"
-                                        : `${post.min_job_salary} - ${post.max_job_salary}`}
+                                        : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
                                     </p>
                                   <p className='job-location'>{post.work_location}</p>
                                 </div>

@@ -53,7 +53,7 @@ const MyApplied = () => {
                                                     </NavLink>
                                                     <p className='mb-0 mt-[4px] text-[13px]'>Hình thức: {item.working_form}</p>
                                                     <p className='mb-0 text-[13px]'>{item.work_location}</p>
-                                                    <p className='text-danger mb-0 text-[13px]'>{formatCurrency(item.job_salary)}</p>
+                                                    <p className='text-danger mb-0 text-[13px]'> {item?.min_job_salary ? `${formatCurrency(item.min_job_salary)}` : "Lên đến"} {item?.min_job_salary && item?.max_job_salary ? '-' : ""} {item?.max_job_salary ? `${formatCurrency(item.max_job_salary)}` : "trở lên"}</p>
                                                 </div>
                                             </div>
 
@@ -61,11 +61,11 @@ const MyApplied = () => {
 
                                                 <div>
                                                     <NavLink
-                                                        to={`/posts/${item._id}`}
+                                                        to={`/posts/${item._id}?apply=1`}
                                                         target='_blank'
                                                         className='px-[16px] py-[10px] bg-[#FE7D55] hover:bg-[#FD6333] text-white rounded-[8px] ml-[16px]'
                                                     >
-                                                        Chi tiết
+                                                        Ứng tuyển lại
                                                     </NavLink>
                                                 </div>
 

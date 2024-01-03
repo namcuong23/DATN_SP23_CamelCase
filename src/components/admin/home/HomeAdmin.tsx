@@ -45,9 +45,9 @@ const HomeAdmin: any = () => {
     setPackageHistory(HistoryPackage)
   }, [HistoryPackage])
   
-  if (!isLoggedIn) {
-    return navigate('/login-admin')
-}
+  // if (!isLoggedIn) {
+  //   return navigate('/login-admin')
+  // }
 
   return (
     <div className="nk-content text-sm">

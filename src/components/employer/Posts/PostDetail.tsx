@@ -40,11 +40,13 @@ const PostDetail: React.FC = (): any => {
     })
     const { data } = useGetCvsByPostIdQuery(post && post?._id)
     const cvs = data?.cvs
+    console.log(cvs);
 
     const add = 'Bạn có muốn thêm vào ứng viên phù hợp?';
     const remove = 'Bạn có muốn xoá không?';
     const [addCandidate] = useCreateCandidateMutation()
     const [addNotification] = useAddNotificationMutation()
+
 
     const onHandleAdd = async (user: any) => {
         try {
@@ -61,9 +63,19 @@ const PostDetail: React.FC = (): any => {
             console.error(error);
         }
     }
+    const notification_title = "Chúc mừng bạn đã ứng tuyển thành công"
+    const notification_content = "Thư mời phỏng vấn đã được gửi tới email của bạn"
     const onHandleNotification = async (user: any) => {
         try {
-            const response = await addNotification(user);
+            const response = await addNotification(
+                {
+                    email: user.email,
+                    role:2,
+                    notification_title: "Bạn đã được nhà tuyển dụng đồng ý cv",
+                    notification_content: `Chúc mừng bạn đã được nhà ứng tuyển đồng ý với CV hãy vào URL để xem nhé !`,
+                    notification_url: `/home/posts/${user.post_id}`
+                }
+            );
             console.log(user);
             if ('data' in response && response.data) {
                 message.success('Đã gửi thông báo đến ứng viên');
@@ -82,6 +94,7 @@ const PostDetail: React.FC = (): any => {
 
         if (confirm !== null) {
             approveCv(id)
+            message.success('Đã gửi thông báo đến ứng viên');
         }
     }
     const [deleteCv] = useRemoveCvMutation()
@@ -125,22 +138,29 @@ const PostDetail: React.FC = (): any => {
 
             render: (_, record) => (
                 <Space size="middle" className='flex items-center'>
-                    <Popconfirm placement="top"
-                        title={"Chấp nhận"}
+                    {/* <Popconfirm placement="top"
+                        title={"Hãy gửi email phỏng vấn"}
                         onConfirm={() => {
                             onHandleNotification(record);
                             onHandleApprove(record._id)
+
                         }}
                         okText="Đồng ý"
                         cancelText="Không"
                         className='leading-[22px] flex items-center'
                     >
                         <CheckOutlined className='text-success' />
-                    </Popconfirm>
-
-                    <Popconfirm
+                    </Popconfirm> */}
+                    <NavLink to={`/home/sendmail`}
+                        className='leading-[22px] flex items-center'
+                        target='_blank'
+                    >
+                        <CheckOutlined className='text-success' />
+                    </NavLink>
+                    <Popconfirm placement="top"
                         title={remove}
                         onConfirm={() => onHandleDelete(record._id)}
+                        // onClick={() => }
                         okText="Đồng ý"
                         cancelText="Không"
                         className='leading-[22px] flex items-center'
@@ -176,7 +196,7 @@ const PostDetail: React.FC = (): any => {
                                         <span className="text-[#333333] block font-thin text-[15px]">
                                             {post?.offer_salary
                                                 ? "Thương lượng"
-                                                : `${formatCurrency(post?.min_job_salary)} - ${formatCurrency(post?.max_job_salary)}`}
+                                                : <div>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</div>}
                                         </span>
                                     </div>
                                     <span style={{ color: "#999", fontSize: "13px" }}>
@@ -281,24 +301,6 @@ const PostDetail: React.FC = (): any => {
                                             <hr />
                                         </div>
                                     </div>
-                                    <button
-                                        className='bg-[#FE7D55] hover:bg-[#FD6333] text-white font-semibold w-100 py-2 rounded mt-1'
-                                        onClick={showModal} >
-                                        Danh sách ứng viên
-                                    </button>
-                                    <Modal
-                                        title="Danh sách ứng viên"
-                                        open={open}
-                                        onCancel={handleCancel}
-                                        okButtonProps={{ hidden: true }}
-                                        cancelButtonProps={{ hidden: true }}
-                                        width={1000}
-                                    >
-                                        <Table dataSource={cvs} columns={columns}
-                                            pagination={{ defaultPageSize: 6 }}
-                                        />
-
-                                    </Modal>
                                 </div>
                             </div>
                         </div>

@@ -7,12 +7,13 @@ import IAdPackage from '../../../interface/admin/package'
 import { formatCurrency } from '../../../utils/hooks/FormatCurrrency'
 import { useCreateOrderMutation } from '../../../service/employer/order';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
+import { convertDaysToMonths } from '../../../utils/hooks/ConvertMonth'
 const PackageList = (): any => {
     const [createOrder] = useCreateOrderMutation();
     const navigate = useNavigate()
     const { isLoggedIn, email } = useAppSelector((rs) => rs.authEmpr)
     const { data: packages, error, isLoading } = useGetAdmPackagesQuery()
-    const {data :user }:any= useGetUserEprByEmailQuery(email)
+    const {data: user }:any= useGetUserEprByEmailQuery(email)
     const onHandleBuy = async (pack: IAdPackage) => {
         const {package_price,package_name,_id} = pack;
         const body = {
@@ -70,6 +71,7 @@ const PackageList = (): any => {
                                     <div key={pack._id} className='bg-white p-4 border-none rounded mb-3 border'>
                                         <h3 className='text-[18px]'>{pack.package_name}</h3>
                                         <span className='text-[17px] text-[#FD6333] font-[700]'>{formatCurrency(pack.package_price)} VND</span>
+                                        <div className='text-[14px] my-1 font-[700]'>Thời hạn gói {convertDaysToMonths(pack.package_day)}</div>
                                         <p>Quảng cáo tin đăng hiệu quả với vị trí nổi bật trong <span className='font-[550]'>Việc làm tốt nhất</span> kết hợp cùng các dịch cao cấp và được bảo hành vị trí ưu tiên.</p>
                                         <div className='flex items-center'>
                                             {/* <button onClick={() => onHandleAddToCart(pack)} className='flex items-center space-x-[5px] border-1 border-[#004AD1] rounded text-[#004AD1] font-[550] px-4 py-1'>

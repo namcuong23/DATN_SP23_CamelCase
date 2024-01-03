@@ -1,5 +1,5 @@
-import { message } from 'antd'
-import { useState, useEffect } from 'react';
+import { message, notification } from 'antd'
+import { useState, useEffect, useRef } from 'react';
 import { Link, NavLink, useParams, useSearchParams } from 'react-router-dom'
 import { useApplyCvMutation } from '../../../service/manage_cv'
 import React from 'react';
@@ -18,17 +18,25 @@ import HeaderSearchhJob from '../../layouts/HeaderSearchhJob'
 import { useForm } from 'react-hook-form';
 import { useAddNotificationMutation } from '../../../service/notification';
 import './postDetail.scss';
+import { useGetUserEprQuery } from '../../../service/auth_employer';
 const PostDetailEp = (): any => {
+  const postRef: any = useRef(null)
   const [countNewCandidates] = useCountNewCandidatesMutation()
   const [params] = useSearchParams()
   const apply = params.get('apply')
   const [isAplly, setIsAplly] = useState(apply !== null)
   const { id } = useParams()
   const { data: post } = useGetPostQuery(id)
+  const { data: userEpr }: any = useGetUserEprQuery(post && post?.user_id)
   const { data: posts } = useGetPostsByCareerQuery({
     id,
     career: post?.career
   })
+
+  useEffect(() => {
+    postRef.current.scrollIntoView({behavior: 'smooth'})
+  }, [])
+
   const { email, isLoggedIn } = useAppSelector((rs: any) => rs.auth)
   const [lastSubmissionDate, setLastSubmissionDate] = useState<Date | null>(null);
   useEffect(() => {
@@ -77,7 +85,8 @@ const PostDetailEp = (): any => {
       email,
       role: 2,
       notification_title: "Ứng tuyển thành công",
-      notification_content: post.job_content
+      notification_content: post.job_content,
+      notification_url : post.id
     })
 
     await addMyPost({
@@ -93,18 +102,26 @@ const PostDetailEp = (): any => {
     formData.append("post_id", id)
     formData.append("file", file)
     formData.append("isNew", true)
-    const apply = await applyCv(formData)
+    formData.append("emailEpr", userEpr.email)
+    setIsAplly(false)
+    const apply = await applyCv(formData);
     const { data: rs } = apply
 
-    if (rs?.success) {
-      countNewCandidates({
-        post_id: id
-      })
-      setIsAplly(false)
-      setIsApplied(true);
-      localStorage.setItem('isApplied', 'true');
-      message.success(rs?.mes)
-    }
+    await countNewCandidates({
+      post_id: id
+    })
+    setIsApplied(true);
+    localStorage.setItem('isApplied', 'true');
+    
+    // if (rs?.success) {
+    //   countNewCandidates({
+    //     post_id: id
+    //   })
+    //   setIsAplly(false)
+    //   setIsApplied(true);
+    //   localStorage.setItem('isApplied', 'true');
+    //   message.success(rs?.mes)
+    // }
     localStorage.setItem('lastSubmissionDate', currentDate.toISOString());
     setLastSubmissionDate(currentDate);
   }
@@ -122,9 +139,6 @@ const PostDetailEp = (): any => {
       _id: id,
       isSave: true
     })
-      .then((res: any) => {
-        message.success("Đã thêm vào Việc làm đã lưu")
-      })
       .catch((err: any) => {
         message.error(err.message)
       })
@@ -132,18 +146,23 @@ const PostDetailEp = (): any => {
 
   const [removeMyPost] = useRemoveMyPostMutation()
   const handleRemove = async (post: any) => {
+    await addNotification({
+      email,
+      role: 2,
+      notification_title: "Đã xoá khỏi Việc làm đã lưu",
+      notification_content: post.job_content
+    })
+
     await removeMyPost({
       _id: id,
       isSave: true
     })
-      .then(() => {
-        message.success("Đã xoá khỏi Việc làm đã lưu")
-      }).catch((err: any) => {
+      .catch((err: any) => {
         message.error(err.message)
       })
   }
   return (
-    <>
+    <div ref={postRef}>
       <div className='bg-white'>
         <HeaderSearchhJob className={'py-[16px]'} />
       </div>
@@ -176,7 +195,7 @@ const PostDetailEp = (): any => {
                       }}
                       className='rounded-full w-[100px] h-[100px]'
                     >
-                      <img src={post?.logo} />
+                      <img src={userEpr?.image} />
                     </section>
                   </div>
                   <div className="cuong1 w-[80%]">
@@ -185,7 +204,7 @@ const PostDetailEp = (): any => {
                       className="job-name"
                       style={{ fontSize: "26px" }}
                     >
-                     <img src={post?.image} alt="" />
+                     <img src={post?.logo} alt="" />
                     </a>
                     <a
                       href="#"
@@ -198,7 +217,8 @@ const PostDetailEp = (): any => {
                       <span className="text-[#333333] block font-thin text-[15px]">
                         {post?.offer_salary
                           ? "Thương lượng"
-                          : `${formatCurrency(post?.min_job_salary)} - ${formatCurrency(post?.max_job_salary)}`}
+                          : <div>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</div>
+                          }
                       </span>
                     </div>
                     <span style={{ color: "#999", fontSize: "13px" }}>
@@ -244,31 +264,27 @@ const PostDetailEp = (): any => {
                       }
                     </>
                   ) : (
-                    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
-                      Đăng nhập để lưu
-                    </div>
+                    <p className='w-100 bg-gray-100 py-[8px] px-[24px] rounded'>Đăng nhập để ứng tuyển</p>
                   )}
                 </div>
-                <div className="w-[170px] h-[50px] ml-[16px]">
                   {isLoggedIn ? (
-                    <label
-                      htmlFor='modal-cv-check'
-                      style={{
-                        fontSize: "18px",
-                        background: isApplied ? "#ccc" : "#ff7d55",
-                        cursor: isApplied ? "not-allowed" : "pointer",
-                      }}
-                      className={`w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center`}
-                      onClick={() => !isApplied && setIsAplly(!isAplly)}
-                    >
-                      {isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
-                    </label>
-                  ) : (
-                    <div className="bg-gray-100 text-[#333333] text-center font-semibold w-100 py-2 rounded mt-5">
-                      Đăng nhập để ứng tuyển
+                    <div className="w-[170px] h-[50px] ml-[16px]">
+                        <label
+                          htmlFor='modal-cv-check'
+                          style={{
+                            fontSize: "18px",
+                            background: isApplied ? "#ccc" : "#ff7d55",
+                            cursor: isApplied ? "not-allowed" : "pointer",
+                          }}
+                          className={`w-full h-full hover:bg-[#FD6333] text-white rounded flex items-center justify-center`}
+                          onClick={() => !isApplied && setIsAplly(!isAplly)}
+                        >
+                          {isApplied ? 'Đã ứng tuyển' : 'Nộp đơn'}
+                        </label>
                     </div>
+                  ) : (
+                    <span></span>
                   )}
-                </div>
 
               </div>
             </div>
@@ -449,7 +465,7 @@ const PostDetailEp = (): any => {
           ></section>
           <section className="modal-cv__job-info">
             <h4 className="modal-cv__job-name">{post?.job_name}</h4>
-            <p className="modal-cv__job-salary">{formatCurrency(post?.job_salary)}</p>
+            <p className="modal-cv__job-salary">{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</p>
             <p className="modal-cv__job-location">{post?.work_location}</p>
           </section>
           <label htmlFor="modal-cv-check" onClick={() => setIsAplly(!isAplly)}>
@@ -530,7 +546,7 @@ const PostDetailEp = (): any => {
         </form>
 
       </section>
-    </>
+    </div>
   )
 }
 

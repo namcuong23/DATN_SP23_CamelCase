@@ -17,6 +17,7 @@ interface IPost {
     isDone: boolean;
     isRead : boolean;
     newCandidates: number;
+    period: Date
     
 }
 
