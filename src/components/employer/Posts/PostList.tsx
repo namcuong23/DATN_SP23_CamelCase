@@ -1,12 +1,9 @@
 import type { ColumnsType, ColumnType } from 'antd/es/table';
 import type { FilterConfirmProps } from 'antd/es/table/interface';
-import { 
-    useGetPostsByUIdQuery, 
-    useResetNewCandidatesMutation 
-} from '../../../service/post';
+import { useGetPostsByUIdQuery, useResetNewCandidatesMutation } from '../../../service/post';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { SearchOutlined } from '@ant-design/icons';
-import { Alert, Avatar, Badge, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
+import { Alert, Badge, InputRef, message, Popconfirm, Spin, Tag } from 'antd';
 import { Button, Input, Space, Table } from 'antd';
 import { useEffect, useRef, useState } from 'react';
 import Highlighter from 'react-highlight-words';
@@ -17,11 +14,11 @@ import { apiGetProvinces } from '../../../service/api';
 import { useAppSelector } from '../../../app/hook';
 import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetCareersQuery } from '../../../service/admin';
+import moment from 'moment';
 import CandidateList from './PostComponents/CandidateList';
 
-const PostList: React.FC = (): any => {
-    const [resetNewCandidates] = useResetNewCandidatesMutation()
-
+const PostList = (): any | null | JSX.Element => {
+    const [resetNewCandidate] = useResetNewCandidatesMutation()
     const searchInput = useRef<InputRef>(null);
     const navigate = useNavigate()
     const [searchText, setSearchText] = useState('');
@@ -29,43 +26,73 @@ const PostList: React.FC = (): any => {
     const [open, setOpen] = useState(false);
     const [postId, setPostId] = useState('');
     const { data: careers } = useGetCareersQuery();
-
+    const getCareerNameById = (careerId: any) => {
+        const career = careers?.find((c) => c._id === careerId);
+        return careerId?.name;
+    };
+    const [selectedPostTitle, setSelectedPostTitle] = useState(null);
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
     const { data: user }: any = useGetUserEprByEmailQuery(email);
     const { data: posts, error, isLoading } = useGetPostsByUIdQuery(user?._id)
     const text: string = 'Are you sure to delete this post?';
-    const removeExpiredPosts = async ()=> {
-        // Lọc ra những bài viết đã hết hạn
-        const expiredPosts = posts?.filter((post: any) => {
-            const expirationDate = new Date(post.createdAt);
-            const expirationMinutes = expirationDate.getMinutes() + post.period;
-            return expirationMinutes < new Date().getMinutes(); //kệ cái lỗi này
-        });
-    
-        // Xóa những bài viết hết hạn
-        if (expiredPosts?.length > 0) {
-            for (const expiredPost of expiredPosts) {
-                await removePost(expiredPost._id);
-            }
-        }
-    };
+    const date = new Date()
+
     const [provinces, setProvinces] = useState<any>([])
     useEffect(() => {
         const fetchProvinces = async () => {
-            const { data: response }: any = await apiGetProvinces();
+            const { data: response }: any = await apiGetProvinces()
             setProvinces(response?.results);
-        };
-        fetchProvinces();
-    
-        // Gọi hàm xóa bài viết hết hạn
-        removeExpiredPosts();
-    }, [posts]);
-    
+        }
+        fetchProvinces()
+    }, [])
 
-    const dataSource = posts?.map((item: any, index: string) => ({
+    interface DataType {
+        key: string;
+        _id: string;
+        job_name: string;
+        job_description: string;
+        job_salary: number;
+        offer_salary: boolean;
+        working_form: string;
+        number_of_recruits: number;
+        requirements: string;
+        gender: string;
+        min_job_salary: string;
+        max_job_salary: string;
+        work_location: string;
+        post_status: boolean | string;
+        user_id: string;
+        createdAt: string;
+        career: string;
+        newCandidates: number;
+        period: string
+    }
+    type DataIndex = keyof DataType;
+    const dataSource = posts?.map((item: DataType, index: string) => ({
         key: String(index),
-        ...item
+        _id: String(item._id),
+        job_name: String(item.job_name),
+        offer_salary: Boolean(item.offer_salary),
+        job_description: String(item.job_description),
+        job_salary: Number(item.job_salary),
+        working_form: String(item.working_form),
+        min_job_salary: String(item.min_job_salary),
+        max_job_salary: String(item.max_job_salary),
+        number_of_recruits: Number(item.number_of_recruits),
+        requirements: String(item.requirements),
+        gender: String(item.job_name),
+        work_location: String(item.work_location),
+        post_status: Boolean(item.post_status),
+        user_id: String(item.user_id),
+        createdAt: String(item.createdAt),
+        career: getCareerNameById(item?.career) || '',
+        newCandidates: Number(item.newCandidates),
+        period: String(item.period)
     }))
+
+    dataSource?.sort((prevPost: any, nextPost: any) => {
+        return nextPost.newCandidates - prevPost.newCandidates
+    })
 
     const [removePost] = useRemovePostMutation()
     const onHandleRemove = (id: string) => {
@@ -77,7 +104,7 @@ const PostList: React.FC = (): any => {
     const handleSearch = (
         selectedKeys: string[],
         confirm: (param?: FilterConfirmProps) => void,
-        dataIndex: any,
+        dataIndex: DataIndex,
     ) => {
         confirm();
         setSearchText(selectedKeys[0]);
@@ -87,7 +114,7 @@ const PostList: React.FC = (): any => {
         clearFilters();
         setSearchText('');
     };
-    const getColumnSearchProps = (dataIndex: any): ColumnType<any> => ({
+    const getColumnSearchProps = (dataIndex: DataIndex): ColumnType<any> => ({
         filterDropdown: ({ setSelectedKeys, selectedKeys, confirm, clearFilters, close }) => (
             <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
                 <Input
@@ -164,13 +191,13 @@ const PostList: React.FC = (): any => {
             ),
     });
 
-    const columns: ColumnsType<any> = [
+    const columns: ColumnsType<DataType> = [
         {
             title: 'Tiêu đề',
             dataIndex: 'job_name',
             ...getColumnSearchProps('job_name'),
             render: (_, record) => (
-                <span className='text-ellipsis'>{record.job_name}</span>
+                <span className='text-ellipsis overflow-hidden w-[100px] max-w-8 block'>{record.job_name}</span>
             )
         },
         {
@@ -193,22 +220,23 @@ const PostList: React.FC = (): any => {
             )
         },
         {
-            title: 'Thời gian hết hạn',
+            title: 'Thời hạn',
             dataIndex: 'period',
             render: (_, record) => (
-                <span> Còn {(record.period)} Ngày</span>
+                <span>{new Date(record.period).toLocaleDateString()}</span>
             )
         },
         {
             title: 'Trạng thái',
             dataIndex: 'post_status',
-            render: (_: any, record: any) => (
+            render: (_: any, record: DataType) => (
                 <>
                     {
                         record.post_status == '' ?
                             <Tag
                                 color={'gold'}
-                                key={'Đang chờ duyệt'}>
+                                key={'Đang chờ duyệt'}
+                            >
                                 Đang chờ duyệt
                             </Tag>
                             :
@@ -221,57 +249,65 @@ const PostList: React.FC = (): any => {
                 </>
             ),
         },
+
         {
             title: 'Ứng viên',
-            dataIndex: 'candidate',
-            render: (_, record) => (
-                <>
-                    <Badge count={record.newCandidates} dot offset={[2, 2]} >
+            dataIndex: 'newCandidates',
+            render: (_, record) => {
+
+                return <>
+                    <Badge dot={record.newCandidates > 0} offset={[2, 2]}>
                         <button
-                            className='text-[#1677ff] underline'
+                            className='text-[#005aff] underline text-center'
                             onClick={() => {
                                 setOpen(true)
                                 setPostId(record._id)
-                                resetNewCandidates({
-                                    post_id: record._id
-                                })
+                                resetNewCandidate({ post_id: record._id })
+                                setSelectedPostTitle(record.job_name);
                             }}
                         >
                             Xem
                         </button>
                     </Badge>
 
-                    <CandidateList 
-                        isOpen={open} 
+                    <CandidateList
+                        isOpen={open}
                         handleCancel={() => setOpen(false)}
                         postId={postId && postId}
+                        postTitle={selectedPostTitle}
                     />
                 </>
-            ),
+            },
 
         },
         {
             title: 'Hành động',
             dataIndex: '_id',
             key: '_id',
-            render: (_, record) => (
-                <Space size="middle">
-                    <NavLink to={`/home/posts/${record._id}`}>
-                        <EyeOutlined className='text-dark' />
-                    </NavLink>
-                    <NavLink to={`/home/posts/${record._id}/edit`}>
-                        <EditOutlined className='text-dark' />
-                    </NavLink>
-                    <Popconfirm placement="top"
-                        title={text}
-                        onConfirm={() => onHandleRemove(record._id)}
-                        okText="Yes"
-                        cancelText="No">
-                        <DeleteOutlined className='text-danger' />
-                    </Popconfirm>
+            render: (_, record) => {
+                // if(!(moment(record.period)).isBefore(moment(date))) {
+                //     onHandleRemove(record._id)
+                // }
 
-                </Space>
-            ),
+                return (
+                    <Space size="middle">
+                        <NavLink to={`/home/posts/${record._id}`}>
+                            <EyeOutlined className='text-dark' />
+                        </NavLink>
+                        <NavLink to={`/home/posts/${record._id}/edit`}>
+                            <EditOutlined className='text-dark' />
+                        </NavLink>
+                        <Popconfirm placement="top"
+                            title={text}
+                            onConfirm={() => onHandleRemove(record._id)}
+                            okText="Yes"
+                            cancelText="No">
+                            <DeleteOutlined className='text-danger' />
+                        </Popconfirm>
+
+                    </Space>
+                )
+            },
         },
     ];
 
@@ -297,9 +333,7 @@ const PostList: React.FC = (): any => {
             <div className='mx-5'>
                 <div className='mt-4 min-h-screen'>
                     <div className='d-flex align-items-center justify-content-between mb-2'>
-                        <div>
-                            <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý Tin tuyển dụng</h2>
-                        </div>
+                        <h2 className='mt-0 text-3xl font-bold text-[#44454A]'>Quản lý Tin tuyển dụng</h2>
                         <div className='bg-[#FE7D55] hover:bg-[#FD6333] rounded px-2 py-1'>
                             <NavLink to={'/home/posts/add'} className='text-white text-decoration-none'>
                                 Đăng tin
