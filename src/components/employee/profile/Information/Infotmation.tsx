@@ -72,10 +72,6 @@ const Infotmation = ({imgUrl}: any) => {
                 ...currentData,
                 {
                     id: currentData ? currentData.length + 1 : 1,
-                    time: {
-                        start_date,
-                        end_date,
-                    },
                     ...formData
                 }
             ]

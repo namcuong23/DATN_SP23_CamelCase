@@ -4,7 +4,8 @@ import { useAppSelector } from "../../../../app/hook"
 import { useGetUserByEmailQuery } from "../../../../service/auth"
 import { apiGetDistricts, apiGetProvinces } from "../../../../service/api"
 import useDateFormat from "../../../../utils/hooks/FormatDate"
-import { DatePicker, Space } from "antd"
+import { DatePicker, Select, Space } from "antd"
+import { useGetCareersQuery } from "../../../../service/admin"
 
 const { RangePicker } = DatePicker;
 
@@ -15,7 +16,7 @@ const getUser = () => {
     return user
 }
 
-export const FormInfor = ({onSubmit}: any) => {
+export const FormInfor = ({ onSubmit }: any) => {
     const { register, handleSubmit, formState: { errors }, reset } = useForm<any>()
     const { email } = useAppSelector((res: any) => res.auth)
     const { data: user } = useGetUserByEmailQuery(email)
@@ -39,7 +40,7 @@ export const FormInfor = ({onSubmit}: any) => {
         }
         fetchDistricts()
     }
-    
+
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='py-2'>
@@ -143,7 +144,7 @@ export const FormInfor = ({onSubmit}: any) => {
     )
 }
 
-export const FormCareerGoal = ({onSubmit}: any) => {
+export const FormCareerGoal = ({ onSubmit }: any) => {
     const { register, handleSubmit, reset } = useForm<any>()
     const user = getUser()
 
@@ -154,7 +155,7 @@ export const FormCareerGoal = ({onSubmit}: any) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='py-3'>
-                <textarea 
+                <textarea
                     className="border-[1px] border-[#D9D9D9] p-[8px] w-100 focus:outline-none" cols={30} rows={5}
                     placeholder={'Điền Mục tiêu nghề nghiệp nếu có'}
                     maxLength={5000}
@@ -171,17 +172,17 @@ export const FormCareerGoal = ({onSubmit}: any) => {
     )
 }
 
-export const FormWorkExp = ({onSubmit}: any) => {
+export const FormWorkExp = ({ onSubmit }: any) => {
     const { register, handleSubmit, formState: { errors }, control } = useForm<any>()
     const date: any = new Date()
     const dayNow = useDateFormat(date)
 
     return (
-        <form 
+        <form
             onSubmit={handleSubmit(((work_experience: any) => onSubmit({
-                    work_experience,
-                    type: "form_work_exp"
-                })))
+                work_experience,
+                type: "form_work_exp"
+            })))
             }>
             <div className='py-2'>
                 <div className='flex items-center mx-3 gap-x-2'>
@@ -208,17 +209,17 @@ export const FormWorkExp = ({onSubmit}: any) => {
                     <div className='w-100'>
                         <div className='mb-[8px]'>Thời gian</div>
                         <Space
-                            direction="horizontal" 
-                            size={12} 
-                            style={{width: '100%', display: 'block'}}
+                            direction="horizontal"
+                            size={12}
+                            style={{ width: '100%', display: 'block' }}
                         >
-                            
+
                             <Controller
                                 name="timeId"
                                 control={control}
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <RangePicker
-                                        style={{ width: '100%', height: '36px'}}
+                                        style={{ width: '100%', height: '36px' }}
                                         format="MM/DD/YYYY"
                                         onChange={(e: any) => {
                                             field.onChange(e)
@@ -235,7 +236,7 @@ export const FormWorkExp = ({onSubmit}: any) => {
                 <div className='mx-3'>
                     <div className='flex flex-col'>
                         <div className='mb-[8px]'>Mô tả <span className='text-red-500'>*</span></div>
-                        <textarea 
+                        <textarea
                             className="border-1 border-[#D9D9D9] p-[8px] w-100 rounded focus:outline-none" cols={30} rows={5}
                             placeholder={'Mô tả kinh nghiệm làm việc'}
                             {...register('desc_exp', {
@@ -253,19 +254,19 @@ export const FormWorkExp = ({onSubmit}: any) => {
     )
 }
 
-export const FormEducation = ({onSubmit, propId}: any) => {
+export const FormEducation = ({ onSubmit, propId }: any) => {
     const { register, handleSubmit, formState: { errors }, reset, control } = useForm<any>()
 
     if (propId) {
         const { education } = getUser()
 
         useEffect(() => {
-            reset(education[propId-1])
+            reset(education[propId - 1])
         }, [education])
     }
 
     return (
-        <form 
+        <form
             onSubmit={handleSubmit(((education: any) => onSubmit({
                 education,
                 type: "form_education"
@@ -305,17 +306,17 @@ export const FormEducation = ({onSubmit, propId}: any) => {
                     <div className='w-100'>
                         <div className='mb-[8px]'>Thời gian</div>
                         <Space
-                            direction="horizontal" 
-                            size={12} 
-                            style={{width: '100%', display: 'block'}}
+                            direction="horizontal"
+                            size={12}
+                            style={{ width: '100%', display: 'block' }}
                         >
-                            
+
                             <Controller
                                 name="timeId"
                                 control={control}
-                                render={({field}) => (
+                                render={({ field }) => (
                                     <RangePicker
-                                        style={{ width: '100%', height: '36px'}}
+                                        style={{ width: '100%', height: '36px' }}
                                         format="MM/DD/YYYY"
                                         onChange={(e: any) => {
                                             field.onChange(e)
@@ -332,7 +333,7 @@ export const FormEducation = ({onSubmit, propId}: any) => {
                 <div className='mx-3'>
                     <div className='flex flex-col'>
                         <div className='mb-[8px]'>Hoạt động</div>
-                        <textarea 
+                        <textarea
                             className="border-1 border-[#D9D9D9] p-[8px] w-100 rounded focus:outline-none" cols={30} rows={5}
                             placeholder={'Các hoạt động từng tham gia'}
                             {...register('act')}
@@ -347,25 +348,54 @@ export const FormEducation = ({onSubmit, propId}: any) => {
     )
 }
 
-export const FormSkills = ({onSubmit, handleRemove}: any) => {
+export const FormSkills = ({ onSubmit, handleRemove }: any) => {
+    const { data: career } = useGetCareersQuery();
+    const [selectedCareer, setSelectedCareer] = useState('');
+
+    const handleSave = async () => {
+        try {
+            if (!career) {
+                console.error('Career is undefined');
+                return;
+            }
+
+            onSubmit({
+                skills: {
+                    selectedCareer,
+                    existingSkills: user?.skills || [], // Lấy danh sách kỹ năng từ user
+                },
+                type: "form_skills"
+            });
+
+        } catch (error) {
+            console.error('Error saving skills:', error);
+        }
+    };
     const user = getUser();
     const { register, handleSubmit } = useForm<any>()
     return (
-        <form 
-            onSubmit={handleSubmit(((skills: any) => onSubmit({
-                skills,
-                type: "form_skills"
-            })))}>
+        <form onSubmit={handleSubmit(((skills: any) => handleSave()))}>
+            {/* Tên kỹ năng và Chọn ngành nghề */}
             <div className='py-3'>
                 <div className='mb-[8px]'>Tên kỹ năng</div>
-                <input className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
-                    {...register("skill_name")} 
-                />
+                <Select
+                    className='w-full border-1 border-[#D9D9D9] rounded focus:outline-none focus:border-[#005AFF] px-1 h-9'
+                    size='large'
+                    allowClear
+                    placeholder='Chọn ngành nghề'
+                    onChange={(value) => setSelectedCareer(value)}
+                >
+                    {career ? career?.map((item: any, index: any) =>
+                        <Select.Option key={index} value={item._id}>{item.name}</Select.Option>
+                    ) : ''}
+                </Select>
             </div>
+
+            {/* Danh sách kỹ năng hiện tại của người dùng */}
             <div>
                 <section className="flex items-center flex-wrap">
                     {
-                        user?.skills && 
+                        user?.skills &&
                         user?.skills.map((item: any) => (
                             <section key={item.id} className="skills-item">
                                 <span>{item?.skill_name}</span>
@@ -380,14 +410,21 @@ export const FormSkills = ({onSubmit, handleRemove}: any) => {
                     }
                 </section>
             </div>
+
+            {/* Nút Lưu */}
             <div className='flex items-center justify-end gap-x-2 mt-2'>
-                <button className='bg-[#ff7d55] text-white font-[700] rounded-[6px] min-w-[80px] py-[8px]'>Lưu</button>
+                <button
+                    className='bg-[#ff7d55] text-white font-[700] rounded-[6px] min-w-[80px] py-[8px]'
+                    type="submit"
+                >
+                    Lưu
+                </button>
             </div>
         </form>
     )
 }
 
-export const FormMoreInfo = ({onSubmit}: any) => {
+export const FormMoreInfo = ({ onSubmit }: any) => {
     const { register, handleSubmit, reset } = useForm<any>()
     const user = getUser()
 
@@ -397,7 +434,7 @@ export const FormMoreInfo = ({onSubmit}: any) => {
     return (
         <form onSubmit={handleSubmit(onSubmit)}>
             <div className='py-3'>
-                <textarea 
+                <textarea
                     className="border-[1px] border-[#D9D9D9] p-[8px] w-100 focus:outline-none" cols={30} rows={5}
                     placeholder={'Điền thông tin thêm nếu có'}
                     maxLength={5000}

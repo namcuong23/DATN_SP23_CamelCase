@@ -9,6 +9,7 @@ import { useGetUserEprByEmailQuery } from '../../../service/auth_employer';
 import { useGetCareersQuery } from '../../../service/admin';
 import type { CheckboxChangeEvent } from 'antd/es/checkbox';
 import './Post.css'
+import { useGetUsersQuery } from '../../../service/auth';
 
 const PostAdd = (): any => {
     const [form] = Form.useForm();
@@ -17,48 +18,57 @@ const PostAdd = (): any => {
     const [addPost] = useAddPostMutation()
     const { email, isLoggedIn } = useAppSelector((res: any) => res.authEmpr)
     const { data: user }: any = useGetUserEprByEmailQuery(email)
-    const [provinces, setProvinces] = useState<any>([])
-    const [bargain,setBargain] = useState<any>(false);
-    
-  useEffect(() => {
-    const fetchProvinces = async () => {
-      const { data: response }: any = await apiGetProvinces();
-      setProvinces(response?.results);
-    };
-    fetchProvinces();
-  }, []);
-
-  const onHandleAdd: any = async (post: any) => {
-    try {
-      post['offer_salary'] = bargain;
-      const data: any = await addPost({
-        ...post,
-        logo: user?.image,
-        post_status: null,
-        user_id: user?._id,
-      });
-      if (data?.error?.status == 400) {
-        message.warning(data.error.data.message);
-      }
-      if (data.data) {
-        message.success("Đăng tin thành công.");
-        navigate("/home/posts");
-      }
-    } catch (error: any) {
-      console.log(error);
+    const { data: user1 } = useGetUsersQuery(email)
+    const skills = user1?.[1]?.skills;
+    if (skills && skills.length > 0) {
+        const selectedCareers = skills.map(skill => skill.selectedCareer);
+        console.log(selectedCareers);
+    } else {
+        console.log('No skills data available');
     }
-  };
-  const onChange = (e: CheckboxChangeEvent) => {
-    console.log(e.target.checked);
-    setBargain(e.target.checked);
-    form.setFieldsValue({
-        min_job_salary : 0,
-        max_job_salary : 0,
-    })
-  };
-  if (!isLoggedIn) {
-    return navigate("/login-epr");
-  }
+
+    const [provinces, setProvinces] = useState<any>([])
+    const [bargain, setBargain] = useState<any>(false);
+
+    useEffect(() => {
+        const fetchProvinces = async () => {
+            const { data: response }: any = await apiGetProvinces();
+            setProvinces(response?.results);
+        };
+        fetchProvinces();
+    }, []);
+
+    const onHandleAdd: any = async (post: any) => {
+        try {
+            post['offer_salary'] = bargain;
+            const data: any = await addPost({
+                ...post,
+                logo: user?.image,
+                post_status: null,
+                user_id: user?._id,
+            });
+            if (data?.error?.status == 400) {
+                message.warning(data.error.data.message);
+            }
+            if (data.data) {
+                message.success("Đăng tin thành công.");
+                navigate("/home/posts");
+            }
+        } catch (error: any) {
+            console.log(error);
+        }
+    };
+    const onChange = (e: CheckboxChangeEvent) => {
+        console.log(e.target.checked);
+        setBargain(e.target.checked);
+        form.setFieldsValue({
+            min_job_salary: 0,
+            max_job_salary: 0,
+        })
+    };
+    if (!isLoggedIn) {
+        return navigate("/login-epr");
+    }
 
     return (
         <>
@@ -68,10 +78,10 @@ const PostAdd = (): any => {
                 >
                     <h1 className='post-add_title text-center text-3xl font-bold text-[#44454A]'>Đăng tin</h1>
                 </div>
-                <Form 
-                    onFinish={onHandleAdd} 
-                    form={form} 
-                    name="add" 
+                <Form
+                    onFinish={onHandleAdd}
+                    form={form}
+                    name="add"
                     layout="vertical"
                 >
                     <div className='max-w-[70%] mx-auto'>
@@ -82,9 +92,9 @@ const PostAdd = (): any => {
                                     rules={[
                                         { required: true, message: "Vui lòng nhập thông tin công việc" },
                                     ]}>
-                                    <Input 
-                                        placeholder='VD: Dịch vụ dọn dẹp' 
-                                        size='large' 
+                                    <Input
+                                        placeholder='VD: Dịch vụ dọn dẹp'
+                                        size='large'
                                     />
                                 </Form.Item>
                             </div>
@@ -106,15 +116,15 @@ const PostAdd = (): any => {
                                     ]}>
                                     <Input.TextArea rows={7} placeholder='Nhập yêu cầu tuyển dụng' />
                                 </Form.Item>
-                                <Space.Compact 
+                                <Space.Compact
                                     block
                                     size="large"
                                     style={{
                                         width: '100%',
                                     }}
                                 >
-                                    <Form.Item 
-                                        name="working_form" 
+                                    <Form.Item
+                                        name="working_form"
                                         label="Hình thức làm việc"
                                         rules={[{ required: true, message: 'Please choose working form.' }]}
                                         initialValue={'0'}
@@ -122,7 +132,7 @@ const PostAdd = (): any => {
                                             width: '100%',
                                         }}
                                     >
-                                        <Select 
+                                        <Select
                                             size='large'
                                         >
                                             <Select.Option value="0">- Chọn hình thức làm việc -</Select.Option>
@@ -135,11 +145,11 @@ const PostAdd = (): any => {
                                             <Select.Option value="Làm việc theo ca">Làm việc theo ca</Select.Option>
                                             <Select.Option value="Làm việc không chính thức (Freelance)">Làm việc không chính thức (Freelance)</Select.Option>
                                             <Select.Option value="Khác">Khác</Select.Option>
-                                            
+
                                         </Select>
                                     </Form.Item>
-                                    <Form.Item 
-                                        name="level" 
+                                    <Form.Item
+                                        name="level"
                                         label="Cấp bậc"
                                         rules={[{ required: true, message: 'Please choose level.' }]}
                                         initialValue={'0'}
@@ -148,7 +158,7 @@ const PostAdd = (): any => {
                                             marginLeft: '24px',
                                         }}
                                     >
-                                        <Select 
+                                        <Select
                                             size='large'
                                         >
                                             <Select.Option value="0">Chọn cấp bậc</Select.Option>
@@ -161,8 +171,8 @@ const PostAdd = (): any => {
                                         </Select>
                                     </Form.Item>
                                 </Space.Compact>
-                                <Form.Item 
-                                    name="gender" 
+                                <Form.Item
+                                    name="gender"
                                     label="Giới tính"
                                     rules={[{ required: true, message: 'This field is required.' }]}
                                     initialValue={'0'}
@@ -180,10 +190,10 @@ const PostAdd = (): any => {
                                         // { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <InputNumber
-                                            min={1} 
-                                            style={{ width: '100%' }} 
-                                            size='large' 
-                                        />
+                                        min={1}
+                                        style={{ width: '100%' }}
+                                        size='large'
+                                    />
                                 </Form.Item>
                                 <Form.Item name="period" label="Thời gian hết hạn"
                                     rules={[
@@ -191,16 +201,16 @@ const PostAdd = (): any => {
                                         { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                     ]}>
                                     <InputNumber
-                                            min={1} 
-                                            style={{ width: '100%' }} 
-                                            size='large' 
-                                        />
+                                        min={1}
+                                        style={{ width: '100%' }}
+                                        size='large'
+                                    />
                                 </Form.Item>
                                 <Form.Item name="career" label="Ngành Nghề"
                                     rules={[{ required: true, message: 'Vui lòng chọn ngành nghề' }]}
                                 >
-                                    <Select 
-                                        size='large' 
+                                    <Select
+                                        size='large'
                                         allowClear
                                         placeholder='Chọn ngành nghề'
                                     >
@@ -211,13 +221,13 @@ const PostAdd = (): any => {
                                         }
                                     </Select>
                                 </Form.Item>
-                                <Form.Item 
-                                    name="work_location" 
+                                <Form.Item
+                                    name="work_location"
                                     label="Khu vực"
                                     rules={[{ required: true, message: 'Vui lòng nhập địa điểm làm việc' }]}
                                 >
                                     {/* <Input /> */}
-                                    <Select 
+                                    <Select
                                         size='large'
                                         // mode='multiple'
                                         allowClear
@@ -225,8 +235,8 @@ const PostAdd = (): any => {
                                     >
                                         {
                                             provinces ? provinces?.map((province: any, index: number) =>
-                                                <Select.Option 
-                                                    key={index} 
+                                                <Select.Option
+                                                    key={index}
                                                     value={province.province_name}
                                                 >
                                                     {province.province_name}
@@ -241,46 +251,46 @@ const PostAdd = (): any => {
                         <div className='d-flex align-items-top'>
                             <div className='w-100 ms-3'>
                                 <div className='fs-4 font-[600]'>Ngân sách dự kiến</div>
-                                <Space 
+                                <Space
                                     style={{
                                         width: '100%',
                                         marginTop: '12px'
                                     }}
                                 >
-                                    <Form.Item 
-                                        name="min_job_salary" 
+                                    <Form.Item
+                                        name="min_job_salary"
                                         style={{
                                             width: '300px',
                                         }}
                                         rules={[
                                             { required: true, message: 'Vui lòng nhập giá trị số.' },
                                             { type: 'number', message: 'Vui lòng nhập giá trị số' }
-                                         ]}
+                                        ]}
                                     >
                                         <InputNumber
                                             disabled={bargain}
                                             min={0}
-                                            style={{ width: '300px' }} 
-                                            size='large' 
+                                            style={{ width: '300px' }}
+                                            size='large'
                                             placeholder='Tối thiểu'
                                         />
                                     </Form.Item>
-                                    <Form.Item 
-                                        name="max_job_salary" 
+                                    <Form.Item
+                                        name="max_job_salary"
                                         style={{
                                             width: '300px',
                                             marginLeft: '24px',
                                         }}
                                         rules={[
-                                           { required: true, message: 'Vui lòng nhập giá trị số.' },
-                                           { type: 'number', message: 'Vui lòng nhập giá trị số' }
+                                            { required: true, message: 'Vui lòng nhập giá trị số.' },
+                                            { type: 'number', message: 'Vui lòng nhập giá trị số' }
                                         ]}
                                     >
                                         <InputNumber
-                                           disabled={bargain}
-                                            min={0} 
-                                            style={{ width: '100%' }} 
-                                            size='large' 
+                                            disabled={bargain}
+                                            min={0}
+                                            style={{ width: '100%' }}
+                                            size='large'
                                             placeholder='Tối đa'
                                         />
                                     </Form.Item>
@@ -291,7 +301,7 @@ const PostAdd = (): any => {
                                             fontSize: 24
                                         }}
                                     >
-                                        <Checkbox  onChange={onChange}>Thương lượng</Checkbox>
+                                        <Checkbox onChange={onChange}>Thương lượng</Checkbox>
                                     </Form.Item>
                                 </Space>
                             </div>
@@ -303,7 +313,7 @@ const PostAdd = (): any => {
                         </button>
                         <NavLink to={'/home/posts'}>
                             <button
-                                className='text-[#838383] hover:text-[#FE7D55] border-1 border-[#686868] hover:border-[#FE7D55] ms-4 py-1 px-6 rounded' 
+                                className='text-[#838383] hover:text-[#FE7D55] border-1 border-[#686868] hover:border-[#FE7D55] ms-4 py-1 px-6 rounded'
                                 type="button"
                             >
                                 Quay lại
@@ -311,9 +321,9 @@ const PostAdd = (): any => {
                         </NavLink>
                     </div>
                 </Form>
-      </div>
-    </>
-  );
+            </div>
+        </>
+    );
 };
 
 export default PostAdd;

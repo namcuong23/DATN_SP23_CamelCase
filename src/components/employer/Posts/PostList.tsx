@@ -27,8 +27,8 @@ const PostList = (): any | null | JSX.Element => {
     const [postId, setPostId] = useState('');
     const { data: careers } = useGetCareersQuery();
     const getCareerNameById = (careerId: any) => {
-        const career = careers?.find((c) => c._id === careerId);
-        return careerId?.name;
+        const career = careers?.find((c) => c._id === careerId)
+        return career?.name;
     };
     const [selectedPostTitle, setSelectedPostTitle] = useState(null);
     const { email, isLoggedIn } = useAppSelector((res) => res.authEmpr);
@@ -217,13 +217,6 @@ const PostList = (): any | null | JSX.Element => {
             dataIndex: 'createdAt',
             render: (_, record) => (
                 <span>{new Date(record.createdAt).toLocaleDateString()}</span>
-            )
-        },
-        {
-            title: 'Thời hạn',
-            dataIndex: 'period',
-            render: (_, record) => (
-                <span>{new Date(record.period).toLocaleDateString()}</span>
             )
         },
         {
