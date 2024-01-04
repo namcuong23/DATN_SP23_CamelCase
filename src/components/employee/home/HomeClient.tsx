@@ -1,5 +1,5 @@
 import { Link, NavLink } from 'react-router-dom'
-import { useGetPostsQuery } from '../../../service/post'
+import { useGetMyPostsQuery, useGetPostsQuery } from '../../../service/post'
 import { WhatsAppOutlined } from '@ant-design/icons'
 import { useAddFeedbackMutation } from '../../../services/feedback'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -25,13 +25,55 @@ const HomeClient = (): any => {
 
     return data.image
   }
+  const [isJob, setIsJob] = useState(false)
   const { data: posts } = useGetPostsQuery(user?._id)
+
   const { data: banners } = useGetBannersQuery()
   const [addFeedback] = useAddFeedbackMutation();
   const { register, handleSubmit, formState: { errors } } = useForm<IFeedback>()
   const [currentPosts, setCurrentPosts] = useState<any[]>([]);
   const [shuffled, setShuffled] = useState(false);
   const { data: careers } = useGetCareersQuery();
+
+  if (user && user.fieldPosition && user.desiredPosition) {
+    const fieldPositionValue = user.fieldPosition;
+    const desiredPositionValue = user.desiredPosition;
+    const provinceValue = user.province;
+    // Bây giờ bạn có thể sử dụng giá trị của fieldPositionValue
+    console.log("Giá trị của fieldPosition:", fieldPositionValue);
+    console.log("Giá trị của desiredPositionValue:", desiredPositionValue);
+    console.log("Giá trị của privinceValue:", provinceValue);
+  } else {
+    console.error("Đối tượng user không tồn tại hoặc không có trường fieldPosition");
+  }
+  const { data: myPostsData } = useGetMyPostsQuery(isJob ? { isDone: false } : { isSave: true });
+  const myPosts = myPostsData?.filter((myPost: any) => myPost);
+  console.log(myPosts);
+
+  const workLocations = myPosts?.map((post: any) => post.work_location) || [];
+
+  // workLocations bây giờ chứa một mảng các giá trị work_location
+  console.log("Danh sách các địa điểm làm việc:", workLocations);
+  const suitableJobs = myPosts?.filter((myPost: any) => {
+    if (user && user.fieldPosition && user.desiredPosition && user.province) {
+      // Kiểm tra các điều kiện so sánh trường
+      const isFieldPositionMatch = myPost.career === user.fieldPosition;
+      const isDesiredPositionMatch = myPost.level === user.desiredPosition;
+
+      // Kiểm tra xem user.province có khớp với bất kỳ giá trị trong mảng workLocations không
+      const isProvinceMatch = workLocations.some((location: string) => location === user.province);
+      console.log("isFieldPositionMatch:", isFieldPositionMatch);
+      console.log("isDesiredPositionMatch:", isDesiredPositionMatch);
+      console.log("isProvinceMatch:", isProvinceMatch);
+      // Trả về true nếu tất cả hoặc ít nhất một điều kiện đều đúng
+      return isFieldPositionMatch && isDesiredPositionMatch && isProvinceMatch;
+
+    }
+
+    // Trả về false nếu có bất kỳ điều kiện nào không đúng hoặc nếu không có thông tin user
+    return false;
+  });
+
   useEffect(() => {
     if (posts && !shuffled) {
       // Lọc và xáo trộn danh sách công việc ngẫu nhiên khi component được tạo ra
@@ -62,8 +104,7 @@ const HomeClient = (): any => {
     setCurrentPosts(shuffledPosts);
   };
 
-  console.log(currentPosts)
-  
+
   const onSubmit: SubmitHandler<IFeedback> = (data) => {
     addFeedback({
       ...data,
@@ -87,15 +128,15 @@ const HomeClient = (): any => {
       <div className="home-banner">
         <HeaderSearchhJob className='bg' />
         <div id="" className=" home-banner__item">
-              <img src={'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                backgroundPosition: 'center',
-                height: '500px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }} alt="..." />
+          <img src={'https://www.vietnamworks.com/_next/image?url=https%3A%2F%2Fimages.vietnamworks.com%2Flogo%2Fcapge_hrbn_124732.jpg&w=1920&q=75'} className="d-block w-100" style={{
+            backgroundSize: 'contain',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'center',
+            height: '500px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }} alt="..." />
 
         </div>
         <section className="sectionBlock sectionBlock_has-padding-touch fadeIn">
@@ -165,11 +206,11 @@ const HomeClient = (): any => {
                 <div className="swiper-container">
                   <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
                     <div className="sc-jtcaXd dhnMFx">
-                    <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
+                      <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {currentPosts &&
                           currentPosts.map((post: any, index: number) => (
                             <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
-                              <div key={post._id} className='job'>
+                              <div className='job'>
                                 <div className="img-wrapper">
                                   <img src={getLogo(post.user_id)} className="job-img" />
                                 </div>
@@ -203,21 +244,21 @@ const HomeClient = (): any => {
             </div>
             <div className="sectionBlock__content" style={{ height: '100%' }}>
               <div id="hot-cagories" className="sc-dvwKko jrSuUk"><div className="sc-jtcaXd dhnMFx">
-              <div className="grid  grid-cols-4">
-                 { careers && careers.map((item:any) => {
-                  return  <div className='my-2'>
-                    <div  className="wrap-item">
-                      <div style={{width:'290px',height:'210px'}} className="category-item">
-                        <Link to={`works?career=${item._id}`}><img width={60} style={{height:'60px'}} src={item.image} />
-                          <div className="wrap-name">
-                            <h3 className="title truncate-text-2-line">{item.name}</h3>
-                          </div>
-                          {/* <p className="total">1124 <span>Việc Làm</span></p> */}
-                        </Link>
+                <div className="grid  grid-cols-4">
+                  {careers && careers.map((item: any) => {
+                    return <div className='my-2'>
+                      <div className="wrap-item">
+                        <div style={{ width: '290px', height: '210px' }} className="category-item">
+                          <Link to={`works?career=${item._id}`}><img width={60} style={{ height: '60px' }} src={item.image} />
+                            <div className="wrap-name">
+                              <h3 className="title truncate-text-2-line">{item.name}</h3>
+                            </div>
+                            {/* <p className="total">1124 <span>Việc Làm</span></p> */}
+                          </Link>
+                        </div>
                       </div>
                     </div>
-                </div>
-                 } ) }
+                  })}
                 </div>
 
               </div>
@@ -243,7 +284,7 @@ const HomeClient = (): any => {
         <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
           <div className="home-content__sug-job">
             <div className="flex justify-between align-center section-title bg-[#f2f7ff] py-[20px] pl-[40px] pr-[25px]">
-              <h2 className="sectionBlock__title m-0">Việc Làm Cho Bạn</h2>
+              <h2 className="sectionBlock__title m-0">Việc Làm Khác</h2>
               <div className="sectionBlock__link">
                 <a href="/viec-lam-goi-y">Xem Tất Cả</a>
               </div>
@@ -255,9 +296,60 @@ const HomeClient = (): any => {
                     <div className="sc-jtcaXd dhnMFx">
                       <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
                         {
-                          posts && posts.filter((post: any) => post.post_status === true).map((post: any, index: number) =>
+                          posts && posts.map((post: any, index: number) =>
                             <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
                               <div key={post._id} className='job'>
+                                <div className="img-wrapper">
+                                  <img src={post.logo}
+                                    className="job-img" />
+                                </div>
+                                <div className="job-info">
+                                  {
+                                    post?.priority &&
+                                    <div className='flex justify-end mt-[-8px] mb-[8px]'>
+                                      <span className='text-[12px] px-2 rouned-xl text-white bg-red-500'>HOT</span>
+                                    </div>
+                                  }
+                                  <h4 className="job-namee">{post.job_name}</h4>
+                                  <p className="truncate block text-[14px] leading-4 text-red-400">
+                                    {post.offer_salary
+                                      ? "Thương lượng"
+                                      : `${post.min_job_salary} - ${post.max_job_salary}`}
+                                  </p>
+                                  <p className='job-location'>{post.work_location}</p>
+                                </div>
+                              </div>
+                            </NavLink>
+                          )
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </section>
+        <section className="sectionBlock sectionBlock_has-slider sectionBlock_job-list section-featured-jobs">
+          <div className="home-content__sug-job">
+            <div className="flex justify-between align-center section-title bg-[#f2f7ff] py-[20px] pl-[40px] pr-[25px]">
+              <h2 className="sectionBlock__title m-0">Dành riêng cho bạn</h2>
+              <div className="sectionBlock__link">
+                <a href="/viec-lam-goi-y">Xem Tất Cả</a>
+              </div>
+            </div>
+            <div className=''>
+              <div className="" style={{ height: '100%', padding: '9px 25px 25px' }}>
+                <div className="swiper-container">
+                  <div id="recommend-jobs" className="sc-dvwKko jrSuUk" style={{ width: '100%' }}>
+                    <div className="sc-jtcaXd dhnMFx">
+                      <div className="sc-dkSuNL gvXlWC row" style={{ transform: 'translateX(0px)', transition: 'all 0s ease 0s' }}>
+                        {
+                          suitableJobs && suitableJobs.filter((post: any) => post.post_status === true).map((post: any, index: number) =>
+                            <NavLink key={index} to={`/posts/${post._id}`} className="sc-gJwTLC doaJYu col-4">
+                              <div className='job'>
                                 <div className="img-wrapper">
                                   <img src={getLogo(post.user_id)}
                                     className="job-img" />
@@ -271,10 +363,10 @@ const HomeClient = (): any => {
                                   }
                                   <h4 className="job-namee">{post.job_name}</h4>
                                   <p className="truncate block text-[14px] leading-4 text-red-400">
-                                      {post.offer_salary
-                                        ? "Thương lượng"
-                                        : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
-                                    </p>
+                                    {post.offer_salary
+                                      ? "Thương lượng"
+                                      : <>{post?.min_job_salary ? `${formatCurrency(post.min_job_salary)}` : "Lên đến"} {post?.min_job_salary && post?.max_job_salary ? '-' : ""} {post?.max_job_salary ? `${formatCurrency(post.max_job_salary)}` : "trở lên"}</>}
+                                  </p>
                                   <p className='job-location'>{post.work_location}</p>
                                 </div>
                               </div>
