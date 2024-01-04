@@ -61,7 +61,8 @@ const HomeClient = (): any => {
       const isDesiredPositionMatch = myPost.level === user.desiredPosition;
 
       // Kiểm tra xem user.province có khớp với bất kỳ giá trị trong mảng workLocations không
-      const isProvinceMatch = workLocations.some((location: string) => location === user.province);
+      const isProvinceMatch = workLocations.some((location: string) => location.includes(user.province));
+
       console.log("isFieldPositionMatch:", isFieldPositionMatch);
       console.log("isDesiredPositionMatch:", isDesiredPositionMatch);
       console.log("isProvinceMatch:", isProvinceMatch);
