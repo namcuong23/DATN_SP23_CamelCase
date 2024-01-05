@@ -59,21 +59,35 @@ const HomeClient = (): any => {
       // Kiểm tra các điều kiện so sánh trường
       const isFieldPositionMatch = myPost.career === user.fieldPosition;
       const isDesiredPositionMatch = myPost.level === user.desiredPosition;
-
+  
       // Kiểm tra xem user.province có khớp với bất kỳ giá trị trong mảng workLocations không
-      const isProvinceMatch = workLocations.some((location: string) => location.includes(user.province));
-
-      console.log("isFieldPositionMatch:", isFieldPositionMatch);
-      console.log("isDesiredPositionMatch:", isDesiredPositionMatch);
-      console.log("isProvinceMatch:", isProvinceMatch);
-      // Trả về true nếu tất cả hoặc ít nhất một điều kiện đều đúng
-      return isFieldPositionMatch && isDesiredPositionMatch && isProvinceMatch;
-
+      const isProvinceMatch = workLocations.some((location: string) => {
+        console.log("Location:", location);
+        console.log("User Province:", user.province);
+  
+        const isLocationMatch = location.includes(user.province);
+  
+        console.log("Is Field Position Match:", isFieldPositionMatch);
+        console.log("Is Desired Position Match:", isDesiredPositionMatch);
+        console.log("Chú ý", isLocationMatch);
+  
+        // Kết quả tổng cộng cho tất cả các điều kiện
+        const overallMatch = isFieldPositionMatch && isDesiredPositionMatch && isLocationMatch;
+  
+        console.log("Overall Match Result:", overallMatch);
+  
+        // Trả về kết quả tổng cộng
+        return overallMatch;
+      });
+  
+      // Trả về true nếu cả 3 điều kiện đều đúng, ngược lại trả về false
+      return isProvinceMatch;
     }
-
+  
     // Trả về false nếu có bất kỳ điều kiện nào không đúng hoặc nếu không có thông tin user
     return false;
   });
+  
 
   useEffect(() => {
     if (posts && !shuffled) {
