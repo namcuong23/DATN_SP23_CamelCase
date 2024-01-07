@@ -23,7 +23,7 @@ const HomeClient = (): any => {
   const getLogo = (user_id: string) => {
     const data = userEpr.find((user: any) => user._id === user_id)
 
-    return data.image
+    return data?.image
   }
   const { data: posts } = useGetPostsQuery(user?._id)
   const { data: banners } = useGetBannersQuery()

@@ -59,7 +59,21 @@ const VoucherAdd = () => {
                             </Form.Item>
                         </div>
                     </div>
-
+                    <div  style={{ width: '800px' }}>
+                        <div className='w-100 ms-3'>
+                            <div className='fs-4'>Loại gói</div>
+                            <Form.Item name="package_type" label="Loại gói"
+                                rules={[
+                                    { required: true, message: "Please input your package type." },
+                                ]}>
+                              <Select>
+                                <Select.Option value="basic">Basic</Select.Option>
+                                <Select.Option value="standard">Standard</Select.Option>
+                                <Select.Option value="premium">Premium</Select.Option>
+                            </Select>
+                            </Form.Item>
+                        </div>
+                    </div>
                     <div  style={{ width: '800px' }}>
                         <div className='w-100 ms-3'>
                             <div className='fs-4'>Thời gian hiệu lực</div>
