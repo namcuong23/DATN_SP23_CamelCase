@@ -39,55 +39,23 @@ const HomeClient = (): any => {
     const fieldPositionValue = user.fieldPosition;
     const desiredPositionValue = user.desiredPosition;
     const provinceValue = user.province;
-    // Bây giờ bạn có thể sử dụng giá trị của fieldPositionValue
-    console.log("Giá trị của fieldPosition:", fieldPositionValue);
-    console.log("Giá trị của desiredPositionValue:", desiredPositionValue);
-    console.log("Giá trị của privinceValue:", provinceValue);
   } else {
-    console.error("Đối tượng user không tồn tại hoặc không có trường fieldPosition");
   }
-  const { data: myPostsData } = useGetMyPostsQuery(isJob ? { isDone: false } : { isSave: true });
-  const myPosts = myPostsData?.filter((myPost: any) => myPost);
-  console.log(myPosts);
-
-  const workLocations = myPosts?.map((post: any) => post.work_location) || [];
-
-  // workLocations bây giờ chứa một mảng các giá trị work_location
-  console.log("Danh sách các địa điểm làm việc:", workLocations);
-  const suitableJobs = myPosts?.filter((myPost: any) => {
-    if (user && user.fieldPosition && user.desiredPosition && user.province) {
-      // Kiểm tra các điều kiện so sánh trường
-      const isFieldPositionMatch = myPost.career === user.fieldPosition;
-      const isDesiredPositionMatch = myPost.level === user.desiredPosition;
-
-      // Kiểm tra xem user.province có khớp với bất kỳ giá trị trong mảng workLocations không
-      const isProvinceMatch = workLocations.some((location: string) => {
-        console.log("Location:", location);
-        console.log("User Province:", user.province);
-
-        const isLocationMatch = location.includes(user.province);
-
-        console.log("Is Field Position Match:", isFieldPositionMatch);
-        console.log("Is Desired Position Match:", isDesiredPositionMatch);
-        console.log("Chú ý", isLocationMatch);
-
-        // Kết quả tổng cộng cho tất cả các điều kiện
-        const overallMatch = isFieldPositionMatch && isDesiredPositionMatch && isLocationMatch;
-
-        console.log("Overall Match Result:", overallMatch);
-
-        // Trả về kết quả tổng cộng
-        return overallMatch;
-      });
-
-      // Trả về true nếu cả 3 điều kiện đều đúng, ngược lại trả về false
-      return isProvinceMatch;
-    }
-
-    // Trả về false nếu có bất kỳ điều kiện nào không đúng hoặc nếu không có thông tin user
-    return false;
-  });
-
+  const { data: myPostsData } = useGetPostsQuery();
+  
+  
+  const suitableJobs = myPostsData?.filter((myPost: any) => {
+        const isFieldPositionMatch = myPost.career === user.fieldPosition;
+        const isDesiredPositionMatch = myPost.level === user.desiredPosition;
+        const matchingLocations = myPost.work_location.filter((location: string) => {
+            const isLocationMatch = location.includes(user.province);
+            return isLocationMatch;
+        });
+        const isProvinceMatch = matchingLocations.length > 0;
+        return isProvinceMatch && isFieldPositionMatch && isDesiredPositionMatch;
+});
+  console.log("phù hợp",suitableJobs);
+  
 
   useEffect(() => {
     if (posts && !shuffled) {
